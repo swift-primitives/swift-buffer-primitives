@@ -12,14 +12,12 @@
 extension Buffer {
     /// Namespace for ring buffer types.
     ///
-    /// Provides `Fixed` and `Growable` ring buffer variants for ~Copyable elements,
-    /// plus `Optional` for backward compatibility with array-backed storage.
+    /// Provides `Bounded` and `Unbounded` ring buffer variants for ~Copyable elements.
     ///
     /// ## Design
     ///
-    /// - `Ring.Fixed`: Bounded capacity, returns rejected element on overflow
-    /// - `Ring.Growable`: Unbounded, grows automatically
-    /// - `Ring.Optional`: Legacy array-backed ring (requires Copyable elements)
+    /// - `Ring.Bounded`: Bounded capacity, returns rejected element on overflow
+    /// - `Ring.Unbounded`: Unbounded, grows automatically
     ///
     /// ## Thread Safety
     ///

@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 extension Buffer.Slots {
-    /// Fixed-capacity, index-addressable slot store for ~Copyable elements.
+    /// Bounded-capacity, index-addressable slot store for ~Copyable elements.
     ///
     /// A slot store provides O(1) indexed insertion and removal with explicit
     /// initialization state tracking. Unlike arrays, slots can be individually
@@ -20,7 +20,7 @@ extension Buffer.Slots {
     ///
     /// - Backing storage: `UnsafeMutablePointer<Element>` (no Array/Optional)
     /// - Occupancy tracking: `UnsafeMutablePointer<Bool>` (one flag per slot)
-    /// - Fixed capacity: known at init, never grows
+    /// - Bounded capacity: known at init, never grows
     /// - Index-based access: O(1) put/take by index
     ///
     /// ## Thread Safety
@@ -43,13 +43,13 @@ extension Buffer.Slots {
     /// ## Typical Usage
     ///
     /// Slot stores are designed to be used with:
-    /// - A free-list (e.g., `Buffer.Ring.Fixed<Int>`) for index allocation
-    /// - An order structure (e.g., `Buffer.Ring.Fixed<Ticket>`) for FIFO ordering
+    /// - A free-list (e.g., `Buffer.Ring.Bounded<Int>`) for index allocation
+    /// - An order structure (e.g., `Buffer.Ring.Bounded<Ticket>`) for FIFO ordering
     /// - An index table mapping external keys to slot indices
     ///
     /// ```swift
-    /// var slots = Buffer.Slots.Fixed<Job>(capacity: 16)
-    /// var freeList = Buffer.Ring.Fixed<Int>(capacity: 16)
+    /// var slots = Buffer.Slots.Bounded<Job>(capacity: 16)
+    /// var freeList = Buffer.Ring.Bounded<Int>(capacity: 16)
     ///
     /// // Initialize free-list with all indices
     /// for i in 0..<16 { _ = freeList.push(i) }
@@ -63,7 +63,7 @@ extension Buffer.Slots {
     /// let job = slots.take(at: index)
     /// _ = freeList.push(index)
     /// ```
-    public struct Fixed<Element: ~Copyable>: ~Swift.Copyable {
+    public struct Bounded<Element: ~Copyable>: ~Swift.Copyable {
         @usableFromInline
         let _storage: UnsafeMutablePointer<Element>
 
@@ -107,7 +107,7 @@ extension Buffer.Slots {
 
 // MARK: - Properties
 
-extension Buffer.Slots.Fixed where Element: ~Copyable {
+extension Buffer.Slots.Bounded where Element: ~Copyable {
     /// The current number of occupied slots.
     @inlinable
     public var count: Int { _count }
@@ -133,7 +133,7 @@ extension Buffer.Slots.Fixed where Element: ~Copyable {
 
 // MARK: - Put (store element at index)
 
-extension Buffer.Slots.Fixed where Element: ~Copyable {
+extension Buffer.Slots.Bounded where Element: ~Copyable {
     /// Stores an element at the specified index.
     ///
     /// The slot must be empty. Storing into an occupied slot is a logic error.
@@ -171,7 +171,7 @@ extension Buffer.Slots.Fixed where Element: ~Copyable {
 
 // MARK: - Take (remove and return element)
 
-extension Buffer.Slots.Fixed where Element: ~Copyable {
+extension Buffer.Slots.Bounded where Element: ~Copyable {
     /// Removes and returns the element at the specified index.
     ///
     /// The slot must be occupied. Taking from an empty slot is a logic error.
@@ -211,7 +211,7 @@ extension Buffer.Slots.Fixed where Element: ~Copyable {
 
 // MARK: - Borrow (read without removing)
 
-extension Buffer.Slots.Fixed where Element: ~Copyable {
+extension Buffer.Slots.Bounded where Element: ~Copyable {
     /// Provides borrowing access to the element at the specified index.
     ///
     /// The slot must be occupied. Borrowing from an empty slot is a logic error.
@@ -235,7 +235,7 @@ extension Buffer.Slots.Fixed where Element: ~Copyable {
 
 // MARK: - Drain
 
-extension Buffer.Slots.Fixed where Element: ~Copyable {
+extension Buffer.Slots.Bounded where Element: ~Copyable {
     /// Removes all elements from the slot store, consuming each via the closure.
     ///
     /// The closure receives the index and element for each occupied slot.
@@ -271,4 +271,4 @@ extension Buffer.Slots.Fixed where Element: ~Copyable {
 
 // MARK: - Sendable
 
-extension Buffer.Slots.Fixed: @unchecked Sendable where Element: Sendable {}
+extension Buffer.Slots.Bounded: @unchecked Sendable where Element: Sendable {}

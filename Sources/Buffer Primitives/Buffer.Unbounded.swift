@@ -1,4 +1,4 @@
-// Buffer.Growable.swift
+// Buffer.Unbounded.swift
 // Resizable buffer storage backed by Buffer.Aligned.
 
 public import Binary_Primitives
@@ -6,7 +6,7 @@ public import Binary_Primitives
 extension Buffer {
     /// Resizable buffer storage that conforms to `Binary.Mutable`.
     ///
-    /// `Growable` provides dynamic capacity management while delegating
+    /// `Unbounded` provides dynamic capacity management while delegating
     /// index tracking to `Binary.Cursor`. The `count` property always
     /// equals the current capacity (addressable bytes).
     ///
@@ -26,7 +26,7 @@ extension Buffer {
     /// ## Example
     ///
     /// ```swift
-    /// var buffer = try Buffer.Growable(minimumCapacity: 64, alignment: .doubleWord)
+    /// var buffer = try Buffer.Unbounded(minimumCapacity: 64, alignment: .doubleWord)
     /// var cursor = try Binary.Cursor(storage: buffer)
     ///
     /// // Write some data
@@ -42,7 +42,7 @@ extension Buffer {
     /// ## Thread Safety
     ///
     /// Not thread-safe. External synchronization required for concurrent access.
-    public struct Growable: ~Copyable {
+    public struct Unbounded: ~Copyable {
         /// The underlying aligned storage.
         @usableFromInline
         internal var _storage: Aligned
@@ -99,7 +99,7 @@ extension Buffer {
 
 // MARK: - Capacity Properties
 
-extension Buffer.Growable {
+extension Buffer.Unbounded {
     /// The current capacity (addressable bytes).
     ///
     /// This equals the underlying storage's byte count.
@@ -118,7 +118,7 @@ extension Buffer.Growable {
 
 // MARK: - Capacity Management
 
-extension Buffer.Growable {
+extension Buffer.Unbounded {
     /// Ensures the buffer has at least the specified capacity, preserving existing bytes.
     ///
     /// If the current capacity is sufficient, this is a no-op.
@@ -189,7 +189,7 @@ extension Buffer.Growable {
 
 // MARK: - Byte Access (typed throws)
 
-extension Buffer.Growable {
+extension Buffer.Unbounded {
     /// Provides read-only access to the buffer's bytes.
     ///
     /// - Parameter body: A closure that receives a pointer to the buffer.
@@ -217,7 +217,7 @@ extension Buffer.Growable {
 
 // MARK: - Span Access
 
-extension Buffer.Growable {
+extension Buffer.Unbounded {
     /// Read-only span of the buffer as bytes.
     @inlinable
     public var bytes: Span<UInt8> {
@@ -239,7 +239,7 @@ extension Buffer.Growable {
 
 // MARK: - Binary.Mutable Conformance
 
-extension Buffer.Growable {
+extension Buffer.Unbounded {
     /// Address space marker for buffer memory positions.
     public typealias Space = Buffer.Aligned.Space
 
@@ -247,4 +247,4 @@ extension Buffer.Growable {
     public typealias Scalar = Buffer.Aligned.Scalar
 }
 
-extension Buffer.Growable: Binary.Mutable {}
+extension Buffer.Unbounded: Binary.Mutable {}

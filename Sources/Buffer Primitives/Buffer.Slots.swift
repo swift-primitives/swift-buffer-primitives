@@ -17,7 +17,7 @@ extension Buffer {
     ///
     /// ## Design
     ///
-    /// - `Slots.Fixed`: Bounded capacity, index-based access with occupancy tracking
+    /// - `Slots.Bounded`: Bounded capacity, index-based access with occupancy tracking
     ///
     /// ## Use Case
     ///

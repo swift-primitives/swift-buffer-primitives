@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 extension Buffer.Ring {
-    /// Growable circular buffer for ~Copyable elements.
+    /// Unbounded circular buffer for ~Copyable elements.
     ///
     /// A FIFO ring buffer that automatically grows when capacity is exhausted.
     /// Uses move semantics for elements, supporting non-copyable types.
@@ -36,7 +36,7 @@ extension Buffer.Ring {
     ///
     /// Elements are accessed exclusively via `popFront()`, `popBack()`, and `drain()`.
     /// No indexed access is provided - queues are not random-access containers.
-    public struct Growable<Element: ~Copyable>: ~Swift.Copyable {
+    public struct Unbounded<Element: ~Copyable>: ~Swift.Copyable {
         @usableFromInline
         var _storage: UnsafeMutablePointer<Element>?
 
@@ -87,7 +87,7 @@ extension Buffer.Ring {
 
 // MARK: - Properties
 
-extension Buffer.Ring.Growable where Element: ~Copyable {
+extension Buffer.Ring.Unbounded where Element: ~Copyable {
     /// The current number of elements in the buffer.
     @inlinable
     public var count: Int { _count }
@@ -103,7 +103,7 @@ extension Buffer.Ring.Growable where Element: ~Copyable {
 
 // MARK: - Push (FIFO - add to tail)
 
-extension Buffer.Ring.Growable where Element: ~Copyable {
+extension Buffer.Ring.Unbounded where Element: ~Copyable {
     /// Pushes an element to the back of the buffer.
     ///
     /// Grows the buffer if necessary.
@@ -123,7 +123,7 @@ extension Buffer.Ring.Growable where Element: ~Copyable {
 
 // MARK: - Pop (FIFO - remove from head)
 
-extension Buffer.Ring.Growable where Element: ~Copyable {
+extension Buffer.Ring.Unbounded where Element: ~Copyable {
     /// Pops the oldest element from the front of the buffer.
     ///
     /// - Returns: The oldest element, or `nil` if empty.
@@ -156,7 +156,7 @@ extension Buffer.Ring.Growable where Element: ~Copyable {
 
 // MARK: - Growth
 
-extension Buffer.Ring.Growable where Element: ~Copyable {
+extension Buffer.Ring.Unbounded where Element: ~Copyable {
     @usableFromInline
     mutating func grow() {
         let newCapacity = _capacity == 0 ? _minimumCapacity : _capacity * 2
@@ -180,7 +180,7 @@ extension Buffer.Ring.Growable where Element: ~Copyable {
 
 // MARK: - Drain
 
-extension Buffer.Ring.Growable where Element: ~Copyable {
+extension Buffer.Ring.Unbounded where Element: ~Copyable {
     /// Drains all elements from the buffer, consuming each via the closure.
     ///
     /// The buffer is empty after this call.
@@ -211,4 +211,4 @@ extension Buffer.Ring.Growable where Element: ~Copyable {
 
 // MARK: - Sendable
 
-extension Buffer.Ring.Growable: @unchecked Sendable where Element: Sendable {}
+extension Buffer.Ring.Unbounded: @unchecked Sendable where Element: Sendable {}

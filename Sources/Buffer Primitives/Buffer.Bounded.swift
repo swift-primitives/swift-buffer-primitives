@@ -10,9 +10,9 @@
 // ===----------------------------------------------------------------------===//
 
 extension Buffer {
-    /// Fixed-capacity buffer with LIFO semantics and copy-on-write.
+    /// Bounded-capacity buffer with LIFO semantics and copy-on-write.
     ///
-    /// `Fixed` provides O(1) push/pop operations with a bounded capacity.
+    /// `Bounded` provides O(1) push/pop operations with a bounded capacity.
     /// Unlike stdlib `Array`, it never reallocates after initialization.
     ///
     /// ## API
@@ -20,7 +20,7 @@ extension Buffer {
     /// Operations use typed throws as the primary API:
     ///
     /// ```swift
-    /// var buffer = Buffer.Fixed<Int>(capacity: 10)
+    /// var buffer = Buffer.Bounded<Int>(capacity: 10)
     ///
     /// // Primary API (typed throws)
     /// try buffer.push(1)           // throws .full if at capacity
@@ -61,7 +61,7 @@ extension Buffer {
     /// The type is `Sendable` when `Element: Sendable`, meaning it can be
     /// transferred across concurrency domains. However, it is NOT thread-safe
     /// for concurrent mutation. External synchronization is required.
-    public struct Fixed<Element> {
+    public struct Bounded<Element> {
         @usableFromInline
         var storage: Storage
 
@@ -94,7 +94,7 @@ extension Buffer {
 
 // MARK: - Storage
 
-extension Buffer.Fixed {
+extension Buffer.Bounded {
     /// Reference-counted storage for COW semantics.
     @usableFromInline
     final class Storage {
@@ -142,7 +142,7 @@ extension Buffer.Fixed {
 
 // MARK: - COW Helper
 
-extension Buffer.Fixed {
+extension Buffer.Bounded {
     /// Ensures storage is uniquely referenced before mutation.
     @inlinable
     mutating func ensureUnique() {
@@ -154,11 +154,11 @@ extension Buffer.Fixed {
 
 // MARK: - Push (Primary Throwing API)
 
-extension Buffer.Fixed {
+extension Buffer.Bounded {
     /// Pushes an element to the buffer.
     ///
     /// - Parameter element: The element to push.
-    /// - Throws: `Buffer.Fixed.Error.full` if the buffer is at capacity.
+    /// - Throws: `Buffer.Bounded.Error.full` if the buffer is at capacity.
     /// - Complexity: O(1).
     @inlinable
     public mutating func push(_ element: Element) throws(Error) {
@@ -201,11 +201,11 @@ extension Buffer.Fixed {
 
 // MARK: - Pop (Primary Throwing API)
 
-extension Buffer.Fixed {
+extension Buffer.Bounded {
     /// Pops the most recently pushed element (LIFO).
     ///
     /// - Returns: The removed element.
-    /// - Throws: `Buffer.Fixed.Error.empty` if the buffer is empty.
+    /// - Throws: `Buffer.Bounded.Error.empty` if the buffer is empty.
     /// - Complexity: O(1).
     @inlinable
     public mutating func pop() throws(Error) -> Element {
@@ -227,7 +227,7 @@ extension Buffer.Fixed {
 
 // MARK: - Peek
 
-extension Buffer.Fixed {
+extension Buffer.Bounded {
     /// The most recently pushed element without removing it.
     ///
     /// - Complexity: O(1).
@@ -244,7 +244,7 @@ extension Buffer.Fixed {
 
 // MARK: - Remove All
 
-extension Buffer.Fixed {
+extension Buffer.Bounded {
     /// Removes all elements from the buffer.
     ///
     /// - Complexity: O(n) where n is the number of elements.
@@ -259,7 +259,7 @@ extension Buffer.Fixed {
 
 // MARK: - Subscript
 
-extension Buffer.Fixed {
+extension Buffer.Bounded {
     /// Accesses the element at the specified index.
     ///
     /// Index 0 is the bottom (oldest), `count - 1` is the top (newest).
@@ -283,7 +283,7 @@ extension Buffer.Fixed {
 
 // MARK: - Iteration
 
-extension Buffer.Fixed {
+extension Buffer.Bounded {
     /// Iterates over all elements from bottom to top.
     ///
     /// - Parameter body: A closure called with each element.
@@ -305,7 +305,7 @@ extension Buffer.Fixed {
 
 // MARK: - Internal Identity (for COW testing)
 
-extension Buffer.Fixed {
+extension Buffer.Bounded {
     /// Storage identity for COW testing.
     ///
     /// Access via `@testable import Buffer`.
@@ -317,11 +317,11 @@ extension Buffer.Fixed {
 
 // MARK: - Conditional Conformances
 
-extension Buffer.Fixed: Sendable where Element: Sendable {}
+extension Buffer.Bounded: Sendable where Element: Sendable {}
 
-extension Buffer.Fixed.Storage: @unchecked Sendable where Element: Sendable {}
+extension Buffer.Bounded.Storage: @unchecked Sendable where Element: Sendable {}
 
-extension Buffer.Fixed: Equatable where Element: Equatable {
+extension Buffer.Bounded: Equatable where Element: Equatable {
     @inlinable
     public static func == (lhs: Self, rhs: Self) -> Bool {
         guard lhs.count == rhs.count else { return false }

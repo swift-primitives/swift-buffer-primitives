@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 extension Buffer.Ring {
-    /// Fixed-capacity circular buffer for ~Copyable elements.
+    /// Bounded-capacity circular buffer for ~Copyable elements.
     ///
     /// A FIFO ring buffer with bounded capacity. Push operations fail when full.
     /// Uses move semantics for elements, supporting non-copyable types.
@@ -19,7 +19,7 @@ extension Buffer.Ring {
     ///
     /// - Backing storage: `UnsafeMutablePointer<Element>` (no Array/Optional)
     /// - Slot tracking: head/tail indices with count
-    /// - Fixed capacity: push returns rejected element when full (never grows)
+    /// - Bounded capacity: push returns rejected element when full (never grows)
     /// - FIFO ordering
     ///
     /// ## Thread Safety
@@ -42,7 +42,7 @@ extension Buffer.Ring {
     ///
     /// Elements are accessed exclusively via `popFront()`, `popBack()`, and `drain()`.
     /// No indexed access is provided - queues are not random-access containers.
-    public struct Fixed<Element: ~Copyable>: ~Swift.Copyable {
+    public struct Bounded<Element: ~Copyable>: ~Swift.Copyable {
         @usableFromInline
         let _storage: UnsafeMutablePointer<Element>
 
@@ -85,7 +85,7 @@ extension Buffer.Ring {
 
 // MARK: - Properties
 
-extension Buffer.Ring.Fixed where Element: ~Copyable {
+extension Buffer.Ring.Bounded where Element: ~Copyable {
     /// The current number of elements in the buffer.
     @inlinable
     public var count: Int { _count }
@@ -101,7 +101,7 @@ extension Buffer.Ring.Fixed where Element: ~Copyable {
 
 // MARK: - Push (FIFO - add to tail)
 
-extension Buffer.Ring.Fixed where Element: ~Copyable {
+extension Buffer.Ring.Bounded where Element: ~Copyable {
     /// Pushes an element to the back of the buffer.
     ///
     /// - Parameter element: The element to push (ownership transferred on success).
@@ -137,7 +137,7 @@ extension Buffer.Ring.Fixed where Element: ~Copyable {
 
 // MARK: - Pop (FIFO - remove from head)
 
-extension Buffer.Ring.Fixed where Element: ~Copyable {
+extension Buffer.Ring.Bounded where Element: ~Copyable {
     /// Pops the oldest element from the front of the buffer.
     ///
     /// - Returns: The oldest element, or `nil` if empty.
@@ -170,7 +170,7 @@ extension Buffer.Ring.Fixed where Element: ~Copyable {
 
 // MARK: - Drain
 
-extension Buffer.Ring.Fixed where Element: ~Copyable {
+extension Buffer.Ring.Bounded where Element: ~Copyable {
     /// Drains all elements from the buffer, consuming each via the closure.
     ///
     /// The buffer is empty after this call.
@@ -204,4 +204,4 @@ extension Buffer.Ring.Fixed where Element: ~Copyable {
 
 // MARK: - Sendable
 
-extension Buffer.Ring.Fixed: @unchecked Sendable where Element: Sendable {}
+extension Buffer.Ring.Bounded: @unchecked Sendable where Element: Sendable {}

@@ -1,6 +1,6 @@
 import Binary_Primitives
-import Test_Support_Primitives
-import Testing
+import Test_Primitives
+import Testing_Extras
 
 @testable import Buffer_Primitives
 
@@ -30,7 +30,7 @@ extension Buffer.BinaryConformance.Test.Unit {
 
     @Test("byte.set writes correct value")
     func byteSetWritesValue() throws {
-        var buffer = try Buffer.Aligned.zeroed(byteCount: 16, alignment: .doubleWord)
+        let buffer = try Buffer.Aligned.zeroed(byteCount: 16, alignment: .doubleWord)
 
         let position = Binary.Position<Buffer.Aligned.Scalar, Buffer.Aligned.Space>(7)
         try buffer.byte.set(0xCD, at: position)
@@ -84,7 +84,7 @@ extension Buffer.BinaryConformance.Test.Unit {
 
     @Test("unchecked byte.set writes correct value")
     func uncheckedByteSetWritesValue() throws {
-        var buffer = try Buffer.Aligned.zeroed(byteCount: 16, alignment: .doubleWord)
+        let buffer = try Buffer.Aligned.zeroed(byteCount: 16, alignment: .doubleWord)
 
         let position = Binary.Position<Buffer.Aligned.Scalar, Buffer.Aligned.Space>(11)
         buffer.byte.set(__unchecked: (), 0x77, at: position)

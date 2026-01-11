@@ -26,7 +26,7 @@ extension Buffer.Growth {
     ///
     /// ```swift
     /// // Use 1.5x growth for memory-sensitive workloads
-    /// var buffer = try Buffer.Growable(
+    /// var buffer = try Buffer.Unbounded(
     ///     minimumCapacity: 1024,
     ///     alignment: 16,
     ///     growthPolicy: .factor(1.5)

@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-extension Buffer.Fixed {
+extension Buffer.Bounded {
     /// Errors that can occur during buffer operations.
     public enum Error: Swift.Error, Sendable, Equatable {
         /// The buffer is full and cannot accept more elements.

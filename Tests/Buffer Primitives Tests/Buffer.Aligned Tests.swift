@@ -1,6 +1,6 @@
 import Binary_Primitives
-import Test_Support_Primitives
-import Testing
+import Test_Primitives
+import Testing_Extras
 
 @testable import Buffer_Primitives
 
