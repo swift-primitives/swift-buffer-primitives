@@ -61,6 +61,7 @@ extension Buffer {
     /// The type is `Sendable` when `Element: Sendable`, meaning it can be
     /// transferred across concurrency domains. However, it is NOT thread-safe
     /// for concurrent mutation. External synchronization is required.
+    @safe
     public struct Bounded<Element> {
         @usableFromInline
         var storage: Storage
@@ -75,20 +76,20 @@ extension Buffer {
         public init(capacity: Int) {
             precondition(capacity >= 0, "Capacity must be non-negative")
             self.capacity = capacity
-            self.storage = Storage(capacity: capacity)
+            unsafe self.storage = Storage(capacity: capacity)
         }
 
         /// The current number of elements in the buffer.
         @inlinable
-        public var count: Int { storage.count }
+        public var count: Int { unsafe storage.count }
 
         /// Whether the buffer is empty.
         @inlinable
-        public var isEmpty: Bool { storage.count == 0 }
+        public var isEmpty: Bool { unsafe storage.count == 0 }
 
         /// Whether the buffer is at capacity.
         @inlinable
-        public var isFull: Bool { storage.count >= capacity }
+        public var isFull: Bool { unsafe storage.count >= capacity }
     }
 }
 
@@ -96,6 +97,7 @@ extension Buffer {
 
 extension Buffer.Bounded {
     /// Reference-counted storage for COW semantics.
+    @unsafe
     @usableFromInline
     final class Storage {
         @usableFromInline
@@ -109,32 +111,32 @@ extension Buffer.Bounded {
 
         @usableFromInline
         init(capacity: Int) {
-            self.capacity = capacity
-            self.count = 0
+            unsafe self.capacity = capacity
+            unsafe self.count = 0
             if capacity > 0 {
-                self.pointer = .allocate(capacity: capacity)
+                unsafe self.pointer = .allocate(capacity: capacity)
             } else {
-                self.pointer = nil
+                unsafe self.pointer = nil
             }
         }
 
         /// Copy constructor for COW.
         @usableFromInline
         init(copying other: Storage) {
-            self.capacity = other.capacity
-            self.count = other.count
-            if other.capacity > 0, let otherPointer = other.pointer {
-                self.pointer = .allocate(capacity: other.capacity)
-                self.pointer!.initialize(from: otherPointer, count: other.count)
+            unsafe self.capacity = other.capacity
+            unsafe self.count = other.count
+            if unsafe other.capacity > 0, let otherPointer = unsafe other.pointer {
+                unsafe self.pointer = .allocate(capacity: other.capacity)
+                unsafe self.pointer!.initialize(from: otherPointer, count: other.count)
             } else {
-                self.pointer = nil
+                unsafe self.pointer = nil
             }
         }
 
         deinit {
-            if let pointer = pointer {
-                pointer.deinitialize(count: count)
-                pointer.deallocate()
+            if let pointer = unsafe pointer {
+                unsafe pointer.deinitialize(count: count)
+                unsafe pointer.deallocate()
             }
         }
     }
@@ -146,8 +148,8 @@ extension Buffer.Bounded {
     /// Ensures storage is uniquely referenced before mutation.
     @inlinable
     mutating func ensureUnique() {
-        if !isKnownUniquelyReferenced(&storage) {
-            storage = Storage(copying: storage)
+        if unsafe !isKnownUniquelyReferenced(&storage) {
+            unsafe storage = Storage(copying: storage)
         }
     }
 }
@@ -162,17 +164,17 @@ extension Buffer.Bounded {
     /// - Complexity: O(1).
     @inlinable
     public mutating func push(_ element: Element) throws(Error) {
-        guard storage.count < capacity else {
+        guard unsafe storage.count < capacity else {
             throw .full
         }
         ensureUnique()
-        storage.pointer!.advanced(by: storage.count).initialize(to: element)
-        storage.count += 1
+        unsafe storage.pointer!.advanced(by: storage.count).initialize(to: element)
+        unsafe storage.count += 1
 
         // Memory invariant: elements in [0..<count) initialized, [count..<capacity) uninitialized.
         // After push, newly incremented count marks the boundary correctly.
         #if DEBUG
-        assert(storage.count >= 1 && storage.count <= capacity, "Count invariant violated after push")
+        assert(unsafe storage.count >= 1 && storage.count <= capacity, "Count invariant violated after push")
         #endif
     }
 
@@ -187,14 +189,14 @@ extension Buffer.Bounded {
     /// - Complexity: O(1).
     @inlinable
     public mutating func push(__unchecked: Void, _ element: Element) {
-        precondition(storage.count < capacity, "Buffer overflow")
+        precondition(unsafe storage.count < capacity, "Buffer overflow")
         ensureUnique()
-        storage.pointer!.advanced(by: storage.count).initialize(to: element)
-        storage.count += 1
+        unsafe storage.pointer!.advanced(by: storage.count).initialize(to: element)
+        unsafe storage.count += 1
 
         // Memory invariant: elements in [0..<count) initialized, [count..<capacity) uninitialized.
         #if DEBUG
-        assert(storage.count >= 1 && storage.count <= capacity, "Count invariant violated after push")
+        assert(unsafe storage.count >= 1 && storage.count <= capacity, "Count invariant violated after push")
         #endif
     }
 }
@@ -209,19 +211,19 @@ extension Buffer.Bounded {
     /// - Complexity: O(1).
     @inlinable
     public mutating func pop() throws(Error) -> Element {
-        guard storage.count > 0 else {
+        guard unsafe storage.count > 0 else {
             throw .empty
         }
         ensureUnique()
-        storage.count -= 1
+        unsafe storage.count -= 1
 
         // Memory invariant: after decrementing count, position [count] will be deinitialized via .move().
         // Elements in [0..<count) remain initialized, [count..<capacity) become uninitialized.
         #if DEBUG
-        assert(storage.count >= 0 && storage.count < capacity, "Count invariant violated after pop")
+        assert(unsafe storage.count >= 0 && storage.count < capacity, "Count invariant violated after pop")
         #endif
 
-        return storage.pointer!.advanced(by: storage.count).move()
+        return unsafe storage.pointer!.advanced(by: storage.count).move()
     }
 }
 
@@ -233,12 +235,12 @@ extension Buffer.Bounded {
     /// - Complexity: O(1).
     @inlinable
     public var top: Element? {
-        guard storage.count > 0 else { return nil }
+        guard unsafe storage.count > 0 else { return nil }
         // Invariant: count > 0 implies pointer != nil (capacity > 0)
         #if DEBUG
-        precondition(storage.pointer != nil, "Invariant violation: non-zero count with nil pointer")
+        precondition(unsafe storage.pointer != nil, "Invariant violation: non-zero count with nil pointer")
         #endif
-        return storage.pointer!.advanced(by: storage.count - 1).pointee
+        return unsafe storage.pointer!.advanced(by: storage.count - 1).pointee
     }
 }
 
@@ -250,10 +252,10 @@ extension Buffer.Bounded {
     /// - Complexity: O(n) where n is the number of elements.
     @inlinable
     public mutating func removeAll() {
-        guard storage.count > 0 else { return }
+        guard unsafe storage.count > 0 else { return }
         ensureUnique()
-        storage.pointer!.deinitialize(count: storage.count)
-        storage.count = 0
+        unsafe storage.pointer!.deinitialize(count: storage.count)
+        unsafe storage.count = 0
     }
 }
 
@@ -270,13 +272,13 @@ extension Buffer.Bounded {
     @inlinable
     public subscript(index: Int) -> Element {
         get {
-            precondition(index >= 0 && index < storage.count, "Index out of bounds")
-            return storage.pointer![index]
+            precondition(unsafe index >= 0 && index < storage.count, "Index out of bounds")
+            return unsafe storage.pointer![index]
         }
         set {
-            precondition(index >= 0 && index < storage.count, "Index out of bounds")
+            precondition(unsafe index >= 0 && index < storage.count, "Index out of bounds")
             ensureUnique()
-            storage.pointer![index] = newValue
+            unsafe storage.pointer![index] = newValue
         }
     }
 }
@@ -290,15 +292,15 @@ extension Buffer.Bounded {
     /// - Complexity: O(n).
     @inlinable
     public func forEach(_ body: (Element) throws -> Void) rethrows {
-        let count = storage.count
+        let count = unsafe storage.count
         guard count > 0 else { return }
         // Invariant: count > 0 implies pointer != nil
         #if DEBUG
-        precondition(storage.pointer != nil, "Invariant violation: non-zero count with nil pointer")
+        precondition(unsafe storage.pointer != nil, "Invariant violation: non-zero count with nil pointer")
         #endif
-        let pointer = storage.pointer!
+        let pointer = unsafe storage.pointer!
         for i in 0..<count {
-            try body(pointer[i])
+            try unsafe body(pointer[i])
         }
     }
 }
@@ -311,7 +313,7 @@ extension Buffer.Bounded {
     /// Access via `@testable import Buffer`.
     @usableFromInline
     internal var _identity: ObjectIdentifier {
-        ObjectIdentifier(storage)
+        unsafe ObjectIdentifier(storage)
     }
 }
 
@@ -327,10 +329,10 @@ extension Buffer.Bounded: Equatable where Element: Equatable {
         guard lhs.count == rhs.count else { return false }
         guard lhs.count > 0 else { return true }  // Both empty
         // Invariant: count > 0 implies pointer != nil
-        let lp = lhs.storage.pointer!
-        let rp = rhs.storage.pointer!
+        let lp = unsafe lhs.storage.pointer!
+        let rp = unsafe rhs.storage.pointer!
         for i in 0..<lhs.count {
-            if lp[i] != rp[i] { return false }
+            if unsafe lp[i] != rp[i] { return false }
         }
         return true
     }

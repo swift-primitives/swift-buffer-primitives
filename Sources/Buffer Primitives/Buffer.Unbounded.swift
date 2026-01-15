@@ -89,8 +89,8 @@ extension Buffer {
                 alignment: alignment,
                 growthPolicy: growthPolicy
             )
-            _ = result._storage.withUnsafeMutableBytes { ptr in
-                ptr.initializeMemory(as: UInt8.self, repeating: 0)
+            _ = unsafe result._storage.withUnsafeMutableBytes { ptr in
+                unsafe ptr.initializeMemory(as: UInt8.self, repeating: 0)
             }
             return result
         }
@@ -176,9 +176,9 @@ extension Buffer.Unbounded {
 
         if preserving {
             let bytesToCopy = min(_storage.count, newCapacity)
-            newStorage.withUnsafeMutableBytes { dest in
-                _storage.withUnsafeBytes { src in
-                    dest.copyMemory(from: UnsafeRawBufferPointer(rebasing: src.prefix(bytesToCopy)))
+            unsafe newStorage.withUnsafeMutableBytes { dest in
+                unsafe _storage.withUnsafeBytes { src in
+                    unsafe dest.copyMemory(from: UnsafeRawBufferPointer(rebasing: src.prefix(bytesToCopy)))
                 }
             }
         }
@@ -199,7 +199,7 @@ extension Buffer.Unbounded {
     public func withUnsafeBytes<R, E: Swift.Error>(
         _ body: (UnsafeRawBufferPointer) throws(E) -> R
     ) throws(E) -> R {
-        try _storage.withUnsafeBytes(body)
+        try unsafe _storage.withUnsafeBytes(body)
     }
 
     /// Provides mutable access to the buffer's bytes.
@@ -211,7 +211,7 @@ extension Buffer.Unbounded {
     public mutating func withUnsafeMutableBytes<R, E: Swift.Error>(
         _ body: (UnsafeMutableRawBufferPointer) throws(E) -> R
     ) throws(E) -> R {
-        try _storage.withUnsafeMutableBytes(body)
+        try unsafe _storage.withUnsafeMutableBytes(body)
     }
 }
 

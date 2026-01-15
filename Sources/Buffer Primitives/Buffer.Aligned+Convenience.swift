@@ -16,11 +16,11 @@ extension Buffer.Aligned {
     public subscript(index: Int) -> UInt8 {
         get {
             precondition(index >= 0 && index < count, "index out of bounds")
-            return bytePointer[index]
+            return unsafe bytePointer[index]
         }
         set {
             precondition(index >= 0 && index < count, "index out of bounds")
-            bytePointer[index] = newValue
+            unsafe bytePointer[index] = newValue
         }
     }
 }
@@ -67,7 +67,7 @@ extension Buffer.Aligned {
         from source: UnsafeRawBufferPointer,
         at offset: Int = 0
     ) {
-        Binary.copy(from: source, into: &self, at: offset)
+        unsafe Binary.copy(from: source, into: &self, at: offset)
     }
 }
 

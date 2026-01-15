@@ -16,25 +16,26 @@ public import Binary_Primitives
 /// Page-aligned pointer dominates all power-of-two alignments <= pageSize (8, 16, 32, ...).
 /// For alignments > pageSize, empty buffers allocate a 1-byte buffer with the requested alignment.
 /// Allocated once at process start; never freed. Memory is bound to UInt8.
+@safe
 @usableFromInline
 nonisolated(unsafe) let emptyBufferSentinel: UnsafeMutablePointer<UInt8> = {
     #if os(Windows)
         var info = SYSTEM_INFO()
         GetSystemInfo(&info)
         let pageSize = Int(info.dwPageSize)
-        guard let raw = _aligned_malloc(1, pageSize) else {
+        guard let raw = unsafe _aligned_malloc(1, pageSize) else {
             fatalError("Failed to allocate empty buffer sentinel")
         }
-        return raw.bindMemory(to: UInt8.self, capacity: 1)
+        return unsafe raw.bindMemory(to: UInt8.self, capacity: 1)
     #else
         let pageSize = sysconf(Int32(_SC_PAGESIZE))
         let alignment = pageSize > 0 ? Int(pageSize) : 4096
         var raw: UnsafeMutableRawPointer?
-        let result = posix_memalign(&raw, alignment, 1)
-        guard result == 0, let p = raw else {
+        let result = unsafe posix_memalign(&raw, alignment, 1)
+        guard result == 0, let p = unsafe raw else {
             fatalError("Failed to allocate empty buffer sentinel")
         }
-        return p.bindMemory(to: UInt8.self, capacity: 1)
+        return unsafe p.bindMemory(to: UInt8.self, capacity: 1)
     #endif
 }()
 
@@ -91,6 +92,7 @@ extension Buffer {
     /// var buffer = try Buffer.Aligned(byteCount: 4096, alignment: .page4096)
     /// buffer.copy(from: sourceData, at: 0)
     /// ```
+    @safe
     public struct Aligned: ~Copyable, @unchecked Sendable {
         /// Typed byte pointer to the allocated memory.
         /// Memory is bound to UInt8 at initialization.
@@ -107,11 +109,11 @@ extension Buffer {
             // Don't free the shared page-aligned sentinel (used for empty buffers with alignment <= pageSize)
             // Empty buffers with alignment > pageSize have their own allocation that must be freed
             // Note: Structured as if-else to work around Swift 6.2.1 Windows MoveOnlyChecker crash
-            if bytePointer != emptyBufferSentinel {
+            if unsafe bytePointer != emptyBufferSentinel {
                 #if os(Windows)
-                    _aligned_free(UnsafeMutableRawPointer(bytePointer))
+                    unsafe _aligned_free(UnsafeMutableRawPointer(bytePointer))
                 #else
-                    free(UnsafeMutableRawPointer(bytePointer))
+                    unsafe free(UnsafeMutableRawPointer(bytePointer))
                 #endif
             }
         }
@@ -144,20 +146,20 @@ extension Buffer.Aligned {
             // For alignment <= pageSize, use the shared page-aligned sentinel
             // For alignment > pageSize, allocate a 1-byte buffer with requested alignment
             if alignmentMagnitude <= Buffer.Memory.pageSize {
-                self.bytePointer = emptyBufferSentinel
+                unsafe self.bytePointer = emptyBufferSentinel
             } else {
                 #if os(Windows)
-                    guard let raw = _aligned_malloc(1, alignmentMagnitude) else {
+                    guard let raw = unsafe _aligned_malloc(1, alignmentMagnitude) else {
                         throw .allocationFailed
                     }
-                    self.bytePointer = raw.bindMemory(to: UInt8.self, capacity: 1)
+                    unsafe self.bytePointer = raw.bindMemory(to: UInt8.self, capacity: 1)
                 #else
                     var raw: UnsafeMutableRawPointer?
-                    let result = posix_memalign(&raw, alignmentMagnitude, 1)
-                    guard result == 0, let allocated = raw else {
+                    let result = unsafe posix_memalign(&raw, alignmentMagnitude, 1)
+                    guard result == 0, let allocated = unsafe raw else {
                         throw .allocationFailed
                     }
-                    self.bytePointer = allocated.bindMemory(to: UInt8.self, capacity: 1)
+                    unsafe self.bytePointer = allocated.bindMemory(to: UInt8.self, capacity: 1)
                 #endif
             }
             self.count = 0
@@ -166,17 +168,17 @@ extension Buffer.Aligned {
         }
 
         #if os(Windows)
-            guard let raw = _aligned_malloc(byteCount, alignmentMagnitude) else {
+            guard let raw = unsafe _aligned_malloc(byteCount, alignmentMagnitude) else {
                 throw .allocationFailed
             }
-            self.bytePointer = raw.bindMemory(to: UInt8.self, capacity: byteCount)
+            unsafe self.bytePointer = raw.bindMemory(to: UInt8.self, capacity: byteCount)
         #else
             var raw: UnsafeMutableRawPointer?
-            let result = posix_memalign(&raw, alignmentMagnitude, byteCount)
-            guard result == 0, let allocated = raw else {
+            let result = unsafe posix_memalign(&raw, alignmentMagnitude, byteCount)
+            guard result == 0, let allocated = unsafe raw else {
                 throw .allocationFailed
             }
-            self.bytePointer = allocated.bindMemory(to: UInt8.self, capacity: byteCount)
+            unsafe self.bytePointer = allocated.bindMemory(to: UInt8.self, capacity: byteCount)
         #endif
 
         self.count = byteCount
@@ -194,7 +196,7 @@ extension Buffer.Aligned {
         alignment: Binary.Alignment
     ) throws(Error) -> Self {
         let buffer = try Self(byteCount: byteCount, alignment: alignment)
-        buffer.bytePointer.initialize(repeating: 0, count: byteCount)
+        unsafe buffer.bytePointer.initialize(repeating: 0, count: byteCount)
         return buffer
     }
 
@@ -222,7 +224,7 @@ extension Buffer.Aligned {
     public func withUnsafeBytes<R, E: Swift.Error>(
         _ body: (UnsafeRawBufferPointer) throws(E) -> R
     ) throws(E) -> R {
-        try body(UnsafeRawBufferPointer(start: UnsafeRawPointer(bytePointer), count: count))
+        try unsafe body(UnsafeRawBufferPointer(start: UnsafeRawPointer(bytePointer), count: count))
     }
 
     /// Provides read-write access to the buffer contents.
@@ -234,7 +236,7 @@ extension Buffer.Aligned {
     public mutating func withUnsafeMutableBytes<R, E: Swift.Error>(
         _ body: (UnsafeMutableRawBufferPointer) throws(E) -> R
     ) throws(E) -> R {
-        try body(UnsafeMutableRawBufferPointer(start: UnsafeMutableRawPointer(bytePointer), count: count))
+        try unsafe body(UnsafeMutableRawBufferPointer(start: UnsafeMutableRawPointer(bytePointer), count: count))
     }
 }
 
@@ -251,7 +253,7 @@ extension Buffer.Aligned {
     /// - Returns: `true` if the buffer's base address is aligned to the boundary.
     @inlinable
     public func isAligned(to boundary: Binary.Alignment) -> Bool {
-        boundary.isAligned(UnsafeRawPointer(bytePointer))
+        unsafe boundary.isAligned(UnsafeRawPointer(bytePointer))
     }
 }
 
@@ -320,7 +322,7 @@ extension Buffer.Aligned {
     public func withRawSpan<R, E: Swift.Error>(
         _ body: (RawSpan) throws(E) -> R
     ) throws(E) -> R {
-        let span = RawSpan(_unsafeStart: UnsafeRawPointer(bytePointer), byteCount: count)
+        let span = unsafe RawSpan(_unsafeStart: UnsafeRawPointer(bytePointer), byteCount: count)
         return try body(span)
     }
 
@@ -336,7 +338,7 @@ extension Buffer.Aligned {
     public mutating func withMutableRawSpan<R, E: Swift.Error>(
         _ body: (inout MutableRawSpan) throws(E) -> R
     ) throws(E) -> R {
-        var span = MutableRawSpan(_unsafeStart: UnsafeMutableRawPointer(bytePointer), byteCount: count)
+        var span = unsafe MutableRawSpan(_unsafeStart: UnsafeMutableRawPointer(bytePointer), byteCount: count)
         return try body(&span)
     }
 }

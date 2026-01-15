@@ -28,16 +28,17 @@ extension Buffer.Aligned {
     ///
     /// Provides grouped operations for reading and writing bytes at typed positions.
     /// Access via `buffer.byte.at(position)` and `buffer.byte.set(value, at: position)`.
+    @safe
     public struct Byte: ~Copyable {
         @usableFromInline
-        let pointer: UnsafeMutablePointer<UInt8>
+        var pointer: UnsafeMutablePointer<UInt8>
 
         @usableFromInline
         let count: Int
 
         @usableFromInline
         internal init(pointer: UnsafeMutablePointer<UInt8>, count: Int) {
-            self.pointer = pointer
+            unsafe self.pointer = pointer
             self.count = count
         }
     }
@@ -55,7 +56,7 @@ extension Buffer.Aligned {
     /// ```
     @inlinable
     public var byte: Byte {
-        Byte(pointer: bytePointer, count: count)
+        unsafe Byte(pointer: bytePointer, count: count)
     }
 }
 
@@ -82,7 +83,7 @@ extension Buffer.Aligned.Byte {
                 )
             )
         }
-        return pointer[index]
+        return unsafe pointer[index]
     }
 
     /// Reads a byte at the given position without bounds checking.
@@ -99,7 +100,7 @@ extension Buffer.Aligned.Byte {
     ) -> UInt8 {
         let index = position.rawValue
         precondition(index >= 0 && index < count, "Position out of bounds")
-        return pointer[index]
+        return unsafe pointer[index]
     }
 }
 
@@ -128,7 +129,7 @@ extension Buffer.Aligned.Byte {
                 )
             )
         }
-        pointer[index] = value
+        unsafe pointer[index] = value
     }
 
     /// Writes a byte at the given position without bounds checking.
@@ -146,7 +147,7 @@ extension Buffer.Aligned.Byte {
     ) {
         let index = position.rawValue
         precondition(index >= 0 && index < count, "Position out of bounds")
-        pointer[index] = value
+        unsafe pointer[index] = value
     }
 }
 
@@ -166,12 +167,12 @@ extension Buffer.Aligned {
         get {
             let index = position.rawValue
             precondition(index >= 0 && index < count, "Position out of bounds")
-            return bytePointer[index]
+            return unsafe bytePointer[index]
         }
         set {
             let index = position.rawValue
             precondition(index >= 0 && index < count, "Position out of bounds")
-            bytePointer[index] = newValue
+            unsafe bytePointer[index] = newValue
         }
     }
 }
@@ -224,7 +225,7 @@ extension Buffer.Aligned {
         }
 
         let span = unsafe Span(
-            _unsafeStart: bytePointer.advanced(by: lower),
+            _unsafeStart: unsafe bytePointer.advanced(by: lower),
             count: upper - lower
         )
         do {
@@ -253,7 +254,7 @@ extension Buffer.Aligned {
         let upper = range.upperBound.rawValue
         precondition(lower >= 0 && lower <= upper && upper <= count)
         let span = unsafe Span(
-            _unsafeStart: bytePointer.advanced(by: lower),
+            _unsafeStart: unsafe bytePointer.advanced(by: lower),
             count: upper - lower
         )
         return try body(span)

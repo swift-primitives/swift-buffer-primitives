@@ -36,6 +36,7 @@ extension Buffer.Ring {
     ///
     /// Elements are accessed exclusively via `popFront()`, `popBack()`, and `drain()`.
     /// No indexed access is provided - queues are not random-access containers.
+    @safe
     public struct Unbounded<Element: ~Copyable>: ~Swift.Copyable {
         @usableFromInline
         var _storage: UnsafeMutablePointer<Element>?
@@ -63,7 +64,7 @@ extension Buffer.Ring {
         /// - Parameter minimumCapacity: Minimum capacity for allocation (default: 8).
         @inlinable
         public init(minimumCapacity: Int = 8) {
-            self._storage = nil
+            unsafe self._storage = nil
             self._head = 0
             self._tail = 0
             self._count = 0
@@ -72,15 +73,15 @@ extension Buffer.Ring {
         }
 
         deinit {
-            guard let storage = _storage else { return }
+            guard let storage = unsafe _storage else { return }
 
             // Deinitialize all elements in ring order
             for i in 0..<_count {
                 let index = (_head + i) % _capacity
-                (storage + index).deinitialize(count: 1)
+                unsafe (storage + index).deinitialize(count: 1)
             }
 
-            storage.deallocate()
+            unsafe storage.deallocate()
         }
     }
 }
@@ -115,7 +116,7 @@ extension Buffer.Ring.Unbounded where Element: ~Copyable {
             grow()
         }
 
-        (_storage! + _tail).initialize(to: element)
+        unsafe (_storage! + _tail).initialize(to: element)
         _tail = (_tail + 1) % _capacity
         _count += 1
     }
@@ -131,7 +132,7 @@ extension Buffer.Ring.Unbounded where Element: ~Copyable {
     public mutating func popFront() -> Element? {
         guard _count > 0 else { return nil }
 
-        let element = (_storage! + _head).move()
+        let element = unsafe (_storage! + _head).move()
         _head = (_head + 1) % _capacity
         _count -= 1
 
@@ -146,7 +147,7 @@ extension Buffer.Ring.Unbounded where Element: ~Copyable {
         guard _count > 0 else { return nil }
 
         let lastIndex = (_tail - 1 + _capacity) % _capacity
-        let element = (_storage! + lastIndex).move()
+        let element = unsafe (_storage! + lastIndex).move()
         _tail = lastIndex
         _count -= 1
 
@@ -163,15 +164,15 @@ extension Buffer.Ring.Unbounded where Element: ~Copyable {
         let newStorage = UnsafeMutablePointer<Element>.allocate(capacity: newCapacity)
 
         // Move elements from old storage to new storage in FIFO order
-        if let oldStorage = _storage {
+        if let oldStorage = unsafe _storage {
             for i in 0..<_count {
                 let oldIndex = (_head + i) % _capacity
-                (newStorage + i).initialize(to: (oldStorage + oldIndex).move())
+                unsafe (newStorage + i).initialize(to: (oldStorage + oldIndex).move())
             }
-            oldStorage.deallocate()
+            unsafe oldStorage.deallocate()
         }
 
-        _storage = newStorage
+        unsafe self._storage = newStorage
         _capacity = newCapacity
         _head = 0
         _tail = _count
@@ -196,11 +197,11 @@ extension Buffer.Ring.Unbounded where Element: ~Copyable {
     /// Removes all elements from the buffer without returning them.
     @inlinable
     public mutating func removeAll() {
-        guard let storage = _storage else { return }
+        guard let storage = unsafe _storage else { return }
 
         for i in 0..<_count {
             let index = (_head + i) % _capacity
-            (storage + index).deinitialize(count: 1)
+            unsafe (storage + index).deinitialize(count: 1)
         }
 
         _head = 0

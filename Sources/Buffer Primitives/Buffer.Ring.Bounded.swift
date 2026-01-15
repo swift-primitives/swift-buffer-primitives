@@ -42,9 +42,10 @@ extension Buffer.Ring {
     ///
     /// Elements are accessed exclusively via `popFront()`, `popBack()`, and `drain()`.
     /// No indexed access is provided - queues are not random-access containers.
+    @safe
     public struct Bounded<Element: ~Copyable>: ~Swift.Copyable {
         @usableFromInline
-        let _storage: UnsafeMutablePointer<Element>
+        var _storage: UnsafeMutablePointer<Element>
 
         @usableFromInline
         var _head: Int
@@ -65,7 +66,7 @@ extension Buffer.Ring {
         public init(capacity: Int) {
             precondition(capacity >= 1, "Capacity must be at least 1")
             self.capacity = capacity
-            self._storage = .allocate(capacity: capacity)
+            unsafe self._storage = .allocate(capacity: capacity)
             self._head = 0
             self._tail = 0
             self._count = 0
@@ -75,10 +76,10 @@ extension Buffer.Ring {
             // Deinitialize only initialized slots (respects _count invariant)
             for i in 0..<_count {
                 let index = (_head + i) % capacity
-                (_storage + index).deinitialize(count: 1)
+                unsafe (_storage + index).deinitialize(count: 1)
             }
 
-            _storage.deallocate()
+            unsafe _storage.deallocate()
         }
     }
 }
@@ -114,7 +115,7 @@ extension Buffer.Ring.Bounded where Element: ~Copyable {
     public mutating func push(_ element: consuming Element) -> Element? {
         guard _count < capacity else { return element }
 
-        (_storage + _tail).initialize(to: element)
+        unsafe (_storage + _tail).initialize(to: element)
         _tail = (_tail + 1) % capacity
         _count += 1
         return nil
@@ -129,7 +130,7 @@ extension Buffer.Ring.Bounded where Element: ~Copyable {
     @inlinable
     public mutating func push(unchecked element: consuming Element) {
         precondition(_count < capacity, "Ring buffer is full")
-        (_storage + _tail).initialize(to: element)
+        unsafe (_storage + _tail).initialize(to: element)
         _tail = (_tail + 1) % capacity
         _count += 1
     }
@@ -145,7 +146,7 @@ extension Buffer.Ring.Bounded where Element: ~Copyable {
     public mutating func popFront() -> Element? {
         guard _count > 0 else { return nil }
 
-        let element = (_storage + _head).move()
+        let element = unsafe (_storage + _head).move()
         _head = (_head + 1) % capacity
         _count -= 1
 
@@ -160,7 +161,7 @@ extension Buffer.Ring.Bounded where Element: ~Copyable {
         guard _count > 0 else { return nil }
 
         let lastIndex = (_tail - 1 + capacity) % capacity
-        let element = (_storage + lastIndex).move()
+        let element = unsafe (_storage + lastIndex).move()
         _tail = lastIndex
         _count -= 1
 
@@ -192,7 +193,7 @@ extension Buffer.Ring.Bounded where Element: ~Copyable {
         // Deinitialize only initialized slots (respects _count invariant)
         for i in 0..<_count {
             let index = (_head + i) % capacity
-            (_storage + index).deinitialize(count: 1)
+            unsafe (_storage + index).deinitialize(count: 1)
         }
 
         _head = 0

@@ -63,12 +63,13 @@ extension Buffer.Slots {
     /// let job = slots.take(at: index)
     /// _ = freeList.push(index)
     /// ```
+    @safe
     public struct Bounded<Element: ~Copyable>: ~Swift.Copyable {
         @usableFromInline
-        let _storage: UnsafeMutablePointer<Element>
+        var _storage: UnsafeMutablePointer<Element>
 
         @usableFromInline
-        let _occupied: UnsafeMutablePointer<Bool>
+        var _occupied: UnsafeMutablePointer<Bool>
 
         @usableFromInline
         var _count: Int
@@ -85,22 +86,22 @@ extension Buffer.Slots {
         public init(capacity: Int) {
             precondition(capacity >= 1, "Capacity must be at least 1")
             self.capacity = capacity
-            self._storage = .allocate(capacity: capacity)
-            self._occupied = .allocate(capacity: capacity)
-            self._occupied.initialize(repeating: false, count: capacity)
+            unsafe self._storage = .allocate(capacity: capacity)
+            unsafe self._occupied = .allocate(capacity: capacity)
+            unsafe _occupied.initialize(repeating: false, count: capacity)
             self._count = 0
         }
 
         deinit {
             // Deinitialize only occupied slots
             for i in 0..<capacity {
-                if _occupied[i] {
-                    (_storage + i).deinitialize(count: 1)
+                if unsafe _occupied[i] {
+                    unsafe (_storage + i).deinitialize(count: 1)
                 }
             }
-            _occupied.deinitialize(count: capacity)
-            _occupied.deallocate()
-            _storage.deallocate()
+            unsafe _occupied.deinitialize(count: capacity)
+            unsafe _occupied.deallocate()
+            unsafe _storage.deallocate()
         }
     }
 }
@@ -127,7 +128,7 @@ extension Buffer.Slots.Bounded where Element: ~Copyable {
     @inlinable
     public func isOccupied(at index: Int) -> Bool {
         precondition(index >= 0 && index < capacity, "Index out of bounds")
-        return _occupied[index]
+        return unsafe _occupied[index]
     }
 }
 
@@ -145,10 +146,10 @@ extension Buffer.Slots.Bounded where Element: ~Copyable {
     @inlinable
     public mutating func put(_ element: consuming Element, at index: Int) {
         precondition(index >= 0 && index < capacity, "Index out of bounds")
-        precondition(!_occupied[index], "Slot already occupied at index \(index)")
+        precondition(unsafe !_occupied[index], "Slot already occupied at index \(index)")
 
-        (_storage + index).initialize(to: element)
-        _occupied[index] = true
+        unsafe (_storage + index).initialize(to: element)
+        unsafe _occupied[index] = true
         _count += 1
     }
 
@@ -161,10 +162,10 @@ extension Buffer.Slots.Bounded where Element: ~Copyable {
     @inlinable
     public mutating func put(unchecked element: consuming Element, at index: Int) {
         assert(index >= 0 && index < capacity, "Index out of bounds")
-        assert(!_occupied[index], "Slot already occupied at index \(index)")
+        assert(unsafe !_occupied[index], "Slot already occupied at index \(index)")
 
-        (_storage + index).initialize(to: element)
-        _occupied[index] = true
+        unsafe (_storage + index).initialize(to: element)
+        unsafe _occupied[index] = true
         _count += 1
     }
 }
@@ -184,10 +185,10 @@ extension Buffer.Slots.Bounded where Element: ~Copyable {
     @inlinable
     public mutating func take(at index: Int) -> Element {
         precondition(index >= 0 && index < capacity, "Index out of bounds")
-        precondition(_occupied[index], "Slot not occupied at index \(index)")
+        precondition(unsafe _occupied[index], "Slot not occupied at index \(index)")
 
-        let element = (_storage + index).move()
-        _occupied[index] = false
+        let element = unsafe (_storage + index).move()
+        unsafe _occupied[index] = false
         _count -= 1
         return element
     }
@@ -200,10 +201,10 @@ extension Buffer.Slots.Bounded where Element: ~Copyable {
     @inlinable
     public mutating func take(unchecked index: Int) -> Element {
         assert(index >= 0 && index < capacity, "Index out of bounds")
-        assert(_occupied[index], "Slot not occupied at index \(index)")
+        assert(unsafe _occupied[index], "Slot not occupied at index \(index)")
 
-        let element = (_storage + index).move()
-        _occupied[index] = false
+        let element = unsafe (_storage + index).move()
+        unsafe _occupied[index] = false
         _count -= 1
         return element
     }
@@ -227,9 +228,9 @@ extension Buffer.Slots.Bounded where Element: ~Copyable {
         _ body: (borrowing Element) throws -> R
     ) rethrows -> R {
         precondition(index >= 0 && index < capacity, "Index out of bounds")
-        precondition(_occupied[index], "Slot not occupied at index \(index)")
+        precondition(unsafe _occupied[index], "Slot not occupied at index \(index)")
 
-        return try body((_storage + index).pointee)
+        return try body(unsafe (_storage + index).pointee)
     }
 }
 
@@ -245,9 +246,9 @@ extension Buffer.Slots.Bounded where Element: ~Copyable {
     @inlinable
     public mutating func drain(_ body: (_ index: Int, consuming Element) -> Void) {
         for i in 0..<capacity {
-            if _occupied[i] {
-                let element = (_storage + i).move()
-                _occupied[i] = false
+            if unsafe _occupied[i] {
+                let element = unsafe (_storage + i).move()
+                unsafe _occupied[i] = false
                 _count -= 1
                 body(i, element)
             }
@@ -260,9 +261,9 @@ extension Buffer.Slots.Bounded where Element: ~Copyable {
     @inlinable
     public mutating func removeAll() {
         for i in 0..<capacity {
-            if _occupied[i] {
-                (_storage + i).deinitialize(count: 1)
-                _occupied[i] = false
+            if unsafe _occupied[i] {
+                unsafe (_storage + i).deinitialize(count: 1)
+                unsafe _occupied[i] = false
             }
         }
         _count = 0
