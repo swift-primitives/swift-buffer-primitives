@@ -1,11 +1,11 @@
 import Binary_Primitives
 import Test_Primitives
-import Testing_Extras
+import Testing
 
 @testable import Buffer_Primitives
 
 extension Buffer.Aligned {
-    #TestSuites
+    #Tests
 }
 
 // MARK: - Unit Tests

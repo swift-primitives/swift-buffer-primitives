@@ -21,8 +21,6 @@ let package = Package(
         .package(path: "../swift-binary-primitives"),
         .package(path: "../swift-container-primitives"),
         .package(path: "../swift-reference-primitives"),
-        .package(path: "../swift-test-primitives"),
-        .package(path: "../../swift-foundations/swift-testing-extras"),
     ],
     targets: [
         .target(
@@ -31,14 +29,6 @@ let package = Package(
                 .product(name: "Binary Primitives", package: "swift-binary-primitives"),
                 .product(name: "Container Primitives", package: "swift-container-primitives"),
                 .product(name: "Reference Primitives", package: "swift-reference-primitives"),
-            ]
-        ),
-        .testTarget(
-            name: "Buffer Primitives Tests",
-            dependencies: [
-                "Buffer Primitives",
-                .product(name: "Test Primitives", package: "swift-test-primitives"),
-                .product(name: "Testing Extras", package: "swift-testing-extras"),
             ]
         ),
     ],

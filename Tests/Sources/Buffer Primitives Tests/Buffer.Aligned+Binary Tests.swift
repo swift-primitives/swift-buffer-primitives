@@ -1,6 +1,6 @@
 import Binary_Primitives
 import Test_Primitives
-import Testing_Extras
+import Testing
 
 @testable import Buffer_Primitives
 
@@ -9,7 +9,7 @@ import Testing_Extras
 
 extension Buffer {
     enum BinaryConformance {
-        #TestSuites
+        #Tests
     }
 }
 
