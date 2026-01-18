@@ -23,10 +23,10 @@ extension Buffer.Aligned {
         precondition(offset > 0 && offset < alignmentMagnitude, "Offset must break alignment")
         precondition(offset < count, "Offset exceeds buffer size")
 
-        return withUnsafeBytes { buffer in
-            let misaligned = buffer.baseAddress!.advanced(by: offset)
+        return unsafe withUnsafeBytes { buffer in
+            let misaligned = unsafe buffer.baseAddress!.advanced(by: offset)
             let remaining = count - offset
-            return body(UnsafeRawBufferPointer(start: misaligned, count: remaining))
+            return body(unsafe UnsafeRawBufferPointer(start: misaligned, count: remaining))
         }
     }
 
@@ -45,10 +45,10 @@ extension Buffer.Aligned {
         precondition(offset > 0 && offset < alignmentMagnitude, "Offset must break alignment")
         precondition(offset < count, "Offset exceeds buffer size")
 
-        return try withUnsafeBytes { (buffer: UnsafeRawBufferPointer) throws(E) -> T in
-            let misaligned = buffer.baseAddress!.advanced(by: offset)
+        return try unsafe withUnsafeBytes { (buffer: UnsafeRawBufferPointer) throws(E) -> T in
+            let misaligned = unsafe buffer.baseAddress!.advanced(by: offset)
             let remaining = count - offset
-            return try body(UnsafeRawBufferPointer(start: misaligned, count: remaining))
+            return try body(unsafe UnsafeRawBufferPointer(start: misaligned, count: remaining))
         }
     }
 
@@ -66,9 +66,9 @@ extension Buffer.Aligned {
         precondition(offset > 0 && offset < alignmentMagnitude, "Offset must break alignment")
         precondition(offset < count, "Offset exceeds buffer size")
 
-        return withUnsafeMutableBytes { [remaining = count - offset] buffer in
-            let misaligned = buffer.baseAddress!.advanced(by: offset)
-            return body(UnsafeMutableRawBufferPointer(start: misaligned, count: remaining))
+        return unsafe withUnsafeMutableBytes { [remaining = count - offset] buffer in
+            let misaligned = unsafe buffer.baseAddress!.advanced(by: offset)
+            return body(unsafe UnsafeMutableRawBufferPointer(start: misaligned, count: remaining))
         }
     }
 
@@ -87,9 +87,9 @@ extension Buffer.Aligned {
         precondition(offset > 0 && offset < alignmentMagnitude, "Offset must break alignment")
         precondition(offset < count, "Offset exceeds buffer size")
 
-        return try withUnsafeMutableBytes { [remaining = count - offset] (buffer: UnsafeMutableRawBufferPointer) throws(E) -> T in
-            let misaligned = buffer.baseAddress!.advanced(by: offset)
-            return try body(UnsafeMutableRawBufferPointer(start: misaligned, count: remaining))
+        return try unsafe withUnsafeMutableBytes { [remaining = count - offset] (buffer: UnsafeMutableRawBufferPointer) throws(E) -> T in
+            let misaligned = unsafe buffer.baseAddress!.advanced(by: offset)
+            return try body(unsafe UnsafeMutableRawBufferPointer(start: misaligned, count: remaining))
         }
     }
 }

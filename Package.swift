@@ -20,6 +20,7 @@ let package = Package(
     dependencies: [
         .package(path: "../swift-binary-primitives"),
         .package(path: "../swift-container-primitives"),
+        .package(path: "../swift-reference-primitives"),
         .package(path: "../swift-test-primitives"),
         .package(path: "../../swift-foundations/swift-testing-extras"),
     ],
@@ -29,6 +30,7 @@ let package = Package(
             dependencies: [
                 .product(name: "Binary Primitives", package: "swift-binary-primitives"),
                 .product(name: "Container Primitives", package: "swift-container-primitives"),
+                .product(name: "Reference Primitives", package: "swift-reference-primitives"),
             ]
         ),
         .testTarget(

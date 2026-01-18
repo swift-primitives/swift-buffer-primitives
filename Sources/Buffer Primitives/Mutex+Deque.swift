@@ -7,6 +7,7 @@
 
 public import Synchronization
 public import Container_Primitives
+public import Reference_Primitives
 
 // MARK: - Mutex<Deque<Element>> Queue Operations
 
@@ -80,14 +81,14 @@ extension Mutex {
     }
 }
 
-// MARK: - Shared<Mutex<Deque<Element>>> Queue Operations
+// MARK: - Reference.Indirect<Mutex<Deque<Element>>> Queue Operations
 
-/// Queue operations on `Shared<Mutex<Deque<Element>>>`.
+/// Queue operations on `Reference.Indirect<Mutex<Deque<Element>>>`.
 ///
 /// Provides thread-safe FIFO queue semantics with shared ownership.
 ///
 /// ```swift
-/// let queue: Shared<Mutex<Deque<Int>>> = .init(.init(.init()))
+/// let queue: Reference.Indirect<Mutex<Deque<Int>>> = .init(.init(.init()))
 ///
 /// // Producers (any thread, any owner)
 /// queue.enqueue(1)
@@ -98,28 +99,28 @@ extension Mutex {
 ///     process(item)
 /// }
 /// ```
-extension Shared where Value: ~Copyable {
+extension Reference.Indirect where Value: ~Copyable {
     /// Adds an element to the back of the queue.
     @inlinable
     public func enqueue<Element: Sendable>(_ element: Element) where Value == Mutex<Deque<Element>> {
-        _value.enqueue(element)
+        value.enqueue(element)
     }
 
     /// Removes and returns the front element, or `nil` if empty.
     @inlinable
     public func dequeue<Element: Sendable>() -> Element? where Value == Mutex<Deque<Element>> {
-        _value.dequeue()
+        value.dequeue()
     }
 
     /// Removes and returns all elements.
     @inlinable
     public func drain<Element: Sendable>() -> [Element] where Value == Mutex<Deque<Element>> {
-        _value.drain()
+        value.drain()
     }
 
     /// Drains all elements into an existing buffer.
     @inlinable
     public func drain<Element: Sendable>(into target: inout [Element]) where Value == Mutex<Deque<Element>> {
-        _value.drain(into: &target)
+        value.drain(into: &target)
     }
 }
