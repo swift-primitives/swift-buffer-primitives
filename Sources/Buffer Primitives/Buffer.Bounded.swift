@@ -321,6 +321,30 @@ extension Buffer.Bounded {
 
 extension Buffer.Bounded: Sendable where Element: Sendable {}
 
+// ## @unchecked Sendable Justification (MEM-SEND-003)
+//
+// This conformance disables compiler race checking for internal reference storage.
+//
+// ### What CoW Does Provide
+// - Sequential access from a single task is safe (uniqueness check before mutation)
+// - Value copies are independent (mutation triggers buffer copy)
+//
+// ### What CoW Does NOT Provide
+// - No protection against concurrent access to the same Buffer.Bounded instance
+// - No synchronization between tasks sharing a reference before CoW triggers
+//
+// ### Remaining Risks
+// - Concurrent read + write to the same instance can race
+// - Concurrent writes to the same instance can race
+// - The compiler will NOT warn when this creates races
+//
+// ### Safe Usage
+// - Transfer Buffer.Bounded values between tasks (each gets independent copy)
+// - Use actor isolation or locks for shared mutable access
+//
+// ### Why @unchecked Instead of Not Sendable
+// - Buffer.Bounded is a value type; transferring it across tasks should be allowed
+// - Reference-backed storage requires explicit Sendable opt-in
 extension Buffer.Bounded.Storage: @unchecked Sendable where Element: Sendable {}
 
 extension Buffer.Bounded: Equatable where Element: Equatable {

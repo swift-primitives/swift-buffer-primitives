@@ -217,9 +217,13 @@ extension Buffer.Aligned {
 extension Buffer.Aligned {
     /// Provides read-only access to the buffer contents.
     ///
+    /// - Warning: This is an escape hatch for C interop. Prefer `bytes` span for safe access.
+    /// - Warning: The pointer must not escape the closure scope.
+    ///
     /// - Parameter body: A closure that receives a pointer to the buffer.
     /// - Returns: The value returned by `body`.
     /// - Throws: The error thrown by the closure (use `Never` for non-throwing).
+    @unsafe
     @inlinable
     public func withUnsafeBytes<R, E: Swift.Error>(
         _ body: (UnsafeRawBufferPointer) throws(E) -> R
@@ -229,9 +233,13 @@ extension Buffer.Aligned {
 
     /// Provides read-write access to the buffer contents.
     ///
+    /// - Warning: This is an escape hatch for C interop. Prefer `mutableBytes` span for safe access.
+    /// - Warning: The pointer must not escape the closure scope.
+    ///
     /// - Parameter body: A closure that receives a mutable pointer to the buffer.
     /// - Returns: The value returned by `body`.
     /// - Throws: The error thrown by the closure (use `Never` for non-throwing).
+    @unsafe
     @inlinable
     public mutating func withUnsafeMutableBytes<R, E: Swift.Error>(
         _ body: (UnsafeMutableRawBufferPointer) throws(E) -> R
