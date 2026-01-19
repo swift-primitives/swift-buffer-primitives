@@ -6,7 +6,7 @@
 //
 
 public import Synchronization
-public import Container_Primitives
+public import Deque_Primitives
 public import Reference_Primitives
 
 // MARK: - Mutex<Deque<Element>> Queue Operations

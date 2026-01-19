@@ -19,7 +19,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../swift-binary-primitives"),
-        .package(path: "../swift-container-primitives"),
+        .package(path: "../swift-deque-primitives"),
         .package(path: "../swift-reference-primitives"),
     ],
     targets: [
@@ -27,7 +27,7 @@ let package = Package(
             name: "Buffer Primitives",
             dependencies: [
                 .product(name: "Binary Primitives", package: "swift-binary-primitives"),
-                .product(name: "Container Primitives", package: "swift-container-primitives"),
+                .product(name: "Deque Primitives", package: "swift-deque-primitives"),
                 .product(name: "Reference Primitives", package: "swift-reference-primitives"),
             ]
         ),
