@@ -20,7 +20,12 @@ let package = Package(
     dependencies: [
         .package(path: "../swift-binary-primitives"),
         .package(path: "../swift-deque-primitives"),
+        .package(path: "../swift-handle-primitives"),
         .package(path: "../swift-reference-primitives"),
+        .package(path: "../swift-index-primitives"),
+        .package(path: "../swift-input-primitives"),
+        .package(path: "../swift-bit-primitives"),
+        .package(path: "../swift-collection-primitives"),
     ],
     targets: [
         .target(
@@ -28,7 +33,12 @@ let package = Package(
             dependencies: [
                 .product(name: "Binary Primitives", package: "swift-binary-primitives"),
                 .product(name: "Deque Primitives", package: "swift-deque-primitives"),
+                .product(name: "Handle Primitives", package: "swift-handle-primitives"),
                 .product(name: "Reference Primitives", package: "swift-reference-primitives"),
+                .product(name: "Index Primitives", package: "swift-index-primitives"),
+                .product(name: "Input Primitives", package: "swift-input-primitives"),
+                .product(name: "Bit Primitives", package: "swift-bit-primitives"),
+                .product(name: "Collection Primitives", package: "swift-collection-primitives"),
             ]
         ),
     ],
