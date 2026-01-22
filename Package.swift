@@ -26,6 +26,9 @@ let package = Package(
         .package(path: "../swift-input-primitives"),
         .package(path: "../swift-bit-primitives"),
         .package(path: "../swift-collection-primitives"),
+        .package(path: "../swift-slab-primitives"),
+        // SDG(wraps): buffers wrap memory lifetimes
+        // .package(path: "../swift-lifetime-primitives"),
     ],
     targets: [
         .target(
@@ -39,6 +42,7 @@ let package = Package(
                 .product(name: "Input Primitives", package: "swift-input-primitives"),
                 .product(name: "Bit Primitives", package: "swift-bit-primitives"),
                 .product(name: "Collection Primitives", package: "swift-collection-primitives"),
+                .product(name: "Slab Primitives", package: "swift-slab-primitives"),
             ]
         ),
     ],
