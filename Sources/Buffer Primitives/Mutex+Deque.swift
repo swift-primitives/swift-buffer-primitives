@@ -7,7 +7,7 @@
 
 public import Synchronization
 public import Deque_Primitives
-public import Reference_Primitives
+public import Ownership_Primitives
 
 // MARK: - Mutex<Deque<Element>> Queue Operations
 
@@ -81,14 +81,14 @@ extension Mutex {
     }
 }
 
-// MARK: - Reference.Indirect<Mutex<Deque<Element>>> Queue Operations
+// MARK: - Ownership.Mutable<Mutex<Deque<Element>>> Queue Operations
 
-/// Queue operations on `Reference.Indirect<Mutex<Deque<Element>>>`.
+/// Queue operations on `Ownership.Mutable<Mutex<Deque<Element>>>`.
 ///
 /// Provides thread-safe FIFO queue semantics with shared ownership.
 ///
 /// ```swift
-/// let queue: Reference.Indirect<Mutex<Deque<Int>>> = .init(.init(.init()))
+/// let queue: Ownership.Mutable<Mutex<Deque<Int>>> = .init(.init(.init()))
 ///
 /// // Producers (any thread, any owner)
 /// queue.enqueue(1)
@@ -99,7 +99,7 @@ extension Mutex {
 ///     process(item)
 /// }
 /// ```
-extension Reference.Indirect where Value: ~Copyable {
+extension Ownership.Mutable where Value: ~Copyable {
     /// Adds an element to the back of the queue.
     @inlinable
     public func enqueue<Element: Sendable>(_ element: Element) where Value == Mutex<Deque<Element>> {
