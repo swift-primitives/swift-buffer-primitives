@@ -88,7 +88,7 @@ extension Buffer.Slots.Bounded.Indexed {
     /// - Returns: `true` if the slot contains an initialized element.
     @inlinable
     public func isOccupied(at index: Index<Tag>) -> Bool {
-        _storage.isOccupied(at: index.position.rawValue)
+        _storage.isOccupied(at: index.position)
     }
 }
 
@@ -105,7 +105,7 @@ extension Buffer.Slots.Bounded.Indexed {
     /// - Precondition: The slot must not already be occupied.
     @inlinable
     public mutating func put(_ element: consuming Element, at index: Index<Tag>) {
-        _storage.put(element, at: index.position.rawValue)
+        _storage.put(element, at: index.position)
     }
 
     /// Stores an element at the specified index without bounds checking.
@@ -115,7 +115,7 @@ extension Buffer.Slots.Bounded.Indexed {
     ///   - index: The typed slot index. Caller must ensure validity.
     @inlinable
     public mutating func put(unchecked element: consuming Element, at index: Index<Tag>) {
-        _storage.put(unchecked: element, at: index.position.rawValue)
+        _storage.put(unchecked: element, at: index.position)
     }
 }
 
@@ -133,7 +133,7 @@ extension Buffer.Slots.Bounded.Indexed {
     /// - Precondition: The slot must be occupied.
     @inlinable
     public mutating func take(at index: Index<Tag>) -> Element {
-        _storage.take(at: index.position.rawValue)
+        _storage.take(at: index.position)
     }
 
     /// Removes and returns the element at the specified index without bounds checking.
@@ -142,7 +142,7 @@ extension Buffer.Slots.Bounded.Indexed {
     /// - Returns: The element that was stored at the index.
     @inlinable
     public mutating func take(unchecked index: Index<Tag>) -> Element {
-        _storage.take(unchecked: index.position.rawValue)
+        _storage.take(unchecked: index.position)
     }
 }
 
@@ -163,7 +163,7 @@ extension Buffer.Slots.Bounded.Indexed {
         at index: Index<Tag>,
         _ body: (borrowing Element) throws -> R
     ) rethrows -> R {
-        try _storage.withElement(at: index.position.rawValue, body)
+        try _storage.withElement(at: index.position, body)
     }
 }
 
