@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+public import Buffer_Primitives_Core
+
 // MARK: - Ring-Aware Storage Operations
 
 extension Buffer.Ring where Element: ~Copyable {

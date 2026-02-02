@@ -72,10 +72,10 @@ extension Buffer.Growth.Policy where Element: ~Copyable {
     /// Rounds up to the next alignment boundary.
     /// Good for large buffers where page alignment matters.
     ///
-    /// - Parameter alignment: The alignment to round up to (default: `.page4096`).
+    /// - Parameter alignment: The alignment to round up to (default: `.`4096``).
     /// - Returns: A growth policy that rounds to alignment boundaries.
     @inlinable
-    public static func pageAligned(_ alignment: Memory.Alignment = .page4096) -> Self {
+    public static func pageAligned(_ alignment: Memory.Alignment = .`4096`) -> Self {
         return Self { _, required in
             let mask: Int = alignment.mask()
             return (required + mask) & ~mask
