@@ -9,12 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
-// Re-export all modules for consumers.
-// Users import Buffer_Primitives and get everything.
+// Re-export dependencies for consumers.
 
-@_exported public import Buffer_Primitives_Core
-@_exported public import Buffer_Ring_Primitives
-@_exported public import Buffer_Ring_Static_Primitives
-@_exported public import Buffer_Linear_Primitives
-@_exported public import Buffer_Slots_Primitives
-@_exported public import Buffer_Slots_Primitives
+@_exported public import Storage_Primitives
+@_exported public import Range_Primitives
+@_exported public import Cyclic_Index_Primitives

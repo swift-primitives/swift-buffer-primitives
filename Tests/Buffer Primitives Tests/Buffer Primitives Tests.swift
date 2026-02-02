@@ -9,12 +9,13 @@
 //
 // ===----------------------------------------------------------------------===//
 
-// Re-export all modules for consumers.
-// Users import Buffer_Primitives and get everything.
+// Buffer Primitives Tests
+//
+// Test organization:
+// - Buffer.Ring Tests.swift         - Unbounded ring buffer tests
+// - Buffer.Ring.Static Tests.swift  - Bounded ring buffer tests
+// - Buffer.Slots.Static Tests.swift - Index-addressable slot storage tests
+//
+// All tests use parallel namespace pattern per [TEST-004] due to generic types.
 
-@_exported public import Buffer_Primitives_Core
-@_exported public import Buffer_Ring_Primitives
-@_exported public import Buffer_Ring_Static_Primitives
-@_exported public import Buffer_Linear_Primitives
-@_exported public import Buffer_Slots_Primitives
-@_exported public import Buffer_Slots_Primitives
+import Buffer_Primitives_Test_Support
