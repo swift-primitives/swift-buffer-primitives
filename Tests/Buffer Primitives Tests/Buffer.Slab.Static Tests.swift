@@ -28,7 +28,7 @@ struct SlabStaticTests {
     @Test("forEachOccupied visits all occupied slots")
     func forEachOccupied() {
         let cap: Index<Storage>.Count = 8
-        var header = Buffer.Slab.Header(capacity: 8)
+        var header: Buffer.Slab.Header = .init(capacity: 8)
         let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
 
         Buffer.Slab.insert(10, at: 1, header: &header, storage: storage)
@@ -46,18 +46,18 @@ struct SlabStaticTests {
 
     @Test("firstVacant finds first empty slot")
     func firstVacant() {
-        var header = Buffer.Slab.Header(capacity: Bit.Index.Count(Cardinal(4)))
-        header.bitmap[Bit.Index(Ordinal(0))] = true
-        header.bitmap[Bit.Index(Ordinal(1))] = true
+        var header: Buffer.Slab.Header = .init(capacity: 4)
+        header.bitmap[0] = true
+        header.bitmap[1] = true
 
         let vacant = Buffer.Slab.firstVacant(header: header)
-        #expect(vacant == Bit.Index(Ordinal(2)))
+        #expect(vacant == 2)
     }
 
     @Test("deinitializeAll clears all occupied slots")
     func deinitializeAll() {
         let cap: Index<Storage>.Count = 8
-        var header = Buffer.Slab.Header(capacity: 8)
+        var header: Buffer.Slab.Header = .init(capacity: 8)
         let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
 
         Buffer.Slab.insert(10, at: 0, header: &header, storage: storage)

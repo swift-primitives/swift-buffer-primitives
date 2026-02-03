@@ -7,7 +7,9 @@ extension Buffer.Growth {
         let _apply: @Sendable (Index<Storage>.Count) -> Index<Storage>.Count
 
         @inlinable
-        init(apply: @escaping @Sendable (Index<Storage>.Count) -> Index<Storage>.Count) {
+        init(
+            apply: @escaping @Sendable (Index<Storage>.Count) -> Index<Storage>.Count
+        ) {
             self._apply = apply
         }
 
