@@ -77,7 +77,7 @@ public enum Buffer<Element: ~Copyable>: Copyable {
         @usableFromInline
         package final class _Storage {
             @usableFromInline
-            package var elements: Storage_Primitives.Storage<Element>
+            package var elements: Storage_Primitives.Storage.Dynamic<Element>
 
             @usableFromInline
             package var header: Header
@@ -86,7 +86,7 @@ public enum Buffer<Element: ~Copyable>: Copyable {
             package var capacity: Index.Count
 
             @usableFromInline
-            package init(elements: Storage_Primitives.Storage<Element>, capacity: Index.Count) {
+            package init(elements: Storage_Primitives.Storage.Dynamic<Element>, capacity: Index.Count) {
                 self.elements = elements
                 self.header = Header()
                 self.capacity = capacity
@@ -101,7 +101,7 @@ public enum Buffer<Element: ~Copyable>: Copyable {
                     index = Ring.successor(of: index, wrapping: capacity)
                 }
                 // Prevent elements.deinit from double-deinitializing
-                elements.count = .zero
+                elements.initialization = .empty
             }
         }
 

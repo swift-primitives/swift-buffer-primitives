@@ -27,7 +27,7 @@ extension Buffer.Ring where Element: ~Copyable {
     ///   - capacity: Buffer capacity for wrapping.
     @inlinable
     public static func deinitializeRing(
-        in storage: Storage_Primitives.Storage<Element>,
+        in storage: Storage_Primitives.Storage.Dynamic<Element>,
         head: Index<Element>,
         count: Index<Element>.Count,
         capacity: Index<Element>.Count
@@ -53,11 +53,11 @@ extension Buffer.Ring where Element: ~Copyable {
     ///   - destination: Destination storage (linear, starting at 0).
     @inlinable
     public static func linearizeToStorage(
-        from source: Storage_Primitives.Storage<Element>,
+        from source: Storage_Primitives.Storage.Dynamic<Element>,
         head: Index<Element>,
         count: Index<Element>.Count,
         capacity: Index<Element>.Count,
-        to destination: Storage_Primitives.Storage<Element>
+        to destination: Storage_Primitives.Storage.Dynamic<Element>
     ) {
         guard count > .zero else { return }
         var srcIndex = head
@@ -85,11 +85,11 @@ extension Buffer.Ring where Element: Copyable {
     ///   - destination: Destination storage (linear, starting at 0).
     @inlinable
     public static func copyToStorage(
-        from source: Storage_Primitives.Storage<Element>,
+        from source: Storage_Primitives.Storage.Dynamic<Element>,
         head: Index<Element>,
         count: Index<Element>.Count,
         capacity: Index<Element>.Count,
-        to destination: Storage_Primitives.Storage<Element>
+        to destination: Storage_Primitives.Storage.Dynamic<Element>
     ) {
         guard count > .zero else { return }
         var srcIndex = head

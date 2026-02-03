@@ -213,8 +213,8 @@ extension Buffer.Ring where Element: ~Copyable {
 
     @usableFromInline
     mutating func growTo(_ newCapacity: Index<Element>.Count) {
-        let newElements = Storage_Primitives.Storage<Element>.create(
-            minimumCapacity: newCapacity
+        let newElements = Storage_Primitives.Storage.Dynamic<Element>.create(
+            minimumCapacity: Storage.Slot.Count(newCapacity.rawValue.rawValue)
         )
 
         let oldCount: Index<Element>.Count

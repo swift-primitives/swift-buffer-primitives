@@ -167,8 +167,8 @@ extension Buffer.Ring where Element: Copyable {
     public mutating func _makeUnique() {
         guard let storage = _storage, !isKnownUniquelyReferenced(&_storage) else { return }
 
-        let newElements = Storage_Primitives.Storage<Element>.create(
-            minimumCapacity: storage.capacity
+        let newElements = Storage_Primitives.Storage.Dynamic<Element>.create(
+            minimumCapacity: Storage.Slot.Count(storage.capacity.rawValue.rawValue)
         )
 
         // Copy elements (non-destructive) from ring to linear layout
