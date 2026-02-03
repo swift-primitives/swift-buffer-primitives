@@ -45,7 +45,7 @@ let package = Package(
         .package(path: "../swift-storage-primitives"),
         .package(path: "../swift-cyclic-index-primitives"),
         .package(path: "../swift-memory-primitives"),
-        .package(path: "../swift-bit-storage-primitives"),
+        .package(path: "../swift-bit-vector-primitives"),
     ],
     targets: [
         // Core: Type declarations, deinit-required operations
@@ -55,7 +55,7 @@ let package = Package(
                 .product(name: "Storage Primitives", package: "swift-storage-primitives"),
                 .product(name: "Cyclic Index Primitives", package: "swift-cyclic-index-primitives"),
                 .product(name: "Memory Primitives", package: "swift-memory-primitives"),
-                .product(name: "Bit Storage Primitives", package: "swift-bit-storage-primitives"),
+                .product(name: "Bit Vector Primitives", package: "swift-bit-vector-primitives"),
             ]
         ),
         // Ring: Circular buffer operations

@@ -11,6 +11,29 @@
 
 public import Buffer_Primitives_Core
 
+extension Buffer.Ring.Header.Cyclic where Element: ~Copyable {
+    /// Whether the buffer is empty.
+    @inlinable
+    public var isEmpty: Bool { count == .zero }
+
+    /// Whether the buffer is full.
+    @inlinable
+    public var isFull: Bool { Int(bitPattern: count) == capacity }
+
+    /// Converts the head position to a linear index.
+    @inlinable
+    public var headIndex: Buffer.Index {
+        Buffer.Index(Ordinal(head.rawValue.position.rawValue))
+    }
+
+    /// Converts the tail position to a linear index.
+    @inlinable
+    public var tailIndex: Buffer.Index {
+        Buffer.Index(Ordinal(tail.rawValue.position.rawValue))
+    }
+}
+
+
 // MARK: - Cyclic Header Operations
 
 extension Buffer.Ring.Header.Cyclic where Element: ~Copyable {
@@ -66,3 +89,4 @@ extension Buffer.Ring.Header.Cyclic where Element: ~Copyable {
         count = .zero
     }
 }
+

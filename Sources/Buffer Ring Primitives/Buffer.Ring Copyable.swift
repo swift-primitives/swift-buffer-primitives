@@ -70,7 +70,7 @@ extension Buffer.Ring where Element: Copyable {
         if _storage == nil || _storage!.header.count >= _storage!.capacity {
             grow()
         }
-        _storage!.elements.initialize(to: element, at: _storage!.header.tail)
+        _storage!.elements.initialize(to: element, at: _storage!.header.tail.retag(Storage.self))
         _storage!.header.advanceTail(capacity: _storage!.capacity)
     }
 
@@ -83,7 +83,7 @@ extension Buffer.Ring where Element: Copyable {
     public mutating func popFront() -> Element? {
         _makeUnique()
         guard let storage = _storage, storage.header.count > .zero else { return nil }
-        let element = storage.elements.move(at: storage.header.head)
+        let element = storage.elements.move(at: storage.header.head.retag(Storage.self))
         storage.header.advanceHead(capacity: storage.capacity)
         return element
     }
@@ -98,7 +98,7 @@ extension Buffer.Ring where Element: Copyable {
         _makeUnique()
         guard let storage = _storage, storage.header.count > .zero else { return nil }
         let lastIndex = Buffer.Ring.predecessor(of: storage.header.tail, wrapping: storage.capacity)
-        let element = storage.elements.move(at: lastIndex)
+        let element = storage.elements.move(at: lastIndex.retag(Storage.self))
         storage.header.retreatTail(capacity: storage.capacity)
         return element
     }
@@ -167,12 +167,12 @@ extension Buffer.Ring where Element: Copyable {
     public mutating func _makeUnique() {
         guard let storage = _storage, !isKnownUniquelyReferenced(&_storage) else { return }
 
-        let newElements = Storage_Primitives.Storage.Dynamic<Element>.create(
-            minimumCapacity: Storage.Slot.Count(storage.capacity.rawValue.rawValue)
+        let newElements = Storage_Primitives.Storage.Heap<Element>.create(
+            minimumCapacity: storage.capacity.retag(Storage.self)
         )
 
         // Copy elements (non-destructive) from ring to linear layout
-        Buffer.Ring.copyToStorage(
+        Buffer.Ring.copy(
             from: storage.elements,
             head: storage.header.head,
             count: storage.header.count,

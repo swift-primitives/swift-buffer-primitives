@@ -27,7 +27,7 @@ extension Buffer.Ring where Element: ~Copyable {
     ///   - capacity: Buffer capacity for wrapping.
     @inlinable
     public static func deinitializeRing(
-        in storage: Storage_Primitives.Storage.Dynamic<Element>,
+        in storage: Storage_Primitives.Storage.Heap<Element>,
         head: Index<Element>,
         count: Index<Element>.Count,
         capacity: Index<Element>.Count
@@ -35,7 +35,7 @@ extension Buffer.Ring where Element: ~Copyable {
         guard count > .zero else { return }
         var index = head
         (Index<Element>.zero..<count).forEach { _ in
-            _ = storage.move(at: index)
+            _ = storage.move(at: index.retag(Storage.self))
             index = successor(of: index, wrapping: capacity)
         }
     }
@@ -53,17 +53,17 @@ extension Buffer.Ring where Element: ~Copyable {
     ///   - destination: Destination storage (linear, starting at 0).
     @inlinable
     public static func linearizeToStorage(
-        from source: Storage_Primitives.Storage.Dynamic<Element>,
+        from source: Storage_Primitives.Storage.Heap<Element>,
         head: Index<Element>,
         count: Index<Element>.Count,
         capacity: Index<Element>.Count,
-        to destination: Storage_Primitives.Storage.Dynamic<Element>
+        to destination: Storage_Primitives.Storage.Heap<Element>
     ) {
         guard count > .zero else { return }
         var srcIndex = head
         (Index<Element>.zero..<count).forEach { dstIdx in
-            let element = source.move(at: srcIndex)
-            destination.initialize(to: element, at: dstIdx)
+            let element = source.move(at: srcIndex.retag(Storage.self))
+            destination.initialize(to: element, at: dstIdx.retag(Storage.self))
             srcIndex = successor(of: srcIndex, wrapping: capacity)
         }
     }
@@ -84,19 +84,41 @@ extension Buffer.Ring where Element: Copyable {
     ///   - capacity: Source buffer capacity for wrapping.
     ///   - destination: Destination storage (linear, starting at 0).
     @inlinable
-    public static func copyToStorage(
-        from source: Storage_Primitives.Storage.Dynamic<Element>,
+    public static func copy(
+        from source: Storage_Primitives.Storage.Heap<Element>,
         head: Index<Element>,
         count: Index<Element>.Count,
         capacity: Index<Element>.Count,
-        to destination: Storage_Primitives.Storage.Dynamic<Element>
+        to destination: Storage_Primitives.Storage.Heap<Element>
     ) {
         guard count > .zero else { return }
         var srcIndex = head
         (Index<Element>.zero..<count).forEach { dstIdx in
-            let element = unsafe source.pointer(at: srcIndex).pointee
-            destination.initialize(to: element, at: dstIdx)
+            let element = unsafe source.pointer(at: srcIndex.retag(Storage.self)).pointee
+            destination.initialize(to: element, at: dstIdx.retag(Storage.self))
             srcIndex = successor(of: srcIndex, wrapping: capacity)
+        }
+    }
+}
+
+extension Storage.Inline {
+    /// Deinitializes elements using a cyclic header.
+    ///
+    /// Iterates from head through count positions with wrapping, deinitializing
+    /// each slot individually.
+    ///
+    /// - Parameter header: The cyclic ring buffer header.
+    /// - Precondition: Elements from head through count positions must be initialized.
+    /// - Note: Non-mutating to allow use from deinit contexts.
+    @inlinable
+    public func deinitialize<let N: Int>(
+        header: Buffer<Element>.Ring.Header.Cyclic<N>
+    ) {
+        guard header.count > .zero else { return }
+        var cyclicHead = header.head
+        (Buffer<Element>.Index.zero..<header.count).forEach { _ in
+            deinitialize(at: slotIndex(from: cyclicHead))
+            cyclicHead += .one
         }
     }
 }

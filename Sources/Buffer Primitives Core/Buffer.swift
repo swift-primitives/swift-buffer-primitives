@@ -77,7 +77,7 @@ public enum Buffer<Element: ~Copyable>: Copyable {
         @usableFromInline
         package final class _Storage {
             @usableFromInline
-            package var elements: Storage_Primitives.Storage.Dynamic<Element>
+            package var elements: Storage_Primitives.Storage.Heap<Element>
 
             @usableFromInline
             package var header: Header
@@ -86,7 +86,7 @@ public enum Buffer<Element: ~Copyable>: Copyable {
             package var capacity: Index.Count
 
             @usableFromInline
-            package init(elements: Storage_Primitives.Storage.Dynamic<Element>, capacity: Index.Count) {
+            package init(elements: Storage_Primitives.Storage.Heap<Element>, capacity: Index.Count) {
                 self.elements = elements
                 self.header = Header()
                 self.capacity = capacity
@@ -97,7 +97,7 @@ public enum Buffer<Element: ~Copyable>: Copyable {
                 // Deinitialize elements in ring order
                 var index = header.head
                 (Index.zero..<header.count).forEach { _ in
-                    _ = elements.move(at: index)
+                    _ = elements.move(at: index.retag(Storage.self))
                     index = Ring.successor(of: index, wrapping: capacity)
                 }
                 // Prevent elements.deinit from double-deinitializing
@@ -206,7 +206,7 @@ public enum Buffer<Element: ~Copyable>: Copyable {
             ///
             /// ## Purpose
             ///
-            /// Designed for use with `Storage.Static<Element, capacity>` to create
+            /// Designed for use with `Storage.Inline<Element, capacity>` to create
             /// fully static ring buffers with no runtime capacity plumbing. The cyclic
             /// index arithmetic is baked into the type, enabling:
             ///
@@ -218,16 +218,16 @@ public enum Buffer<Element: ~Copyable>: Copyable {
             ///
             /// ```swift
             /// struct StaticRingBuffer<Element, let capacity: Int> {
-            ///     var storage: Storage.Static<Element, capacity>
+            ///     var storage: Storage.Inline<Element, capacity>
             ///     var header: Buffer.Ring.Header.Cyclic<capacity>
             /// }
             /// ```
             ///
-            /// ## Relationship to Storage.Static
+            /// ## Relationship to Storage.Inline
             ///
             /// While `Header` is used with dynamically-sized storage
             /// (`UnsafeMutablePointer<Element>`), `Header.Cyclic<capacity>` is the
-            /// compile-time counterpart designed for `Storage.Static<Element, capacity>`.
+            /// compile-time counterpart designed for `Storage.Inline<Element, capacity>`.
             /// Together they enable fully static ring buffer implementations.
             public struct Cyclic<let capacity: Int>: Sendable {
                 /// Physical position of the first element (next dequeue).
@@ -239,44 +239,16 @@ public enum Buffer<Element: ~Copyable>: Copyable {
                 /// Number of valid elements in the buffer.
                 public var count: Buffer.Index.Count
 
-                /// Creates an empty ring buffer header.
-                @inlinable
-                public init() {
-                    self.head = .init(__unchecked: 0)
-                    self.tail = .init(__unchecked: 0)
-                    self.count = .zero
-                }
-
                 /// Creates a ring buffer header with specified values.
                 @inlinable
                 public init(
-                    head: Buffer.Index.Cyclic<capacity>,
-                    tail: Buffer.Index.Cyclic<capacity>,
-                    count: Buffer.Index.Count
+                    head: Buffer.Index.Cyclic<capacity> = .init(__unchecked: 0),
+                    tail: Buffer.Index.Cyclic<capacity> = .init(__unchecked: 0),
+                    count: Buffer.Index.Count = .zero
                 ) {
                     self.head = head
                     self.tail = tail
                     self.count = count
-                }
-
-                /// Whether the buffer is empty.
-                @inlinable
-                public var isEmpty: Bool { count == .zero }
-
-                /// Whether the buffer is full.
-                @inlinable
-                public var isFull: Bool { Int(bitPattern: count) == capacity }
-
-                /// Converts the head position to a linear index.
-                @inlinable
-                public var headIndex: Buffer.Index {
-                    Buffer.Index(Ordinal(head.rawValue.position.rawValue))
-                }
-
-                /// Converts the tail position to a linear index.
-                @inlinable
-                public var tailIndex: Buffer.Index {
-                    Buffer.Index(Ordinal(tail.rawValue.position.rawValue))
                 }
             }
         }
@@ -390,7 +362,7 @@ public enum Buffer<Element: ~Copyable>: Copyable {
             }
 
             deinit {
-                _occupied.forEachSetBit { bitIndex in
+                self._occupied.ones.forEach { bitIndex in
                     let offset = Int(bitIndex.position.rawValue)
                     unsafe (_storage + offset).deinitialize(count: 1)
                 }
@@ -475,3 +447,5 @@ extension Buffer.Slots.Static.Indexed: @unchecked Sendable where Element: Sendab
 /// Copies share storage until mutation (copy-on-write). Use `_makeUnique()`
 /// before mutating to ensure independent storage.
 extension Buffer.Ring: Copyable where Element: Copyable {}
+
+

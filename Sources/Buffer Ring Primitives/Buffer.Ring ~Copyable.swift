@@ -106,7 +106,7 @@ extension Buffer.Ring where Element: ~Copyable {
             grow()
         }
 
-        _storage!.elements.initialize(to: element, at: _storage!.header.tail)
+        _storage!.elements.initialize(to: element, at: _storage!.header.tail.retag(Storage.self))
         _storage!.header.advanceTail(capacity: _storage!.capacity)
     }
 }
@@ -121,7 +121,7 @@ extension Buffer.Ring where Element: ~Copyable {
     public mutating func popFront() -> Element? {
         guard let storage = _storage, storage.header.count > .zero else { return nil }
 
-        let element = storage.elements.move(at: storage.header.head)
+        let element = storage.elements.move(at: storage.header.head.retag(Storage.self))
         storage.header.advanceHead(capacity: storage.capacity)
 
         return element
@@ -135,7 +135,7 @@ extension Buffer.Ring where Element: ~Copyable {
         guard let storage = _storage, storage.header.count > .zero else { return nil }
 
         let lastIndex = Buffer.Ring.predecessor(of: storage.header.tail, wrapping: storage.capacity)
-        let element = storage.elements.move(at: lastIndex)
+        let element = storage.elements.move(at: lastIndex.retag(Storage.self))
         storage.header.retreatTail(capacity: storage.capacity)
 
         return element
@@ -157,7 +157,7 @@ extension Buffer.Ring where Element: ~Copyable {
         _ body: (borrowing Element) throws -> R
     ) rethrows -> R? {
         guard let storage = _storage, storage.header.count > .zero else { return nil }
-        return try body(unsafe storage.elements.pointer(at: storage.header.head).pointee)
+        return try body(unsafe storage.elements.pointer(at: storage.header.head.retag(Storage.self)).pointee)
     }
 
     /// Provides borrowing access to the back element without removing it.
@@ -173,7 +173,7 @@ extension Buffer.Ring where Element: ~Copyable {
     ) rethrows -> R? {
         guard let storage = _storage, storage.header.count > .zero else { return nil }
         let lastIndex = Buffer.Ring.predecessor(of: storage.header.tail, wrapping: storage.capacity)
-        return try body(unsafe storage.elements.pointer(at: lastIndex).pointee)
+        return try body(unsafe storage.elements.pointer(at: lastIndex.retag(Storage.self)).pointee)
     }
 }
 
@@ -213,8 +213,8 @@ extension Buffer.Ring where Element: ~Copyable {
 
     @usableFromInline
     mutating func growTo(_ newCapacity: Index<Element>.Count) {
-        let newElements = Storage_Primitives.Storage.Dynamic<Element>.create(
-            minimumCapacity: Storage.Slot.Count(newCapacity.rawValue.rawValue)
+        let newElements = Storage_Primitives.Storage.Heap<Element>.create(
+            minimumCapacity: newCapacity.retag(Storage.self)
         )
 
         let oldCount: Index<Element>.Count
