@@ -364,7 +364,7 @@ public enum Buffer<Element: ~Copyable>: Copyable {
             package var _storage: UnsafeMutablePointer<Element>
 
             @usableFromInline
-            package var _occupied: Bitset
+            package var _occupied: Bit.Vector
 
             @usableFromInline
             package var _count: Buffer.Index.Count
@@ -385,16 +385,14 @@ public enum Buffer<Element: ~Copyable>: Copyable {
                 unsafe self._storage = UnsafeMutablePointer<Element>(
                     .allocate(capacity: capacityInt)
                 )
-                self._occupied = Bitset(capacity: capacityInt)
+                self._occupied = Bit.Vector(capacity: Bit.Index.Count(capacity.rawValue))
                 self._count = .zero
             }
 
             deinit {
-                let capacityInt = Int(bitPattern: capacity)
-                for i in 0..<capacityInt {
-                    if _occupied[i] {
-                        unsafe (_storage + i).deinitialize(count: 1)
-                    }
+                _occupied.forEachSetBit { bitIndex in
+                    let offset = Int(bitIndex.position.rawValue)
+                    unsafe (_storage + offset).deinitialize(count: 1)
                 }
                 unsafe _storage.deallocate()
             }

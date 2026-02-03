@@ -14,3 +14,4 @@
 @_exported public import Storage_Primitives
 @_exported public import Range_Primitives
 @_exported public import Cyclic_Index_Primitives
+@_exported public import Bit_Storage_Primitives

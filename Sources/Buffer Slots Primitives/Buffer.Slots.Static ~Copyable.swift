@@ -33,8 +33,7 @@ extension Buffer.Slots.Static where Element: ~Copyable {
     @inlinable
     public func isOccupied(at index: Index<Element>) -> Bool {
         precondition(index < capacity, "Index out of bounds")
-        let indexInt = Int(bitPattern: index)
-        return _occupied[indexInt]
+        return _occupied[Bit.Index(index.position)]
     }
 }
 
@@ -52,11 +51,11 @@ extension Buffer.Slots.Static where Element: ~Copyable {
     @inlinable
     public mutating func put(_ element: consuming Element, at index: Index<Element>) {
         precondition(index < capacity, "Index out of bounds")
-        let indexInt = Int(bitPattern: index)
-        precondition(unsafe !_occupied[indexInt], "Slot already occupied at index \(indexInt)")
+        let bitIndex = Bit.Index(index.position)
+        precondition(!_occupied[bitIndex], "Slot already occupied at index \(index)")
 
         unsafe (_storage + Index.Offset(__unchecked: (), index)).initialize(to: element)
-        _occupied[indexInt] = true
+        _occupied[bitIndex] = true
         _count = _count + .one
     }
 
@@ -68,12 +67,12 @@ extension Buffer.Slots.Static where Element: ~Copyable {
     /// - Warning: Undefined behavior if index is out of bounds or slot is occupied.
     @inlinable
     public mutating func put(unchecked element: consuming Element, at index: Index<Element>) {
-        let indexInt = Int(bitPattern: index)
+        let bitIndex = Bit.Index(index.position)
         assert(index < capacity, "Index out of bounds")
-        assert(unsafe !_occupied[indexInt], "Slot already occupied at index \(indexInt)")
+        assert(!_occupied[bitIndex], "Slot already occupied at index \(index)")
 
         unsafe (_storage + Index.Offset(__unchecked: (), index)).initialize(to: element)
-        _occupied[indexInt] = true
+        _occupied[bitIndex] = true
         _count = _count + .one
     }
 }
@@ -93,11 +92,11 @@ extension Buffer.Slots.Static where Element: ~Copyable {
     @inlinable
     public mutating func take(at index: Index<Element>) -> Element {
         precondition(index < capacity, "Index out of bounds")
-        let indexInt = Int(bitPattern: index)
-        precondition(_occupied[indexInt], "Slot not occupied at index \(indexInt)")
+        let bitIndex = Bit.Index(index.position)
+        precondition(_occupied[bitIndex], "Slot not occupied at index \(index)")
 
         let element = unsafe (_storage + Index.Offset(__unchecked: (), index)).move()
-        _occupied[indexInt] = false
+        _occupied[bitIndex] = false
         _count = _count.subtract.saturating(.one)
         return element
     }
@@ -109,12 +108,12 @@ extension Buffer.Slots.Static where Element: ~Copyable {
     /// - Warning: Undefined behavior if index is out of bounds or slot is unoccupied.
     @inlinable
     public mutating func take(unchecked index: Index<Element>) -> Element {
-        let indexInt = Int(bitPattern: index)
+        let bitIndex = Bit.Index(index.position)
         assert(index < capacity, "Index out of bounds")
-        assert(_occupied[indexInt], "Slot not occupied at index \(indexInt)")
+        assert(_occupied[bitIndex], "Slot not occupied at index \(index)")
 
         let element = unsafe (_storage + Index.Offset(__unchecked: (), index)).move()
-        _occupied[indexInt] = false
+        _occupied[bitIndex] = false
         _count = _count.subtract.saturating(.one)
         return element
     }
@@ -138,8 +137,7 @@ extension Buffer.Slots.Static where Element: ~Copyable {
         _ body: (borrowing Element) throws -> R
     ) rethrows -> R {
         precondition(index < capacity, "Index out of bounds")
-        let indexInt = Int(bitPattern: index)
-        precondition(_occupied[indexInt], "Slot not occupied at index \(indexInt)")
+        precondition(_occupied[Bit.Index(index.position)], "Slot not occupied at index \(index)")
 
         return try body(unsafe (_storage + Index.Offset(__unchecked: (), index)).pointee)
     }
@@ -157,10 +155,10 @@ extension Buffer.Slots.Static where Element: ~Copyable {
     @inlinable
     public mutating func drain(_ body: (_ index: Index<Element>, consuming Element) -> Void) {
         (.zero..<capacity).forEach { index in
-            let indexInt = Int(bitPattern: index)
-            if _occupied[indexInt] {
+            let bitIndex = Bit.Index(index.position)
+            if _occupied[bitIndex] {
                 let element = unsafe (_storage + Index.Offset(__unchecked: (), index)).move()
-                _occupied[indexInt] = false
+                _occupied[bitIndex] = false
                 _count = _count.subtract.saturating(.one)
                 body(index, element)
             }
@@ -173,10 +171,10 @@ extension Buffer.Slots.Static where Element: ~Copyable {
     @inlinable
     public mutating func removeAll() {
         (.zero..<capacity).forEach { index in
-            let indexInt = Int(bitPattern: index)
-            if _occupied[indexInt] {
+            let bitIndex = Bit.Index(index.position)
+            if _occupied[bitIndex] {
                 unsafe (_storage + Index.Offset(__unchecked: (), index)).deinitialize(count: 1)
-                _occupied[indexInt] = false
+                _occupied[bitIndex] = false
             }
         }
         _count = .zero
