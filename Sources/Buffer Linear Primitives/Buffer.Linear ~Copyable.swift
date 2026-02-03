@@ -1,136 +1,99 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-primitives open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 public import Buffer_Primitives_Core
 
-extension Buffer.Linear where Element: ~Copyable {
-    /// Shifts elements left to fill a gap after removal.
+// MARK: - Static Operations for ~Copyable Elements on Storage.Heap
+
+extension Buffer.Linear {
+
+    // MARK: Append
+
+    /// Writes element at slot `count`, then increments count.
     ///
-    /// Moves elements from `[gapIndex+1, count)` to `[gapIndex, count-1)`.
-    /// The element at `gapIndex` must already be deinitialized.
-    ///
-    /// - Parameters:
-    ///   - elements: Pointer to element storage.
-    ///   - gapIndex: Index where the gap exists (element was removed).
-    ///   - count: Total number of elements before removal.
+    /// - Precondition: `header.count < header.capacity` (not full).
     @inlinable
-    public static func shiftLeft(
-        _ elements: UnsafeMutablePointer<Element>,
-        gapIndex: Index<Element>,
-        count: Index<Element>.Count
+    public static func append<Element: ~Copyable>(
+        _ element: consuming Element,
+        header: inout Header,
+        storage: Storage.Heap<Element>
     ) {
-        let newCount = count.subtract.saturating(.one)
-        guard gapIndex < newCount else { return }
+        let slot = Index<Storage>(header.count)
+        storage.initialize(to: consume element, at: slot)
 
-        // Iterate forward: move [gapIndex+1, count) to [gapIndex, count-1)
-        (gapIndex..<newCount).forEach { destIndex in
-            let srcIndex = destIndex + .one
-            unsafe (elements + Index.Offset(__unchecked: (), destIndex)).initialize(
-                to: (elements + Index.Offset(__unchecked: (), srcIndex)).move()
-            )
-        }
+        let newCount = Cardinal(header.count.rawValue.rawValue &+ 1)
+        header.count = Index<Storage>.Count(newCount)
+
+        storage.initialization = header.initialization
     }
 
-    /// Shifts elements right to make room for insertion.
+    // MARK: Consume Front
+
+    /// Removes and returns element at slot 0, shifting remaining elements left.
     ///
-    /// Moves elements from `[insertionIndex, count)` to `[insertionIndex+1, count+1)`.
-    /// After this operation, the slot at `insertionIndex` is uninitialized.
+    /// Uses bulk `move(range:to:)` per H3 — no element-by-element loop.
     ///
-    /// - Parameters:
-    ///   - elements: Pointer to element storage.
-    ///   - insertionIndex: Index where new element will be inserted.
-    ///   - count: Current number of elements.
+    /// - Precondition: `header.count > 0` (not empty).
     @inlinable
-    public static func shiftRight(
-        _ elements: UnsafeMutablePointer<Element>,
-        insertionIndex: Index<Element>,
-        count: Index<Element>.Count
+    public static func consumeFront<Element: ~Copyable>(
+        header: inout Header,
+        storage: Storage.Heap<Element>
+    ) -> Element {
+        let element = storage.move(at: .zero)
+
+        let oldCount = header.count.rawValue.rawValue
+        if oldCount > 1 {
+            // Shift elements [1, count) down to [0, count-1)
+            let shiftStart = Index<Storage>(Ordinal(1))
+            let shiftEnd = Index<Storage>(Ordinal(oldCount))
+            storage.move(range: shiftStart ..< shiftEnd, to: storage)
+        }
+
+        let newCount = Cardinal(oldCount &- 1)
+        header.count = Index<Storage>.Count(newCount)
+
+        storage.initialization = header.initialization
+
+        return element
+    }
+
+    // MARK: Consume Back
+
+    /// Removes and returns the last element (at slot `count - 1`).
+    ///
+    /// - Precondition: `header.count > 0` (not empty).
+    @inlinable
+    public static func consumeBack<Element: ~Copyable>(
+        header: inout Header,
+        storage: Storage.Heap<Element>
+    ) -> Element {
+        let newCount = Cardinal(header.count.rawValue.rawValue &- 1)
+        let lastSlot = Index<Storage>(Ordinal(newCount.rawValue))
+
+        let element = storage.move(at: lastSlot)
+
+        header.count = Index<Storage>.Count(newCount)
+
+        storage.initialization = header.initialization
+
+        return element
+    }
+
+    // MARK: Deinitialize All
+
+    /// Deinitializes all elements tracked by the header.
+    @inlinable
+    public static func deinitializeAll<Element: ~Copyable>(
+        header: inout Header,
+        storage: Storage.Heap<Element>
     ) {
-        guard insertionIndex < count else { return }
-
-        // Work backwards: move [insertionIndex, count) to [insertionIndex+1, count+1)
-        // Start at count-1 and work down to insertionIndex
-        var srcCount = count
-        while srcCount > Index<Element>.Count(insertionIndex) {
-            srcCount = srcCount.subtract.saturating(.one)
-            let srcIndex = Index<Element>(srcCount)
-            let dstIndex = srcIndex + .one
-            unsafe (elements + Index.Offset(__unchecked: (), dstIndex)).initialize(
-                to: (elements + Index.Offset(__unchecked: (), srcIndex)).move()
-            )
+        switch header.initialization {
+        case .empty:
+            break
+        case .one(let range):
+            storage.deinitialize(range: range)
+        case .two(_, _):
+            // Linear buffers never have .two — but handle gracefully
+            break
         }
-    }
-
-    /// Deinitializes all elements in linear storage.
-    ///
-    /// - Parameters:
-    ///   - elements: Pointer to element storage.
-    ///   - count: Number of elements to deinitialize.
-    @inlinable
-    public static func deinitialize(
-        _ elements: UnsafeMutablePointer<Element>,
-        count: Index<Element>.Count
-    ) {
-        guard count > .zero else { return }
-        (.zero..<count).forEach { index in
-            unsafe (elements + Index.Offset(__unchecked: (), index)).deinitialize(count: 1)
-        }
-    }
-
-    /// Moves all elements from source to destination.
-    ///
-    /// - Parameters:
-    ///   - source: Pointer to source storage.
-    ///   - destination: Pointer to destination storage.
-    ///   - count: Number of elements to move.
-    @inlinable
-    public static func move(
-        from source: UnsafeMutablePointer<Element>,
-        to destination: UnsafeMutablePointer<Element>,
-        count: Index<Element>.Count
-    ) {
-        guard count > .zero else { return }
-        (.zero..<count).forEach { index in
-            unsafe (destination + Index.Offset(__unchecked: (), index)).initialize(
-                to: (source + Index.Offset(__unchecked: (), index)).move()
-            )
-        }
-    }
-}
-
-// MARK: - Linear Arithmetic
-
-extension Buffer.Linear where Element: ~Copyable {
-    /// Returns the next index without wrapping.
-    ///
-    /// - Parameter index: The current index.
-    /// - Returns: The successor index.
-    /// - Complexity: O(1)
-    @inlinable
-    public static func successor(
-        of index: Index<Element>
-    ) -> Index<Element> {
-        index + .one
-    }
-
-    /// Returns the previous index without wrapping.
-    ///
-    /// - Parameter index: The current index.
-    /// - Returns: The predecessor index.
-    /// - Throws: `Ordinal.Error.underflow` if index is zero.
-    /// - Complexity: O(1)
-    @inlinable
-    public static func predecessor(
-        of index: Index<Element>
-    ) throws(Ordinal.Error) -> Index<Element> {
-        try index.predecessor.exact()
+        header.count = .zero
+        storage.initialization = .empty
     }
 }

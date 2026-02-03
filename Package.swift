@@ -25,16 +25,12 @@ let package = Package(
             targets: ["Buffer Ring Primitives"]
         ),
         .library(
-            name: "Buffer Ring Static Primitives",
-            targets: ["Buffer Ring Static Primitives"]
-        ),
-        .library(
             name: "Buffer Linear Primitives",
             targets: ["Buffer Linear Primitives"]
         ),
         .library(
-            name: "Buffer Slots Primitives",
-            targets: ["Buffer Slots Primitives"]
+            name: "Buffer Slab Primitives",
+            targets: ["Buffer Slab Primitives"]
         ),
         .library(
             name: "Buffer Primitives Test Support",
@@ -46,9 +42,10 @@ let package = Package(
         .package(path: "../swift-cyclic-index-primitives"),
         .package(path: "../swift-memory-primitives"),
         .package(path: "../swift-bit-vector-primitives"),
+        .package(path: "../swift-sequence-primitives"),
     ],
     targets: [
-        // Core: Type declarations, deinit-required operations
+        // Core: Namespace enums, header types, growth policy
         .target(
             name: "Buffer Primitives Core",
             dependencies: [
@@ -58,37 +55,38 @@ let package = Package(
                 .product(name: "Bit Vector Primitives", package: "swift-bit-vector-primitives"),
             ]
         ),
-        // Ring: Circular buffer operations
+        // Ring: Circular buffer static ops and composed types
         .target(
             name: "Buffer Ring Primitives",
-            dependencies: ["Buffer Primitives Core"]
-        ),
-        .target(
-            name: "Buffer Ring Static Primitives",
             dependencies: [
                 "Buffer Primitives Core",
-                "Buffer Ring Primitives"
+                .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
-        // Linear: Contiguous buffer operations
+        // Linear: Contiguous buffer static ops and composed types
         .target(
             name: "Buffer Linear Primitives",
-            dependencies: ["Buffer Primitives Core"]
+            dependencies: [
+                "Buffer Primitives Core",
+                .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
+            ]
         ),
-        // Slots: Index-addressable slot storage operations
+        // Slab: Index-addressable slot storage static ops and composed types
         .target(
-            name: "Buffer Slots Primitives",
-            dependencies: ["Buffer Primitives Core"]
+            name: "Buffer Slab Primitives",
+            dependencies: [
+                "Buffer Primitives Core",
+                .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
+            ]
         ),
-        // Public: Re-exports all modules
+        // Umbrella: Re-exports Core, Ring, Linear, Slab
         .target(
             name: "Buffer Primitives",
             dependencies: [
                 "Buffer Primitives Core",
                 "Buffer Ring Primitives",
                 "Buffer Linear Primitives",
-                "Buffer Slots Primitives",
-                "Buffer Ring Static Primitives"
+                "Buffer Slab Primitives",
             ]
         ),
         .target(
@@ -96,6 +94,9 @@ let package = Package(
             dependencies: [
                 "Buffer Primitives",
                 .product(name: "Storage Primitives Test Support", package: "swift-storage-primitives"),
+                .product(name: "Cyclic Index Primitives Test Support", package: "swift-cyclic-index-primitives"),
+                .product(name: "Bit Vector Primitives Test Support", package: "swift-bit-vector-primitives"),
+                .product(name: "Memory Primitives Test Support", package: "swift-memory-primitives"),
             ],
             path: "Tests/Support"
         ),

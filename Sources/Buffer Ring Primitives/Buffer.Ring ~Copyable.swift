@@ -1,280 +1,138 @@
-//
-//  Buffer.Ring ~Copyable.swift
-//  swift-buffer-primitives
-//
-//  Created by Coen ten Thije Boonkkamp on 02/02/2026.
-//
-
 public import Buffer_Primitives_Core
 
-extension Buffer.Ring where Element: ~Copyable {
-    /// Advances an index by an offset, wrapping at capacity.
-    ///
-    /// - Parameters:
-    ///   - index: The starting index.
-    ///   - offset: The offset to advance by (can be negative).
-    ///   - capacity: The buffer capacity (must be positive).
-    /// - Returns: The resulting index wrapped to `0..<capacity`.
-    /// - Complexity: O(1)
-    @inlinable
-    public static func advanced(
-        _ index: Index<Element>,
-        by offset: Index<Element>.Offset,
-        wrapping capacity: Index<Element>.Count
-    ) -> Index<Element> {
-        Modular.advanced(index, by: offset, capacity: capacity)
-    }
+// MARK: - Static Operations for ~Copyable Elements on Storage.Heap
 
-    /// Calculates the physical index from a logical index in a ring buffer.
-    ///
-    /// Converts a logical index (0 = front of queue) to a physical storage position
-    /// given the current head position.
-    ///
-    /// - Parameters:
-    ///   - logicalIndex: The logical index (0..<count).
-    ///   - head: The physical position of the first element.
-    ///   - capacity: The buffer capacity.
-    /// - Returns: The physical storage index.
-    /// - Complexity: O(1)
-    @inlinable
-    public static func physicalIndex(
-        forLogical logicalIndex: Index<Element>,
-        head: Index<Element>,
-        capacity: Index<Element>.Count
-    ) -> Index<Element> {
-        Modular.physical(forLogical: logicalIndex, head: head, capacity: capacity)
-    }
-}
+extension Buffer.Ring {
 
-extension Buffer.Ring where Element: ~Copyable {
-    /// Moves elements from a ring buffer to linear storage.
+    // MARK: Push Back
+
+    /// Writes element at the tail position `(head + count) mod capacity`.
     ///
-    /// Elements are read from `head` position with wrapping at `capacity`,
-    /// and written linearly starting at destination index 0. Source elements
-    /// are deinitialized after moving.
-    ///
-    /// - Parameters:
-    ///   - source: Mutable pointer to source ring buffer elements.
-    ///   - head: Physical index of first element in ring.
-    ///   - count: Number of elements to move.
-    ///   - capacity: Source buffer capacity (for wrapping).
-    ///   - destination: Pointer to destination (linear, starting at 0).
+    /// - Precondition: `header.count < header.capacity` (not full).
+    /// - Note: Uses `Modular.advanced` per H1 — no manual `%`.
     @inlinable
-    public static func linearize(
-        from source: UnsafeMutablePointer<Element>,
-        head: Buffer.Index,
-        count: Buffer.Index.Count,
-        capacity: Buffer.Index.Count,
-        to destination: UnsafeMutablePointer<Element>
+    public static func pushBack<Element: ~Copyable>(
+        _ element: consuming Element,
+        header: inout Header,
+        storage: Storage.Heap<Element>
     ) {
-        guard count > .zero else { return }
-        var srcIndex = head
-        (Buffer.Index.zero..<count).forEach { dstIdx in
-            unsafe (destination + Buffer.Index.Offset(__unchecked: (), dstIdx)).initialize(
-                to: (source + Buffer.Index.Offset(__unchecked: (), srcIndex)).move()
-            )
-            srcIndex = successor(of: srcIndex, wrapping: capacity)
-        }
+        let countOffset = Index<Storage>.Offset(
+            fromZero: Index<Storage>(header.count)
+        )
+        let tail = Modular.advanced(header.head, by: countOffset, capacity: header.capacity)
+
+        storage.initialize(to: consume element, at: tail)
+
+        let newCount = Cardinal(header.count.rawValue.rawValue &+ 1)
+        header.count = Index<Storage>.Count(newCount)
+
+        storage.initialization = header.initialization
     }
-}
 
-extension Buffer.Ring where Element: ~Copyable {
-    /// The current number of elements in the buffer.
-    @inlinable
-    public var count: Index<Element>.Count { _storage?.header.count ?? .zero }
+    // MARK: Pop Front
 
-    /// Whether the buffer is empty.
-    @inlinable
-    public var isEmpty: Bool { _storage?.header.isEmpty ?? true }
-
-    /// The current capacity of the buffer.
-    @inlinable
-    public var capacity: Index<Element>.Count { _storage?.capacity ?? .zero }
-}
-
-// MARK: - Push (FIFO - add to tail)
-
-extension Buffer.Ring where Element: ~Copyable {
-    /// Pushes an element to the back of the buffer.
+    /// Removes and returns the element at head.
     ///
-    /// Grows the buffer if necessary.
-    ///
-    /// - Parameter element: The element to push (ownership transferred).
+    /// - Precondition: `header.count > 0` (not empty).
+    /// - Note: Uses `Modular.successor` per H1 — no manual `%`.
     @inlinable
-    public mutating func push(_ element: consuming Element) {
-        if _storage == nil || _storage!.header.count >= _storage!.capacity {
-            grow()
-        }
+    public static func popFront<Element: ~Copyable>(
+        header: inout Header,
+        storage: Storage.Heap<Element>
+    ) -> Element {
+        let element = storage.move(at: header.head)
 
-        _storage!.elements.initialize(to: element, at: _storage!.header.tail.retag(Storage.self))
-        _storage!.header.advanceTail(capacity: _storage!.capacity)
-    }
-}
+        header.head = Modular.successor(of: header.head, capacity: header.capacity)
 
-// MARK: - Pop (FIFO - remove from head)
+        let newCount = Cardinal(header.count.rawValue.rawValue &- 1)
+        header.count = Index<Storage>.Count(newCount)
 
-extension Buffer.Ring where Element: ~Copyable {
-    /// Pops the oldest element from the front of the buffer.
-    ///
-    /// - Returns: The oldest element, or `nil` if empty.
-    @inlinable
-    public mutating func popFront() -> Element? {
-        guard let storage = _storage, storage.header.count > .zero else { return nil }
-
-        let element = storage.elements.move(at: storage.header.head.retag(Storage.self))
-        storage.header.advanceHead(capacity: storage.capacity)
+        storage.initialization = header.initialization
 
         return element
     }
 
-    /// Pops the newest element from the back of the buffer (LIFO).
-    ///
-    /// - Returns: The newest element, or `nil` if empty.
-    @inlinable
-    public mutating func popBack() -> Element? {
-        guard let storage = _storage, storage.header.count > .zero else { return nil }
+    // MARK: Push Front
 
-        let lastIndex = Buffer.Ring.predecessor(of: storage.header.tail, wrapping: storage.capacity)
-        let element = storage.elements.move(at: lastIndex.retag(Storage.self))
-        storage.header.retreatTail(capacity: storage.capacity)
+    /// Writes element at `(head - 1) mod capacity`.
+    ///
+    /// - Precondition: `header.count < header.capacity` (not full).
+    /// - Note: Uses `Modular.predecessor` per H1 — no manual `%`.
+    @inlinable
+    public static func pushFront<Element: ~Copyable>(
+        _ element: consuming Element,
+        header: inout Header,
+        storage: Storage.Heap<Element>
+    ) {
+        header.head = Modular.predecessor(of: header.head, capacity: header.capacity)
+
+        storage.initialize(to: consume element, at: header.head)
+
+        let newCount = Cardinal(header.count.rawValue.rawValue &+ 1)
+        header.count = Index<Storage>.Count(newCount)
+
+        storage.initialization = header.initialization
+    }
+
+    // MARK: Pop Back
+
+    /// Removes and returns the element at `(head + count - 1) mod capacity`.
+    ///
+    /// - Precondition: `header.count > 0` (not empty).
+    @inlinable
+    public static func popBack<Element: ~Copyable>(
+        header: inout Header,
+        storage: Storage.Heap<Element>
+    ) -> Element {
+        let newCount = Cardinal(header.count.rawValue.rawValue &- 1)
+        let lastOffset = Index<Storage>.Offset(
+            fromZero: Index<Storage>(Ordinal(newCount.rawValue))
+        )
+        let lastSlot = Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
+
+        let element = storage.move(at: lastSlot)
+
+        header.count = Index<Storage>.Count(newCount)
+
+        storage.initialization = header.initialization
 
         return element
     }
-}
 
-// MARK: - Inspection
+    // MARK: Logical to Physical
 
-extension Buffer.Ring where Element: ~Copyable {
-    /// Provides borrowing access to the front element without removing it.
-    ///
-    /// Use this for conditional logic that depends on the front element's value
-    /// without consuming ownership.
-    ///
-    /// - Parameter body: A closure that receives a borrowing reference to the front element.
-    /// - Returns: The result of the closure, or `nil` if the buffer is empty.
+    /// Maps logical index (0 = front of buffer) to physical storage slot.
     @inlinable
-    public func withFront<R>(
-        _ body: (borrowing Element) throws -> R
-    ) rethrows -> R? {
-        guard let storage = _storage, storage.header.count > .zero else { return nil }
-        return try body(unsafe storage.elements.pointer(at: storage.header.head.retag(Storage.self)).pointee)
-    }
-
-    /// Provides borrowing access to the back element without removing it.
-    ///
-    /// Use this for conditional logic that depends on the back element's value
-    /// without consuming ownership.
-    ///
-    /// - Parameter body: A closure that receives a borrowing reference to the back element.
-    /// - Returns: The result of the closure, or `nil` if the buffer is empty.
-    @inlinable
-    public func withBack<R>(
-        _ body: (borrowing Element) throws -> R
-    ) rethrows -> R? {
-        guard let storage = _storage, storage.header.count > .zero else { return nil }
-        let lastIndex = Buffer.Ring.predecessor(of: storage.header.tail, wrapping: storage.capacity)
-        return try body(unsafe storage.elements.pointer(at: lastIndex.retag(Storage.self)).pointee)
-    }
-}
-
-
-
-// MARK: - Growth
-
-extension Buffer.Ring where Element: ~Copyable {
-    /// Ensures the buffer has at least the specified capacity.
-    ///
-    /// If the current capacity is less than `minimumCapacity`, the buffer grows
-    /// according to its growth policy. This is a no-op if the current capacity
-    /// already meets or exceeds the requested capacity.
-    ///
-    /// - Parameter minimumCapacity: The minimum capacity to ensure.
-    /// - Complexity: O(n) if growth is required, O(1) otherwise.
-    @inlinable
-    public mutating func reserveCapacity(_ minimumCapacity: Index<Element>.Count) {
-        let required = Int(bitPattern: minimumCapacity)
-        let current = Int(bitPattern: _storage?.capacity ?? .zero)
-        guard required > current else { return }
-
-        let newCapacityInt = _growthPolicy.nextCapacity(current: current, required: required)
-        growTo(Index<Element>.Count(UInt(newCapacityInt)))
-    }
-
-    @usableFromInline
-    mutating func grow() {
-        let current = Int(bitPattern: _storage?.capacity ?? .zero)
-        let required = current == 0
-            ? Int(bitPattern: _minimumCapacity)
-            : current + 1  // Need at least one more slot
-
-        let newCapacityInt = _growthPolicy.nextCapacity(current: current, required: required)
-        growTo(Index<Element>.Count(UInt(newCapacityInt)))
-    }
-
-    @usableFromInline
-    mutating func growTo(_ newCapacity: Index<Element>.Count) {
-        let newElements = Storage_Primitives.Storage.Heap<Element>.create(
-            minimumCapacity: newCapacity.retag(Storage.self)
+    public static func physicalSlot(
+        forLogical logicalIndex: Index<Storage>,
+        header: Header
+    ) -> Index<Storage> {
+        Modular.physical(
+            forLogical: logicalIndex,
+            head: header.head,
+            capacity: header.capacity
         )
+    }
 
-        let oldCount: Index<Element>.Count
+    // MARK: Deinitialize All
 
-        // Move elements from old storage to new storage in FIFO order (linearize)
-        if let oldStorage = _storage {
-            oldCount = oldStorage.header.count
-            Buffer.Ring.linearizeToStorage(
-                from: oldStorage.elements,
-                head: oldStorage.header.head,
-                count: oldStorage.header.count,
-                capacity: oldStorage.capacity,
-                to: newElements
-            )
-            // Prevent oldStorage.deinit from double-deinitializing
-            oldStorage.header = Header()
-        } else {
-            oldCount = .zero
+    /// Deinitializes all elements tracked by the header.
+    @inlinable
+    public static func deinitializeAll<Element: ~Copyable>(
+        header: inout Header,
+        storage: Storage.Heap<Element>
+    ) {
+        switch header.initialization {
+        case .empty:
+            break
+        case .one(let range):
+            storage.deinitialize(range: range)
+        case .two(let first, let second):
+            storage.deinitialize(range: first)
+            storage.deinitialize(range: second)
         }
-
-        // Create new storage wrapper
-        let newStorage = _Storage(elements: newElements, capacity: newCapacity)
-        // Set header to linear layout (elements at 0..<oldCount)
-        newStorage.header = Header(
-            head: .zero,
-            tail: Index<Element>(Ordinal(oldCount.rawValue)),
-            count: oldCount
-        )
-
-        self._storage = newStorage
-    }
-}
-
-// MARK: - Drain
-
-extension Buffer.Ring where Element: ~Copyable {
-    /// Drains all elements from the buffer, consuming each via the closure.
-    ///
-    /// The buffer is empty after this call.
-    ///
-    /// - Parameter body: A closure that consumes each element.
-    @inlinable
-    public mutating func drain(_ body: (consuming Element) -> Void) {
-        while let element = popFront() {
-            body(element)
-        }
-    }
-
-    /// Removes all elements from the buffer without returning them.
-    @inlinable
-    public mutating func removeAll() {
-        guard let storage = _storage else { return }
-
-        Buffer.Ring.deinitializeRing(
-            in: storage.elements,
-            head: storage.header.head,
-            count: storage.header.count,
-            capacity: storage.capacity
-        )
-
-        storage.header = Buffer.Ring.Header()
+        header.count = .zero
+        header.head = .zero
+        storage.initialization = .empty
     }
 }

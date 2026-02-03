@@ -1,84 +1,60 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-primitives open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 public import Memory_Primitives
 
-// MARK: - Built-in Policies
+extension Buffer.Growth {
+    /// Determines how a buffer's capacity grows when more space is needed.
+    public struct Policy: Sendable {
+        @usableFromInline
+        let _apply: @Sendable (Index<Storage>.Count) -> Index<Storage>.Count
 
-extension Buffer.Growth.Policy where Element: ~Copyable {
-    /// Doubling growth policy (2x).
-    ///
-    /// Classic growth strategy that provides O(1) amortized append.
-    /// Doubles capacity each time growth is needed.
-    ///
-    /// - Note: This is the recommended default for most use cases.
+        @inlinable
+        init(apply: @escaping @Sendable (Index<Storage>.Count) -> Index<Storage>.Count) {
+            self._apply = apply
+        }
+
+        /// Computes the new capacity given the current capacity.
+        @inlinable
+        public func newCapacity(from current: Index<Storage>.Count) -> Index<Storage>.Count {
+            _apply(current)
+        }
+    }
+}
+
+extension Buffer.Growth.Policy {
+    /// Doubles the current capacity (minimum 1).
+    @inlinable
     public static var doubling: Self {
-        Self { current, required in
-            if current == 0 {
-                return max(required, 64)  // Minimum initial allocation
-            }
-            var newCapacity = current
-            while newCapacity < required {
-                newCapacity = newCapacity * 2
-            }
-            return newCapacity
-        }
-    }
-    /// Factor-based growth policy.
-    ///
-    /// Multiplies current capacity by the given factor until it exceeds required.
-    /// Use factors < 2.0 for more memory-efficient growth at the cost of more allocations.
-    ///
-    /// - Parameter factor: Growth multiplier (must be > 1.0). Common values: 1.5, 2.0.
-    /// - Returns: A growth policy using the specified factor.
-    @inlinable
-    public static func factor(
-        _ factor: Double
-    ) -> Self {
-        precondition(factor > 1.0, "Growth factor must be > 1.0")
-        return Self { current, required in
-            if current == 0 {
-                return max(required, 64)
-            }
-            var newCapacity = current
-            while newCapacity < required {
-                newCapacity = Int((Double(newCapacity) * factor).rounded(.up))
-            }
-            return newCapacity
+        Self { current in
+            let raw = current.rawValue.rawValue
+            let doubled = raw == 0 ? UInt(1) : raw &<< 1
+            return Index<Storage>.Count(Cardinal(doubled))
         }
     }
 
-    /// Exact growth policy (no over-allocation).
-    ///
-    /// Always allocates exactly the required capacity.
-    /// Minimizes memory usage but maximizes reallocations.
-    ///
-    /// - Warning: This policy leads to O(n) amortized append cost.
-    ///   Use only when memory is more critical than performance.
+    /// Multiplies the current capacity by the given factor (rounded up, minimum 1).
+    @inlinable
+    public static func factor(_ multiplier: UInt) -> Self {
+        Self { current in
+            let raw = current.rawValue.rawValue
+            let grown = raw == 0 ? UInt(1) : raw &* multiplier
+            return Index<Storage>.Count(Cardinal(grown))
+        }
+    }
+
+    /// Returns the exact capacity requested (no growth beyond what is needed).
+    @inlinable
     public static var exact: Self {
-        Self { _, required in required }
+        Self { current in current }
     }
 
-    /// Page-aligned growth policy.
+    /// Rounds capacity up to the given alignment boundary.
     ///
-    /// Rounds up to the next alignment boundary.
-    /// Good for large buffers where page alignment matters.
-    ///
-    /// - Parameter alignment: The alignment to round up to (default: `.`4096``).
-    /// - Returns: A growth policy that rounds to alignment boundaries.
+    /// Uses `Memory.Alignment.alignUp()` per H5 — no manual arithmetic.
     @inlinable
-    public static func pageAligned(_ alignment: Memory.Alignment = .`4096`) -> Self {
-        return Self { _, required in
-            let mask: Int = alignment.mask()
-            return (required + mask) & ~mask
+    public static func pageAligned(_ alignment: Memory.Alignment) -> Self {
+        Self { current in
+            let raw = current.rawValue.rawValue
+            let aligned = alignment.alignUp(raw == 0 ? UInt(1) : raw)
+            return Index<Storage>.Count(Cardinal(aligned))
         }
     }
 }

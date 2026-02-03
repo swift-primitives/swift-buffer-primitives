@@ -1,79 +1,67 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-primitives open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
+// MARK: - Ring Factory Methods
 
-public import Buffer_Primitives
-import Index_Primitives
-
-// MARK: - Buffer.Ring Test Convenience
-
-extension Buffer.Ring where Element: Copyable {
-    /// Creates a ring buffer pre-populated with the given elements for testing.
-    ///
-    /// - Parameter elements: The elements to push into the buffer.
-    /// - Returns: A ring buffer containing all elements in FIFO order.
+extension Buffer.Ring.Growable where Element == Int {
+    /// Creates a growable ring buffer pre-filled with the given elements.
     @inlinable
-    public static func with(_ elements: [Element]) -> Buffer<Element>.Ring {
-        var ring = Buffer<Element>.Ring(
-            minimumCapacity: Buffer.Index.Count(UInt(max(elements.count, 1)))
-        )
+    public static func with(_ elements: [Int], minimumCapacity: UInt = 0) -> Self {
+        let cap: Index<Storage>.Count = .init(Cardinal(max(UInt(elements.count), minimumCapacity)))
+        var buffer = Self(minimumCapacity: cap)
         for element in elements {
-            ring.push(element)
+            buffer.pushBack(element)
         }
-        return ring
+        return buffer
     }
 }
 
-extension Buffer.Ring.Static where Element: Copyable {
-    /// Creates a bounded ring buffer pre-populated with the given elements for testing.
-    ///
-    /// - Parameters:
-    ///   - capacity: The fixed capacity of the buffer.
-    ///   - elements: The elements to push into the buffer.
-    /// - Returns: A bounded ring buffer containing all elements in FIFO order.
-    /// - Precondition: `elements.count <= capacity`
+extension Buffer.Ring.Bounded where Element == Int {
+    /// Creates a bounded ring buffer pre-filled with the given elements.
     @inlinable
-    public static func with(
-        capacity: Buffer<Element>.Index.Count,
-        elements: [Element]
-    ) -> Buffer<Element>.Ring.Static {
-        precondition(elements.count <= Int(bitPattern: capacity), "Too many elements for capacity")
-        var ring = Buffer<Element>.Ring.Static(capacity: capacity)
+    public static func with(_ elements: [Int], capacity: UInt) -> Self {
+        var buffer = Self(minimumCapacity: .init(Cardinal(capacity)))
         for element in elements {
-            _ = ring.push(element)
+            _ = buffer.pushBack(element)
         }
-        return ring
+        return buffer
     }
 }
 
-// MARK: - Buffer.Slots.Static Test Convenience
+// MARK: - Linear Factory Methods
 
-extension Buffer.Slots.Static where Element: Copyable {
-    /// Creates a slot store pre-populated with elements at sequential indices for testing.
-    ///
-    /// - Parameters:
-    ///   - capacity: The fixed capacity of the slot store.
-    ///   - elements: The elements to store at indices 0, 1, 2, ...
-    /// - Returns: A slot store with elements at sequential positions.
-    /// - Precondition: `elements.count <= capacity`
+extension Buffer.Linear.Growable where Element == Int {
+    /// Creates a growable linear buffer pre-filled with the given elements.
     @inlinable
-    public static func with(
-        capacity: Buffer<Element>.Index.Count,
-        elements: [Element]
-    ) -> Buffer<Element>.Slots.Static {
-        precondition(elements.count <= Int(bitPattern: capacity), "Too many elements for capacity")
-        var slots = Buffer<Element>.Slots.Static(capacity: capacity)
+    public static func with(_ elements: [Int], minimumCapacity: UInt = 0) -> Self {
+        let cap: Index<Storage>.Count = .init(Cardinal(max(UInt(elements.count), minimumCapacity)))
+        var buffer = Self(minimumCapacity: cap)
+        for element in elements {
+            buffer.append(element)
+        }
+        return buffer
+    }
+}
+
+extension Buffer.Linear.Bounded where Element == Int {
+    /// Creates a bounded linear buffer pre-filled with the given elements.
+    @inlinable
+    public static func with(_ elements: [Int], capacity: UInt) -> Self {
+        var buffer = Self(minimumCapacity: .init(Cardinal(capacity)))
+        for element in elements {
+            _ = buffer.append(element)
+        }
+        return buffer
+    }
+}
+
+// MARK: - Slab Factory Methods
+
+extension Buffer.Slab.Bounded where Element == Int {
+    /// Creates a bounded slab buffer pre-filled at consecutive slots.
+    @inlinable
+    public static func with(_ elements: [Int], capacity: UInt) -> Self {
+        var buffer = Self(minimumCapacity: .init(Cardinal(capacity)))
         for (i, element) in elements.enumerated() {
-            let index = Buffer<Element>.Index(Ordinal(UInt(i)))
-            slots.put(element, at: index)
+            buffer.insert(element, at: Bit.Index(Ordinal(UInt(i))))
         }
-        return slots
+        return buffer
     }
 }
