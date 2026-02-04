@@ -13,7 +13,10 @@ extension Buffer.Ring.Bounded {
         let storage: Storage.Heap<Element>
 
         @inlinable
-        package init(header: Buffer.Ring.Header, storage: Storage.Heap<Element>) {
+        package init(
+            header: Buffer.Ring.Header,
+            storage: Storage.Heap<Element>
+        ) {
             self.header = header
             self.storage = storage
         }
