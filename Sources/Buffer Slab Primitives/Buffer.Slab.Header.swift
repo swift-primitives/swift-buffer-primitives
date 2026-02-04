@@ -37,13 +37,12 @@ extension Buffer.Slab.Header {
     /// Returns `nil` if all slots are full.
     @inlinable
     public func firstVacant(max: Bit.Index.Count) -> Bit.Index? {
-        let maxRaw = max.rawValue.rawValue
-        for i: UInt in 0 ..< maxRaw {
-            let idx = Bit.Index(Ordinal(i))
-            if !bitmap[idx] {
-                return idx
+        var result: Bit.Index? = nil
+        (.zero..<max).forEach { index in
+            if result == nil && !bitmap[index] {
+                result = index
             }
         }
-        return nil
+        return result
     }
 }
