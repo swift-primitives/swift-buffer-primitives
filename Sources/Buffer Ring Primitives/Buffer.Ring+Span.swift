@@ -85,7 +85,7 @@ extension Buffer.Ring where Element: Copyable {
         public mutating func nextSpan(maximumCount: Cardinal) -> Span<Element> {
             if remaining > 0 {
                 let take = min(maximumCount.rawValue, remaining)
-                let span = unsafe Span(_unsafeStart: base, count: Int(bitPattern: take))
+                let span = unsafe Swift.Span(_unsafeStart: base, count: Int(bitPattern: take))
                 unsafe base = base + Int(bitPattern: take)
                 remaining &-= take
                 return span
@@ -98,13 +98,13 @@ extension Buffer.Ring where Element: Copyable {
                 secondCount = 0
 
                 let take = min(maximumCount.rawValue, remaining)
-                let span = unsafe Span(_unsafeStart: base, count: Int(bitPattern: take))
+                let span = unsafe Swift.Span(_unsafeStart: base, count: Int(bitPattern: take))
                 unsafe base = base + Int(bitPattern: take)
                 remaining &-= take
                 return span
             }
 
-            return unsafe Span(_unsafeStart: base, count: 0)
+            return unsafe Swift.Span(_unsafeStart: base, count: 0)
         }
     }
 }
@@ -192,7 +192,7 @@ extension Buffer.Ring.Bounded where Element: Copyable {
         public mutating func nextSpan(maximumCount: Cardinal) -> Span<Element> {
             if remaining > 0 {
                 let take = min(maximumCount.rawValue, remaining)
-                let span = unsafe Span(_unsafeStart: base, count: Int(bitPattern: take))
+                let span = unsafe Swift.Span(_unsafeStart: base, count: Int(bitPattern: take))
                 unsafe base = base + Int(bitPattern: take)
                 remaining &-= take
                 return span
@@ -205,13 +205,13 @@ extension Buffer.Ring.Bounded where Element: Copyable {
                 secondCount = 0
 
                 let take = min(maximumCount.rawValue, remaining)
-                let span = unsafe Span(_unsafeStart: base, count: Int(bitPattern: take))
+                let span = unsafe Swift.Span(_unsafeStart: base, count: Int(bitPattern: take))
                 unsafe base = base + Int(bitPattern: take)
                 remaining &-= take
                 return span
             }
 
-            return unsafe Span(_unsafeStart: base, count: 0)
+            return unsafe Swift.Span(_unsafeStart: base, count: 0)
         }
     }
 }

@@ -1,3 +1,6 @@
+import Range_Primitives
+import Index_Primitives
+
 /// Namespace for buffer primitives.
 ///
 /// Buffer provides three disciplines for managing elements in storage:
@@ -118,38 +121,6 @@ public enum Buffer<Element: ~Copyable> {
             @inlinable
             public var isFull: Bool { count == capacity }
 
-            /// Compute the `Storage.Initialization` state from ring header.
-            ///
-            /// Returns `.empty`, `.one`, or `.two` depending on whether elements
-            /// wrap around the capacity boundary.
-            @inlinable
-            public var initialization: Storage.Initialization {
-                let countRaw = count.rawValue
-                if countRaw == .zero {
-                    return .empty
-                }
-
-                let headOrdinal = head.rawValue
-                let capRaw = capacity.rawValue
-
-                // Compute tail position: where next element would go
-                let headPlusCount = Cardinal(headOrdinal.rawValue &+ countRaw.rawValue)
-                if headPlusCount.rawValue <= capRaw.rawValue {
-                    // Non-wrapping: one contiguous range
-                    let end = Index<Storage>(Ordinal(headPlusCount.rawValue))
-                    return .one(head ..< end)
-                } else {
-                    // Wrapping: two ranges
-                    let capIndex = Index<Storage>(Ordinal(capRaw.rawValue))
-                    let overflowAmount = headPlusCount.rawValue &- capRaw.rawValue
-                    let overflowEnd = Index<Storage>(Ordinal(overflowAmount))
-                    return .two(
-                        first: head ..< capIndex,
-                        second: .zero ..< overflowEnd
-                    )
-                }
-            }
-
             // MARK: - Header.Cyclic
 
             /// Compile-time capacity ring header using modular arithmetic.
@@ -183,39 +154,6 @@ public enum Buffer<Element: ~Copyable> {
                 @inlinable
                 public static var slotCapacity: Index<Storage>.Count {
                     Index<Storage>.Count(Cardinal(UInt(capacity)))
-                }
-
-                /// Compute the `Storage.Initialization` state from the cyclic ring header.
-                ///
-                /// Returns `.empty`, `.one`, or `.two` depending on whether elements
-                /// wrap around the capacity boundary.
-                @inlinable
-                public var initialization: Storage.Initialization {
-                    let countRaw = count.rawValue.rawValue
-                    if countRaw == 0 {
-                        return .empty
-                    }
-
-                    let headOrdinal = Ordinal(head.rawValue).rawValue
-                    let capRaw = UInt(capacity)
-
-                    let headPlusCount = headOrdinal &+ countRaw
-                    if headPlusCount <= capRaw {
-                        // Non-wrapping: one contiguous range
-                        let headIdx = Index<Storage>(Ordinal(headOrdinal))
-                        let endIdx = Index<Storage>(Ordinal(headPlusCount))
-                        return .one(headIdx ..< endIdx)
-                    } else {
-                        // Wrapping: two ranges
-                        let headIdx = Index<Storage>(Ordinal(headOrdinal))
-                        let capIdx = Index<Storage>(Ordinal(capRaw))
-                        let overflowAmount = headPlusCount &- capRaw
-                        let overflowEnd = Index<Storage>(Ordinal(overflowAmount))
-                        return .two(
-                            first: headIdx ..< capIdx,
-                            second: .zero ..< overflowEnd
-                        )
-                    }
                 }
             }
         }
@@ -313,18 +251,6 @@ public enum Buffer<Element: ~Copyable> {
             /// Whether the buffer is at capacity.
             @inlinable
             public var isFull: Bool { count == capacity }
-
-            /// The initialization state for storage tracking.
-            ///
-            /// Linear buffers always have a single contiguous range `[0, count)`.
-            @inlinable
-            public var initialization: Storage.Initialization {
-                if count == .zero {
-                    return .empty
-                }
-                let end = Index<Storage>(count)
-                return .one(.zero ..< end)
-            }
         }
     }
 
@@ -578,3 +504,9 @@ extension Buffer.Slab.Bounded.Indexed: @unchecked Sendable where Element: Sendab
 
 extension Buffer.Slab.Inline: Copyable where Element: Copyable {}
 extension Buffer.Slab.Inline: Sendable where Element: Sendable {}
+
+
+
+
+
+
