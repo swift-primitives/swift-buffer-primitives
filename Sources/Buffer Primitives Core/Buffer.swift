@@ -113,14 +113,6 @@ public enum Buffer<Element: ~Copyable> {
                 self.capacity = capacity
             }
 
-            /// Whether the buffer has no elements.
-            @inlinable
-            public var isEmpty: Bool { count == .zero }
-
-            /// Whether the buffer is at capacity.
-            @inlinable
-            public var isFull: Bool { count == capacity }
-
             // MARK: - Header.Cyclic
 
             /// Compile-time capacity ring header using modular arithmetic.
@@ -140,20 +132,6 @@ public enum Buffer<Element: ~Copyable> {
                 public init() {
                     self.head = Index<Storage>.Cyclic<capacity>(__unchecked: Ordinal(0))
                     self.count = .zero
-                }
-
-                /// Whether the buffer has no elements.
-                @inlinable
-                public var isEmpty: Bool { count == .zero }
-
-                /// Whether the buffer is at capacity.
-                @inlinable
-                public var isFull: Bool { count.rawValue.rawValue == UInt(capacity) }
-
-                /// The total slot capacity as `Index<Storage>.Count` (compile-time constant).
-                @inlinable
-                public static var slotCapacity: Index<Storage>.Count {
-                    Index<Storage>.Count(Cardinal(UInt(capacity)))
                 }
             }
         }
@@ -243,14 +221,6 @@ public enum Buffer<Element: ~Copyable> {
                 self.count = .zero
                 self.capacity = capacity
             }
-
-            /// Whether the buffer has no elements.
-            @inlinable
-            public var isEmpty: Bool { count == .zero }
-
-            /// Whether the buffer is at capacity.
-            @inlinable
-            public var isFull: Bool { count == capacity }
         }
     }
 
@@ -298,7 +268,10 @@ public enum Buffer<Element: ~Copyable> {
             package var storage: Storage.Heap<Element>
 
             @inlinable
-            package init(header: consuming Header, storage: Storage.Heap<Element>) {
+            package init(
+                header: consuming Header,
+                storage: Storage.Heap<Element>
+            ) {
                 self.header = header
                 self.storage = storage
             }
@@ -345,7 +318,10 @@ public enum Buffer<Element: ~Copyable> {
             package var storage: Storage.Inline<Element, wordCount>
 
             @inlinable
-            package init(header: Header.Static<wordCount>, storage: consuming Storage.Inline<Element, wordCount>) {
+            package init(
+                header: Header.Static<wordCount>,
+                storage: consuming Storage.Inline<Element, wordCount>
+            ) {
                 self.header = header
                 self.storage = storage
             }
@@ -372,45 +348,6 @@ public enum Buffer<Element: ~Copyable> {
                 self.bitmap = Bit.Vector(capacity: capacity)
             }
 
-            /// The number of occupied slots.
-            @inlinable
-            public var occupancy: Bit.Index.Count {
-                bitmap.popcount
-            }
-
-            /// Whether no slots are occupied.
-            @inlinable
-            public var isEmpty: Bool {
-                bitmap.isEmpty
-            }
-
-            /// Whether all slots are occupied.
-            @inlinable
-            public var isFull: Bool {
-                bitmap.isFull
-            }
-
-            /// Checks whether a specific slot is occupied.
-            @inlinable
-            public func isOccupied(at slot: Bit.Index) -> Bool {
-                bitmap[slot]
-            }
-
-            /// Finds the first vacant slot by scanning the bitmap.
-            ///
-            /// Returns `nil` if all slots are full.
-            @inlinable
-            public func firstVacant(max: Bit.Index.Count) -> Bit.Index? {
-                let maxRaw = max.rawValue.rawValue
-                for i: UInt in 0 ..< maxRaw {
-                    let idx = Bit.Index(Ordinal(i))
-                    if !bitmap[idx] {
-                        return idx
-                    }
-                }
-                return nil
-            }
-
             // MARK: - Header.Static
 
             /// Compile-time word count slab header using `Bit.Vector.Static`.
@@ -427,45 +364,6 @@ public enum Buffer<Element: ~Copyable> {
                 @inlinable
                 public init() {
                     self.bitmap = .init()
-                }
-
-                /// The number of occupied slots.
-                @inlinable
-                public var occupancy: Bit.Index.Count {
-                    bitmap.popcount
-                }
-
-                /// Whether no slots are occupied.
-                @inlinable
-                public var isEmpty: Bool {
-                    bitmap.isEmpty
-                }
-
-                /// Whether all slots are occupied.
-                @inlinable
-                public var isFull: Bool {
-                    bitmap.isFull
-                }
-
-                /// Checks whether a specific slot is occupied.
-                @inlinable
-                public func isOccupied(at slot: Bit.Index) -> Bool {
-                    bitmap[slot]
-                }
-
-                /// Finds the first vacant slot by scanning the bitmap.
-                ///
-                /// Returns `nil` if all slots are full.
-                @inlinable
-                public func firstVacant(max: Bit.Index.Count) -> Bit.Index? {
-                    let maxRaw = max.rawValue.rawValue
-                    for i: UInt in 0 ..< maxRaw {
-                        let idx = Bit.Index(Ordinal(i))
-                        if !bitmap[idx] {
-                            return idx
-                        }
-                    }
-                    return nil
                 }
             }
         }
@@ -504,9 +402,5 @@ extension Buffer.Slab.Bounded.Indexed: @unchecked Sendable where Element: Sendab
 
 extension Buffer.Slab.Inline: Copyable where Element: Copyable {}
 extension Buffer.Slab.Inline: Sendable where Element: Sendable {}
-
-
-
-
 
 

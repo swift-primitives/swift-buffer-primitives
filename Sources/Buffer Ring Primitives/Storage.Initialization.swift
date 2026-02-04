@@ -43,7 +43,7 @@ extension Storage.Initialization {
             return
         }
 
-        let slotCapacity = type(of: header).slotCapacity
+        let slotCapacity = Buffer<Element>.Ring.Header.Cyclic<capacity>.slotCapacity
         let headIndex = Index<Storage>(Ordinal(header.head.rawValue))
         let tail = headIndex + header.count
 

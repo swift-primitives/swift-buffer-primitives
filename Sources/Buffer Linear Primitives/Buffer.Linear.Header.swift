@@ -7,7 +7,18 @@
 
 public import Buffer_Primitives_Core
 
-extension Buffer.Linear.Header {
+extension Buffer.Linear.Header where Element: ~Copyable {
+    
+    /// Whether the buffer has no elements.
+    @inlinable
+    public var isEmpty: Bool { count == .zero }
+
+    /// Whether the buffer is at capacity.
+    @inlinable
+    public var isFull: Bool { count == capacity }
+}
+
+extension Buffer.Linear.Header where Element: ~Copyable {
     /// Compute the `Storage.Initialization` state from ring header.
     ///
     /// Returns `.empty`, `.one`, or `.two` depending on whether elements
@@ -16,16 +27,3 @@ extension Buffer.Linear.Header {
     public var initialization: Storage.Initialization { .init(self) }
 }
 
-extension Storage.Initialization {
-    @inlinable
-    public init<Element: ~Copyable>(
-        _ header: Buffer<Element>.Linear.Header
-    ) {
-        if header.count == .zero {
-            self = .empty
-            return
-        }
-        let end = Index<Storage>(header.count)
-        self = .one(.zero ..< end)
-    }
-}
