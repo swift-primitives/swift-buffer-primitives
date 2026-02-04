@@ -247,8 +247,7 @@ public enum Buffer<Element: ~Copyable> {
         deinit {
             // Slab deinit is NOT automatic — bitmap drives cleanup.
             header.bitmap.ones.forEach { bitIndex in
-                let storageIndex = Index<Storage>(Ordinal(bitIndex.rawValue.rawValue))
-                storage.deinitialize(at: storageIndex)
+                storage.deinitialize(at: bitIndex.retag(Storage.self))
             }
             storage.initialization = .empty
         }
@@ -279,8 +278,7 @@ public enum Buffer<Element: ~Copyable> {
             deinit {
                 // Slab deinit is NOT automatic — bitmap drives cleanup.
                 header.bitmap.ones.forEach { bitIndex in
-                    let storageIndex = Index<Storage>(Ordinal(bitIndex.rawValue.rawValue))
-                    storage.deinitialize(at: storageIndex)
+                    storage.deinitialize(at: bitIndex.retag(Storage.self))
                 }
                 storage.initialization = .empty
             }
