@@ -32,7 +32,7 @@ extension Buffer.Linear where Element: Copyable {
 
         @inlinable
         @_lifetime(&self)
-        public mutating func nextSpan(maximumCount: Cardinal) -> Span<Element> {
+        public mutating func nextSpan(maximumCount: Cardinal) -> Swift.Span<Element> {
             let take = min(maximumCount.rawValue, remaining)
             guard take > 0 else {
                 return unsafe Span(_unsafeStart: base, count: 0)
@@ -81,7 +81,7 @@ extension Buffer.Linear.Bounded where Element: Copyable {
 
         @inlinable
         @_lifetime(&self)
-        public mutating func nextSpan(maximumCount: Cardinal) -> Span<Element> {
+        public mutating func nextSpan(maximumCount: Cardinal) -> Swift.Span<Element> {
             let take = min(maximumCount.rawValue, remaining)
             guard take > 0 else {
                 return unsafe Span(_unsafeStart: base, count: 0)
