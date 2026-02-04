@@ -17,7 +17,7 @@ extension Buffer.Ring {
     public init(minimumCapacity: Index<Storage>.Count) {
         let storage = Storage.Heap<Element>.create(minimumCapacity: minimumCapacity)
         self.init(
-            header: Buffer<Element>.Ring.Header(capacity: storage.slotCapacity),
+            header: Buffer.Ring.Header(capacity: storage.slotCapacity),
             storage: storage
         )
     }
@@ -126,7 +126,7 @@ extension Buffer.Ring {
         let oldCount = header.count
         storage.initialization = .empty
         storage = newStorage
-        header = Buffer<Element>.Ring.Header(capacity: newStorage.slotCapacity)
+        header = Buffer.Ring.Header(capacity: newStorage.slotCapacity)
         header.count = oldCount
         // head is 0 after linearization
         storage.initialization = header.initialization

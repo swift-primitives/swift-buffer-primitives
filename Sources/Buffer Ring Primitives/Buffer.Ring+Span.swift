@@ -26,7 +26,7 @@ extension Buffer.Ring where Element: Copyable {
         @inlinable
         internal init(
             storageBase: UnsafePointer<Element>,
-            header: Buffer<Element>.Ring.Header
+            header: Buffer.Ring.Header
         ) {
             switch header.initialization {
             case .empty:
@@ -137,7 +137,7 @@ extension Buffer.Ring.Bounded where Element: Copyable {
         @inlinable
         internal init(
             storageBase: UnsafePointer<Element>,
-            header: Buffer<Element>.Ring.Header
+            header: Buffer.Ring.Header
         ) {
             switch header.initialization {
             case .empty:

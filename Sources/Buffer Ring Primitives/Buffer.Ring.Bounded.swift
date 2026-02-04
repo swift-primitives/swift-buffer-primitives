@@ -9,7 +9,7 @@ extension Buffer.Ring.Bounded {
     public init(minimumCapacity: Index<Storage>.Count) {
         let storage = Storage.Heap<Element>.create(minimumCapacity: minimumCapacity)
         self.init(
-            header: Buffer<Element>.Ring.Header(capacity: storage.slotCapacity),
+            header: Buffer.Ring.Header(capacity: storage.slotCapacity),
             storage: storage
         )
     }

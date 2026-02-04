@@ -11,7 +11,7 @@ extension Buffer.Ring.Inline {
     public init() throws(Storage.Inline<Element, capacity>.Error) {
         let cap = Index<Storage>.Count(Cardinal(UInt(capacity)))
         self.init(
-            header: Buffer<Element>.Ring.Header(capacity: cap),
+            header: Buffer.Ring.Header(capacity: cap),
             storage: try .init()
         )
     }

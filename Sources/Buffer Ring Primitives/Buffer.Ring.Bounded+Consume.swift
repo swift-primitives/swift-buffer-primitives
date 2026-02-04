@@ -7,13 +7,13 @@ extension Buffer.Ring.Bounded {
     /// and cleanup-on-drop requires a deinit.
     public final class ConsumeState: @unchecked Sendable {
         @usableFromInline
-        var header: Buffer<Element>.Ring.Header
+        var header: Buffer.Ring.Header
 
         @usableFromInline
         let storage: Storage.Heap<Element>
 
         @inlinable
-        package init(header: Buffer<Element>.Ring.Header, storage: Storage.Heap<Element>) {
+        package init(header: Buffer.Ring.Header, storage: Storage.Heap<Element>) {
             self.header = header
             self.storage = storage
         }
