@@ -48,7 +48,7 @@ extension Buffer.Ring {
         if header.isFull {
             _grow()
         }
-        Buffer<Element>.Ring.pushBack(consume element, header: &header, storage: storage)
+        Buffer.Ring.pushBack(consume element, header: &header, storage: storage)
     }
 
     /// Removes and returns the element at the front of the ring.
@@ -56,7 +56,7 @@ extension Buffer.Ring {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func popFront() -> Element {
-        Buffer<Element>.Ring.popFront(header: &header, storage: storage)
+        Buffer.Ring.popFront(header: &header, storage: storage)
     }
 
     /// Pushes an element to the front of the ring.
@@ -67,7 +67,7 @@ extension Buffer.Ring {
         if header.isFull {
             _grow()
         }
-        Buffer<Element>.Ring.pushFront(consume element, header: &header, storage: storage)
+        Buffer.Ring.pushFront(consume element, header: &header, storage: storage)
     }
 
     /// Removes and returns the element at the back of the ring.
@@ -75,13 +75,13 @@ extension Buffer.Ring {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func popBack() -> Element {
-        Buffer<Element>.Ring.popBack(header: &header, storage: storage)
+        Buffer.Ring.popBack(header: &header, storage: storage)
     }
 
     /// Removes all elements from the buffer.
     @inlinable
     public mutating func removeAll() {
-        Buffer<Element>.Ring.deinitializeAll(header: &header, storage: storage)
+        Buffer.Ring.deinitializeAll(header: &header, storage: storage)
     }
 
     /// Ensures the buffer can hold at least `minimumCapacity` elements.

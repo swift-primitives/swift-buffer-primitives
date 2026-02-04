@@ -23,7 +23,7 @@ extension Buffer.Ring.Bounded {
 
         deinit {
             var h = header
-            Buffer<Element>.Ring.deinitializeAll(header: &h, storage: storage)
+            Buffer.Ring.deinitializeAll(header: &h, storage: storage)
         }
     }
 }
@@ -37,7 +37,7 @@ extension Buffer.Ring.Bounded: Sequence.Consume.`Protocol` {
             state: ConsumeState(header: h, storage: s),
             next: { state in
                 guard !state.header.isEmpty else { return nil }
-                return Buffer<Element>.Ring.popFront(header: &state.header, storage: state.storage)
+                return Buffer.Ring.popFront(header: &state.header, storage: state.storage)
             }
         )
     }
