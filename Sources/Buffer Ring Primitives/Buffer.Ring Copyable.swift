@@ -1,42 +1,54 @@
-// MARK: - Static Operations for Copyable Elements on Storage.Heap
+// MARK: - Copyable Conformances for Ring
 
-extension Buffer.Ring {
+extension Buffer.Ring where Element: Copyable {
 
-    /// Copies all elements from source to destination storage in logical order.
+    /// Returns the front element without removing it.
     ///
-    /// After this call, destination contains elements at slots `0 ..< header.count`
-    /// in FIFO order (linearized).
+    /// - Precondition: The buffer is not empty.
     @inlinable
-    public static func linearize<Element: Copyable>(
-        header: Header,
-        source: Storage.Heap<Element>,
-        to destination: Storage.Heap<Element>
-    ) {
-        switch header.initialization {
-        case .empty:
-            break
-        case .one(let range):
-            source.copy(range: range, to: destination)
-        case .two(let first, let second):
-            source.copy(range: first, to: destination)
-            let offset = first.count.rawValue.rawValue
-            let secondCount = second.count.rawValue.rawValue
-            for i: UInt in 0 ..< secondCount {
-                let srcIdx = Index<Storage>(Ordinal(second.lowerBound.rawValue.rawValue &+ i))
-                let dstIdx = Index<Storage>(Ordinal(offset &+ i))
-                let value: Element = unsafe source.pointer(at: srcIdx).pointee
-                destination.initialize(to: value, at: dstIdx)
-            }
-        }
+    public var peekFront: Element {
+        unsafe storage.pointer(at: header.head).pointee
     }
 
-    /// Copies all ring elements to a new storage, linearized to slots `0 ..< count`.
+    /// Returns the back element without removing it.
+    ///
+    /// - Precondition: The buffer is not empty.
     @inlinable
-    public static func copy<Element: Copyable>(
-        header: Header,
-        source: Storage.Heap<Element>,
-        to destination: Storage.Heap<Element>
-    ) {
-        linearize(header: header, source: source, to: destination)
+    public var peekBack: Element {
+        let lastCount = Cardinal(header.count.rawValue.rawValue &- 1)
+        let lastOffset = Index<Storage>.Offset(
+            fromZero: Index<Storage>(Ordinal(lastCount.rawValue))
+        )
+        let lastSlot = Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
+        return unsafe storage.pointer(at: lastSlot).pointee
+    }
+
+    /// Ensures this buffer has unique storage (copy-on-write).
+    @inlinable
+    mutating func _makeUnique() {
+        if !isKnownUniquelyReferenced(&storage) {
+            let newStorage = Storage.Heap<Element>.create(minimumCapacity: header.capacity)
+            Buffer.Ring<Element>.copy(header: header, source: storage, to: newStorage)
+            let oldCount = header.count
+            storage = newStorage
+            header = .init(capacity: newStorage.slotCapacity)
+            header.count = oldCount
+            storage.initialization = header.initialization
+        }
+    }
+}
+
+// MARK: - Property.View (.forEach)
+
+extension Buffer.Ring where Element: Copyable {
+    @inlinable
+    public var forEach: Property<Sequence.ForEach, Self>.View {
+        mutating _read {
+            yield unsafe Property<Sequence.ForEach, Self>.View(&self)
+        }
+        mutating _modify {
+            var view = unsafe Property<Sequence.ForEach, Self>.View(&self)
+            yield &view
+        }
     }
 }

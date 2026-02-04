@@ -8,18 +8,18 @@ struct RingStaticTests {
     @Test("pushBack/popFront FIFO ordering")
     func fifoOrdering() {
         let cap: Index<Storage>.Count = 4
-        var header = Buffer.Ring.Header(capacity: cap)
+        var header = Buffer.Ring<Int>.Header(capacity: cap)
         let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
 
-        Buffer.Ring.pushBack(10, header: &header, storage: storage)
-        Buffer.Ring.pushBack(20, header: &header, storage: storage)
-        Buffer.Ring.pushBack(30, header: &header, storage: storage)
+        Buffer.Ring<Int>.pushBack(10, header: &header, storage: storage)
+        Buffer.Ring<Int>.pushBack(20, header: &header, storage: storage)
+        Buffer.Ring<Int>.pushBack(30, header: &header, storage: storage)
 
         #expect(header.count == 3)
 
-        let a = Buffer.Ring.popFront(header: &header, storage: storage)
-        let b = Buffer.Ring.popFront(header: &header, storage: storage)
-        let c = Buffer.Ring.popFront(header: &header, storage: storage)
+        let a = Buffer.Ring<Int>.popFront(header: &header, storage: storage)
+        let b = Buffer.Ring<Int>.popFront(header: &header, storage: storage)
+        let c = Buffer.Ring<Int>.popFront(header: &header, storage: storage)
 
         #expect(a == 10)
         #expect(b == 20)
@@ -32,14 +32,14 @@ struct RingStaticTests {
     @Test("pushFront/popBack ordering")
     func pushFrontPopBack() {
         let cap: Index<Storage>.Count = 4
-        var header = Buffer.Ring.Header(capacity: cap)
+        var header = Buffer.Ring<Int>.Header(capacity: cap)
         let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
 
-        Buffer.Ring.pushFront(10, header: &header, storage: storage)
-        Buffer.Ring.pushFront(20, header: &header, storage: storage)
+        Buffer.Ring<Int>.pushFront(10, header: &header, storage: storage)
+        Buffer.Ring<Int>.pushFront(20, header: &header, storage: storage)
 
-        let a = Buffer.Ring.popBack(header: &header, storage: storage)
-        let b = Buffer.Ring.popBack(header: &header, storage: storage)
+        let a = Buffer.Ring<Int>.popBack(header: &header, storage: storage)
+        let b = Buffer.Ring<Int>.popBack(header: &header, storage: storage)
 
         #expect(a == 10)
         #expect(b == 20)
@@ -51,30 +51,30 @@ struct RingStaticTests {
     @Test("wrap-around correctness")
     func wrapAround() {
         let cap: Index<Storage>.Count = 4
-        var header = Buffer.Ring.Header(capacity: cap)
+        var header = Buffer.Ring<Int>.Header(capacity: cap)
         let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
 
         // Fill to capacity
         var i = 0
         while i < 4 {
-            Buffer.Ring.pushBack(i, header: &header, storage: storage)
+            Buffer.Ring<Int>.pushBack(i, header: &header, storage: storage)
             i += 1
         }
         #expect(header.isFull)
 
         // Pop two from front
-        _ = Buffer.Ring.popFront(header: &header, storage: storage)
-        _ = Buffer.Ring.popFront(header: &header, storage: storage)
+        _ = Buffer.Ring<Int>.popFront(header: &header, storage: storage)
+        _ = Buffer.Ring<Int>.popFront(header: &header, storage: storage)
 
         // Push two more — these wrap around
-        Buffer.Ring.pushBack(100, header: &header, storage: storage)
-        Buffer.Ring.pushBack(200, header: &header, storage: storage)
+        Buffer.Ring<Int>.pushBack(100, header: &header, storage: storage)
+        Buffer.Ring<Int>.pushBack(200, header: &header, storage: storage)
 
         // Should read: 2, 3, 100, 200
-        let a = Buffer.Ring.popFront(header: &header, storage: storage)
-        let b = Buffer.Ring.popFront(header: &header, storage: storage)
-        let c = Buffer.Ring.popFront(header: &header, storage: storage)
-        let d = Buffer.Ring.popFront(header: &header, storage: storage)
+        let a = Buffer.Ring<Int>.popFront(header: &header, storage: storage)
+        let b = Buffer.Ring<Int>.popFront(header: &header, storage: storage)
+        let c = Buffer.Ring<Int>.popFront(header: &header, storage: storage)
+        let d = Buffer.Ring<Int>.popFront(header: &header, storage: storage)
 
         #expect(a == 2)
         #expect(b == 3)
@@ -86,42 +86,42 @@ struct RingStaticTests {
 
     @Test("physicalSlot logical-to-physical mapping")
     func physicalSlotMapping() {
-        var header = Buffer.Ring.Header(capacity: 8)
+        var header = Buffer.Ring<Int>.Header(capacity: 8)
         header.head = 5
         header.count = 4
 
         // Logical 0 → physical 5
-        let p0 = Buffer.Ring.physicalSlot(forLogical: 0, header: header)
+        let p0 = Buffer.Ring<Int>.physicalSlot(forLogical: 0, header: header)
         #expect(p0 == 5)
 
         // Logical 3 → physical (5+3)%8 = 0
-        let p3 = Buffer.Ring.physicalSlot(forLogical: 3, header: header)
+        let p3 = Buffer.Ring<Int>.physicalSlot(forLogical: 3, header: header)
         #expect(p3 == 0)
     }
 
     @Test("initialization sync through operations")
     func initializationSync() {
         let cap: Index<Storage>.Count = 4
-        var header = Buffer.Ring.Header(capacity: cap)
+        var header = Buffer.Ring<Int>.Header(capacity: cap)
         let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
 
         // Start empty
         #expect(header.initialization == .empty)
 
         // Push one → .one
-        Buffer.Ring.pushBack(42, header: &header, storage: storage)
+        Buffer.Ring<Int>.pushBack(42, header: &header, storage: storage)
         switch header.initialization {
         case .one: break
         default: Issue.record("Expected .one")
         }
 
         // Fill capacity, advance head to force wrap
-        Buffer.Ring.pushBack(43, header: &header, storage: storage)
-        Buffer.Ring.pushBack(44, header: &header, storage: storage)
-        _ = Buffer.Ring.popFront(header: &header, storage: storage)
-        _ = Buffer.Ring.popFront(header: &header, storage: storage)
-        Buffer.Ring.pushBack(45, header: &header, storage: storage)
-        Buffer.Ring.pushBack(46, header: &header, storage: storage)
+        Buffer.Ring<Int>.pushBack(43, header: &header, storage: storage)
+        Buffer.Ring<Int>.pushBack(44, header: &header, storage: storage)
+        _ = Buffer.Ring<Int>.popFront(header: &header, storage: storage)
+        _ = Buffer.Ring<Int>.popFront(header: &header, storage: storage)
+        Buffer.Ring<Int>.pushBack(45, header: &header, storage: storage)
+        Buffer.Ring<Int>.pushBack(46, header: &header, storage: storage)
 
         // Should be wrapping → .two
         switch header.initialization {
@@ -130,20 +130,20 @@ struct RingStaticTests {
         }
 
         // Drain all → .empty
-        Buffer.Ring.deinitializeAll(header: &header, storage: storage)
+        Buffer.Ring<Int>.deinitializeAll(header: &header, storage: storage)
         #expect(header.initialization == .empty)
     }
 
     @Test("deinitializeAll clears everything")
     func deinitializeAll() {
         let cap: Index<Storage>.Count = 4
-        var header = Buffer.Ring.Header(capacity: cap)
+        var header = Buffer.Ring<Int>.Header(capacity: cap)
         let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
 
-        Buffer.Ring.pushBack(1, header: &header, storage: storage)
-        Buffer.Ring.pushBack(2, header: &header, storage: storage)
+        Buffer.Ring<Int>.pushBack(1, header: &header, storage: storage)
+        Buffer.Ring<Int>.pushBack(2, header: &header, storage: storage)
 
-        Buffer.Ring.deinitializeAll(header: &header, storage: storage)
+        Buffer.Ring<Int>.deinitializeAll(header: &header, storage: storage)
 
         #expect(header.isEmpty)
         #expect(header.head == 0)

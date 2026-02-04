@@ -1,10 +1,10 @@
-// MARK: - Copyable Conformances for Slab.Bounded.Inline
+// MARK: - Copyable Conformances for Slab.Inline
 //
 // Unlike heap-backed Slab.Bounded (always ~Copyable due to Bit.Vector),
-// Slab.Bounded.Inline uses Header.Static (Copyable), so the type IS Copyable
+// Slab.Inline uses Header.Static (Copyable), so the type IS Copyable
 // when Element: Copyable.
 
-extension Buffer.Slab.Bounded.Inline where Element: Copyable {
+extension Buffer.Slab.Inline where Element: Copyable {
 
     /// Reads the element at the given slot without removing it.
     ///
@@ -18,7 +18,7 @@ extension Buffer.Slab.Bounded.Inline where Element: Copyable {
 
 // MARK: - Sequence.Protocol
 
-extension Buffer.Slab.Bounded.Inline: Sequence.`Protocol` where Element: Copyable {
+extension Buffer.Slab.Inline: Sequence.`Protocol` where Element: Copyable {
     public struct Iterator: IteratorProtocol, @unchecked Sendable {
         @usableFromInline
         let storage: Storage.Inline<Element, wordCount>
@@ -59,7 +59,7 @@ extension Buffer.Slab.Bounded.Inline: Sequence.`Protocol` where Element: Copyabl
 
 // MARK: - Property.View (.forEach)
 
-extension Buffer.Slab.Bounded.Inline where Element: Copyable {
+extension Buffer.Slab.Inline where Element: Copyable {
     @inlinable
     public var forEach: Property<Sequence.ForEach, Self>.View {
         mutating _read {

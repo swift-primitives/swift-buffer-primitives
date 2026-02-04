@@ -8,7 +8,7 @@ struct RingHeaderTests {
     @Test("init sets head to zero, count to zero")
     func initDefaults() {
         let cap: Index<Storage>.Count = 8
-        let header = Buffer.Ring.Header(capacity: cap)
+        let header = Buffer.Ring<Int>.Header(capacity: cap)
         #expect(header.head == 0)
         #expect(header.count == 0)
         #expect(header.capacity == cap)
@@ -17,7 +17,7 @@ struct RingHeaderTests {
     @Test("isEmpty and isFull")
     func emptyAndFull() {
         let cap: Index<Storage>.Count = 4
-        var header = Buffer.Ring.Header(capacity: cap)
+        var header = Buffer.Ring<Int>.Header(capacity: cap)
         #expect(header.isEmpty)
         #expect(!header.isFull)
 
@@ -28,7 +28,7 @@ struct RingHeaderTests {
 
     @Test("initialization returns .empty when count is zero")
     func initializationEmpty() {
-        let header = Buffer.Ring.Header(capacity: 4)
+        let header = Buffer.Ring<Int>.Header(capacity: 4)
         switch header.initialization {
         case .empty:
             break
@@ -39,7 +39,7 @@ struct RingHeaderTests {
 
     @Test("initialization returns .one for non-wrapping elements")
     func initializationOne() {
-        var header = Buffer.Ring.Header(capacity: 8)
+        var header = Buffer.Ring<Int>.Header(capacity: 8)
         header.count = 3
         // head=0, count=3, capacity=8 → .one(0..<3)
         switch header.initialization {
@@ -53,7 +53,7 @@ struct RingHeaderTests {
 
     @Test("initialization returns .two for wrapping elements")
     func initializationTwo() {
-        var header = Buffer.Ring.Header(capacity: 4)
+        var header = Buffer.Ring<Int>.Header(capacity: 4)
         header.head = 3
         header.count = 3
         // head=3, count=3, capacity=4 → wraps: first=[3,4), second=[0,2)
@@ -70,7 +70,7 @@ struct RingHeaderTests {
 
     @Test("Copyable and Hashable")
     func copyableHashable() {
-        let a = Buffer.Ring.Header(capacity: 4)
+        let a = Buffer.Ring<Int>.Header(capacity: 4)
         let b = a
         #expect(a == b)
         #expect(a.hashValue == b.hashValue)

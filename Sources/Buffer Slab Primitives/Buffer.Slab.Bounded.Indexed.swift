@@ -12,7 +12,7 @@ extension Buffer.Slab.Bounded.Indexed {
             Cardinal(minimumCapacity.rawValue.rawValue)
         )
         self.init(
-            _base: Buffer.Slab.Bounded<Element>(minimumCapacity: storageCount)
+            _base: Buffer.Slab.Bounded(minimumCapacity: storageCount)
         )
     }
 

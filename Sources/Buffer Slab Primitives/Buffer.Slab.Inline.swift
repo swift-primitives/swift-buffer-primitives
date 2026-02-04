@@ -1,12 +1,12 @@
-// MARK: - Extensions for Slab.Bounded.Inline (declared in Core)
+// MARK: - Extensions for Slab.Inline (declared in Core)
 //
 // Note: Phase 6 Slab inline ops take `Header` (runtime, ~Copyable) but this type
 // stores `Header.Static<wordCount>` (compile-time, Copyable). Operations are inlined
 // directly rather than delegating to the static ops.
 
-extension Buffer.Slab.Bounded.Inline {
+extension Buffer.Slab.Inline {
 
-    /// Creates a bounded inline slab buffer with all slots vacant.
+    /// Creates an inline slab buffer with all slots vacant.
     ///
     /// The storage capacity equals the `wordCount` generic parameter.
     ///
@@ -85,7 +85,7 @@ extension Buffer.Slab.Bounded.Inline {
 
 // MARK: - Sequence.Drain.Protocol
 
-extension Buffer.Slab.Bounded.Inline: Sequence.Drain.`Protocol` {
+extension Buffer.Slab.Inline: Sequence.Drain.`Protocol` {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         for i: UInt in 0 ..< UInt(wordCount) {
@@ -102,13 +102,13 @@ extension Buffer.Slab.Bounded.Inline: Sequence.Drain.`Protocol` {
 
 // MARK: - Sequence.Clearable
 
-extension Buffer.Slab.Bounded.Inline: Sequence.Clearable where Element: Copyable {
+extension Buffer.Slab.Inline: Sequence.Clearable where Element: Copyable {
     // removeAll() already provided above
 }
 
 // MARK: - Property.View (.drain)
 
-extension Buffer.Slab.Bounded.Inline {
+extension Buffer.Slab.Inline {
     @inlinable
     public var drain: Property<Sequence.Drain, Self>.View {
         mutating _read {

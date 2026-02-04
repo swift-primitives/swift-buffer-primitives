@@ -1,6 +1,6 @@
-// MARK: - Copyable Conformances for Linear.Bounded.Inline
+// MARK: - Copyable Conformances for Linear.Inline
 
-extension Buffer.Linear.Bounded.Inline where Element: Copyable {
+extension Buffer.Linear.Inline where Element: Copyable {
 
     /// Returns the first element without removing it.
     ///
@@ -22,7 +22,7 @@ extension Buffer.Linear.Bounded.Inline where Element: Copyable {
 
 // MARK: - Sequence.Protocol
 
-extension Buffer.Linear.Bounded.Inline: Sequence.`Protocol` where Element: Copyable {
+extension Buffer.Linear.Inline: Sequence.`Protocol` where Element: Copyable {
     public struct Iterator: IteratorProtocol, @unchecked Sendable {
         @usableFromInline
         let storage: Storage.Inline<Element, capacity>
@@ -55,7 +55,7 @@ extension Buffer.Linear.Bounded.Inline: Sequence.`Protocol` where Element: Copya
 
 // MARK: - Property.View (.forEach)
 
-extension Buffer.Linear.Bounded.Inline where Element: Copyable {
+extension Buffer.Linear.Inline where Element: Copyable {
     @inlinable
     public var forEach: Property<Sequence.ForEach, Self>.View {
         mutating _read {

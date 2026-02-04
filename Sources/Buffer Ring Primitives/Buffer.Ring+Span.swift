@@ -1,6 +1,6 @@
 // MARK: - Unified Iterator for Ring buffers (Sequence.Protocol + Sequence.Borrowing.Protocol)
 
-extension Buffer.Ring.Growable where Element: Copyable {
+extension Buffer.Ring where Element: Copyable {
     /// Iterator that provides both element-at-a-time and span-based iteration
     /// for ring storage.
     ///
@@ -26,7 +26,7 @@ extension Buffer.Ring.Growable where Element: Copyable {
         @inlinable
         internal init(
             storageBase: UnsafePointer<Element>,
-            header: Buffer.Ring.Header
+            header: Buffer.Ring<Element>.Header
         ) {
             switch header.initialization {
             case .empty:
@@ -109,7 +109,7 @@ extension Buffer.Ring.Growable where Element: Copyable {
     }
 }
 
-extension Buffer.Ring.Growable: Sequence.`Protocol`, Sequence.Borrowing.`Protocol` where Element: Copyable {
+extension Buffer.Ring: Sequence.`Protocol`, Sequence.Borrowing.`Protocol` where Element: Copyable {
     @inlinable
     public borrowing func makeIterator() -> Iterator {
         let base = unsafe UnsafePointer(storage.pointer(at: .zero))
@@ -137,7 +137,7 @@ extension Buffer.Ring.Bounded where Element: Copyable {
         @inlinable
         internal init(
             storageBase: UnsafePointer<Element>,
-            header: Buffer.Ring.Header
+            header: Buffer.Ring<Element>.Header
         ) {
             switch header.initialization {
             case .empty:

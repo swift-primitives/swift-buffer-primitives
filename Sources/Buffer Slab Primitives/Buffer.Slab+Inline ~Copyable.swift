@@ -8,7 +8,7 @@ extension Buffer.Slab {
     ///
     /// - Precondition: The slot is not already occupied.
     @inlinable
-    public static func insert<Element: ~Copyable, let capacity: Int>(
+    public static func insert<let capacity: Int>(
         _ element: consuming Element,
         at slot: Bit.Index,
         header: inout Header,
@@ -25,7 +25,7 @@ extension Buffer.Slab {
     ///
     /// - Precondition: The slot is occupied.
     @inlinable
-    public static func remove<Element: ~Copyable, let capacity: Int>(
+    public static func remove<let capacity: Int>(
         at slot: Bit.Index,
         header: inout Header,
         storage: inout Storage.Inline<Element, capacity>
@@ -40,7 +40,7 @@ extension Buffer.Slab {
 
     /// Visits each occupied slot, passing the storage index.
     @inlinable
-    public static func forEachOccupied<Element: ~Copyable, let capacity: Int>(
+    public static func forEachOccupied<let capacity: Int>(
         header: borrowing Header,
         storage: borrowing Storage.Inline<Element, capacity>,
         _ body: (Index<Storage>) -> Void
@@ -55,7 +55,7 @@ extension Buffer.Slab {
 
     /// Deinitializes all occupied slots using the bitmap as truth.
     @inlinable
-    public static func deinitializeAll<Element: ~Copyable, let capacity: Int>(
+    public static func deinitializeAll<let capacity: Int>(
         header: inout Header,
         storage: inout Storage.Inline<Element, capacity>
     ) {

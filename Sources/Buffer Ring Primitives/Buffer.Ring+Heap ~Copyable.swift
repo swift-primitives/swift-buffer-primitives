@@ -11,7 +11,7 @@ extension Buffer.Ring {
     /// - Precondition: `header.count < header.capacity` (not full).
     /// - Note: Uses `Modular.advanced` per H1 — no manual `%`.
     @inlinable
-    public static func pushBack<Element: ~Copyable>(
+    public static func pushBack(
         _ element: consuming Element,
         header: inout Header,
         storage: Storage.Heap<Element>
@@ -36,7 +36,7 @@ extension Buffer.Ring {
     /// - Precondition: `header.count > 0` (not empty).
     /// - Note: Uses `Modular.successor` per H1 — no manual `%`.
     @inlinable
-    public static func popFront<Element: ~Copyable>(
+    public static func popFront(
         header: inout Header,
         storage: Storage.Heap<Element>
     ) -> Element {
@@ -59,7 +59,7 @@ extension Buffer.Ring {
     /// - Precondition: `header.count < header.capacity` (not full).
     /// - Note: Uses `Modular.predecessor` per H1 — no manual `%`.
     @inlinable
-    public static func pushFront<Element: ~Copyable>(
+    public static func pushFront(
         _ element: consuming Element,
         header: inout Header,
         storage: Storage.Heap<Element>
@@ -80,7 +80,7 @@ extension Buffer.Ring {
     ///
     /// - Precondition: `header.count > 0` (not empty).
     @inlinable
-    public static func popBack<Element: ~Copyable>(
+    public static func popBack(
         header: inout Header,
         storage: Storage.Heap<Element>
     ) -> Element {
@@ -118,7 +118,7 @@ extension Buffer.Ring {
 
     /// Deinitializes all elements tracked by the header.
     @inlinable
-    public static func deinitializeAll<Element: ~Copyable>(
+    public static func deinitializeAll(
         header: inout Header,
         storage: Storage.Heap<Element>
     ) {

@@ -1,6 +1,6 @@
-// MARK: - Copyable Conformances for Ring.Bounded.Inline
+// MARK: - Copyable Conformances for Ring.Inline
 
-extension Buffer.Ring.Bounded.Inline where Element: Copyable {
+extension Buffer.Ring.Inline where Element: Copyable {
 
     /// Returns the front element without removing it.
     ///
@@ -26,19 +26,19 @@ extension Buffer.Ring.Bounded.Inline where Element: Copyable {
 
 // MARK: - Sequence.Protocol
 
-extension Buffer.Ring.Bounded.Inline: Sequence.`Protocol` where Element: Copyable {
+extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
     public struct Iterator: IteratorProtocol, @unchecked Sendable {
         @usableFromInline
         let storage: Storage.Inline<Element, capacity>
         @usableFromInline
-        let header: Buffer.Ring.Header
+        let header: Buffer.Ring<Element>.Header
         @usableFromInline
         var current: UInt
         @usableFromInline
         let total: UInt
 
         @inlinable
-        init(storage: Storage.Inline<Element, capacity>, header: Buffer.Ring.Header) {
+        init(storage: Storage.Inline<Element, capacity>, header: Buffer.Ring<Element>.Header) {
             self.storage = storage
             self.header = header
             self.current = 0
@@ -67,7 +67,7 @@ extension Buffer.Ring.Bounded.Inline: Sequence.`Protocol` where Element: Copyabl
 
 // MARK: - Property.View (.forEach)
 
-extension Buffer.Ring.Bounded.Inline where Element: Copyable {
+extension Buffer.Ring.Inline where Element: Copyable {
     @inlinable
     public var forEach: Property<Sequence.ForEach, Self>.View {
         mutating _read {

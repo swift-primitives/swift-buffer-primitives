@@ -1,6 +1,6 @@
 // MARK: - Ring Factory Methods
 
-extension Buffer.Ring.Growable where Element == Int {
+extension Buffer.Ring where Element == Int {
     /// Creates a growable ring buffer pre-filled with the given elements.
     @inlinable
     public static func with(_ elements: [Int], minimumCapacity: UInt = 0) -> Self {
@@ -27,7 +27,7 @@ extension Buffer.Ring.Bounded where Element == Int {
 
 // MARK: - Linear Factory Methods
 
-extension Buffer.Linear.Growable where Element == Int {
+extension Buffer.Linear where Element == Int {
     /// Creates a growable linear buffer pre-filled with the given elements.
     @inlinable
     public static func with(_ elements: [Int], minimumCapacity: UInt = 0) -> Self {
@@ -68,7 +68,7 @@ extension Buffer.Slab.Bounded where Element == Int {
 
 // MARK: - Inline Ring Factory Methods
 
-extension Buffer.Ring.Bounded.Inline where Element == Int {
+extension Buffer.Ring.Inline where Element == Int {
     /// Creates a bounded inline ring buffer pre-filled with the given elements.
     @inlinable
     public static func with(_ elements: [Int]) throws(Storage.Inline<Int, capacity>.Error) -> Self {
@@ -82,7 +82,7 @@ extension Buffer.Ring.Bounded.Inline where Element == Int {
 
 // MARK: - Inline Linear Factory Methods
 
-extension Buffer.Linear.Bounded.Inline where Element == Int {
+extension Buffer.Linear.Inline where Element == Int {
     /// Creates a bounded inline linear buffer pre-filled with the given elements.
     @inlinable
     public static func with(_ elements: [Int]) throws(Storage.Inline<Int, capacity>.Error) -> Self {
@@ -96,7 +96,7 @@ extension Buffer.Linear.Bounded.Inline where Element == Int {
 
 // MARK: - Inline Slab Factory Methods
 
-extension Buffer.Slab.Bounded.Inline where Element == Int {
+extension Buffer.Slab.Inline where Element == Int {
     /// Creates a bounded inline slab buffer pre-filled at consecutive slots.
     @inlinable
     public static func with(_ elements: [Int]) throws(Storage.Inline<Int, wordCount>.Error) -> Self {

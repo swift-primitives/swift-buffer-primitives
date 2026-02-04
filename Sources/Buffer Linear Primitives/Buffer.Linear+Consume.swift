@@ -1,13 +1,13 @@
-// MARK: - Sequence.Consume.Protocol for Linear.Growable
+// MARK: - Sequence.Consume.Protocol for Linear
 
-extension Buffer.Linear.Growable {
+extension Buffer.Linear {
     /// State for consuming iteration — deinitializes remaining elements on early exit.
     ///
     /// Class-based because `Sequence.Consume.Protocol.ConsumeState` must be Copyable,
     /// and cleanup-on-drop requires a deinit.
     public final class ConsumeState: @unchecked Sendable {
         @usableFromInline
-        let header: Buffer.Linear.Header
+        let header: Buffer.Linear<Element>.Header
 
         @usableFromInline
         let storage: Storage.Heap<Element>
@@ -16,7 +16,7 @@ extension Buffer.Linear.Growable {
         var position: UInt
 
         @inlinable
-        package init(header: Buffer.Linear.Header, storage: Storage.Heap<Element>) {
+        package init(header: Buffer.Linear<Element>.Header, storage: Storage.Heap<Element>) {
             self.header = header
             self.storage = storage
             self.position = 0
@@ -35,7 +35,7 @@ extension Buffer.Linear.Growable {
     }
 }
 
-extension Buffer.Linear.Growable: Sequence.Consume.`Protocol` {
+extension Buffer.Linear: Sequence.Consume.`Protocol` {
     @inlinable
     public consuming func consume() -> Sequence.Consume.View<Element, ConsumeState> {
         let h = header

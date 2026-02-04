@@ -8,7 +8,7 @@ extension Buffer.Ring {
     ///
     /// - Precondition: `header.count < capacity` (not full).
     @inlinable
-    public static func pushBack<Element: ~Copyable, let capacity: Int>(
+    public static func pushBack<let capacity: Int>(
         _ element: consuming Element,
         header: inout Header,
         storage: inout Storage.Inline<Element, capacity>
@@ -32,7 +32,7 @@ extension Buffer.Ring {
     ///
     /// - Precondition: `header.count > 0` (not empty).
     @inlinable
-    public static func popFront<Element: ~Copyable, let capacity: Int>(
+    public static func popFront<let capacity: Int>(
         header: inout Header,
         storage: inout Storage.Inline<Element, capacity>
     ) -> Element {
@@ -54,7 +54,7 @@ extension Buffer.Ring {
     ///
     /// - Precondition: `header.count < capacity` (not full).
     @inlinable
-    public static func pushFront<Element: ~Copyable, let capacity: Int>(
+    public static func pushFront<let capacity: Int>(
         _ element: consuming Element,
         header: inout Header,
         storage: inout Storage.Inline<Element, capacity>
@@ -75,7 +75,7 @@ extension Buffer.Ring {
     ///
     /// - Precondition: `header.count > 0` (not empty).
     @inlinable
-    public static func popBack<Element: ~Copyable, let capacity: Int>(
+    public static func popBack<let capacity: Int>(
         header: inout Header,
         storage: inout Storage.Inline<Element, capacity>
     ) -> Element {
@@ -98,7 +98,7 @@ extension Buffer.Ring {
 
     /// Deinitializes all elements tracked by the header.
     @inlinable
-    public static func deinitializeAll<Element: ~Copyable, let capacity: Int>(
+    public static func deinitializeAll<let capacity: Int>(
         header: inout Header,
         storage: inout Storage.Inline<Element, capacity>
     ) {

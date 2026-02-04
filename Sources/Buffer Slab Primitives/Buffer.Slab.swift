@@ -1,8 +1,8 @@
 public import Sequence_Primitives
 
-// MARK: - Extensions for Slab.Growable (declared in Core)
+// MARK: - Extensions for Slab (declared in Core)
 
-extension Buffer.Slab.Growable {
+extension Buffer.Slab {
 
     /// Creates a growable slab buffer with at least the given capacity.
     ///
@@ -13,7 +13,7 @@ extension Buffer.Slab.Growable {
         let actualCapacity = storage.slotCapacity
         let bitCapacity = Bit.Index.Count(Cardinal(actualCapacity.rawValue.rawValue))
         self.init(
-            header: Buffer.Slab.Header(capacity: bitCapacity),
+            header: Buffer.Slab<Element>.Header(capacity: bitCapacity),
             storage: storage
         )
     }
@@ -37,7 +37,7 @@ extension Buffer.Slab.Growable {
     /// - Precondition: The slot is not occupied.
     @inlinable
     public mutating func insert(_ element: consuming Element, at slot: Bit.Index) {
-        Buffer.Slab.insert(consume element, at: slot, header: &header, storage: storage)
+        Buffer.Slab<Element>.insert(consume element, at: slot, header: &header, storage: storage)
     }
 
     /// Removes and returns the element at the given slot.
@@ -45,25 +45,25 @@ extension Buffer.Slab.Growable {
     /// - Precondition: The slot is occupied.
     @inlinable
     public mutating func remove(at slot: Bit.Index) -> Element {
-        Buffer.Slab.remove(at: slot, header: &header, storage: storage)
+        Buffer.Slab<Element>.remove(at: slot, header: &header, storage: storage)
     }
 
     /// Returns the first vacant slot, or `nil` if all slots are full.
     @inlinable
     public func firstVacant() -> Bit.Index? {
-        Buffer.Slab.firstVacant(header: header)
+        Buffer.Slab<Element>.firstVacant(header: header)
     }
 
     /// Removes all elements from the buffer.
     @inlinable
     public mutating func removeAll() {
-        Buffer.Slab.deinitializeAll(header: &header, storage: storage)
+        Buffer.Slab<Element>.deinitializeAll(header: &header, storage: storage)
     }
 }
 
 // MARK: - Sequence.Drain.Protocol
 
-extension Buffer.Slab.Growable: Sequence.Drain.`Protocol` {
+extension Buffer.Slab: Sequence.Drain.`Protocol` {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         header.bitmap.ones.forEach { bitIndex in
@@ -79,7 +79,7 @@ extension Buffer.Slab.Growable: Sequence.Drain.`Protocol` {
 
 // MARK: - Property.View (.drain)
 
-extension Buffer.Slab.Growable {
+extension Buffer.Slab {
     @inlinable
     public var drain: Property<Sequence.Drain, Self>.View {
         mutating _read {

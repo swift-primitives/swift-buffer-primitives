@@ -1,18 +1,17 @@
 public import Sequence_Primitives
 
-// MARK: - Extensions for Ring.Growable (declared in Core)
+// MARK: - Extensions for Linear (declared in Core)
 
-extension Buffer.Ring.Growable {
+extension Buffer.Linear {
 
-    /// Creates a growable ring buffer with at least the given capacity.
+    /// Creates a growable linear buffer with at least the given capacity.
     ///
-    /// The actual capacity may be larger than requested per H6 —
-    /// `header.capacity` is set from `storage.slotCapacity`.
+    /// Actual capacity comes from `storage.slotCapacity` per H6.
     @inlinable
     public init(minimumCapacity: Index<Storage>.Count) {
         let storage = Storage.Heap<Element>.create(minimumCapacity: minimumCapacity)
         self.init(
-            header: Buffer.Ring.Header(capacity: storage.slotCapacity),
+            header: Buffer.Linear<Element>.Header(capacity: storage.slotCapacity),
             storage: storage
         )
     }
@@ -35,48 +34,37 @@ extension Buffer.Ring.Growable {
 
     // MARK: - Mutations
 
-    /// Pushes an element to the back of the ring.
+    /// Appends an element to the back of the buffer.
     ///
     /// Grows the buffer if full.
     @inlinable
-    public mutating func pushBack(_ element: consuming Element) {
+    public mutating func append(_ element: consuming Element) {
         if header.isFull {
             _grow()
         }
-        Buffer.Ring.pushBack(consume element, header: &header, storage: storage)
+        Buffer.Linear<Element>.append(consume element, header: &header, storage: storage)
     }
 
-    /// Removes and returns the element at the front of the ring.
+    /// Removes and returns the first element, shifting remaining elements left.
     ///
     /// - Precondition: The buffer is not empty.
     @inlinable
-    public mutating func popFront() -> Element {
-        Buffer.Ring.popFront(header: &header, storage: storage)
+    public mutating func consumeFront() -> Element {
+        Buffer.Linear<Element>.consumeFront(header: &header, storage: storage)
     }
 
-    /// Pushes an element to the front of the ring.
-    ///
-    /// Grows the buffer if full.
-    @inlinable
-    public mutating func pushFront(_ element: consuming Element) {
-        if header.isFull {
-            _grow()
-        }
-        Buffer.Ring.pushFront(consume element, header: &header, storage: storage)
-    }
-
-    /// Removes and returns the element at the back of the ring.
+    /// Removes and returns the last element.
     ///
     /// - Precondition: The buffer is not empty.
     @inlinable
-    public mutating func popBack() -> Element {
-        Buffer.Ring.popBack(header: &header, storage: storage)
+    public mutating func removeLast() -> Element {
+        Buffer.Linear<Element>.consumeBack(header: &header, storage: storage)
     }
 
     /// Removes all elements from the buffer.
     @inlinable
     public mutating func removeAll() {
-        Buffer.Ring.deinitializeAll(header: &header, storage: storage)
+        Buffer.Linear<Element>.deinitializeAll(header: &header, storage: storage)
     }
 
     /// Ensures the buffer can hold at least `minimumCapacity` elements.
@@ -100,54 +88,44 @@ extension Buffer.Ring.Growable {
     @inlinable
     mutating func _growTo(_ minimumCapacity: Index<Storage>.Count) {
         let newStorage = Storage.Heap<Element>.create(minimumCapacity: minimumCapacity)
-        // Move elements to new storage in linearized order
+        // Move elements to new storage — linear is always contiguous
         switch header.initialization {
         case .empty:
             break
         case .one(let range):
             storage.move(range: range, to: newStorage)
-        case .two(let first, let second):
-            storage.move(range: first, to: newStorage)
-            // Move second range after first range's elements in destination
-            let offset = first.count.rawValue.rawValue
-            let secondCount = second.count.rawValue.rawValue
-            for i: UInt in 0 ..< secondCount {
-                let srcIdx = Index<Storage>(Ordinal(second.lowerBound.rawValue.rawValue &+ i))
-                let dstIdx = Index<Storage>(Ordinal(offset &+ i))
-                let element = storage.move(at: srcIdx)
-                newStorage.initialize(to: consume element, at: dstIdx)
-            }
+        case .two(_, _):
+            break
         }
         let oldCount = header.count
         storage.initialization = .empty
         storage = newStorage
-        header = Buffer.Ring.Header(capacity: newStorage.slotCapacity)
+        header = Buffer.Linear<Element>.Header(capacity: newStorage.slotCapacity)
         header.count = oldCount
-        // head is 0 after linearization
         storage.initialization = header.initialization
     }
 }
 
 // MARK: - Sequence.Drain.Protocol
 
-extension Buffer.Ring.Growable: Sequence.Drain.`Protocol` {
+extension Buffer.Linear: Sequence.Drain.`Protocol` {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         while !isEmpty {
-            body(popFront())
+            body(consumeFront())
         }
     }
 }
 
 // MARK: - Sequence.Clearable
 
-extension Buffer.Ring.Growable: Sequence.Clearable where Element: Copyable {
+extension Buffer.Linear: Sequence.Clearable where Element: Copyable {
     // removeAll() already provided above
 }
 
 // MARK: - Property.View (.drain)
 
-extension Buffer.Ring.Growable {
+extension Buffer.Linear {
     @inlinable
     public var drain: Property<Sequence.Drain, Self>.View {
         mutating _read {

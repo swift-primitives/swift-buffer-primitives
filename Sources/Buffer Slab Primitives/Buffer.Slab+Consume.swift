@@ -1,6 +1,6 @@
-// MARK: - Sequence.Consume.Protocol for Slab.Growable
+// MARK: - Sequence.Consume.Protocol for Slab
 
-extension Buffer.Slab.Growable {
+extension Buffer.Slab {
     /// State for consuming iteration — deinitializes remaining occupied slots on early exit.
     ///
     /// Class-based because `Sequence.Consume.Protocol.ConsumeState` must be Copyable,
@@ -36,7 +36,7 @@ extension Buffer.Slab.Growable {
     }
 }
 
-extension Buffer.Slab.Growable: Sequence.Consume.`Protocol` {
+extension Buffer.Slab: Sequence.Consume.`Protocol` {
     @inlinable
     public consuming func consume() -> Sequence.Consume.View<Element, ConsumeState> {
         // Snapshot occupied slot indices before consuming

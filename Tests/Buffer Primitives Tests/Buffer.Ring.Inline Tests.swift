@@ -2,12 +2,12 @@ import Testing
 import Buffer_Primitives
 import Buffer_Primitives_Test_Support
 
-@Suite("Buffer.Ring.Bounded.Inline")
+@Suite("Buffer.Ring.Inline")
 struct RingBoundedInlineTests {
 
     @Test("FIFO ordering")
     func fifo() throws {
-        var buffer = try Buffer.Ring.Bounded<Int>.Inline<4>()
+        var buffer = try Buffer.Ring<Int>.Inline<4>()
         _ = buffer.pushBack(10)
         _ = buffer.pushBack(20)
         _ = buffer.pushBack(30)
@@ -22,7 +22,7 @@ struct RingBoundedInlineTests {
 
     @Test("wrap-around behavior")
     func wrapAround() throws {
-        var buffer = try Buffer.Ring.Bounded<Int>.Inline<4>()
+        var buffer = try Buffer.Ring<Int>.Inline<4>()
 
         // Fill to capacity
         _ = buffer.pushBack(0)
@@ -47,7 +47,7 @@ struct RingBoundedInlineTests {
 
     @Test("full rejection — pushBack returns element when full")
     func fullRejectionBack() throws {
-        var buffer = try Buffer.Ring.Bounded<Int>.Inline<4>()
+        var buffer = try Buffer.Ring<Int>.Inline<4>()
 
         _ = buffer.pushBack(0)
         _ = buffer.pushBack(1)
@@ -61,7 +61,7 @@ struct RingBoundedInlineTests {
 
     @Test("full rejection — pushFront returns element when full")
     func fullRejectionFront() throws {
-        var buffer = try Buffer.Ring.Bounded<Int>.Inline<4>()
+        var buffer = try Buffer.Ring<Int>.Inline<4>()
 
         _ = buffer.pushBack(0)
         _ = buffer.pushBack(1)
@@ -74,7 +74,7 @@ struct RingBoundedInlineTests {
 
     @Test("pushFront and popBack (deque behavior)")
     func deque() throws {
-        var buffer = try Buffer.Ring.Bounded<Int>.Inline<4>()
+        var buffer = try Buffer.Ring<Int>.Inline<4>()
         _ = buffer.pushFront(10)
         _ = buffer.pushFront(20)
 
@@ -84,7 +84,7 @@ struct RingBoundedInlineTests {
 
     @Test("peekFront and peekBack (Copyable)")
     func peekFrontBack() throws {
-        let buffer = try Buffer.Ring.Bounded<Int>.Inline<8>.with([10, 20, 30])
+        let buffer = try Buffer.Ring<Int>.Inline<8>.with([10, 20, 30])
         #expect(buffer.peekFront == 10)
         #expect(buffer.peekBack == 30)
         #expect(buffer.count == 3)
@@ -92,7 +92,7 @@ struct RingBoundedInlineTests {
 
     @Test("drain removes all elements in FIFO order")
     func drain() throws {
-        var buffer = try Buffer.Ring.Bounded<Int>.Inline<8>.with([10, 20, 30])
+        var buffer = try Buffer.Ring<Int>.Inline<8>.with([10, 20, 30])
         var drained: [Int] = []
         buffer.drain { drained.append($0) }
         #expect(drained == [10, 20, 30])
@@ -101,7 +101,7 @@ struct RingBoundedInlineTests {
 
     @Test("removeAll clears buffer")
     func removeAll() throws {
-        var buffer = try Buffer.Ring.Bounded<Int>.Inline<8>.with([1, 2, 3])
+        var buffer = try Buffer.Ring<Int>.Inline<8>.with([1, 2, 3])
         buffer.removeAll()
         #expect(buffer.isEmpty)
         #expect(buffer.count == 0)
@@ -109,7 +109,7 @@ struct RingBoundedInlineTests {
 
     @Test("Sequence.Protocol iteration (Copyable)")
     func sequenceIteration() throws {
-        let buffer = try Buffer.Ring.Bounded<Int>.Inline<8>.with([10, 20, 30])
+        let buffer = try Buffer.Ring<Int>.Inline<8>.with([10, 20, 30])
         var collected: [Int] = []
         var iter = buffer.makeIterator()
         while let value = iter.next() {
@@ -120,7 +120,7 @@ struct RingBoundedInlineTests {
 
     @Test("interleaved push/pop cycles")
     func interleaved() throws {
-        var buffer = try Buffer.Ring.Bounded<Int>.Inline<4>()
+        var buffer = try Buffer.Ring<Int>.Inline<4>()
         _ = buffer.pushBack(1)
         _ = buffer.pushBack(2)
         #expect(buffer.popFront() == 1)

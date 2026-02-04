@@ -8,7 +8,7 @@ extension Buffer.Linear {
     ///
     /// - Precondition: `header.count < capacity` (not full).
     @inlinable
-    public static func append<Element: ~Copyable, let capacity: Int>(
+    public static func append<let capacity: Int>(
         _ element: consuming Element,
         header: inout Header,
         storage: inout Storage.Inline<Element, capacity>
@@ -28,7 +28,7 @@ extension Buffer.Linear {
     ///
     /// - Precondition: `header.count > 0` (not empty).
     @inlinable
-    public static func consumeFront<Element: ~Copyable, let capacity: Int>(
+    public static func consumeFront<let capacity: Int>(
         header: inout Header,
         storage: inout Storage.Inline<Element, capacity>
     ) -> Element {
@@ -59,7 +59,7 @@ extension Buffer.Linear {
     ///
     /// - Precondition: `header.count > 0` (not empty).
     @inlinable
-    public static func consumeBack<Element: ~Copyable, let capacity: Int>(
+    public static func consumeBack<let capacity: Int>(
         header: inout Header,
         storage: inout Storage.Inline<Element, capacity>
     ) -> Element {
@@ -79,7 +79,7 @@ extension Buffer.Linear {
 
     /// Deinitializes all elements tracked by the header.
     @inlinable
-    public static func deinitializeAll<Element: ~Copyable, let capacity: Int>(
+    public static func deinitializeAll<let capacity: Int>(
         header: inout Header,
         storage: inout Storage.Inline<Element, capacity>
     ) {

@@ -1,12 +1,12 @@
 // MARK: - Static Operations for Copyable Elements on Storage.Inline
 
-extension Buffer.Linear {
+extension Buffer.Linear where Element: Copyable {
 
     /// Copies elements from inline source storage to heap destination storage.
     ///
     /// After this call, destination contains elements at slots `0 ..< header.count`.
     @inlinable
-    public static func copy<Element: Copyable, let capacity: Int>(
+    public static func copy<let capacity: Int>(
         header: Header,
         source: borrowing Storage.Inline<Element, capacity>,
         to destination: Storage.Heap<Element>

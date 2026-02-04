@@ -1,6 +1,6 @@
 // MARK: - Unified Iterator for Linear buffers (Sequence.Protocol + Sequence.Borrowing.Protocol)
 
-extension Buffer.Linear.Growable where Element: Copyable {
+extension Buffer.Linear where Element: Copyable {
     /// Iterator that provides both element-at-a-time and span-based iteration
     /// for linear storage.
     @safe
@@ -45,7 +45,7 @@ extension Buffer.Linear.Growable where Element: Copyable {
     }
 }
 
-extension Buffer.Linear.Growable: Sequence.`Protocol`, Sequence.Borrowing.`Protocol` where Element: Copyable {
+extension Buffer.Linear: Sequence.`Protocol`, Sequence.Borrowing.`Protocol` where Element: Copyable {
     @inlinable
     public borrowing func makeIterator() -> Iterator {
         let base = unsafe UnsafePointer(storage.pointer(at: .zero))
