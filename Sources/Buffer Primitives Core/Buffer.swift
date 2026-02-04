@@ -402,5 +402,3 @@ extension Buffer.Slab.Bounded.Indexed: @unchecked Sendable where Element: Sendab
 
 extension Buffer.Slab.Inline: Copyable where Element: Copyable {}
 extension Buffer.Slab.Inline: Sendable where Element: Sendable {}
-
-
