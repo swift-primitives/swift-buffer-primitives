@@ -7,7 +7,7 @@ struct SlabBoundedTests {
 
     @Test("insert and remove at specific slots")
     func insertRemove() {
-        var buffer = Buffer.Slab<Int>.Bounded(minimumCapacity: 8)
+        var buffer = Buffer<Int>.Slab.Bounded(minimumCapacity: 8)
         let slot: Bit.Index = 3
         buffer.insert(42, at: slot)
         #expect(buffer.isOccupied(at: slot) == true)
@@ -21,7 +21,7 @@ struct SlabBoundedTests {
 
     @Test("sparse occupancy — non-contiguous slots")
     func sparseOccupancy() {
-        var buffer = Buffer.Slab<Int>.Bounded(minimumCapacity: 8)
+        var buffer = Buffer<Int>.Slab.Bounded(minimumCapacity: 8)
         buffer.insert(10, at: 0)
         buffer.insert(20, at: 3)
         buffer.insert(30, at: 7)
@@ -35,7 +35,7 @@ struct SlabBoundedTests {
 
     @Test("slot reuse after removal")
     func slotReuse() {
-        var buffer = Buffer.Slab<Int>.Bounded(minimumCapacity: 4)
+        var buffer = Buffer<Int>.Slab.Bounded(minimumCapacity: 4)
         let slot: Bit.Index = 1
         buffer.insert(10, at: slot)
         _ = buffer.remove(at: slot)
@@ -45,7 +45,7 @@ struct SlabBoundedTests {
 
     @Test("firstVacant finds available slot")
     func firstVacant() {
-        var buffer = Buffer.Slab<Int>.Bounded(minimumCapacity: 4)
+        var buffer = Buffer<Int>.Slab.Bounded(minimumCapacity: 4)
         buffer.insert(10, at: 0)
         buffer.insert(20, at: 1)
 
@@ -55,7 +55,7 @@ struct SlabBoundedTests {
 
     @Test("drain removes all elements")
     func drain() {
-        var buffer = Buffer.Slab<Int>.Bounded.with([10, 20, 30], capacity: 8)
+        var buffer = Buffer<Int>.Slab.Bounded.with([10, 20, 30], capacity: 8)
         var drained: [Int] = []
         buffer.drain { drained.append($0) }
         #expect(buffer.isEmpty == true)
@@ -64,7 +64,7 @@ struct SlabBoundedTests {
 
     @Test("removeAll clears buffer")
     func removeAll() {
-        var buffer = Buffer.Slab<Int>.Bounded.with([1, 2, 3], capacity: 8)
+        var buffer = Buffer<Int>.Slab.Bounded.with([1, 2, 3], capacity: 8)
         buffer.removeAll()
         #expect(buffer.isEmpty == true)
         #expect(buffer.occupancy == 0)
@@ -72,7 +72,7 @@ struct SlabBoundedTests {
 
     @Test("peek reads without removing (Copyable)")
     func peek() {
-        var buffer = Buffer.Slab<Int>.Bounded(minimumCapacity: 8)
+        var buffer = Buffer<Int>.Slab.Bounded(minimumCapacity: 8)
         let slot: Bit.Index = 5
         buffer.insert(42, at: slot)
         #expect(buffer.peek(at: slot) == 42)
@@ -82,7 +82,7 @@ struct SlabBoundedTests {
     @Test("deinit cleans up occupied slots")
     func deinitCleanup() {
         // Create and drop — deinit should iterate bitmap.ones
-        var buffer: Buffer.Slab<Int>.Bounded? = Buffer.Slab<Int>.Bounded(
+        var buffer: Buffer<Int>.Slab.Bounded? = Buffer<Int>.Slab.Bounded(
             minimumCapacity: 4
         )
         buffer!.insert(10, at: 0)

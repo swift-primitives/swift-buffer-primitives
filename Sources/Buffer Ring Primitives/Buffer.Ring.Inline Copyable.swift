@@ -31,14 +31,14 @@ extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
         @usableFromInline
         let storage: Storage.Inline<Element, capacity>
         @usableFromInline
-        let header: Buffer.Ring<Element>.Header
+        let header: Buffer<Element>.Ring.Header
         @usableFromInline
         var current: UInt
         @usableFromInline
         let total: UInt
 
         @inlinable
-        init(storage: Storage.Inline<Element, capacity>, header: Buffer.Ring<Element>.Header) {
+        init(storage: Storage.Inline<Element, capacity>, header: Buffer<Element>.Ring.Header) {
             self.storage = storage
             self.header = header
             self.current = 0

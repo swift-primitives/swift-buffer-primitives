@@ -11,7 +11,7 @@ extension Buffer.Linear.Inline {
     public init() throws(Storage.Inline<Element, capacity>.Error) {
         let cap = Index<Storage>.Count(Cardinal(UInt(capacity)))
         self.init(
-            header: Buffer.Linear<Element>.Header(capacity: cap),
+            header: Buffer<Element>.Linear.Header(capacity: cap),
             storage: try .init()
         )
     }
@@ -36,7 +36,7 @@ extension Buffer.Linear.Inline {
         if header.isFull {
             return element
         }
-        Buffer.Linear<Element>.append(consume element, header: &header, storage: &storage)
+        Buffer<Element>.Linear.append(consume element, header: &header, storage: &storage)
         return nil
     }
 
@@ -45,7 +45,7 @@ extension Buffer.Linear.Inline {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func consumeFront() -> Element {
-        Buffer.Linear<Element>.consumeFront(header: &header, storage: &storage)
+        Buffer<Element>.Linear.consumeFront(header: &header, storage: &storage)
     }
 
     /// Removes and returns the last element.
@@ -53,13 +53,13 @@ extension Buffer.Linear.Inline {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func removeLast() -> Element {
-        Buffer.Linear<Element>.consumeBack(header: &header, storage: &storage)
+        Buffer<Element>.Linear.consumeBack(header: &header, storage: &storage)
     }
 
     /// Removes all elements from the buffer.
     @inlinable
     public mutating func removeAll() {
-        Buffer.Linear<Element>.deinitializeAll(header: &header, storage: &storage)
+        Buffer<Element>.Linear.deinitializeAll(header: &header, storage: &storage)
     }
 }
 

@@ -7,20 +7,20 @@ extension Buffer.Ring.Bounded {
     /// and cleanup-on-drop requires a deinit.
     public final class ConsumeState: @unchecked Sendable {
         @usableFromInline
-        var header: Buffer.Ring<Element>.Header
+        var header: Buffer<Element>.Ring.Header
 
         @usableFromInline
         let storage: Storage.Heap<Element>
 
         @inlinable
-        package init(header: Buffer.Ring<Element>.Header, storage: Storage.Heap<Element>) {
+        package init(header: Buffer<Element>.Ring.Header, storage: Storage.Heap<Element>) {
             self.header = header
             self.storage = storage
         }
 
         deinit {
             var h = header
-            Buffer.Ring<Element>.deinitializeAll(header: &h, storage: storage)
+            Buffer<Element>.Ring.deinitializeAll(header: &h, storage: storage)
         }
     }
 }
@@ -34,7 +34,7 @@ extension Buffer.Ring.Bounded: Sequence.Consume.`Protocol` {
             state: ConsumeState(header: h, storage: s),
             next: { state in
                 guard !state.header.isEmpty else { return nil }
-                return Buffer.Ring<Element>.popFront(header: &state.header, storage: state.storage)
+                return Buffer<Element>.Ring.popFront(header: &state.header, storage: state.storage)
             }
         )
     }

@@ -11,7 +11,7 @@ extension Buffer.Slab.Bounded {
         let actualCapacity = storage.slotCapacity
         let bitCapacity = Bit.Index.Count(Cardinal(actualCapacity.rawValue.rawValue))
         self.init(
-            header: Buffer.Slab<Element>.Header(capacity: bitCapacity),
+            header: Buffer<Element>.Slab.Header(capacity: bitCapacity),
             storage: storage
         )
     }
@@ -41,7 +41,7 @@ extension Buffer.Slab.Bounded {
     /// - Precondition: The slot is not occupied.
     @inlinable
     public mutating func insert(_ element: consuming Element, at slot: Bit.Index) {
-        Buffer.Slab<Element>.insert(consume element, at: slot, header: &header, storage: storage)
+        Buffer<Element>.Slab.insert(consume element, at: slot, header: &header, storage: storage)
     }
 
     /// Removes and returns the element at the given slot.
@@ -49,19 +49,19 @@ extension Buffer.Slab.Bounded {
     /// - Precondition: The slot is occupied.
     @inlinable
     public mutating func remove(at slot: Bit.Index) -> Element {
-        Buffer.Slab<Element>.remove(at: slot, header: &header, storage: storage)
+        Buffer<Element>.Slab.remove(at: slot, header: &header, storage: storage)
     }
 
     /// Returns the first vacant slot, or `nil` if all slots are full.
     @inlinable
     public func firstVacant() -> Bit.Index? {
-        Buffer.Slab<Element>.firstVacant(header: header)
+        Buffer<Element>.Slab.firstVacant(header: header)
     }
 
     /// Removes all elements from the buffer.
     @inlinable
     public mutating func removeAll() {
-        Buffer.Slab<Element>.deinitializeAll(header: &header, storage: storage)
+        Buffer<Element>.Slab.deinitializeAll(header: &header, storage: storage)
     }
 }
 

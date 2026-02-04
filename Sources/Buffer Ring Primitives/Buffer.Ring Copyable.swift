@@ -28,7 +28,7 @@ extension Buffer.Ring where Element: Copyable {
     mutating func _makeUnique() {
         if !isKnownUniquelyReferenced(&storage) {
             let newStorage = Storage.Heap<Element>.create(minimumCapacity: header.capacity)
-            Buffer.Ring<Element>.copy(header: header, source: storage, to: newStorage)
+            Buffer<Element>.Ring.copy(header: header, source: storage, to: newStorage)
             let oldCount = header.count
             storage = newStorage
             header = .init(capacity: newStorage.slotCapacity)

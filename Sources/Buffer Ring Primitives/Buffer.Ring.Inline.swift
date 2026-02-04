@@ -11,7 +11,7 @@ extension Buffer.Ring.Inline {
     public init() throws(Storage.Inline<Element, capacity>.Error) {
         let cap = Index<Storage>.Count(Cardinal(UInt(capacity)))
         self.init(
-            header: Buffer.Ring<Element>.Header(capacity: cap),
+            header: Buffer<Element>.Ring.Header(capacity: cap),
             storage: try .init()
         )
     }
@@ -36,7 +36,7 @@ extension Buffer.Ring.Inline {
         if header.isFull {
             return element
         }
-        Buffer.Ring<Element>.pushBack(consume element, header: &header, storage: &storage)
+        Buffer<Element>.Ring.pushBack(consume element, header: &header, storage: &storage)
         return nil
     }
 
@@ -45,7 +45,7 @@ extension Buffer.Ring.Inline {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func popFront() -> Element {
-        Buffer.Ring<Element>.popFront(header: &header, storage: &storage)
+        Buffer<Element>.Ring.popFront(header: &header, storage: &storage)
     }
 
     /// Pushes an element to the front. Returns the element if the buffer is full.
@@ -54,7 +54,7 @@ extension Buffer.Ring.Inline {
         if header.isFull {
             return element
         }
-        Buffer.Ring<Element>.pushFront(consume element, header: &header, storage: &storage)
+        Buffer<Element>.Ring.pushFront(consume element, header: &header, storage: &storage)
         return nil
     }
 
@@ -63,13 +63,13 @@ extension Buffer.Ring.Inline {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func popBack() -> Element {
-        Buffer.Ring<Element>.popBack(header: &header, storage: &storage)
+        Buffer<Element>.Ring.popBack(header: &header, storage: &storage)
     }
 
     /// Removes all elements from the buffer.
     @inlinable
     public mutating func removeAll() {
-        Buffer.Ring<Element>.deinitializeAll(header: &header, storage: &storage)
+        Buffer<Element>.Ring.deinitializeAll(header: &header, storage: &storage)
     }
 }
 

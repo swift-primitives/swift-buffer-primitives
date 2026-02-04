@@ -7,7 +7,7 @@ struct LinearGrowableTests {
 
     @Test("append and consumeFront")
     func appendConsumeFront() {
-        var buffer = Buffer.Linear<Int>(minimumCapacity: 4)
+        var buffer = Buffer<Int>.Linear(minimumCapacity: 4)
         buffer.append(10)
         buffer.append(20)
         buffer.append(30)
@@ -20,7 +20,7 @@ struct LinearGrowableTests {
 
     @Test("append and removeLast")
     func appendRemoveLast() {
-        var buffer = Buffer.Linear<Int>(minimumCapacity: 4)
+        var buffer = Buffer<Int>.Linear(minimumCapacity: 4)
         buffer.append(10)
         buffer.append(20)
         buffer.append(30)
@@ -33,7 +33,7 @@ struct LinearGrowableTests {
 
     @Test("growth doubles capacity")
     func growth() {
-        var buffer = Buffer.Linear<Int>(minimumCapacity: 2)
+        var buffer = Buffer<Int>.Linear(minimumCapacity: 2)
         let originalCap = buffer.capacity
 
         var i = 0
@@ -55,7 +55,7 @@ struct LinearGrowableTests {
 
     @Test("drain removes all in front-to-back order")
     func drain() {
-        var buffer = Buffer.Linear<Int>.with([10, 20, 30])
+        var buffer = Buffer<Int>.Linear.with([10, 20, 30])
         var drained: [Int] = []
         buffer.drain { drained.append($0) }
         #expect(drained == [10, 20, 30])
@@ -64,21 +64,21 @@ struct LinearGrowableTests {
 
     @Test("removeAll clears buffer")
     func removeAll() {
-        var buffer = Buffer.Linear<Int>.with([1, 2, 3])
+        var buffer = Buffer<Int>.Linear.with([1, 2, 3])
         buffer.removeAll()
         #expect(buffer.isEmpty)
     }
 
     @Test("peekFront and peekBack (Copyable)")
     func peekFrontBack() {
-        let buffer = Buffer.Linear<Int>.with([10, 20, 30])
+        let buffer = Buffer<Int>.Linear.with([10, 20, 30])
         #expect(buffer.peekFront == 10)
         #expect(buffer.peekBack == 30)
     }
 
     @Test("Sequence.Protocol iteration (Copyable)")
     func sequenceIteration() {
-        let buffer = Buffer.Linear<Int>.with([10, 20, 30])
+        let buffer = Buffer<Int>.Linear.with([10, 20, 30])
         var collected: [Int] = []
         var iter = buffer.makeIterator()
         while let value = iter.next() {
@@ -89,7 +89,7 @@ struct LinearGrowableTests {
 
     @Test("single element")
     func singleElement() {
-        var buffer = Buffer.Linear<Int>(minimumCapacity: 1)
+        var buffer = Buffer<Int>.Linear(minimumCapacity: 1)
         buffer.append(42)
         #expect(buffer.count == 1)
         #expect(buffer.removeLast() == 42)
@@ -98,7 +98,7 @@ struct LinearGrowableTests {
 
     @Test("reserveCapacity grows if needed")
     func reserveCapacity() {
-        var buffer = Buffer.Linear<Int>(minimumCapacity: 2)
+        var buffer = Buffer<Int>.Linear(minimumCapacity: 2)
         buffer.reserveCapacity(Index<Storage>.Count(Cardinal(100)))
         #expect(buffer.capacity.rawValue.rawValue >= 100)
     }

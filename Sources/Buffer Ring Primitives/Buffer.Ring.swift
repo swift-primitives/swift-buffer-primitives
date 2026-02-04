@@ -12,7 +12,7 @@ extension Buffer.Ring {
     public init(minimumCapacity: Index<Storage>.Count) {
         let storage = Storage.Heap<Element>.create(minimumCapacity: minimumCapacity)
         self.init(
-            header: Buffer.Ring<Element>.Header(capacity: storage.slotCapacity),
+            header: Buffer<Element>.Ring.Header(capacity: storage.slotCapacity),
             storage: storage
         )
     }
@@ -43,7 +43,7 @@ extension Buffer.Ring {
         if header.isFull {
             _grow()
         }
-        Buffer.Ring<Element>.pushBack(consume element, header: &header, storage: storage)
+        Buffer<Element>.Ring.pushBack(consume element, header: &header, storage: storage)
     }
 
     /// Removes and returns the element at the front of the ring.
@@ -51,7 +51,7 @@ extension Buffer.Ring {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func popFront() -> Element {
-        Buffer.Ring<Element>.popFront(header: &header, storage: storage)
+        Buffer<Element>.Ring.popFront(header: &header, storage: storage)
     }
 
     /// Pushes an element to the front of the ring.
@@ -62,7 +62,7 @@ extension Buffer.Ring {
         if header.isFull {
             _grow()
         }
-        Buffer.Ring<Element>.pushFront(consume element, header: &header, storage: storage)
+        Buffer<Element>.Ring.pushFront(consume element, header: &header, storage: storage)
     }
 
     /// Removes and returns the element at the back of the ring.
@@ -70,13 +70,13 @@ extension Buffer.Ring {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func popBack() -> Element {
-        Buffer.Ring<Element>.popBack(header: &header, storage: storage)
+        Buffer<Element>.Ring.popBack(header: &header, storage: storage)
     }
 
     /// Removes all elements from the buffer.
     @inlinable
     public mutating func removeAll() {
-        Buffer.Ring<Element>.deinitializeAll(header: &header, storage: storage)
+        Buffer<Element>.Ring.deinitializeAll(header: &header, storage: storage)
     }
 
     /// Ensures the buffer can hold at least `minimumCapacity` elements.
@@ -121,7 +121,7 @@ extension Buffer.Ring {
         let oldCount = header.count
         storage.initialization = .empty
         storage = newStorage
-        header = Buffer.Ring<Element>.Header(capacity: newStorage.slotCapacity)
+        header = Buffer<Element>.Ring.Header(capacity: newStorage.slotCapacity)
         header.count = oldCount
         // head is 0 after linearization
         storage.initialization = header.initialization

@@ -9,7 +9,7 @@ extension Buffer.Linear.Bounded {
     public init(minimumCapacity: Index<Storage>.Count) {
         let storage = Storage.Heap<Element>.create(minimumCapacity: minimumCapacity)
         self.init(
-            header: Buffer.Linear<Element>.Header(capacity: storage.slotCapacity),
+            header: Buffer<Element>.Linear.Header(capacity: storage.slotCapacity),
             storage: storage
         )
     }
@@ -38,7 +38,7 @@ extension Buffer.Linear.Bounded {
         if header.isFull {
             return element
         }
-        Buffer.Linear<Element>.append(consume element, header: &header, storage: storage)
+        Buffer<Element>.Linear.append(consume element, header: &header, storage: storage)
         return nil
     }
 
@@ -47,7 +47,7 @@ extension Buffer.Linear.Bounded {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func consumeFront() -> Element {
-        Buffer.Linear<Element>.consumeFront(header: &header, storage: storage)
+        Buffer<Element>.Linear.consumeFront(header: &header, storage: storage)
     }
 
     /// Removes and returns the last element.
@@ -55,13 +55,13 @@ extension Buffer.Linear.Bounded {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func removeLast() -> Element {
-        Buffer.Linear<Element>.consumeBack(header: &header, storage: storage)
+        Buffer<Element>.Linear.consumeBack(header: &header, storage: storage)
     }
 
     /// Removes all elements from the buffer.
     @inlinable
     public mutating func removeAll() {
-        Buffer.Linear<Element>.deinitializeAll(header: &header, storage: storage)
+        Buffer<Element>.Linear.deinitializeAll(header: &header, storage: storage)
     }
 }
 

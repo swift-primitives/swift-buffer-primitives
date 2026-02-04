@@ -24,10 +24,10 @@ extension Buffer.Linear where Element: Copyable {
     mutating func _makeUnique() {
         if !isKnownUniquelyReferenced(&storage) {
             let newStorage = Storage.Heap<Element>.create(minimumCapacity: header.capacity)
-            Buffer.Linear<Element>.copy(header: header, source: storage, to: newStorage)
+            Buffer<Element>.Linear.copy(header: header, source: storage, to: newStorage)
             let oldCount = header.count
             storage = newStorage
-            header = Buffer.Linear<Element>.Header(capacity: newStorage.slotCapacity)
+            header = Buffer<Element>.Linear.Header(capacity: newStorage.slotCapacity)
             header.count = oldCount
             storage.initialization = header.initialization
         }
