@@ -7,7 +7,7 @@ extension Buffer.Linear.Bounded {
     /// and cleanup-on-drop requires a deinit.
     public final class ConsumeState: @unchecked Sendable {
         @usableFromInline
-        let header: Buffer<Element>.Linear.Header
+        let header: Buffer.Linear.Header
 
         @usableFromInline
         let storage: Storage.Heap<Element>
@@ -16,7 +16,7 @@ extension Buffer.Linear.Bounded {
         var position: UInt
 
         @inlinable
-        package init(header: Buffer<Element>.Linear.Header, storage: Storage.Heap<Element>) {
+        package init(header: Buffer.Linear.Header, storage: Storage.Heap<Element>) {
             self.header = header
             self.storage = storage
             self.position = 0

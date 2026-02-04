@@ -11,7 +11,7 @@ extension Buffer.Linear {
     public init(minimumCapacity: Index<Storage>.Count) {
         let storage = Storage.Heap<Element>.create(minimumCapacity: minimumCapacity)
         self.init(
-            header: Buffer<Element>.Linear.Header(capacity: storage.slotCapacity),
+            header: Buffer.Linear.Header(capacity: storage.slotCapacity),
             storage: storage
         )
     }
@@ -42,7 +42,7 @@ extension Buffer.Linear {
         if header.isFull {
             _grow()
         }
-        Buffer<Element>.Linear.append(consume element, header: &header, storage: storage)
+        Buffer.Linear.append(consume element, header: &header, storage: storage)
     }
 
     /// Removes and returns the first element, shifting remaining elements left.
@@ -50,7 +50,7 @@ extension Buffer.Linear {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func consumeFront() -> Element {
-        Buffer<Element>.Linear.consumeFront(header: &header, storage: storage)
+        Buffer.Linear.consumeFront(header: &header, storage: storage)
     }
 
     /// Removes and returns the last element.
@@ -58,13 +58,13 @@ extension Buffer.Linear {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func removeLast() -> Element {
-        Buffer<Element>.Linear.consumeBack(header: &header, storage: storage)
+        Buffer.Linear.consumeBack(header: &header, storage: storage)
     }
 
     /// Removes all elements from the buffer.
     @inlinable
     public mutating func removeAll() {
-        Buffer<Element>.Linear.deinitializeAll(header: &header, storage: storage)
+        Buffer.Linear.deinitializeAll(header: &header, storage: storage)
     }
 
     /// Ensures the buffer can hold at least `minimumCapacity` elements.
@@ -100,7 +100,7 @@ extension Buffer.Linear {
         let oldCount = header.count
         storage.initialization = .empty
         storage = newStorage
-        header = Buffer<Element>.Linear.Header(capacity: newStorage.slotCapacity)
+        header = Buffer.Linear.Header(capacity: newStorage.slotCapacity)
         header.count = oldCount
         storage.initialization = header.initialization
     }
