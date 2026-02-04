@@ -1,12 +1,10 @@
-// MARK: - Sequence.Borrowing.Protocol for Linear buffers
+// MARK: - Unified Iterator for Linear buffers (Sequence.Protocol + Sequence.Borrowing.Protocol)
 
 extension Buffer.Linear.Growable where Element: Copyable {
-    /// Borrowing iterator that returns contiguous spans from linear storage.
-    ///
-    /// Advances the stored base pointer on each call to `nextSpan` so
-    /// the returned `Span` depends on `self` directly.
+    /// Iterator that provides both element-at-a-time and span-based iteration
+    /// for linear storage.
     @safe
-    public struct BorrowingIterator: Sequence.Iterator.Borrowing.`Protocol` {
+    public struct Iterator: Sequence.Iterator.Borrowing.`Protocol`, IteratorProtocol, @unchecked Sendable {
         @usableFromInline
         var base: UnsafePointer<Element>
 
@@ -18,6 +16,19 @@ extension Buffer.Linear.Growable where Element: Copyable {
             unsafe self.base = base
             self.remaining = count
         }
+
+        // MARK: IteratorProtocol
+
+        @inlinable
+        public mutating func next() -> Element? {
+            guard remaining > 0 else { return nil }
+            let element = unsafe base.pointee
+            unsafe base = base + 1
+            remaining &-= 1
+            return element
+        }
+
+        // MARK: Sequence.Iterator.Borrowing.Protocol
 
         @inlinable
         @_lifetime(&self)
@@ -34,18 +45,19 @@ extension Buffer.Linear.Growable where Element: Copyable {
     }
 }
 
-extension Buffer.Linear.Growable: Sequence.Borrowing.`Protocol` where Element: Copyable {
+extension Buffer.Linear.Growable: Sequence.`Protocol`, Sequence.Borrowing.`Protocol` where Element: Copyable {
     @inlinable
-    public borrowing func makeIterator() -> BorrowingIterator {
+    public borrowing func makeIterator() -> Iterator {
         let base = unsafe UnsafePointer(storage.pointer(at: .zero))
-        return unsafe BorrowingIterator(base: base, count: header.count.rawValue.rawValue)
+        return unsafe Iterator(base: base, count: header.count.rawValue.rawValue)
     }
 }
 
 extension Buffer.Linear.Bounded where Element: Copyable {
-    /// Borrowing iterator that returns contiguous spans from linear storage.
+    /// Iterator that provides both element-at-a-time and span-based iteration
+    /// for linear storage.
     @safe
-    public struct BorrowingIterator: Sequence.Iterator.Borrowing.`Protocol` {
+    public struct Iterator: Sequence.Iterator.Borrowing.`Protocol`, IteratorProtocol, @unchecked Sendable {
         @usableFromInline
         var base: UnsafePointer<Element>
 
@@ -56,6 +68,15 @@ extension Buffer.Linear.Bounded where Element: Copyable {
         internal init(base: UnsafePointer<Element>, count: UInt) {
             unsafe self.base = base
             self.remaining = count
+        }
+
+        @inlinable
+        public mutating func next() -> Element? {
+            guard remaining > 0 else { return nil }
+            let element = unsafe base.pointee
+            unsafe base = base + 1
+            remaining &-= 1
+            return element
         }
 
         @inlinable
@@ -73,10 +94,10 @@ extension Buffer.Linear.Bounded where Element: Copyable {
     }
 }
 
-extension Buffer.Linear.Bounded: Sequence.Borrowing.`Protocol` where Element: Copyable {
+extension Buffer.Linear.Bounded: Sequence.`Protocol`, Sequence.Borrowing.`Protocol` where Element: Copyable {
     @inlinable
-    public borrowing func makeIterator() -> BorrowingIterator {
+    public borrowing func makeIterator() -> Iterator {
         let base = unsafe UnsafePointer(storage.pointer(at: .zero))
-        return unsafe BorrowingIterator(base: base, count: header.count.rawValue.rawValue)
+        return unsafe Iterator(base: base, count: header.count.rawValue.rawValue)
     }
 }

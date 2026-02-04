@@ -34,39 +34,6 @@ extension Buffer.Linear.Growable where Element: Copyable {
     }
 }
 
-// MARK: - Sequence.Protocol
-
-extension Buffer.Linear.Growable: Sequence.`Protocol` where Element: Copyable {
-    public struct Iterator: IteratorProtocol, @unchecked Sendable {
-        @usableFromInline
-        let storage: Storage.Heap<Element>
-        @usableFromInline
-        var current: UInt
-        @usableFromInline
-        let total: UInt
-
-        @inlinable
-        init(storage: Storage.Heap<Element>, count: Index<Storage>.Count) {
-            self.storage = storage
-            self.current = 0
-            self.total = count.rawValue.rawValue
-        }
-
-        @inlinable
-        public mutating func next() -> Element? {
-            guard current < total else { return nil }
-            let idx = Index<Storage>(Ordinal(current))
-            current &+= 1
-            return unsafe storage.pointer(at: idx).pointee
-        }
-    }
-
-    @inlinable
-    public borrowing func makeIterator() -> Iterator {
-        Iterator(storage: storage, count: header.count)
-    }
-}
-
 // MARK: - Property.View (.forEach)
 
 extension Buffer.Linear.Growable where Element: Copyable {

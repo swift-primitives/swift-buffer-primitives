@@ -65,3 +65,45 @@ extension Buffer.Slab.Bounded where Element == Int {
         return buffer
     }
 }
+
+// MARK: - Inline Ring Factory Methods
+
+extension Buffer.Ring.Bounded.Inline where Element == Int {
+    /// Creates a bounded inline ring buffer pre-filled with the given elements.
+    @inlinable
+    public static func with(_ elements: [Int]) throws(Storage.Inline<Int, capacity>.Error) -> Self {
+        var buffer = try Self()
+        for element in elements {
+            _ = buffer.pushBack(element)
+        }
+        return buffer
+    }
+}
+
+// MARK: - Inline Linear Factory Methods
+
+extension Buffer.Linear.Bounded.Inline where Element == Int {
+    /// Creates a bounded inline linear buffer pre-filled with the given elements.
+    @inlinable
+    public static func with(_ elements: [Int]) throws(Storage.Inline<Int, capacity>.Error) -> Self {
+        var buffer = try Self()
+        for element in elements {
+            _ = buffer.append(element)
+        }
+        return buffer
+    }
+}
+
+// MARK: - Inline Slab Factory Methods
+
+extension Buffer.Slab.Bounded.Inline where Element == Int {
+    /// Creates a bounded inline slab buffer pre-filled at consecutive slots.
+    @inlinable
+    public static func with(_ elements: [Int]) throws(Storage.Inline<Int, wordCount>.Error) -> Self {
+        var buffer = try Self()
+        for (i, element) in elements.enumerated() {
+            buffer.insert(element, at: Bit.Index(Ordinal(UInt(i))))
+        }
+        return buffer
+    }
+}

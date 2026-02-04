@@ -1,16 +1,13 @@
-// MARK: - Sequence.Borrowing.Protocol for Ring buffers
+// MARK: - Unified Iterator for Ring buffers (Sequence.Protocol + Sequence.Borrowing.Protocol)
 
 extension Buffer.Ring.Growable where Element: Copyable {
-    /// Borrowing iterator that returns contiguous spans from ring storage.
+    /// Iterator that provides both element-at-a-time and span-based iteration
+    /// for ring storage.
     ///
-    /// When the ring wraps, returns two separate spans: one for the
-    /// first contiguous region (head to capacity) and one for the
-    /// second (zero to tail).
-    ///
-    /// Advances the stored base pointer on each `nextSpan` call so
-    /// the returned `Span` depends on `self` directly.
+    /// When the ring wraps, handles two contiguous regions: head-to-capacity
+    /// and zero-to-tail.
     @safe
-    public struct BorrowingIterator: Sequence.Iterator.Borrowing.`Protocol` {
+    public struct Iterator: Sequence.Iterator.Borrowing.`Protocol`, IteratorProtocol, @unchecked Sendable {
         @usableFromInline
         var base: UnsafePointer<Element>
 
@@ -55,10 +52,37 @@ extension Buffer.Ring.Growable where Element: Copyable {
             }
         }
 
+        // MARK: IteratorProtocol
+
+        @inlinable
+        public mutating func next() -> Element? {
+            if remaining > 0 {
+                let element = unsafe base.pointee
+                unsafe base = base + 1
+                remaining &-= 1
+                return element
+            }
+
+            if let second = unsafe secondBase, secondCount > 0 {
+                unsafe base = second
+                remaining = secondCount
+                unsafe secondBase = nil
+                secondCount = 0
+
+                let element = unsafe base.pointee
+                unsafe base = base + 1
+                remaining &-= 1
+                return element
+            }
+
+            return nil
+        }
+
+        // MARK: Sequence.Iterator.Borrowing.Protocol
+
         @inlinable
         @_lifetime(&self)
         public mutating func nextSpan(maximumCount: Cardinal) -> Span<Element> {
-            // Try current region first
             if remaining > 0 {
                 let take = min(maximumCount.rawValue, remaining)
                 let span = unsafe Span(_unsafeStart: base, count: Int(bitPattern: take))
@@ -67,7 +91,6 @@ extension Buffer.Ring.Growable where Element: Copyable {
                 return span
             }
 
-            // Transition to second region if available
             if let second = unsafe secondBase, secondCount > 0 {
                 unsafe base = second
                 remaining = secondCount
@@ -81,24 +104,24 @@ extension Buffer.Ring.Growable where Element: Copyable {
                 return span
             }
 
-            // Exhausted
             return unsafe Span(_unsafeStart: base, count: 0)
         }
     }
 }
 
-extension Buffer.Ring.Growable: Sequence.Borrowing.`Protocol` where Element: Copyable {
+extension Buffer.Ring.Growable: Sequence.`Protocol`, Sequence.Borrowing.`Protocol` where Element: Copyable {
     @inlinable
-    public borrowing func makeIterator() -> BorrowingIterator {
+    public borrowing func makeIterator() -> Iterator {
         let base = unsafe UnsafePointer(storage.pointer(at: .zero))
-        return unsafe BorrowingIterator(storageBase: base, header: header)
+        return unsafe Iterator(storageBase: base, header: header)
     }
 }
 
 extension Buffer.Ring.Bounded where Element: Copyable {
-    /// Borrowing iterator that returns contiguous spans from ring storage.
+    /// Iterator that provides both element-at-a-time and span-based iteration
+    /// for ring storage.
     @safe
-    public struct BorrowingIterator: Sequence.Iterator.Borrowing.`Protocol` {
+    public struct Iterator: Sequence.Iterator.Borrowing.`Protocol`, IteratorProtocol, @unchecked Sendable {
         @usableFromInline
         var base: UnsafePointer<Element>
 
@@ -141,6 +164,30 @@ extension Buffer.Ring.Bounded where Element: Copyable {
         }
 
         @inlinable
+        public mutating func next() -> Element? {
+            if remaining > 0 {
+                let element = unsafe base.pointee
+                unsafe base = base + 1
+                remaining &-= 1
+                return element
+            }
+
+            if let second = unsafe secondBase, secondCount > 0 {
+                unsafe base = second
+                remaining = secondCount
+                unsafe secondBase = nil
+                secondCount = 0
+
+                let element = unsafe base.pointee
+                unsafe base = base + 1
+                remaining &-= 1
+                return element
+            }
+
+            return nil
+        }
+
+        @inlinable
         @_lifetime(&self)
         public mutating func nextSpan(maximumCount: Cardinal) -> Span<Element> {
             if remaining > 0 {
@@ -169,10 +216,10 @@ extension Buffer.Ring.Bounded where Element: Copyable {
     }
 }
 
-extension Buffer.Ring.Bounded: Sequence.Borrowing.`Protocol` where Element: Copyable {
+extension Buffer.Ring.Bounded: Sequence.`Protocol`, Sequence.Borrowing.`Protocol` where Element: Copyable {
     @inlinable
-    public borrowing func makeIterator() -> BorrowingIterator {
+    public borrowing func makeIterator() -> Iterator {
         let base = unsafe UnsafePointer(storage.pointer(at: .zero))
-        return unsafe BorrowingIterator(storageBase: base, header: header)
+        return unsafe Iterator(storageBase: base, header: header)
     }
 }

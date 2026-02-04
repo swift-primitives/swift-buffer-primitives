@@ -24,47 +24,6 @@ extension Buffer.Ring.Bounded where Element: Copyable {
     }
 }
 
-// MARK: - Sequence.Protocol
-
-extension Buffer.Ring.Bounded: Sequence.`Protocol` where Element: Copyable {
-    public struct Iterator: IteratorProtocol, @unchecked Sendable {
-        @usableFromInline
-        let storage: Storage.Heap<Element>
-        @usableFromInline
-        let header: Buffer.Ring.Header
-        @usableFromInline
-        var current: UInt
-        @usableFromInline
-        let total: UInt
-
-        @inlinable
-        init(storage: Storage.Heap<Element>, header: Buffer.Ring.Header) {
-            self.storage = storage
-            self.header = header
-            self.current = 0
-            self.total = header.count.rawValue.rawValue
-        }
-
-        @inlinable
-        public mutating func next() -> Element? {
-            guard current < total else { return nil }
-            let logicalIdx = Index<Storage>(Ordinal(current))
-            let physicalIdx = Modular.physical(
-                forLogical: logicalIdx,
-                head: header.head,
-                capacity: header.capacity
-            )
-            current &+= 1
-            return unsafe storage.pointer(at: physicalIdx).pointee
-        }
-    }
-
-    @inlinable
-    public borrowing func makeIterator() -> Iterator {
-        Iterator(storage: storage, header: header)
-    }
-}
-
 // MARK: - Property.View (.forEach)
 
 extension Buffer.Ring.Bounded where Element: Copyable {
