@@ -30,18 +30,16 @@ extension Buffer.Growth.Policy {
 
     /// Multiplies the current capacity by the given factor (rounded up, minimum 1).
     @inlinable
-    public static func factor(_ multiplier: UInt) -> Self {
-        Self { current in
-            let raw = current.rawValue.rawValue
-            let grown = raw == 0 ? UInt(1) : raw &* multiplier
-            return Index<Storage>.Count(Cardinal(grown))
-        }
+    public static func factor(
+        _ scale: Affine.Discrete.Ratio<Storage, Storage>
+    ) -> Self {
+        Self { Index<Storage>.Count.max($0 * scale, .one) }
     }
 
     /// Returns the exact capacity requested (no growth beyond what is needed).
     @inlinable
     public static var exact: Self {
-        Self { current in current }
+        Self { $0 }
     }
 
     /// Rounds capacity up to the given alignment boundary.
@@ -50,9 +48,8 @@ extension Buffer.Growth.Policy {
     @inlinable
     public static func pageAligned(_ alignment: Memory.Alignment) -> Self {
         Self { current in
-            let raw = current.rawValue.rawValue
-            let aligned = alignment.alignUp(raw == 0 ? UInt(1) : raw)
-            return Index<Storage>.Count(Cardinal(aligned))
+            let cardinal = current.count
+            return Index<Storage>.Count(alignment.align.up(cardinal == .zero ? .one : cardinal))
         }
     }
 }
