@@ -8,7 +8,9 @@ extension Buffer.Linear {
     ///
     /// Actual capacity comes from `storage.slotCapacity` per H6.
     @inlinable
-    public init(minimumCapacity: Index<Storage>.Count) {
+    public init(
+        minimumCapacity: Index<Storage>.Count
+    ) {
         let storage = Storage.Heap<Element>.create(minimumCapacity: minimumCapacity)
         self.init(
             header: Buffer.Linear.Header(capacity: storage.slotCapacity),

@@ -25,12 +25,8 @@ extension Buffer.Growth.Policy {
     /// Doubles the current capacity (minimum 1).
     @inlinable
     public static var doubling: Self {
-        Self { current in
-            let raw = current.rawValue.rawValue
-            let doubled = raw == 0 ? UInt(1) : raw &<< 1
-            return Index<Storage>.Count(Cardinal(doubled))
-        }
-    }
+          Self { max($0 + $0, .one) }
+      }
 
     /// Multiplies the current capacity by the given factor (rounded up, minimum 1).
     @inlinable
