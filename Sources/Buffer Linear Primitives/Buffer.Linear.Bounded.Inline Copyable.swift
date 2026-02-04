@@ -1,6 +1,6 @@
-// MARK: - Copyable Conformances for Linear.Growable
+// MARK: - Copyable Conformances for Linear.Bounded.Inline
 
-extension Buffer.Linear.Growable where Element: Copyable {
+extension Buffer.Linear.Bounded.Inline where Element: Copyable {
 
     /// Returns the first element without removing it.
     ///
@@ -18,35 +18,21 @@ extension Buffer.Linear.Growable where Element: Copyable {
         let lastIdx = Index<Storage>(Ordinal(header.count.rawValue.rawValue &- 1))
         return unsafe storage.pointer(at: lastIdx).pointee
     }
-
-    /// Ensures this buffer has unique storage (copy-on-write).
-    @inlinable
-    mutating func _makeUnique() {
-        if !isKnownUniquelyReferenced(&storage) {
-            let newStorage = Storage.Heap<Element>.create(minimumCapacity: header.capacity)
-            Buffer.Linear.copy(header: header, source: storage, to: newStorage)
-            let oldCount = header.count
-            storage = newStorage
-            header = Buffer.Linear.Header(capacity: newStorage.slotCapacity)
-            header.count = oldCount
-            storage.initialization = header.initialization
-        }
-    }
 }
 
 // MARK: - Sequence.Protocol
 
-extension Buffer.Linear.Growable: Sequence.`Protocol` where Element: Copyable {
+extension Buffer.Linear.Bounded.Inline: Sequence.`Protocol` where Element: Copyable {
     public struct Iterator: IteratorProtocol, @unchecked Sendable {
         @usableFromInline
-        let storage: Storage.Heap<Element>
+        let storage: Storage.Inline<Element, capacity>
         @usableFromInline
         var current: UInt
         @usableFromInline
         let total: UInt
 
         @inlinable
-        init(storage: Storage.Heap<Element>, count: Index<Storage>.Count) {
+        init(storage: Storage.Inline<Element, capacity>, count: Index<Storage>.Count) {
             self.storage = storage
             self.current = 0
             self.total = count.rawValue.rawValue
@@ -69,7 +55,7 @@ extension Buffer.Linear.Growable: Sequence.`Protocol` where Element: Copyable {
 
 // MARK: - Property.View (.forEach)
 
-extension Buffer.Linear.Growable where Element: Copyable {
+extension Buffer.Linear.Bounded.Inline where Element: Copyable {
     @inlinable
     public var forEach: Property<Sequence.ForEach, Self>.View {
         mutating _read {

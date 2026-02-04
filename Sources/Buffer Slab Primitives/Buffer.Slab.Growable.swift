@@ -76,3 +76,18 @@ extension Buffer.Slab.Growable: Sequence.Drain.`Protocol` {
 }
 
 // MARK: - Sequence.Clearable — not applicable (Slab is never Copyable)
+
+// MARK: - Property.View (.drain)
+
+extension Buffer.Slab.Growable {
+    @inlinable
+    public var drain: Property<Sequence.Drain, Self>.View {
+        mutating _read {
+            yield unsafe Property<Sequence.Drain, Self>.View(&self)
+        }
+        mutating _modify {
+            var view = unsafe Property<Sequence.Drain, Self>.View(&self)
+            yield &view
+        }
+    }
+}

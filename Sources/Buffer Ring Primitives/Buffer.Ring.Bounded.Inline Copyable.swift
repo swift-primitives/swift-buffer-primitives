@@ -1,6 +1,6 @@
-// MARK: - Copyable Conformances for Ring.Growable
+// MARK: - Copyable Conformances for Ring.Bounded.Inline
 
-extension Buffer.Ring.Growable where Element: Copyable {
+extension Buffer.Ring.Bounded.Inline where Element: Copyable {
 
     /// Returns the front element without removing it.
     ///
@@ -22,28 +22,14 @@ extension Buffer.Ring.Growable where Element: Copyable {
         let lastSlot = Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
         return unsafe storage.pointer(at: lastSlot).pointee
     }
-
-    /// Ensures this buffer has unique storage (copy-on-write).
-    @inlinable
-    mutating func _makeUnique() {
-        if !isKnownUniquelyReferenced(&storage) {
-            let newStorage = Storage.Heap<Element>.create(minimumCapacity: header.capacity)
-            Buffer.Ring.copy(header: header, source: storage, to: newStorage)
-            let oldCount = header.count
-            storage = newStorage
-            header = .init(capacity: newStorage.slotCapacity)
-            header.count = oldCount
-            storage.initialization = header.initialization
-        }
-    }
 }
 
 // MARK: - Sequence.Protocol
 
-extension Buffer.Ring.Growable: Sequence.`Protocol` where Element: Copyable {
+extension Buffer.Ring.Bounded.Inline: Sequence.`Protocol` where Element: Copyable {
     public struct Iterator: IteratorProtocol, @unchecked Sendable {
         @usableFromInline
-        let storage: Storage.Heap<Element>
+        let storage: Storage.Inline<Element, capacity>
         @usableFromInline
         let header: Buffer.Ring.Header
         @usableFromInline
@@ -52,7 +38,7 @@ extension Buffer.Ring.Growable: Sequence.`Protocol` where Element: Copyable {
         let total: UInt
 
         @inlinable
-        init(storage: Storage.Heap<Element>, header: Buffer.Ring.Header) {
+        init(storage: Storage.Inline<Element, capacity>, header: Buffer.Ring.Header) {
             self.storage = storage
             self.header = header
             self.current = 0
@@ -81,7 +67,7 @@ extension Buffer.Ring.Growable: Sequence.`Protocol` where Element: Copyable {
 
 // MARK: - Property.View (.forEach)
 
-extension Buffer.Ring.Growable where Element: Copyable {
+extension Buffer.Ring.Bounded.Inline where Element: Copyable {
     @inlinable
     public var forEach: Property<Sequence.ForEach, Self>.View {
         mutating _read {

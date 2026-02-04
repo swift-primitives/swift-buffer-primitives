@@ -1,16 +1,18 @@
-// MARK: - Extensions for Ring.Bounded (declared in Core)
+// MARK: - Extensions for Ring.Bounded.Inline (declared in Core)
 
-extension Buffer.Ring.Bounded {
+extension Buffer.Ring.Bounded.Inline {
 
-    /// Creates a bounded ring buffer with at least the given capacity.
+    /// Creates a bounded inline ring buffer with fixed capacity.
     ///
-    /// Actual capacity comes from `storage.slotCapacity` per H6.
+    /// The capacity is determined by the compile-time generic parameter.
+    ///
+    /// - Throws: `Storage.Inline.Error` if the element type exceeds slot constraints.
     @inlinable
-    public init(minimumCapacity: Index<Storage>.Count) {
-        let storage = Storage.Heap<Element>.create(minimumCapacity: minimumCapacity)
+    public init() throws(Storage.Inline<Element, capacity>.Error) {
+        let cap = Index<Storage>.Count(Cardinal(UInt(capacity)))
         self.init(
-            header: Buffer.Ring.Header(capacity: storage.slotCapacity),
-            storage: storage
+            header: Buffer.Ring.Header(capacity: cap),
+            storage: try .init()
         )
     }
 
@@ -21,10 +23,6 @@ extension Buffer.Ring.Bounded {
     /// Whether the buffer has no elements.
     @inlinable
     public var isEmpty: Bool { header.isEmpty }
-
-    /// The total slot capacity.
-    @inlinable
-    public var capacity: Index<Storage>.Count { header.capacity }
 
     /// Whether the buffer is at capacity.
     @inlinable
@@ -38,7 +36,7 @@ extension Buffer.Ring.Bounded {
         if header.isFull {
             return element
         }
-        Buffer.Ring.pushBack(consume element, header: &header, storage: storage)
+        Buffer.Ring.pushBack(consume element, header: &header, storage: &storage)
         return nil
     }
 
@@ -47,7 +45,7 @@ extension Buffer.Ring.Bounded {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func popFront() -> Element {
-        Buffer.Ring.popFront(header: &header, storage: storage)
+        Buffer.Ring.popFront(header: &header, storage: &storage)
     }
 
     /// Pushes an element to the front. Returns the element if the buffer is full.
@@ -56,7 +54,7 @@ extension Buffer.Ring.Bounded {
         if header.isFull {
             return element
         }
-        Buffer.Ring.pushFront(consume element, header: &header, storage: storage)
+        Buffer.Ring.pushFront(consume element, header: &header, storage: &storage)
         return nil
     }
 
@@ -65,19 +63,19 @@ extension Buffer.Ring.Bounded {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func popBack() -> Element {
-        Buffer.Ring.popBack(header: &header, storage: storage)
+        Buffer.Ring.popBack(header: &header, storage: &storage)
     }
 
     /// Removes all elements from the buffer.
     @inlinable
     public mutating func removeAll() {
-        Buffer.Ring.deinitializeAll(header: &header, storage: storage)
+        Buffer.Ring.deinitializeAll(header: &header, storage: &storage)
     }
 }
 
 // MARK: - Sequence.Drain.Protocol
 
-extension Buffer.Ring.Bounded: Sequence.Drain.`Protocol` {
+extension Buffer.Ring.Bounded.Inline: Sequence.Drain.`Protocol` {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         while !isEmpty {
@@ -88,13 +86,13 @@ extension Buffer.Ring.Bounded: Sequence.Drain.`Protocol` {
 
 // MARK: - Sequence.Clearable
 
-extension Buffer.Ring.Bounded: Sequence.Clearable where Element: Copyable {
+extension Buffer.Ring.Bounded.Inline: Sequence.Clearable where Element: Copyable {
     // removeAll() already provided above
 }
 
 // MARK: - Property.View (.drain)
 
-extension Buffer.Ring.Bounded {
+extension Buffer.Ring.Bounded.Inline {
     @inlinable
     public var drain: Property<Sequence.Drain, Self>.View {
         mutating _read {

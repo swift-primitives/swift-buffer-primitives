@@ -1,16 +1,18 @@
-// MARK: - Extensions for Linear.Bounded (declared in Core)
+// MARK: - Extensions for Linear.Bounded.Inline (declared in Core)
 
-extension Buffer.Linear.Bounded {
+extension Buffer.Linear.Bounded.Inline {
 
-    /// Creates a bounded linear buffer with at least the given capacity.
+    /// Creates a bounded inline linear buffer with fixed capacity.
     ///
-    /// Actual capacity comes from `storage.slotCapacity` per H6.
+    /// The capacity is determined by the compile-time generic parameter.
+    ///
+    /// - Throws: `Storage.Inline.Error` if the element type exceeds slot constraints.
     @inlinable
-    public init(minimumCapacity: Index<Storage>.Count) {
-        let storage = Storage.Heap<Element>.create(minimumCapacity: minimumCapacity)
+    public init() throws(Storage.Inline<Element, capacity>.Error) {
+        let cap = Index<Storage>.Count(Cardinal(UInt(capacity)))
         self.init(
-            header: Buffer.Linear.Header(capacity: storage.slotCapacity),
-            storage: storage
+            header: Buffer.Linear.Header(capacity: cap),
+            storage: try .init()
         )
     }
 
@@ -21,10 +23,6 @@ extension Buffer.Linear.Bounded {
     /// Whether the buffer has no elements.
     @inlinable
     public var isEmpty: Bool { header.isEmpty }
-
-    /// The total slot capacity.
-    @inlinable
-    public var capacity: Index<Storage>.Count { header.capacity }
 
     /// Whether the buffer is at capacity.
     @inlinable
@@ -38,7 +36,7 @@ extension Buffer.Linear.Bounded {
         if header.isFull {
             return element
         }
-        Buffer.Linear.append(consume element, header: &header, storage: storage)
+        Buffer.Linear.append(consume element, header: &header, storage: &storage)
         return nil
     }
 
@@ -47,7 +45,7 @@ extension Buffer.Linear.Bounded {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func consumeFront() -> Element {
-        Buffer.Linear.consumeFront(header: &header, storage: storage)
+        Buffer.Linear.consumeFront(header: &header, storage: &storage)
     }
 
     /// Removes and returns the last element.
@@ -55,19 +53,19 @@ extension Buffer.Linear.Bounded {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func removeLast() -> Element {
-        Buffer.Linear.consumeBack(header: &header, storage: storage)
+        Buffer.Linear.consumeBack(header: &header, storage: &storage)
     }
 
     /// Removes all elements from the buffer.
     @inlinable
     public mutating func removeAll() {
-        Buffer.Linear.deinitializeAll(header: &header, storage: storage)
+        Buffer.Linear.deinitializeAll(header: &header, storage: &storage)
     }
 }
 
 // MARK: - Sequence.Drain.Protocol
 
-extension Buffer.Linear.Bounded: Sequence.Drain.`Protocol` {
+extension Buffer.Linear.Bounded.Inline: Sequence.Drain.`Protocol` {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         while !isEmpty {
@@ -78,13 +76,13 @@ extension Buffer.Linear.Bounded: Sequence.Drain.`Protocol` {
 
 // MARK: - Sequence.Clearable
 
-extension Buffer.Linear.Bounded: Sequence.Clearable where Element: Copyable {
+extension Buffer.Linear.Bounded.Inline: Sequence.Clearable where Element: Copyable {
     // removeAll() already provided above
 }
 
 // MARK: - Property.View (.drain)
 
-extension Buffer.Linear.Bounded {
+extension Buffer.Linear.Bounded.Inline {
     @inlinable
     public var drain: Property<Sequence.Drain, Self>.View {
         mutating _read {

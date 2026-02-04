@@ -122,3 +122,18 @@ extension Buffer.Linear.Growable: Sequence.Drain.`Protocol` {
 extension Buffer.Linear.Growable: Sequence.Clearable where Element: Copyable {
     // removeAll() already provided above
 }
+
+// MARK: - Property.View (.drain)
+
+extension Buffer.Linear.Growable {
+    @inlinable
+    public var drain: Property<Sequence.Drain, Self>.View {
+        mutating _read {
+            yield unsafe Property<Sequence.Drain, Self>.View(&self)
+        }
+        mutating _modify {
+            var view = unsafe Property<Sequence.Drain, Self>.View(&self)
+            yield &view
+        }
+    }
+}
