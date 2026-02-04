@@ -47,9 +47,6 @@ extension Buffer.Growth.Policy {
     /// Uses `Memory.Alignment.alignUp()` per H5 — no manual arithmetic.
     @inlinable
     public static func pageAligned(_ alignment: Memory.Alignment) -> Self {
-        Self { current in
-            let cardinal = current.count
-            return Index<Storage>.Count(alignment.align.up(cardinal == .zero ? .one : cardinal))
-        }
+        Self { alignment.align.up($0 == .zero ? .one : $0) }
     }
 }
