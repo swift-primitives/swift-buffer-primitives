@@ -12,7 +12,7 @@ extension Buffer.Slab.Inline {
     ///
     /// - Throws: `Storage.Inline.Error` if the element type exceeds slot constraints.
     @inlinable
-    public init() throws(Storage.Inline<Element, wordCount>.Error) {
+    public init() throws(Storage<Element>.Inline<wordCount>.Error) {
         self.init(
             header: .init(),
             storage: try .init()
@@ -46,7 +46,7 @@ extension Buffer.Slab.Inline {
     /// - Precondition: The slot is not occupied.
     @inlinable
     public mutating func insert(_ element: consuming Element, at slot: Bit.Index) {
-        let storageIndex = Index<Storage>(Ordinal(slot.rawValue.rawValue))
+        let storageIndex = Index<Element>(Ordinal(slot.rawValue.rawValue))
         storage.initialize(to: consume element, at: storageIndex)
         header.bitmap[slot] = true
     }
@@ -56,7 +56,7 @@ extension Buffer.Slab.Inline {
     /// - Precondition: The slot is occupied.
     @inlinable
     public mutating func remove(at slot: Bit.Index) -> Element {
-        let storageIndex = Index<Storage>(Ordinal(slot.rawValue.rawValue))
+        let storageIndex = Index<Element>(Ordinal(slot.rawValue.rawValue))
         let element = storage.move(at: storageIndex)
         header.bitmap[slot] = false
         return element
@@ -75,7 +75,7 @@ extension Buffer.Slab.Inline {
         for i: UInt in 0 ..< UInt(wordCount) {
             let slot = Bit.Index(Ordinal(i))
             if header.bitmap[slot] {
-                let storageIndex = Index<Storage>(Ordinal(i))
+                let storageIndex = Index<Element>(Ordinal(i))
                 storage.deinitialize(at: storageIndex)
                 header.bitmap[slot] = false
             }
@@ -91,7 +91,7 @@ extension Buffer.Slab.Inline: Sequence.Drain.`Protocol` {
         for i: UInt in 0 ..< UInt(wordCount) {
             let slot = Bit.Index(Ordinal(i))
             if header.bitmap[slot] {
-                let storageIndex = Index<Storage>(Ordinal(i))
+                let storageIndex = Index<Element>(Ordinal(i))
                 let element = storage.move(at: storageIndex)
                 header.bitmap[slot] = false
                 body(consume element)

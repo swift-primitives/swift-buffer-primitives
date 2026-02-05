@@ -7,7 +7,7 @@ struct SlabStaticTests {
 
     @Test("insert and remove")
     func insertRemove() {
-        let cap: Index<Storage>.Count = 8
+        let cap: Index<Element>.Count = 8
         var header: Buffer<Int>.Slab.Header = .init(capacity: 8)
         let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
 
@@ -27,7 +27,7 @@ struct SlabStaticTests {
 
     @Test("forEachOccupied visits all occupied slots")
     func forEachOccupied() {
-        let cap: Index<Storage>.Count = 8
+        let cap: Index<Element>.Count = 8
         var header: Buffer<Int>.Slab.Header = .init(capacity: 8)
         let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
 
@@ -56,7 +56,7 @@ struct SlabStaticTests {
 
     @Test("deinitializeAll clears all occupied slots")
     func deinitializeAll() {
-        let cap: Index<Storage>.Count = 8
+        let cap: Index<Element>.Count = 8
         var header: Buffer<Int>.Slab.Header = .init(capacity: 8)
         let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
 

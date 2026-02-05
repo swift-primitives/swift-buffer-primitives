@@ -10,12 +10,12 @@ extension Buffer.Ring.Bounded {
         var header: Buffer.Ring.Header
 
         @usableFromInline
-        let storage: Storage.Heap<Element>
+        let storage: Storage<Element>.Heap
 
         @inlinable
         package init(
             header: Buffer.Ring.Header,
-            storage: Storage.Heap<Element>
+            storage: Storage<Element>.Heap
         ) {
             self.header = header
             self.storage = storage

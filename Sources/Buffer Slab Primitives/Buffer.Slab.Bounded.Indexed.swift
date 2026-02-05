@@ -1,14 +1,14 @@
 // MARK: - Extensions for Slab.Bounded.Indexed (declared in Core)
 //
 // Phantom-typed wrapper using Tagged.retag() per H2 for
-// zero-cost Index<Tag> ↔ Index<Storage> and Bit.Index conversion.
+// zero-cost Index<Tag> ↔ Index<Element> and Bit.Index conversion.
 
 extension Buffer.Slab.Bounded.Indexed {
 
     /// Creates an indexed bounded slab buffer with at least the given capacity.
     @inlinable
     public init(minimumCapacity: Index<Tag>.Count) {
-        let storageCount = Index<Storage>.Count(
+        let storageCount = Index<Element>.Count(
             Cardinal(minimumCapacity.rawValue.rawValue)
         )
         self.init(

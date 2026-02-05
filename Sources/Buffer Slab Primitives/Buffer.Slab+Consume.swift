@@ -9,7 +9,7 @@ extension Buffer.Slab {
     @safe
     public final class ConsumeState: @unchecked Sendable {
         @usableFromInline
-        let storage: Storage.Heap<Element>
+        let storage: Storage<Element>.Heap
 
         @usableFromInline
         var slots: [UInt]
@@ -18,7 +18,7 @@ extension Buffer.Slab {
         var position: Int
 
         @inlinable
-        package init(storage: Storage.Heap<Element>, slots: [UInt]) {
+        package init(storage: Storage<Element>.Heap, slots: [UInt]) {
             self.storage = storage
             self.slots = slots
             self.position = 0
@@ -27,7 +27,7 @@ extension Buffer.Slab {
         deinit {
             // Deinitialize any remaining elements not yet consumed
             while position < slots.count {
-                let storageIndex = Index<Storage>(Ordinal(slots[position]))
+                let storageIndex = Index<Element>(Ordinal(slots[position]))
                 storage.deinitialize(at: storageIndex)
                 position += 1
             }
@@ -50,7 +50,7 @@ extension Buffer.Slab: Sequence.Consume.`Protocol` {
             state: state,
             next: { state in
                 guard state.position < state.slots.count else { return nil }
-                let storageIndex = Index<Storage>(Ordinal(state.slots[state.position]))
+                let storageIndex = Index<Element>(Ordinal(state.slots[state.position]))
                 let element = state.storage.move(at: storageIndex)
                 state.position += 1
                 return element

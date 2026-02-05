@@ -24,9 +24,9 @@ extension Storage.Initialization {
             self = .one(header.head ..< tail)
         } else {
             self = .two(
-                first: header.head ..< Index<Storage>(header.capacity),
-                second: .zero ..< Index<Storage>(
-                    Index<Storage>.Count(tail).subtract.saturating(header.capacity)
+                first: header.head ..< Index<Element>(header.capacity),
+                second: .zero ..< Index<Element>(
+                    Index<Element>.Count(tail).subtract.saturating(header.capacity)
                 )
             )
         }
@@ -44,16 +44,16 @@ extension Storage.Initialization {
         }
 
         let slotCapacity = Buffer<Element>.Ring.Header.Cyclic<capacity>.slotCapacity
-        let headIndex = Index<Storage>(Ordinal(header.head.rawValue))
+        let headIndex = Index<Element>(Ordinal(header.head.rawValue))
         let tail = headIndex + header.count
 
         if tail <= slotCapacity {
             self = .one(headIndex ..< tail)
         } else {
             self = .two(
-                first: headIndex ..< Index<Storage>(slotCapacity),
-                second: .zero ..< Index<Storage>(
-                    Index<Storage>.Count(tail).subtract.saturating(slotCapacity)
+                first: headIndex ..< Index<Element>(slotCapacity),
+                second: .zero ..< Index<Element>(
+                    Index<Element>.Count(tail).subtract.saturating(slotCapacity)
                 )
             )
         }

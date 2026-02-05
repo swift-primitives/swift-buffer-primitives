@@ -10,13 +10,13 @@ extension Buffer.Linear.Bounded {
         let header: Buffer.Linear.Header
 
         @usableFromInline
-        let storage: Storage.Heap<Element>
+        let storage: Storage<Element>.Heap
 
         @usableFromInline
         var position: UInt
 
         @inlinable
-        package init(header: Buffer.Linear.Header, storage: Storage.Heap<Element>) {
+        package init(header: Buffer.Linear.Header, storage: Storage<Element>.Heap) {
             self.header = header
             self.storage = storage
             self.position = 0
@@ -26,7 +26,7 @@ extension Buffer.Linear.Bounded {
             // Deinitialize remaining elements from current position to count
             let count = header.count.rawValue.rawValue
             while position < count {
-                let idx = Index<Storage>(Ordinal(position))
+                let idx = Index<Element>(Ordinal(position))
                 storage.deinitialize(at: idx)
                 position &+= 1
             }
@@ -44,7 +44,7 @@ extension Buffer.Linear.Bounded: Sequence.Consume.`Protocol` {
             state: ConsumeState(header: h, storage: s),
             next: { state in
                 guard state.position < state.header.count.rawValue.rawValue else { return nil }
-                let idx = Index<Storage>(Ordinal(state.position))
+                let idx = Index<Element>(Ordinal(state.position))
                 let element = state.storage.move(at: idx)
                 state.position &+= 1
                 return element

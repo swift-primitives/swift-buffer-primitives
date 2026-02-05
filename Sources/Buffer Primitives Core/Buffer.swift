@@ -33,10 +33,10 @@ public enum Buffer<Element: ~Copyable> {
         package var header: Header
 
         @usableFromInline
-        package var storage: Storage.Heap<Element>
+        package var storage: Storage<Element>.Heap
 
         @inlinable
-        package init(header: Header, storage: Storage.Heap<Element>) {
+        package init(header: Header, storage: Storage<Element>.Heap) {
             self.header = header
             self.storage = storage
         }
@@ -55,10 +55,10 @@ public enum Buffer<Element: ~Copyable> {
             package var header: Header
 
             @usableFromInline
-            package var storage: Storage.Heap<Element>
+            package var storage: Storage<Element>.Heap
 
             @inlinable
-            package init(header: Header, storage: Storage.Heap<Element>) {
+            package init(header: Header, storage: Storage<Element>.Heap) {
                 self.header = header
                 self.storage = storage
             }
@@ -68,7 +68,7 @@ public enum Buffer<Element: ~Copyable> {
 
         /// A fixed-capacity ring buffer backed by inline (stack-allocated) storage.
         ///
-        /// Uses `Storage.Inline<Element, capacity>` for stack-based allocation
+        /// Uses `Storage<Element>.Inline<capacity>` for stack-based allocation
         /// and the runtime `Header` for ring state tracking.
         ///
         /// Unlike heap-backed `Bounded`, this type does not automatically
@@ -79,10 +79,10 @@ public enum Buffer<Element: ~Copyable> {
             package var header: Header
 
             @usableFromInline
-            package var storage: Storage.Inline<Element, capacity>
+            package var storage: Storage<Element>.Inline<capacity>
 
             @inlinable
-            package init(header: Header, storage: consuming Storage.Inline<Element, capacity>) {
+            package init(header: Header, storage: consuming Storage<Element>.Inline<capacity>) {
                 self.header = header
                 self.storage = storage
             }
@@ -97,17 +97,17 @@ public enum Buffer<Element: ~Copyable> {
         /// Blueprint: `Experiments/ring-buffer-architecture-validation/Sources/main.swift:48-101`
         public struct Header: Copyable, Sendable, Hashable {
             /// Slot index of the first element.
-            public var head: Index<Storage>
+            public var head: Index<Element>
 
             /// Number of initialized elements.
-            public var count: Index<Storage>.Count
+            public var count: Index<Element>.Count
 
             /// Total slot capacity.
-            public let capacity: Index<Storage>.Count
+            public let capacity: Index<Element>.Count
 
             /// Creates a header with the given capacity and zero elements.
             @inlinable
-            public init(capacity: Index<Storage>.Count) {
+            public init(capacity: Index<Element>.Count) {
                 self.head = .zero
                 self.count = .zero
                 self.capacity = capacity
@@ -117,20 +117,20 @@ public enum Buffer<Element: ~Copyable> {
 
             /// Compile-time capacity ring header using modular arithmetic.
             ///
-            /// Uses `Index<Storage>.Cyclic<capacity>` for the head position, providing
+            /// Uses `Index<Element>.Cyclic<capacity>` for the head position, providing
             /// automatic wrap-around via the cyclic group Z/capacityZ. The capacity
             /// is encoded in the type — no stored capacity field needed.
             public struct Cyclic<let capacity: Int>: Copyable, Sendable {
                 /// Slot index of the first element (modular, wraps at capacity).
-                public var head: Index<Storage>.Cyclic<capacity>
+                public var head: Index<Element>.Cyclic<capacity>
 
                 /// Number of initialized elements.
-                public var count: Index<Storage>.Count
+                public var count: Index<Element>.Count
 
                 /// Creates a header with zero elements.
                 @inlinable
                 public init() {
-                    self.head = Index<Storage>.Cyclic<capacity>(__unchecked: Ordinal(0))
+                    self.head = Index<Element>.Cyclic<capacity>(__unchecked: Ordinal(0))
                     self.count = .zero
                 }
             }
@@ -151,10 +151,10 @@ public enum Buffer<Element: ~Copyable> {
         package var header: Header
 
         @usableFromInline
-        package var storage: Storage.Heap<Element>
+        package var storage: Storage<Element>.Heap
 
         @inlinable
-        package init(header: Header, storage: Storage.Heap<Element>) {
+        package init(header: Header, storage: Storage<Element>.Heap) {
             self.header = header
             self.storage = storage
         }
@@ -170,10 +170,10 @@ public enum Buffer<Element: ~Copyable> {
             package var header: Header
 
             @usableFromInline
-            package var storage: Storage.Heap<Element>
+            package var storage: Storage<Element>.Heap
 
             @inlinable
-            package init(header: Header, storage: Storage.Heap<Element>) {
+            package init(header: Header, storage: Storage<Element>.Heap) {
                 self.header = header
                 self.storage = storage
             }
@@ -183,17 +183,17 @@ public enum Buffer<Element: ~Copyable> {
 
         /// A fixed-capacity linear buffer backed by inline (stack-allocated) storage.
         ///
-        /// Uses `Storage.Inline<Element, capacity>` for stack-based allocation
+        /// Uses `Storage<Element>.Inline<capacity>` for stack-based allocation
         /// and the runtime `Header` for linear state tracking.
         public struct Inline<let capacity: Int>: ~Copyable {
             @usableFromInline
             package var header: Header
 
             @usableFromInline
-            package var storage: Storage.Inline<Element, capacity>
+            package var storage: Storage<Element>.Inline<capacity>
 
             @inlinable
-            package init(header: Header, storage: consuming Storage.Inline<Element, capacity>) {
+            package init(header: Header, storage: consuming Storage<Element>.Inline<capacity>) {
                 self.header = header
                 self.storage = storage
             }
@@ -210,14 +210,14 @@ public enum Buffer<Element: ~Copyable> {
         /// contiguous range starting at zero.
         public struct Header: Copyable, Sendable {
             /// Number of initialized elements.
-            public var count: Index<Storage>.Count
+            public var count: Index<Element>.Count
 
             /// Total slot capacity.
-            public let capacity: Index<Storage>.Count
+            public let capacity: Index<Element>.Count
 
             /// Creates a header with the given capacity and zero elements.
             @inlinable
-            public init(capacity: Index<Storage>.Count) {
+            public init(capacity: Index<Element>.Count) {
                 self.count = .zero
                 self.capacity = capacity
             }
@@ -236,10 +236,10 @@ public enum Buffer<Element: ~Copyable> {
         package var header: Header
 
         @usableFromInline
-        package var storage: Storage.Heap<Element>
+        package var storage: Storage<Element>.Heap
 
         @inlinable
-        package init(header: consuming Header, storage: Storage.Heap<Element>) {
+        package init(header: consuming Header, storage: Storage<Element>.Heap) {
             self.header = header
             self.storage = storage
         }
@@ -247,7 +247,7 @@ public enum Buffer<Element: ~Copyable> {
         deinit {
             // Slab deinit is NOT automatic — bitmap drives cleanup.
             header.bitmap.ones.forEach { bitIndex in
-                storage.deinitialize(at: bitIndex.retag(Storage.self))
+                storage.deinitialize(at: bitIndex.retag())
             }
             storage.initialization = .empty
         }
@@ -264,12 +264,12 @@ public enum Buffer<Element: ~Copyable> {
             package var header: Header
 
             @usableFromInline
-            package var storage: Storage.Heap<Element>
+            package var storage: Storage<Element>.Heap
 
             @inlinable
             package init(
                 header: consuming Header,
-                storage: Storage.Heap<Element>
+                storage: Storage<Element>.Heap
             ) {
                 self.header = header
                 self.storage = storage
@@ -278,7 +278,7 @@ public enum Buffer<Element: ~Copyable> {
             deinit {
                 // Slab deinit is NOT automatic — bitmap drives cleanup.
                 header.bitmap.ones.forEach { bitIndex in
-                    storage.deinitialize(at: bitIndex.retag(Storage.self))
+                    storage.deinitialize(at: bitIndex.retag())
                 }
                 storage.initialization = .empty
             }
@@ -287,7 +287,7 @@ public enum Buffer<Element: ~Copyable> {
 
             /// Phantom-typed wrapper providing `Index<Tag>` access to slab storage.
             ///
-            /// Uses `Tagged.retag()` per H2 for zero-cost `Index<Tag>` <-> `Index<Storage>` conversion.
+            /// Uses `Tagged.retag()` per H2 for zero-cost `Index<Tag>` <-> `Index<Element>` conversion.
             public struct Indexed<Tag: ~Copyable>: ~Copyable {
                 @usableFromInline
                 package var _base: Bounded
@@ -303,7 +303,7 @@ public enum Buffer<Element: ~Copyable> {
 
         /// A fixed-capacity slab buffer backed by inline (stack-allocated) storage.
         ///
-        /// Uses `Storage.Inline<Element, wordCount>` for stack-based allocation
+        /// Uses `Storage<Element>.Inline<wordCount>` for stack-based allocation
         /// and `Header.Static<wordCount>` for the bitmap.
         ///
         /// The bitmap drives cleanup — `Storage.Inline`'s initialization state
@@ -313,12 +313,12 @@ public enum Buffer<Element: ~Copyable> {
             package var header: Header.Static<wordCount>
 
             @usableFromInline
-            package var storage: Storage.Inline<Element, wordCount>
+            package var storage: Storage<Element>.Inline<wordCount>
 
             @inlinable
             package init(
                 header: Header.Static<wordCount>,
-                storage: consuming Storage.Inline<Element, wordCount>
+                storage: consuming Storage<Element>.Inline<wordCount>
             ) {
                 self.header = header
                 self.storage = storage
@@ -376,7 +376,13 @@ extension Buffer.Ring: @unchecked Sendable where Element: Sendable {}
 extension Buffer.Ring.Bounded: Copyable where Element: Copyable {}
 extension Buffer.Ring.Bounded: @unchecked Sendable where Element: Sendable {}
 
-extension Buffer.Ring.Inline: Copyable where Element: Copyable {}
+// Cannot conform to Copyable: Storage.Inline uses @_rawLayout which is
+// unconditionally ~Copyable (INV-INLINE-004a). @_rawLayout is required
+// because InlineArray has no uninitialized API and requires Copyable for
+// init(repeating:), but Storage.Inline must support ~Copyable elements.
+// If Swift adds InlineArray.init(unsafeUninitializedCapacity:), Storage.Inline
+// could migrate and this conformance can be restored.
+// extension Buffer.Ring.Inline: Copyable where Element: Copyable {}
 extension Buffer.Ring.Inline: Sendable where Element: Sendable {}
 
 // MARK: - Conditional Conformances (Linear)
@@ -387,7 +393,13 @@ extension Buffer.Linear: @unchecked Sendable where Element: Sendable {}
 extension Buffer.Linear.Bounded: Copyable where Element: Copyable {}
 extension Buffer.Linear.Bounded: @unchecked Sendable where Element: Sendable {}
 
-extension Buffer.Linear.Inline: Copyable where Element: Copyable {}
+// Cannot conform to Copyable: Storage.Inline uses @_rawLayout which is
+// unconditionally ~Copyable (INV-INLINE-004a). @_rawLayout is required
+// because InlineArray has no uninitialized API and requires Copyable for
+// init(repeating:), but Storage.Inline must support ~Copyable elements.
+// If Swift adds InlineArray.init(unsafeUninitializedCapacity:), Storage.Inline
+// could migrate and this conformance can be restored.
+// extension Buffer.Linear.Inline: Copyable where Element: Copyable {}
 extension Buffer.Linear.Inline: Sendable where Element: Sendable {}
 
 // MARK: - Conditional Conformances (Slab)
@@ -398,5 +410,11 @@ extension Buffer.Slab.Bounded: @unchecked Sendable where Element: Sendable {}
 
 extension Buffer.Slab.Bounded.Indexed: @unchecked Sendable where Element: Sendable, Tag: ~Copyable {}
 
-extension Buffer.Slab.Inline: Copyable where Element: Copyable {}
+// Cannot conform to Copyable: Storage.Inline uses @_rawLayout which is
+// unconditionally ~Copyable (INV-INLINE-004a). @_rawLayout is required
+// because InlineArray has no uninitialized API and requires Copyable for
+// init(repeating:), but Storage.Inline must support ~Copyable elements.
+// If Swift adds InlineArray.init(unsafeUninitializedCapacity:), Storage.Inline
+// could migrate and this conformance can be restored.
+// extension Buffer.Slab.Inline: Copyable where Element: Copyable {}
 extension Buffer.Slab.Inline: Sendable where Element: Sendable {}

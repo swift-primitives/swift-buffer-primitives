@@ -16,7 +16,7 @@ extension Storage.Initialization {
             self = .empty
             return
         }
-        let end = Index<Storage>(header.count)
+        let end = Index<Element>(header.count)
         self = .one(.zero ..< end)
     }
 }

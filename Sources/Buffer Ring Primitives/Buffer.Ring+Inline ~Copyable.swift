@@ -11,17 +11,17 @@ extension Buffer.Ring {
     public static func pushBack<let capacity: Int>(
         _ element: consuming Element,
         header: inout Header,
-        storage: inout Storage.Inline<Element, capacity>
+        storage: inout Storage<Element>.Inline<capacity>
     ) {
-        let countOffset = Index<Storage>.Offset(
-            fromZero: Index<Storage>(header.count)
+        let countOffset = Index<Element>.Offset(
+            fromZero: Index<Element>(header.count)
         )
         let tail = Modular.advanced(header.head, by: countOffset, capacity: header.capacity)
 
         storage.initialize(to: consume element, at: tail)
 
         let newCount = Cardinal(header.count.rawValue.rawValue &+ 1)
-        header.count = Index<Storage>.Count(newCount)
+        header.count = Index<Element>.Count(newCount)
 
         storage.initialization = header.initialization
     }
@@ -34,14 +34,14 @@ extension Buffer.Ring {
     @inlinable
     public static func popFront<let capacity: Int>(
         header: inout Header,
-        storage: inout Storage.Inline<Element, capacity>
+        storage: inout Storage<Element>.Inline<capacity>
     ) -> Element {
         let element = storage.move(at: header.head)
 
         header.head = Modular.successor(of: header.head, capacity: header.capacity)
 
         let newCount = Cardinal(header.count.rawValue.rawValue &- 1)
-        header.count = Index<Storage>.Count(newCount)
+        header.count = Index<Element>.Count(newCount)
 
         storage.initialization = header.initialization
 
@@ -57,14 +57,14 @@ extension Buffer.Ring {
     public static func pushFront<let capacity: Int>(
         _ element: consuming Element,
         header: inout Header,
-        storage: inout Storage.Inline<Element, capacity>
+        storage: inout Storage<Element>.Inline<capacity>
     ) {
         header.head = Modular.predecessor(of: header.head, capacity: header.capacity)
 
         storage.initialize(to: consume element, at: header.head)
 
         let newCount = Cardinal(header.count.rawValue.rawValue &+ 1)
-        header.count = Index<Storage>.Count(newCount)
+        header.count = Index<Element>.Count(newCount)
 
         storage.initialization = header.initialization
     }
@@ -77,17 +77,17 @@ extension Buffer.Ring {
     @inlinable
     public static func popBack<let capacity: Int>(
         header: inout Header,
-        storage: inout Storage.Inline<Element, capacity>
+        storage: inout Storage<Element>.Inline<capacity>
     ) -> Element {
         let newCount = Cardinal(header.count.rawValue.rawValue &- 1)
-        let lastOffset = Index<Storage>.Offset(
-            fromZero: Index<Storage>(Ordinal(newCount.rawValue))
+        let lastOffset = Index<Element>.Offset(
+            fromZero: Index<Element>(Ordinal(newCount.rawValue))
         )
         let lastSlot = Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
 
         let element = storage.move(at: lastSlot)
 
-        header.count = Index<Storage>.Count(newCount)
+        header.count = Index<Element>.Count(newCount)
 
         storage.initialization = header.initialization
 
@@ -100,7 +100,7 @@ extension Buffer.Ring {
     @inlinable
     public static func deinitializeAll<let capacity: Int>(
         header: inout Header,
-        storage: inout Storage.Inline<Element, capacity>
+        storage: inout Storage<Element>.Inline<capacity>
     ) {
         switch header.initialization {
         case .empty:

@@ -16,10 +16,10 @@ extension Buffer.Ring.Header.Cyclic where Element: ~Copyable {
     @inlinable
     public var isFull: Bool { count.rawValue.rawValue == UInt(capacity) }
 
-    /// The total slot capacity as `Index<Storage>.Count` (compile-time constant).
+    /// The total slot capacity as `Index<Element>.Count` (compile-time constant).
     @inlinable
-    public static var slotCapacity: Index<Storage>.Count {
-        Index<Storage>.Count(Cardinal(UInt(capacity)))
+    public static var slotCapacity: Index<Element>.Count {
+        Index<Element>.Count(Cardinal(UInt(capacity)))
     }
 }
 

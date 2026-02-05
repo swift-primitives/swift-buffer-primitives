@@ -8,14 +8,14 @@ extension Buffer.Linear where Element: Copyable {
     @inlinable
     public static func copy<let capacity: Int>(
         header: Header,
-        source: borrowing Storage.Inline<Element, capacity>,
-        to destination: Storage.Heap<Element>
+        source: borrowing Storage<Element>.Inline<capacity>,
+        to destination: Storage<Element>.Heap
     ) {
         switch header.initialization {
         case .empty:
             break
         case .one(let range):
-            var dstSlot: Index<Storage> = .zero
+            var dstSlot: Index<Element> = .zero
             var srcSlot = range.lowerBound
             while srcSlot < range.upperBound {
                 let value: Element = unsafe source.pointer(at: srcSlot).pointee

@@ -14,9 +14,9 @@ extension Buffer.Slab {
         _ element: consuming Element,
         at slot: Bit.Index,
         header: inout Header,
-        storage: Storage.Heap<Element>
+        storage: Storage<Element>.Heap
     ) {
-        let storageIndex = Index<Storage>(Ordinal(slot.rawValue.rawValue))
+        let storageIndex = Index<Element>(Ordinal(slot.rawValue.rawValue))
         storage.initialize(to: consume element, at: storageIndex)
         header.bitmap[slot] = true
     }
@@ -30,9 +30,9 @@ extension Buffer.Slab {
     public static func remove(
         at slot: Bit.Index,
         header: inout Header,
-        storage: Storage.Heap<Element>
+        storage: Storage<Element>.Heap
     ) -> Element {
-        let storageIndex = Index<Storage>(Ordinal(slot.rawValue.rawValue))
+        let storageIndex = Index<Element>(Ordinal(slot.rawValue.rawValue))
         let element = storage.move(at: storageIndex)
         header.bitmap[slot] = false
         return element
@@ -44,11 +44,11 @@ extension Buffer.Slab {
     @inlinable
     public static func forEachOccupied(
         header: borrowing Header,
-        storage: Storage.Heap<Element>,
-        _ body: (Index<Storage>) -> Void
+        storage: Storage<Element>.Heap,
+        _ body: (Index<Element>) -> Void
     ) {
         header.bitmap.ones.forEach { bitIndex in
-            let storageIndex = Index<Storage>(Ordinal(bitIndex.rawValue.rawValue))
+            let storageIndex = Index<Element>(Ordinal(bitIndex.rawValue.rawValue))
             body(storageIndex)
         }
     }
@@ -69,10 +69,10 @@ extension Buffer.Slab {
     @inlinable
     public static func deinitializeAll(
         header: inout Header,
-        storage: Storage.Heap<Element>
+        storage: Storage<Element>.Heap
     ) {
         header.bitmap.ones.forEach { bitIndex in
-            let storageIndex = Index<Storage>(Ordinal(bitIndex.rawValue.rawValue))
+            let storageIndex = Index<Element>(Ordinal(bitIndex.rawValue.rawValue))
             storage.deinitialize(at: storageIndex)
             header.bitmap[bitIndex] = false
         }

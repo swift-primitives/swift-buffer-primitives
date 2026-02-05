@@ -11,13 +11,13 @@ extension Buffer.Linear {
     public static func append<let capacity: Int>(
         _ element: consuming Element,
         header: inout Header,
-        storage: inout Storage.Inline<Element, capacity>
+        storage: inout Storage<Element>.Inline<capacity>
     ) {
-        let slot = Index<Storage>(header.count)
+        let slot = Index<Element>(header.count)
         storage.initialize(to: consume element, at: slot)
 
         let newCount = Cardinal(header.count.rawValue.rawValue &+ 1)
-        header.count = Index<Storage>.Count(newCount)
+        header.count = Index<Element>.Count(newCount)
 
         storage.initialization = header.initialization
     }
@@ -30,7 +30,7 @@ extension Buffer.Linear {
     @inlinable
     public static func consumeFront<let capacity: Int>(
         header: inout Header,
-        storage: inout Storage.Inline<Element, capacity>
+        storage: inout Storage<Element>.Inline<capacity>
     ) -> Element {
         let element = storage.move(at: .zero)
 
@@ -38,15 +38,15 @@ extension Buffer.Linear {
         if oldCount > 1 {
             // Shift elements [1, count) down to [0, count-1)
             for i: UInt in 1 ..< oldCount {
-                let srcSlot = Index<Storage>(Ordinal(i))
-                let dstSlot = Index<Storage>(Ordinal(i &- 1))
+                let srcSlot = Index<Element>(Ordinal(i))
+                let dstSlot = Index<Element>(Ordinal(i &- 1))
                 let moved = storage.move(at: srcSlot)
                 storage.initialize(to: consume moved, at: dstSlot)
             }
         }
 
         let newCount = Cardinal(oldCount &- 1)
-        header.count = Index<Storage>.Count(newCount)
+        header.count = Index<Element>.Count(newCount)
 
         storage.initialization = header.initialization
 
@@ -61,14 +61,14 @@ extension Buffer.Linear {
     @inlinable
     public static func consumeBack<let capacity: Int>(
         header: inout Header,
-        storage: inout Storage.Inline<Element, capacity>
+        storage: inout Storage<Element>.Inline<capacity>
     ) -> Element {
         let newCount = Cardinal(header.count.rawValue.rawValue &- 1)
-        let lastSlot = Index<Storage>(Ordinal(newCount.rawValue))
+        let lastSlot = Index<Element>(Ordinal(newCount.rawValue))
 
         let element = storage.move(at: lastSlot)
 
-        header.count = Index<Storage>.Count(newCount)
+        header.count = Index<Element>.Count(newCount)
 
         storage.initialization = header.initialization
 
@@ -81,7 +81,7 @@ extension Buffer.Linear {
     @inlinable
     public static func deinitializeAll<let capacity: Int>(
         header: inout Header,
-        storage: inout Storage.Inline<Element, capacity>
+        storage: inout Storage<Element>.Inline<capacity>
     ) {
         switch header.initialization {
         case .empty:

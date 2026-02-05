@@ -6,8 +6,8 @@ extension Buffer.Slab.Bounded {
     ///
     /// Actual capacity comes from `storage.slotCapacity` per H6.
     @inlinable
-    public init(minimumCapacity: Index<Storage>.Count) {
-        let storage = Storage.Heap<Element>.create(minimumCapacity: minimumCapacity)
+    public init(minimumCapacity: Index<Element>.Count) {
+        let storage = Storage<Element>.Heap.create(minimumCapacity: minimumCapacity)
         let actualCapacity = storage.slotCapacity
         let bitCapacity = Bit.Index.Count(Cardinal(actualCapacity.rawValue.rawValue))
         self.init(
@@ -71,7 +71,7 @@ extension Buffer.Slab.Bounded: Sequence.Drain.`Protocol` {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         header.bitmap.ones.forEach { bitIndex in
-            let storageIndex = Index<Storage>(Ordinal(bitIndex.rawValue.rawValue))
+            let storageIndex = Index<Element>(Ordinal(bitIndex.rawValue.rawValue))
             let element = storage.move(at: storageIndex)
             header.bitmap[bitIndex] = false
             body(consume element)

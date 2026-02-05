@@ -15,7 +15,7 @@ extension Buffer.Linear.Inline where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var peekBack: Element {
-        let lastIdx = Index<Storage>(Ordinal(header.count.rawValue.rawValue &- 1))
+        let lastIdx = Index<Element>(Ordinal(header.count.rawValue.rawValue &- 1))
         return unsafe storage.pointer(at: lastIdx).pointee
     }
 }
@@ -25,14 +25,14 @@ extension Buffer.Linear.Inline where Element: Copyable {
 extension Buffer.Linear.Inline: Sequence.`Protocol` where Element: Copyable {
     public struct Iterator: IteratorProtocol, @unchecked Sendable {
         @usableFromInline
-        let storage: Storage.Inline<Element, capacity>
+        let storage: Storage<Element>.Inline<capacity>
         @usableFromInline
         var current: UInt
         @usableFromInline
         let total: UInt
 
         @inlinable
-        init(storage: Storage.Inline<Element, capacity>, count: Index<Storage>.Count) {
+        init(storage: Storage<Element>.Inline<capacity>, count: Index<Element>.Count) {
             self.storage = storage
             self.current = 0
             self.total = count.rawValue.rawValue
@@ -41,7 +41,7 @@ extension Buffer.Linear.Inline: Sequence.`Protocol` where Element: Copyable {
         @inlinable
         public mutating func next() -> Element? {
             guard current < total else { return nil }
-            let idx = Index<Storage>(Ordinal(current))
+            let idx = Index<Element>(Ordinal(current))
             current &+= 1
             return unsafe storage.pointer(at: idx).pointee
         }

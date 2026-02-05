@@ -94,7 +94,7 @@ struct RingGrowableTests {
     @Test("reserveCapacity grows if needed")
     func reserveCapacity() {
         var buffer = Buffer<Int>.Ring(minimumCapacity: 2)
-        buffer.reserveCapacity(Index<Storage>.Count(Cardinal(100)))
+        buffer.reserveCapacity(Index<Element>.Count(Cardinal(100)))
         #expect(buffer.capacity.rawValue.rawValue >= 100)
     }
 

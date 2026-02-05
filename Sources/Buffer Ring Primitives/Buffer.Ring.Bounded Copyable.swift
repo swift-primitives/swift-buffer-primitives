@@ -16,8 +16,8 @@ extension Buffer.Ring.Bounded where Element: Copyable {
     @inlinable
     public var peekBack: Element {
         let lastCount = Cardinal(header.count.rawValue.rawValue &- 1)
-        let lastOffset = Index<Storage>.Offset(
-            fromZero: Index<Storage>(Ordinal(lastCount.rawValue))
+        let lastOffset = Index<Element>.Offset(
+            fromZero: Index<Element>(Ordinal(lastCount.rawValue))
         )
         let lastSlot = Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
         return unsafe storage.pointer(at: lastSlot).pointee

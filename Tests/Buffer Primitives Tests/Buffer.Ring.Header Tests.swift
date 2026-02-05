@@ -7,7 +7,7 @@ struct RingHeaderTests {
 
     @Test("init sets head to zero, count to zero")
     func initDefaults() {
-        let cap: Index<Storage>.Count = 8
+        let cap: Index<Element>.Count = 8
         let header = Buffer<Int>.Ring.Header(capacity: cap)
         #expect(header.head == 0)
         #expect(header.count == 0)
@@ -16,7 +16,7 @@ struct RingHeaderTests {
 
     @Test("isEmpty and isFull")
     func emptyAndFull() {
-        let cap: Index<Storage>.Count = 4
+        let cap: Index<Element>.Count = 4
         var header = Buffer<Int>.Ring.Header(capacity: cap)
         #expect(header.isEmpty)
         #expect(!header.isFull)

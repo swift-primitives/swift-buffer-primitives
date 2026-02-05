@@ -8,8 +8,8 @@ extension Buffer.Linear.Inline {
     ///
     /// - Throws: `Storage.Inline.Error` if the element type exceeds slot constraints.
     @inlinable
-    public init() throws(Storage.Inline<Element, capacity>.Error) {
-        let cap = Index<Storage>.Count(Cardinal(UInt(capacity)))
+    public init() throws(Storage<Element>.Inline<capacity>.Error) {
+        let cap = Index<Element>.Count(Cardinal(UInt(capacity)))
         self.init(
             header: Buffer.Linear.Header(capacity: cap),
             storage: try .init()
@@ -18,7 +18,7 @@ extension Buffer.Linear.Inline {
 
     /// The number of elements in the buffer.
     @inlinable
-    public var count: Index<Storage>.Count { header.count }
+    public var count: Index<Element>.Count { header.count }
 
     /// Whether the buffer has no elements.
     @inlinable

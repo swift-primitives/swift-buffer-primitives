@@ -17,7 +17,7 @@ The Swift Institute primitives architecture establishes a logical dependency cha
 Storage (Tier 12) → Buffer (Tier 13) → Data Structures (Tier 14+)
 ```
 
-We have invested significant design effort in `storage-primitives` (providing `Storage.Heap<Element>` and `Storage.Inline<Element, capacity>` with `Storage.Initialization` tracking) and `bit-vector-primitives` (providing `Bit.Vector` and `Bit.Vector.Static<wordCount>` for packed occupancy bitmaps). These two packages represent a mature, well-tested foundation.
+We have invested significant design effort in `storage-primitives` (providing `Storage<Element>.Heap` and `Storage<Element>.Inline<capacity>` with `Storage.Initialization` tracking) and `bit-vector-primitives` (providing `Bit.Vector` and `Bit.Vector.Static<wordCount>` for packed occupancy bitmaps). These two packages represent a mature, well-tested foundation.
 
 The existing `buffer-primitives` package was written before `storage-primitives` and `bit-vector-primitives` reached their current form. Attempting to incrementally refactor the existing buffer layer to use the new foundation has not produced satisfactory results — the legacy structure resists the new abstractions.
 
@@ -222,7 +222,7 @@ where v = S[head], head' = (head + 1) mod capacity, S' = S with slot head deinit
 
 **Slab Buffer — Insert**:
 ```
-Γ ⊢ buf : Buffer.Slab<E>    Γ ⊢ elem : E    Γ ⊢ slot : Index<Storage>    bitmap[slot] = 0
+Γ ⊢ buf : Buffer.Slab<E>    Γ ⊢ elem : E    Γ ⊢ slot : Index<Element>    bitmap[slot] = 0
 ─────────────────────────────────────────────────────────────────────────────────────── (T-SlabInsert)
 Γ; (S, bitmap) ⊢ buf.insert(consuming elem, at: slot) ⇒ (S', bitmap'); () : Void
 where S' = S[slot ↦ elem], bitmap' = bitmap with bit slot set
@@ -230,7 +230,7 @@ where S' = S[slot ↦ elem], bitmap' = bitmap with bit slot set
 
 **Slab Buffer — Remove**:
 ```
-Γ ⊢ buf : Buffer.Slab<E>    Γ ⊢ slot : Index<Storage>    bitmap[slot] = 1
+Γ ⊢ buf : Buffer.Slab<E>    Γ ⊢ slot : Index<Element>    bitmap[slot] = 1
 ────────────────────────────────────────────────────────────────────────────── (T-SlabRemove)
 Γ; (S, bitmap) ⊢ buf.remove(at: slot) ⇒ (S', bitmap'); v : E
 where v = S[slot], S' = S with slot deinitialized, bitmap' = bitmap with bit slot cleared
@@ -345,7 +345,7 @@ In practice, Heap variants support growth (reallocation to larger storage), whil
 
 Rather than creating 6 separate types (one per cell in the product), we define **3 discipline namespaces** with storage-parametric operations. The discipline namespace owns the Header type (cursor state); the storage type is passed to operations.
 
-This follows the pattern established in `storage-primitives` where operations are defined on `Storage.Heap` and `Storage.Inline` separately but share the coordinate system `Index<Storage>`.
+This follows the pattern established in `storage-primitives` where operations are defined on `Storage.Heap` and `Storage.Inline` separately but share the coordinate system `Index<Element>`.
 
 ### Option A: Discipline Owns Both Header and Storage (Monolithic)
 
@@ -353,12 +353,12 @@ This follows the pattern established in `storage-primitives` where operations ar
 // Each buffer type bundles header + storage
 public struct Buffer.Ring<Element: ~Copyable>: ~Copyable {
     var header: Header
-    var storage: Storage.Heap<Element>
+    var storage: Storage<Element>.Heap
 }
 
 public struct Buffer.Ring.Static<Element: ~Copyable, let capacity: Int>: ~Copyable {
     var header: Header.Cyclic<capacity>
-    var storage: Storage.Inline<Element, capacity>
+    var storage: Storage<Element>.Inline<capacity>
 }
 ```
 
@@ -370,21 +370,21 @@ public struct Buffer.Ring.Static<Element: ~Copyable, let capacity: Int>: ~Copyab
 ```swift
 // Discipline defines only the cursor/state header
 public struct Buffer.Ring.Header: Sendable {
-    public var head: Index<Storage>
-    public var count: Index<Storage>.Count
-    public let capacity: Index<Storage>.Count
+    public var head: Index<Element>
+    public var count: Index<Element>.Count
+    public let capacity: Index<Element>.Count
 }
 
 // Operations are methods on Header that take storage as inout parameter
 extension Buffer.Ring.Header {
     public mutating func pushBack(
         _ element: consuming Element,
-        into storage: Storage.Heap<Element>
+        into storage: Storage<Element>.Heap
     )
 
     public mutating func pushBack(
         _ element: consuming Element,
-        into storage: inout Storage.Inline<Element, capacity>
+        into storage: inout Storage<Element>.Inline<capacity>
     )
 }
 ```
@@ -397,10 +397,10 @@ extension Buffer.Ring.Header {
 ```swift
 protocol BufferStorage<Element> {
     associatedtype Element: ~Copyable
-    var slotCapacity: Index<Storage>.Count { get }
-    func initialize(to element: consuming Element, at slot: Index<Storage>)
-    func move(at slot: Index<Storage>) -> Element
-    func deinitialize(at slot: Index<Storage>)
+    var slotCapacity: Index<Element>.Count { get }
+    func initialize(to element: consuming Element, at slot: Index<Element>)
+    func move(at slot: Index<Element>) -> Element
+    func deinitialize(at slot: Index<Element>)
 }
 
 extension Storage.Heap: BufferStorage {}
@@ -431,7 +431,7 @@ extension Buffer.Ring {
     public static func pushBack(
         _ element: consuming Element,
         header: inout Buffer.Ring.Header,
-        storage: Storage.Heap<Element>
+        storage: Storage<Element>.Heap
     ) { ... }
 }
 ```
@@ -469,12 +469,12 @@ public enum Buffer<Element: ~Copyable>: Copyable {
 extension Buffer.Linear {
     public struct Header: Copyable, Sendable, Hashable {
         /// Number of initialized elements at [0, count).
-        public var count: Index<Storage>.Count
+        public var count: Index<Element>.Count
 
         /// Total slot capacity.
-        public let capacity: Index<Storage>.Count
+        public let capacity: Index<Element>.Count
 
-        public init(capacity: Index<Storage>.Count)
+        public init(capacity: Index<Element>.Count)
     }
 }
 ```
@@ -487,15 +487,15 @@ extension Buffer.Linear {
 extension Buffer.Ring {
     public struct Header: Copyable, Sendable, Hashable {
         /// Slot index of the first element.
-        public var head: Index<Storage>
+        public var head: Index<Element>
 
         /// Number of initialized elements.
-        public var count: Index<Storage>.Count
+        public var count: Index<Element>.Count
 
         /// Total slot capacity.
-        public let capacity: Index<Storage>.Count
+        public let capacity: Index<Element>.Count
 
-        public init(capacity: Index<Storage>.Count)
+        public init(capacity: Index<Element>.Count)
     }
 }
 ```
@@ -519,10 +519,10 @@ For fixed-capacity ring buffers, a specialized header uses compile-time modular 
 ```swift
 extension Buffer.Ring.Header {
     public struct Cyclic<let capacity: Int>: Copyable, Sendable, Hashable {
-        public var head: Index<Storage>
-        public var count: Index<Storage>.Count
+        public var head: Index<Element>
+        public var count: Index<Element>.Count
 
-        public static var capacity: Index<Storage>.Count { ... }
+        public static var capacity: Index<Element>.Count { ... }
 
         public init()
     }
@@ -586,7 +586,7 @@ extension Buffer.Linear {
     public static func append(
         _ element: consuming Element,
         header: inout Header,
-        storage: Storage.Heap<Element>
+        storage: Storage<Element>.Heap
     )
     // Precondition: header.count < header.capacity
     // Effect: storage.initialize(to: element, at: Index(header.count))
@@ -598,7 +598,7 @@ extension Buffer.Linear {
     public static func append(
         _ element: consuming Element,
         header: inout Header,
-        storage: inout Storage.Inline<Element, capacity>
+        storage: inout Storage<Element>.Inline<capacity>
     )
 
     // === Consume Front (read + shift) ===
@@ -607,7 +607,7 @@ extension Buffer.Linear {
     @inlinable
     public static func consumeFront(
         header: inout Header,
-        storage: Storage.Heap<Element>
+        storage: Storage<Element>.Heap
     ) -> Element
     // Precondition: header.count > 0
     // Effect: v = storage.move(at: .zero)
@@ -621,7 +621,7 @@ extension Buffer.Linear {
     @inlinable
     public static func deinitializeAll(
         header: inout Header,
-        storage: Storage.Heap<Element>
+        storage: Storage<Element>.Heap
     )
 
     // === Span Access (Copyable elements, Heap storage) ===
@@ -630,7 +630,7 @@ extension Buffer.Linear {
     @inlinable
     public static func withSpan<R, E: Swift.Error>(
         header: Header,
-        storage: Storage.Heap<Element>,
+        storage: Storage<Element>.Heap,
         _ body: (Span<Element>) throws(E) -> R
     ) throws(E) -> R where Element: Copyable
 }
@@ -647,7 +647,7 @@ extension Buffer.Ring {
     public static func pushBack(
         _ element: consuming Element,
         header: inout Header,
-        storage: Storage.Heap<Element>
+        storage: Storage<Element>.Heap
     )
     // Precondition: header.count < header.capacity
     // Effect: tail = (head + count) mod capacity
@@ -661,7 +661,7 @@ extension Buffer.Ring {
     @inlinable
     public static func popFront(
         header: inout Header,
-        storage: Storage.Heap<Element>
+        storage: Storage<Element>.Heap
     ) -> Element
     // Precondition: header.count > 0
     // Effect: v = storage.move(at: head)
@@ -676,7 +676,7 @@ extension Buffer.Ring {
     public static func pushFront(
         _ element: consuming Element,
         header: inout Header,
-        storage: Storage.Heap<Element>
+        storage: Storage<Element>.Heap
     )
     // Precondition: header.count < header.capacity
     // Effect: head = (head - 1) mod capacity
@@ -689,7 +689,7 @@ extension Buffer.Ring {
     @inlinable
     public static func popBack(
         header: inout Header,
-        storage: Storage.Heap<Element>
+        storage: Storage<Element>.Heap
     ) -> Element
 
     // === Indexed Access ===
@@ -697,9 +697,9 @@ extension Buffer.Ring {
     /// Returns the storage slot for logical index i (0-based from front).
     @inlinable
     public static func slot(
-        forLogicalIndex i: Index<Storage>.Offset,
+        forLogicalIndex i: Index<Element>.Offset,
         header: Header
-    ) -> Index<Storage>
+    ) -> Index<Element>
     // Returns (head + i) mod capacity
 
     // === Linearize ===
@@ -708,7 +708,7 @@ extension Buffer.Ring {
     @inlinable
     public static func linearize(
         header: inout Header,
-        storage: Storage.Heap<Element>
+        storage: Storage<Element>.Heap
     )
     // Effect: if wrapping, rotate elements so head = 0
 
@@ -717,7 +717,7 @@ extension Buffer.Ring {
     @inlinable
     public static func deinitializeAll(
         header: inout Header,
-        storage: Storage.Heap<Element>
+        storage: Storage<Element>.Heap
     )
 
     // All operations also have Storage.Inline overloads.
@@ -734,9 +734,9 @@ extension Buffer.Slab {
     @inlinable
     public static func insert(
         _ element: consuming Element,
-        at slot: Index<Storage>,
+        at slot: Index<Element>,
         header: inout Header,
-        storage: Storage.Heap<Element>
+        storage: Storage<Element>.Heap
     )
     // Precondition: header.bitmap[slot.asBitIndex] == false
     // Effect: storage.initialize(to: element, at: slot)
@@ -747,9 +747,9 @@ extension Buffer.Slab {
     /// Deinitializes and returns the element at the given slot.
     @inlinable
     public static func remove(
-        at slot: Index<Storage>,
+        at slot: Index<Element>,
         header: inout Header,
-        storage: Storage.Heap<Element>
+        storage: Storage<Element>.Heap
     ) -> Element
     // Precondition: header.bitmap[slot.asBitIndex] == true
     // Effect: v = storage.move(at: slot)
@@ -762,7 +762,7 @@ extension Buffer.Slab {
     @inlinable
     public static func forEachOccupied(
         header: borrowing Header,
-        _ body: (Index<Storage>) -> Void
+        _ body: (Index<Element>) -> Void
     )
     // Effect: header.bitmap.ones.forEach { bitIndex in body(bitIndex.asStorageIndex) }
 
@@ -772,14 +772,14 @@ extension Buffer.Slab {
     @inlinable
     public static func firstVacant(
         header: borrowing Header
-    ) -> Index<Storage>?
+    ) -> Index<Element>?
 
     // === Deinitialize All ===
 
     @inlinable
     public static func deinitializeAll(
         header: inout Header,
-        storage: Storage.Heap<Element>
+        storage: Storage<Element>.Heap
     )
     // Effect: header.bitmap.ones.forEach { slot in storage.deinitialize(at: slot) }
     //         header.bitmap.clear.all()
@@ -797,18 +797,18 @@ extension Buffer.Ring {
     /// A growable ring buffer backed by heap storage.
     public struct Growable<Element: ~Copyable>: ~Copyable {
         public var header: Header
-        public var storage: Storage.Heap<Element>
+        public var storage: Storage<Element>.Heap
 
-        public init(minimumCapacity: Index<Storage>.Count)
+        public init(minimumCapacity: Index<Element>.Count)
 
         public mutating func pushBack(_ element: consuming Element)
         public mutating func popFront() -> Element
         public mutating func pushFront(_ element: consuming Element)
         public mutating func popBack() -> Element
 
-        public var count: Index<Storage>.Count { header.count }
+        public var count: Index<Element>.Count { header.count }
         public var isEmpty: Bool { header.count == .zero }
-        public var capacity: Index<Storage>.Count { header.capacity }
+        public var capacity: Index<Element>.Count { header.capacity }
 
         deinit // calls Buffer.Ring.deinitializeAll
     }
@@ -830,9 +830,9 @@ extension Buffer.Ring {
     /// A fixed-capacity ring buffer backed by inline storage.
     public struct Bounded<Element: ~Copyable, let capacity: Int>: ~Copyable {
         public var header: Header.Cyclic<capacity>
-        public var storage: Storage.Inline<Element, capacity>
+        public var storage: Storage<Element>.Inline<capacity>
 
-        public init() throws(Storage.Inline<Element, capacity>.Error)
+        public init() throws(Storage<Element>.Inline<capacity>.Error)
 
         public mutating func pushBack(_ element: consuming Element)
         public mutating func popFront() -> Element
@@ -850,13 +850,13 @@ extension Buffer.Ring.Bounded: Sendable where Element: Sendable {}
 extension Buffer.Linear {
     public struct Growable<Element: ~Copyable>: ~Copyable {
         public var header: Header
-        public var storage: Storage.Heap<Element>
+        public var storage: Storage<Element>.Heap
 
-        public init(minimumCapacity: Index<Storage>.Count)
+        public init(minimumCapacity: Index<Element>.Count)
 
         public mutating func append(_ element: consuming Element)
         public mutating func removeLast() -> Element
-        public var count: Index<Storage>.Count { header.count }
+        public var count: Index<Element>.Count { header.count }
 
         deinit
     }
@@ -869,9 +869,9 @@ extension Buffer.Linear {
 extension Buffer.Linear {
     public struct Bounded<Element: ~Copyable, let capacity: Int>: ~Copyable {
         public var header: Header
-        public var storage: Storage.Inline<Element, capacity>
+        public var storage: Storage<Element>.Inline<capacity>
 
-        public init() throws(Storage.Inline<Element, capacity>.Error)
+        public init() throws(Storage<Element>.Inline<capacity>.Error)
 
         public mutating func append(_ element: consuming Element)
         public mutating func removeLast() -> Element
@@ -887,12 +887,12 @@ extension Buffer.Linear {
 extension Buffer.Slab {
     public struct Growable<Element: ~Copyable>: ~Copyable {
         public var header: Header
-        public var storage: Storage.Heap<Element>
+        public var storage: Storage<Element>.Heap
 
-        public init(capacity: Index<Storage>.Count)
+        public init(capacity: Index<Element>.Count)
 
-        public mutating func insert(_ element: consuming Element, at slot: Index<Storage>)
-        public mutating func remove(at slot: Index<Storage>) -> Element
+        public mutating func insert(_ element: consuming Element, at slot: Index<Element>)
+        public mutating func remove(at slot: Index<Element>) -> Element
 
         deinit
     }
@@ -905,9 +905,9 @@ extension Buffer.Slab {
 extension Buffer.Slab {
     public struct Bounded<Element: ~Copyable, let capacity: Int, let wordCount: Int>: ~Copyable {
         public var header: Header.Static<wordCount>
-        public var storage: Storage.Inline<Element, capacity>
+        public var storage: Storage<Element>.Inline<capacity>
 
-        public init() throws(Storage.Inline<Element, capacity>.Error)
+        public init() throws(Storage<Element>.Inline<capacity>.Error)
 
         deinit
     }
@@ -920,11 +920,11 @@ extension Buffer.Slab {
 extension Buffer {
     public enum Growth {
         public struct Policy: Copyable, Sendable {
-            public let grow: @Sendable (Index<Storage>.Count) -> Index<Storage>.Count
+            public let grow: @Sendable (Index<Element>.Count) -> Index<Element>.Count
 
             public static var doubling: Self
             public static func factor(_ multiplier: Double) -> Self
-            public static func exact(_ capacity: Index<Storage>.Count) -> Self
+            public static func exact(_ capacity: Index<Element>.Count) -> Self
             public static func pageAligned(pageSize: Int = 4096) -> Self
         }
     }
@@ -934,24 +934,24 @@ extension Buffer {
 Growth policy is only relevant for `Growable` variants. When a push exceeds capacity:
 
 1. Compute new capacity via policy: `newCapacity = policy.grow(currentCapacity)`
-2. Allocate new `Storage.Heap<Element>` with `newCapacity`
+2. Allocate new `Storage<Element>.Heap` with `newCapacity`
 3. Move all elements from old to new storage (linearizing ring if needed)
 4. Replace header capacity
 5. Old storage deallocated via ARC (Heap) or scope (Inline — but Inline doesn't grow)
 
 ### Index Bridge: Bit.Index ↔ Index\<Storage\>
 
-The slab discipline requires converting between `Bit.Index` (used by `Bit.Vector`) and `Index<Storage>` (used by storage). This bridge must be explicit:
+The slab discipline requires converting between `Bit.Index` (used by `Bit.Vector`) and `Index<Element>` (used by storage). This bridge must be explicit:
 
 ```swift
 extension Buffer.Slab {
     /// Converts a storage slot index to a bit index for bitmap access.
     @inlinable
-    public static func bitIndex(for slot: Index<Storage>) -> Bit.Index
+    public static func bitIndex(for slot: Index<Element>) -> Bit.Index
 
     /// Converts a bit index from bitmap to a storage slot index.
     @inlinable
-    public static func storageIndex(for bit: Bit.Index) -> Index<Storage>
+    public static func storageIndex(for bit: Bit.Index) -> Index<Element>
 }
 ```
 

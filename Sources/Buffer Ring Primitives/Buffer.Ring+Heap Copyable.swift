@@ -9,8 +9,8 @@ extension Buffer.Ring where Element: Copyable {
     @inlinable
     public static func linearize(
         header: Header,
-        source: Storage.Heap<Element>,
-        to destination: Storage.Heap<Element>
+        source: Storage<Element>.Heap,
+        to destination: Storage<Element>.Heap
     ) {
         switch header.initialization {
         case .empty:
@@ -22,8 +22,8 @@ extension Buffer.Ring where Element: Copyable {
             let offset = first.count.rawValue.rawValue
             let secondCount = second.count.rawValue.rawValue
             for i: UInt in 0 ..< secondCount {
-                let srcIdx = Index<Storage>(Ordinal(second.lowerBound.rawValue.rawValue &+ i))
-                let dstIdx = Index<Storage>(Ordinal(offset &+ i))
+                let srcIdx = Index<Element>(Ordinal(second.lowerBound.rawValue.rawValue &+ i))
+                let dstIdx = Index<Element>(Ordinal(offset &+ i))
                 let value: Element = unsafe source.pointer(at: srcIdx).pointee
                 destination.initialize(to: value, at: dstIdx)
             }
@@ -34,8 +34,8 @@ extension Buffer.Ring where Element: Copyable {
     @inlinable
     public static func copy(
         header: Header,
-        source: Storage.Heap<Element>,
-        to destination: Storage.Heap<Element>
+        source: Storage<Element>.Heap,
+        to destination: Storage<Element>.Heap
     ) {
         linearize(header: header, source: source, to: destination)
     }

@@ -16,8 +16,8 @@ extension Buffer.Ring where Element: Copyable {
     @inlinable
     public var peekBack: Element {
         let lastCount = Cardinal(header.count.rawValue.rawValue &- 1)
-        let lastOffset = Index<Storage>.Offset(
-            fromZero: Index<Storage>(Ordinal(lastCount.rawValue))
+        let lastOffset = Index<Element>.Offset(
+            fromZero: Index<Element>(Ordinal(lastCount.rawValue))
         )
         let lastSlot = Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
         return unsafe storage.pointer(at: lastSlot).pointee
@@ -27,7 +27,7 @@ extension Buffer.Ring where Element: Copyable {
     @inlinable
     mutating func _makeUnique() {
         if !isKnownUniquelyReferenced(&storage) {
-            let newStorage = Storage.Heap<Element>.create(minimumCapacity: header.capacity)
+            let newStorage = Storage<Element>.Heap.create(minimumCapacity: header.capacity)
             Buffer.Ring.copy(header: header, source: storage, to: newStorage)
             let oldCount = header.count
             storage = newStorage

@@ -4,7 +4,7 @@ extension Buffer.Ring where Element == Int {
     /// Creates a growable ring buffer pre-filled with the given elements.
     @inlinable
     public static func with(_ elements: [Int], minimumCapacity: UInt = 0) -> Self {
-        let cap: Index<Storage>.Count = .init(Cardinal(max(UInt(elements.count), minimumCapacity)))
+        let cap: Index<Element>.Count = .init(Cardinal(max(UInt(elements.count), minimumCapacity)))
         var buffer = Self(minimumCapacity: cap)
         for element in elements {
             buffer.pushBack(element)
@@ -31,7 +31,7 @@ extension Buffer.Linear where Element == Int {
     /// Creates a growable linear buffer pre-filled with the given elements.
     @inlinable
     public static func with(_ elements: [Int], minimumCapacity: UInt = 0) -> Self {
-        let cap: Index<Storage>.Count = .init(Cardinal(max(UInt(elements.count), minimumCapacity)))
+        let cap: Index<Element>.Count = .init(Cardinal(max(UInt(elements.count), minimumCapacity)))
         var buffer = Self(minimumCapacity: cap)
         for element in elements {
             buffer.append(element)

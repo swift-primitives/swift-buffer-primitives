@@ -14,8 +14,8 @@ extension Buffer.Ring {
     /// The actual capacity may be larger than requested per H6 —
     /// `header.capacity` is set from `storage.slotCapacity`.
     @inlinable
-    public init(minimumCapacity: Index<Storage>.Count) {
-        let storage = Storage.Heap<Element>.create(minimumCapacity: minimumCapacity)
+    public init(minimumCapacity: Index<Element>.Count) {
+        let storage = Storage<Element>.Heap.create(minimumCapacity: minimumCapacity)
         self.init(
             header: Buffer.Ring.Header(capacity: storage.slotCapacity),
             storage: storage
@@ -24,7 +24,7 @@ extension Buffer.Ring {
 
     /// The number of elements in the buffer.
     @inlinable
-    public var count: Index<Storage>.Count { header.count }
+    public var count: Index<Element>.Count { header.count }
 
     /// Whether the buffer has no elements.
     @inlinable
@@ -32,7 +32,7 @@ extension Buffer.Ring {
 
     /// The total slot capacity.
     @inlinable
-    public var capacity: Index<Storage>.Count { header.capacity }
+    public var capacity: Index<Element>.Count { header.capacity }
 
     /// Whether the buffer is at capacity.
     @inlinable
@@ -86,7 +86,7 @@ extension Buffer.Ring {
 
     /// Ensures the buffer can hold at least `minimumCapacity` elements.
     @inlinable
-    public mutating func reserveCapacity(_ minimumCapacity: Index<Storage>.Count) {
+    public mutating func reserveCapacity(_ minimumCapacity: Index<Element>.Count) {
         if minimumCapacity.rawValue.rawValue > header.capacity.rawValue.rawValue {
             _growTo(minimumCapacity)
         }
@@ -99,12 +99,12 @@ extension Buffer.Ring {
         let newCap = Cardinal(header.capacity.rawValue.rawValue == 0
             ? UInt(1)
             : header.capacity.rawValue.rawValue &<< 1)
-        _growTo(Index<Storage>.Count(newCap))
+        _growTo(Index<Element>.Count(newCap))
     }
 
     @inlinable
-    mutating func _growTo(_ minimumCapacity: Index<Storage>.Count) {
-        let newStorage = Storage.Heap<Element>.create(minimumCapacity: minimumCapacity)
+    mutating func _growTo(_ minimumCapacity: Index<Element>.Count) {
+        let newStorage = Storage<Element>.Heap.create(minimumCapacity: minimumCapacity)
         // Move elements to new storage in linearized order
         switch header.initialization {
         case .empty:
@@ -117,8 +117,8 @@ extension Buffer.Ring {
             let offset = first.count.rawValue.rawValue
             let secondCount = second.count.rawValue.rawValue
             for i: UInt in 0 ..< secondCount {
-                let srcIdx = Index<Storage>(Ordinal(second.lowerBound.rawValue.rawValue &+ i))
-                let dstIdx = Index<Storage>(Ordinal(offset &+ i))
+                let srcIdx = Index<Element>(Ordinal(second.lowerBound.rawValue.rawValue &+ i))
+                let dstIdx = Index<Element>(Ordinal(offset &+ i))
                 let element = storage.move(at: srcIdx)
                 newStorage.initialize(to: consume element, at: dstIdx)
             }

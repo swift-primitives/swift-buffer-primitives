@@ -15,7 +15,7 @@ extension Buffer.Linear where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var peekBack: Element {
-        let lastIdx = Index<Storage>(Ordinal(header.count.rawValue.rawValue &- 1))
+        let lastIdx = Index<Element>(Ordinal(header.count.rawValue.rawValue &- 1))
         return unsafe storage.pointer(at: lastIdx).pointee
     }
 
@@ -23,7 +23,7 @@ extension Buffer.Linear where Element: Copyable {
     @inlinable
     mutating func _makeUnique() {
         if !isKnownUniquelyReferenced(&storage) {
-            let newStorage = Storage.Heap<Element>.create(minimumCapacity: header.capacity)
+            let newStorage = Storage<Element>.Heap.create(minimumCapacity: header.capacity)
             Buffer.Linear.copy(header: header, source: storage, to: newStorage)
             let oldCount = header.count
             storage = newStorage

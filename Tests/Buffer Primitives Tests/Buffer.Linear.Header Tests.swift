@@ -7,7 +7,7 @@ struct LinearHeaderTests {
 
     @Test("init sets count to zero")
     func initDefaults() {
-        let cap: Index<Storage>.Count = 8
+        let cap: Index<Element>.Count = 8
         let header = Buffer<Int>.Linear.Header(capacity: cap)
         #expect(header.count == 0)
         #expect(header.capacity == cap)
@@ -15,7 +15,7 @@ struct LinearHeaderTests {
 
     @Test("isEmpty and isFull")
     func emptyAndFull() {
-        let cap: Index<Storage>.Count = 4
+        let cap: Index<Element>.Count = 4
         var header = Buffer<Int>.Linear.Header(capacity: cap)
         #expect(header.isEmpty)
         #expect(!header.isFull)

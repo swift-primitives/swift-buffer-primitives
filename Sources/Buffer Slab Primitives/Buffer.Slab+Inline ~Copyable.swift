@@ -12,9 +12,9 @@ extension Buffer.Slab {
         _ element: consuming Element,
         at slot: Bit.Index,
         header: inout Header,
-        storage: inout Storage.Inline<Element, capacity>
+        storage: inout Storage<Element>.Inline<capacity>
     ) {
-        let storageIndex = Index<Storage>(Ordinal(slot.rawValue.rawValue))
+        let storageIndex = Index<Element>(Ordinal(slot.rawValue.rawValue))
         storage.initialize(to: consume element, at: storageIndex)
         header.bitmap[slot] = true
     }
@@ -28,9 +28,9 @@ extension Buffer.Slab {
     public static func remove<let capacity: Int>(
         at slot: Bit.Index,
         header: inout Header,
-        storage: inout Storage.Inline<Element, capacity>
+        storage: inout Storage<Element>.Inline<capacity>
     ) -> Element {
-        let storageIndex = Index<Storage>(Ordinal(slot.rawValue.rawValue))
+        let storageIndex = Index<Element>(Ordinal(slot.rawValue.rawValue))
         let element = storage.move(at: storageIndex)
         header.bitmap[slot] = false
         return element
@@ -42,11 +42,11 @@ extension Buffer.Slab {
     @inlinable
     public static func forEachOccupied<let capacity: Int>(
         header: borrowing Header,
-        storage: borrowing Storage.Inline<Element, capacity>,
-        _ body: (Index<Storage>) -> Void
+        storage: borrowing Storage<Element>.Inline<capacity>,
+        _ body: (Index<Element>) -> Void
     ) {
         header.bitmap.ones.forEach { bitIndex in
-            let storageIndex = Index<Storage>(Ordinal(bitIndex.rawValue.rawValue))
+            let storageIndex = Index<Element>(Ordinal(bitIndex.rawValue.rawValue))
             body(storageIndex)
         }
     }
@@ -57,10 +57,10 @@ extension Buffer.Slab {
     @inlinable
     public static func deinitializeAll<let capacity: Int>(
         header: inout Header,
-        storage: inout Storage.Inline<Element, capacity>
+        storage: inout Storage<Element>.Inline<capacity>
     ) {
         header.bitmap.ones.forEach { bitIndex in
-            let storageIndex = Index<Storage>(Ordinal(bitIndex.rawValue.rawValue))
+            let storageIndex = Index<Element>(Ordinal(bitIndex.rawValue.rawValue))
             storage.deinitialize(at: storageIndex)
             header.bitmap[bitIndex] = false
         }

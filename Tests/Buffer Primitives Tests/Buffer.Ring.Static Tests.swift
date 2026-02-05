@@ -7,7 +7,7 @@ struct RingStaticTests {
 
     @Test("pushBack/popFront FIFO ordering")
     func fifoOrdering() {
-        let cap: Index<Storage>.Count = 4
+        let cap: Index<Element>.Count = 4
         var header = Buffer<Int>.Ring.Header(capacity: cap)
         let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
 
@@ -31,7 +31,7 @@ struct RingStaticTests {
 
     @Test("pushFront/popBack ordering")
     func pushFrontPopBack() {
-        let cap: Index<Storage>.Count = 4
+        let cap: Index<Element>.Count = 4
         var header = Buffer<Int>.Ring.Header(capacity: cap)
         let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
 
@@ -50,7 +50,7 @@ struct RingStaticTests {
 
     @Test("wrap-around correctness")
     func wrapAround() {
-        let cap: Index<Storage>.Count = 4
+        let cap: Index<Element>.Count = 4
         var header = Buffer<Int>.Ring.Header(capacity: cap)
         let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
 
@@ -101,7 +101,7 @@ struct RingStaticTests {
 
     @Test("initialization sync through operations")
     func initializationSync() {
-        let cap: Index<Storage>.Count = 4
+        let cap: Index<Element>.Count = 4
         var header = Buffer<Int>.Ring.Header(capacity: cap)
         let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
 
@@ -136,7 +136,7 @@ struct RingStaticTests {
 
     @Test("deinitializeAll clears everything")
     func deinitializeAll() {
-        let cap: Index<Storage>.Count = 4
+        let cap: Index<Element>.Count = 4
         var header = Buffer<Int>.Ring.Header(capacity: cap)
         let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
 

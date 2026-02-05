@@ -15,7 +15,7 @@ extension Buffer.Linear.Bounded where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var peekBack: Element {
-        let lastIdx = Index<Storage>(Ordinal(header.count.rawValue.rawValue &- 1))
+        let lastIdx = Index<Element>(Ordinal(header.count.rawValue.rawValue &- 1))
         return unsafe storage.pointer(at: lastIdx).pointee
     }
 }

@@ -11,7 +11,7 @@ extension Buffer.Slab.Inline where Element: Copyable {
     /// - Precondition: The slot is occupied.
     @inlinable
     public func peek(at slot: Bit.Index) -> Element {
-        let storageIndex = Index<Storage>(Ordinal(slot.rawValue.rawValue))
+        let storageIndex = Index<Element>(Ordinal(slot.rawValue.rawValue))
         return unsafe storage.pointer(at: storageIndex).pointee
     }
 }
@@ -21,7 +21,7 @@ extension Buffer.Slab.Inline where Element: Copyable {
 extension Buffer.Slab.Inline: Sequence.`Protocol` where Element: Copyable {
     public struct Iterator: IteratorProtocol, @unchecked Sendable {
         @usableFromInline
-        let storage: Storage.Inline<Element, wordCount>
+        let storage: Storage<Element>.Inline<wordCount>
         @usableFromInline
         let bitmap: Bit.Vector.Static<wordCount>
         @usableFromInline
@@ -30,7 +30,7 @@ extension Buffer.Slab.Inline: Sequence.`Protocol` where Element: Copyable {
         let max: UInt
 
         @inlinable
-        init(storage: Storage.Inline<Element, wordCount>, bitmap: Bit.Vector.Static<wordCount>, max: UInt) {
+        init(storage: Storage<Element>.Inline<wordCount>, bitmap: Bit.Vector.Static<wordCount>, max: UInt) {
             self.storage = storage
             self.bitmap = bitmap
             self.current = 0
@@ -43,7 +43,7 @@ extension Buffer.Slab.Inline: Sequence.`Protocol` where Element: Copyable {
                 let slot = Bit.Index(Ordinal(current))
                 current &+= 1
                 if bitmap[slot] {
-                    let storageIndex = Index<Storage>(Ordinal(slot.rawValue.rawValue))
+                    let storageIndex = Index<Element>(Ordinal(slot.rawValue.rawValue))
                     return unsafe storage.pointer(at: storageIndex).pointee
                 }
             }

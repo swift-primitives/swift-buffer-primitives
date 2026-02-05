@@ -6,8 +6,8 @@ extension Buffer.Ring.Bounded {
     ///
     /// Actual capacity comes from `storage.slotCapacity` per H6.
     @inlinable
-    public init(minimumCapacity: Index<Storage>.Count) {
-        let storage = Storage.Heap<Element>.create(minimumCapacity: minimumCapacity)
+    public init(minimumCapacity: Index<Element>.Count) {
+        let storage = Storage<Element>.Heap.create(minimumCapacity: minimumCapacity)
         self.init(
             header: Buffer.Ring.Header(capacity: storage.slotCapacity),
             storage: storage
@@ -16,7 +16,7 @@ extension Buffer.Ring.Bounded {
 
     /// The number of elements in the buffer.
     @inlinable
-    public var count: Index<Storage>.Count { header.count }
+    public var count: Index<Element>.Count { header.count }
 
     /// Whether the buffer has no elements.
     @inlinable
@@ -24,7 +24,7 @@ extension Buffer.Ring.Bounded {
 
     /// The total slot capacity.
     @inlinable
-    public var capacity: Index<Storage>.Count { header.capacity }
+    public var capacity: Index<Element>.Count { header.capacity }
 
     /// Whether the buffer is at capacity.
     @inlinable

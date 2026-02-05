@@ -26,7 +26,7 @@ Are there any operations in the buffer-primitives design that would duplicate lo
 
 | Package | Tier | Key Types/Operations Used |
 |---------|------|---------------------------|
-| `swift-storage-primitives` | 12 | `Storage.Heap`, `Storage.Inline`, `Storage.Initialization`, `Index<Storage>`, initialize/move/deinitialize/withSpan, copy/move-range |
+| `swift-storage-primitives` | 12 | `Storage.Heap`, `Storage.Inline`, `Storage.Initialization`, `Index<Element>`, initialize/move/deinitialize/withSpan, copy/move-range |
 | `swift-bit-vector-primitives` | 13 | `Bit.Vector`, `Bit.Vector.Static`, subscript, popcount, set/clear/ones.forEach |
 | `swift-sequence-primitives` | 7 | `Sequence.Protocol`, `Sequence.Borrowing.Protocol`, `Sequence.Consume.Protocol`, `Sequence.Drain.Protocol`, `Sequence.Clearable`, Property.View tags |
 | `swift-cyclic-index-primitives` | 9 | `Index<Tag>.Cyclic<N>`, `Modular.successor`, `Modular.predecessor`, `Modular.advanced`, `Modular.physical` |
@@ -40,15 +40,15 @@ Are there any operations in the buffer-primitives design that would duplicate lo
 
 | Operation | Naive Implementation | Correct Dependency |
 |-----------|---------------------|-------------------|
-| `(head + count) mod capacity` (tail computation) | `Index<Storage>((head.position.rawValue + count.rawValue) % capacity.rawValue)` | `Modular.advanced(head, by: Index<Storage>.Offset(fromZero: count), capacity: capacity)` OR `Index<Storage>(head.position % capacity)` |
+| `(head + count) mod capacity` (tail computation) | `Index<Element>((head.position.rawValue + count.rawValue) % capacity.rawValue)` | `Modular.advanced(head, by: Index<Element>.Offset(fromZero: count), capacity: capacity)` OR `Index<Element>(head.position % capacity)` |
 | `(head + 1) mod capacity` (pop front) | Manual modulo | `Modular.successor(of: head, capacity: capacity)` |
 | `(head - 1) mod capacity` (push front) | Manual modulo with underflow guard | `Modular.predecessor(of: head, capacity: capacity)` |
 | Logical-to-physical index mapping | `(head + logicalIndex) mod capacity` | `Modular.physical(forLogical:head:capacity:)` — purpose-built |
-| Compile-time modular arithmetic (Bounded) | Manual `% N` | `Index<Storage>.Cyclic<N>` arithmetic (`+`, `-` operators) |
+| Compile-time modular arithmetic (Bounded) | Manual `% N` | `Index<Element>.Cyclic<N>` arithmetic (`+`, `-` operators) |
 
 **Finding**: `cyclic-index-primitives` provides `Modular.physical(forLogical:head:capacity:)` which is exactly the logical→physical slot mapping ring buffers need. This MUST be used instead of writing `(head + i) % capacity` locally.
 
-**Finding**: For `Ring.Bounded`, `Index<Storage>.Cyclic<capacity>` provides compile-time modular arithmetic. The `Header.Cyclic<capacity>` type should store `head` as `Index<Storage>.Cyclic<capacity>` to get free modular operations.
+**Finding**: For `Ring.Bounded`, `Index<Element>.Cyclic<capacity>` provides compile-time modular arithmetic. The `Header.Cyclic<capacity>` type should store `head` as `Index<Element>.Cyclic<capacity>` to get free modular operations.
 
 #### Ring Buffer — Initialization State
 
@@ -57,13 +57,13 @@ Are there any operations in the buffer-primitives design that would duplicate lo
 | Compute `Storage.Initialization` from ring state | Reimplement range construction | Use `Storage.Initialization.one(Range(start:count:))` and `.two(first:second:)` directly — these are already provided by storage-primitives' Range extension `init(start:count:)` |
 | Transition from `.one` to `.two` on wrap | Ad-hoc range splitting | Compute from `head`, `count`, `capacity` — no existing primitive covers this specific transition (buffer-local logic is correct here) |
 
-**Finding**: `Range<Index<Storage>>.init(start:count:)` is provided by storage-primitives. Use it for constructing initialization ranges rather than writing `start..<(start + count)` manually.
+**Finding**: `Range<Index<Element>>.init(start:count:)` is provided by storage-primitives. Use it for constructing initialization ranges rather than writing `start..<(start + count)` manually.
 
 #### Linear Buffer — Index Arithmetic
 
 | Operation | Risk | Correct Approach |
 |-----------|------|-----------------|
-| Append at position `count` | Convert count to index | `Index<Storage>` from count — use affine conversion |
+| Append at position `count` | Convert count to index | `Index<Element>` from count — use affine conversion |
 | Element shift on consume-front | Manual loop | `Storage.Heap.move(range:to:)` — storage-primitives provides range move |
 
 **Finding**: `Storage.Heap.move(range:to:)` can handle the element shift in `consumeFront`. The linear buffer does NOT need a custom element-by-element shift loop — the storage range-move operation does this.
@@ -85,9 +85,9 @@ Are there any operations in the buffer-primitives design that would duplicate lo
 
 | Operation | Risk | Correct Approach |
 |-----------|------|-----------------|
-| `Index<Storage>` ↔ `Bit.Index` conversion | Manual `rawValue` extraction | Use `Index.retag()` from identity-primitives (zero-cost phantom-type conversion via Tagged.retag) |
+| `Index<Element>` ↔ `Bit.Index` conversion | Manual `rawValue` extraction | Use `Index.retag()` from identity-primitives (zero-cost phantom-type conversion via Tagged.retag) |
 
-**Finding**: `Tagged.retag(to:)` is the zero-cost cross-domain index conversion provided by identity-primitives (re-exported through index-primitives). The `Bit.Index ↔ Index<Storage>` bridge should use `.retag(Storage.self)` / `.retag(Bit.self)` — NOT manual rawValue extraction and reconstruction.
+**Finding**: `Tagged.retag(to:)` is the zero-cost cross-domain index conversion provided by identity-primitives (re-exported through index-primitives). The `Bit.Index ↔ Index<Element>` bridge should use `.retag(Storage.self)` / `.retag(Bit.self)` — NOT manual rawValue extraction and reconstruction.
 
 #### Growth Policy — Capacity Computation
 

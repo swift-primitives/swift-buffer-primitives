@@ -8,8 +8,8 @@ extension Buffer.Linear where Element: Copyable {
     @inlinable
     public static func copy(
         header: Header,
-        source: Storage.Heap<Element>,
-        to destination: Storage.Heap<Element>
+        source: Storage<Element>.Heap,
+        to destination: Storage<Element>.Heap
     ) {
         switch header.initialization {
         case .empty:
