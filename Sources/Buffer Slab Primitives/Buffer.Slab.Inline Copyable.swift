@@ -19,9 +19,13 @@ extension Buffer.Slab.Inline where Element: Copyable {
 // MARK: - Sequence.Protocol
 
 extension Buffer.Slab.Inline: Sequence.`Protocol` where Element: Copyable {
+    /// Iterator over slab inline buffer elements.
+    ///
+    /// Uses pointer-based iteration with bitmap occupancy checking.
+    /// The iterator is only valid while the source buffer exists.
     public struct Iterator: IteratorProtocol, @unchecked Sendable {
         @usableFromInline
-        let storage: Storage<Element>.Inline<wordCount>
+        let base: UnsafePointer<Element>
         @usableFromInline
         let bitmap: Bit.Vector.Static<wordCount>
         @usableFromInline
@@ -30,8 +34,8 @@ extension Buffer.Slab.Inline: Sequence.`Protocol` where Element: Copyable {
         let max: UInt
 
         @inlinable
-        init(storage: Storage<Element>.Inline<wordCount>, bitmap: Bit.Vector.Static<wordCount>, max: UInt) {
-            self.storage = storage
+        init(base: UnsafePointer<Element>, bitmap: Bit.Vector.Static<wordCount>, max: UInt) {
+            self.base = base
             self.bitmap = bitmap
             self.current = 0
             self.max = max
@@ -43,8 +47,7 @@ extension Buffer.Slab.Inline: Sequence.`Protocol` where Element: Copyable {
                 let slot = Bit.Index(Ordinal(current))
                 current &+= 1
                 if bitmap[slot] {
-                    let storageIndex = Index<Element>(Ordinal(slot.rawValue.rawValue))
-                    return unsafe storage.pointer(at: storageIndex).pointee
+                    return unsafe (base + Int(slot.rawValue.rawValue)).pointee
                 }
             }
             return nil
@@ -53,7 +56,8 @@ extension Buffer.Slab.Inline: Sequence.`Protocol` where Element: Copyable {
 
     @inlinable
     public borrowing func makeIterator() -> Iterator {
-        Iterator(storage: storage, bitmap: header.bitmap, max: UInt(wordCount))
+        let base = unsafe storage.pointer(at: .zero)
+        return Iterator(base: base, bitmap: header.bitmap, max: UInt(wordCount))
     }
 }
 

@@ -27,9 +27,13 @@ extension Buffer.Ring.Inline where Element: Copyable {
 // MARK: - Sequence.Protocol
 
 extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
+    /// Iterator over ring inline buffer elements.
+    ///
+    /// Uses pointer-based iteration with ring wrap-around logic.
+    /// The iterator is only valid while the source buffer exists.
     public struct Iterator: IteratorProtocol, @unchecked Sendable {
         @usableFromInline
-        let storage: Storage<Element>.Inline<capacity>
+        let base: UnsafePointer<Element>
         @usableFromInline
         let header: Buffer.Ring.Header
         @usableFromInline
@@ -38,8 +42,8 @@ extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
         let total: UInt
 
         @inlinable
-        init(storage: Storage<Element>.Inline<capacity>, header: Buffer.Ring.Header) {
-            self.storage = storage
+        init(base: UnsafePointer<Element>, header: Buffer.Ring.Header) {
+            self.base = base
             self.header = header
             self.current = 0
             self.total = header.count.rawValue.rawValue
@@ -55,13 +59,14 @@ extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
                 capacity: header.capacity
             )
             current &+= 1
-            return unsafe storage.pointer(at: physicalIdx).pointee
+            return unsafe (base + Int(physicalIdx.ordinal.rawValue)).pointee
         }
     }
 
     @inlinable
     public borrowing func makeIterator() -> Iterator {
-        Iterator(storage: storage, header: header)
+        let base = unsafe storage.pointer(at: .zero)
+        return Iterator(base: base, header: header)
     }
 }
 

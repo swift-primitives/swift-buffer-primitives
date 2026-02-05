@@ -8,9 +8,9 @@
 import Buffer_Primitives_Core
 import Storage_Primitives
 
-extension Storage.Initialization {
+extension Storage.Initialization where Element: ~Copyable {
     @inlinable
-    public init<Element: ~Copyable>(
+    public init(
         _ header: Buffer<Element>.Ring.Header
     ) {
         if header.count == .zero {
@@ -33,9 +33,9 @@ extension Storage.Initialization {
     }
 }
 
-extension Storage.Initialization {
+extension Storage.Initialization where Element: ~Copyable {
     @inlinable
-    public init<Element: ~Copyable, let capacity: Int>(
+    public init<let capacity: Int>(
         _ header: Buffer<Element>.Ring.Header.Cyclic<capacity>
     ) {
         if header.count == .zero {

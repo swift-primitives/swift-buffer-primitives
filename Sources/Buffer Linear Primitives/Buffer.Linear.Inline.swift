@@ -5,14 +5,12 @@ extension Buffer.Linear.Inline {
     /// Creates a bounded inline linear buffer with fixed capacity.
     ///
     /// The capacity is determined by the compile-time generic parameter.
-    ///
-    /// - Throws: `Storage.Inline.Error` if the element type exceeds slot constraints.
     @inlinable
-    public init() throws(Storage<Element>.Inline<capacity>.Error) {
+    public init() {
         let cap = Index<Element>.Count(Cardinal(UInt(capacity)))
         self.init(
             header: Buffer.Linear.Header(capacity: cap),
-            storage: try .init()
+            storage: .init()
         )
     }
 

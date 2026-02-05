@@ -12,10 +12,10 @@ extension Buffer.Slab.Inline {
     ///
     /// - Throws: `Storage.Inline.Error` if the element type exceeds slot constraints.
     @inlinable
-    public init() throws(Storage<Element>.Inline<wordCount>.Error) {
+    public init() {
         self.init(
             header: .init(),
-            storage: try .init()
+            storage: .init()
         )
     }
 

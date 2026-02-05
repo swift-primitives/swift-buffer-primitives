@@ -8,11 +8,11 @@ extension Buffer.Ring.Inline {
     ///
     /// - Throws: `Storage.Inline.Error` if the element type exceeds slot constraints.
     @inlinable
-    public init() throws(Storage<Element>.Inline<capacity>.Error) {
+    public init() {
         let cap = Index<Element>.Count(Cardinal(UInt(capacity)))
         self.init(
             header: Buffer.Ring.Header(capacity: cap),
-            storage: try .init()
+            storage: .init()
         )
     }
 

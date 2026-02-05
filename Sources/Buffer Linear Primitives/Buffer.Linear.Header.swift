@@ -24,6 +24,6 @@ extension Buffer.Linear.Header where Element: ~Copyable {
     /// Returns `.empty`, `.one`, or `.two` depending on whether elements
     /// wrap around the capacity boundary.
     @inlinable
-    public var initialization: Storage.Initialization { .init(self) }
+    public var initialization: Storage<Element>.Initialization { .init(self) }
 }
 

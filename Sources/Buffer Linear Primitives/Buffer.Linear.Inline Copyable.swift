@@ -23,33 +23,38 @@ extension Buffer.Linear.Inline where Element: Copyable {
 // MARK: - Sequence.Protocol
 
 extension Buffer.Linear.Inline: Sequence.`Protocol` where Element: Copyable {
+    /// Iterator over linear inline buffer elements.
+    ///
+    /// Uses pointer-based iteration. The iterator is only valid while the
+    /// source buffer exists - standard for-in loops maintain this invariant.
     public struct Iterator: IteratorProtocol, @unchecked Sendable {
         @usableFromInline
-        let storage: Storage<Element>.Inline<capacity>
+        let base: UnsafePointer<Element>
         @usableFromInline
         var current: UInt
         @usableFromInline
         let total: UInt
 
         @inlinable
-        init(storage: Storage<Element>.Inline<capacity>, count: Index<Element>.Count) {
-            self.storage = storage
+        init(base: UnsafePointer<Element>, total: UInt) {
+            self.base = base
             self.current = 0
-            self.total = count.rawValue.rawValue
+            self.total = total
         }
 
         @inlinable
         public mutating func next() -> Element? {
             guard current < total else { return nil }
-            let idx = Index<Element>(Ordinal(current))
+            let element = unsafe (base + Int(current)).pointee
             current &+= 1
-            return unsafe storage.pointer(at: idx).pointee
+            return element
         }
     }
 
     @inlinable
     public borrowing func makeIterator() -> Iterator {
-        Iterator(storage: storage, count: header.count)
+        let base = unsafe storage.pointer(at: .zero)
+        return Iterator(base: base, total: header.count.rawValue.rawValue)
     }
 }
 
