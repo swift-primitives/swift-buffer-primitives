@@ -98,7 +98,7 @@ extension Buffer.Ring {
 
     /// Deinitializes all elements tracked by the header.
     @inlinable
-    public static func deinitializeAll<let capacity: Int>(
+    public static func deinitialize<let capacity: Int>(
         header: inout Header,
         storage: inout Storage<Element>.Inline<capacity>
     ) {

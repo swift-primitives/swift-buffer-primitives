@@ -69,7 +69,7 @@ extension Buffer.Ring.Inline {
     /// Removes all elements from the buffer.
     @inlinable
     public mutating func removeAll() {
-        Buffer.Ring.deinitializeAll(header: &header, storage: &storage)
+        Buffer.Ring.deinitialize(header: &header, storage: &storage)
     }
 }
 
