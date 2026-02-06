@@ -22,8 +22,6 @@ extension Buffer.Ring {
 
         let newCount = Cardinal(header.count.rawValue.rawValue &+ 1)
         header.count = Index<Element>.Count(newCount)
-
-        storage.initialization = header.initialization
     }
 
     // MARK: Pop Front (Inline)
@@ -42,8 +40,6 @@ extension Buffer.Ring {
 
         let newCount = Cardinal(header.count.rawValue.rawValue &- 1)
         header.count = Index<Element>.Count(newCount)
-
-        storage.initialization = header.initialization
 
         return element
     }
@@ -65,8 +61,6 @@ extension Buffer.Ring {
 
         let newCount = Cardinal(header.count.rawValue.rawValue &+ 1)
         header.count = Index<Element>.Count(newCount)
-
-        storage.initialization = header.initialization
     }
 
     // MARK: Pop Back (Inline)
@@ -88,8 +82,6 @@ extension Buffer.Ring {
         let element = storage.move(at: lastSlot)
 
         header.count = Index<Element>.Count(newCount)
-
-        storage.initialization = header.initialization
 
         return element
     }

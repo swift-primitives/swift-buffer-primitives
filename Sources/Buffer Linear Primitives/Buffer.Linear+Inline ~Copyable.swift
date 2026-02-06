@@ -18,8 +18,6 @@ extension Buffer.Linear {
 
         let newCount = Cardinal(header.count.rawValue.rawValue &+ 1)
         header.count = Index<Element>.Count(newCount)
-
-        storage.initialization = header.initialization
     }
 
     // MARK: Consume Front (Inline)
@@ -48,8 +46,6 @@ extension Buffer.Linear {
         let newCount = Cardinal(oldCount &- 1)
         header.count = Index<Element>.Count(newCount)
 
-        storage.initialization = header.initialization
-
         return element
     }
 
@@ -69,8 +65,6 @@ extension Buffer.Linear {
         let element = storage.move(at: lastSlot)
 
         header.count = Index<Element>.Count(newCount)
-
-        storage.initialization = header.initialization
 
         return element
     }
