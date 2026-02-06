@@ -40,7 +40,7 @@ extension Buffer.Slab.Header.Static where Element: ~Copyable {
     public func firstVacant(max: Bit.Index.Count) -> Bit.Index? {
         let maxRaw = max.rawValue.rawValue
         for i: UInt in 0 ..< maxRaw {
-            let idx = Bit.Index(Ordinal(i))
+            let idx = Bit.Index(__unchecked: (), Ordinal(i))
             if !bitmap[idx] {
                 return idx
             }

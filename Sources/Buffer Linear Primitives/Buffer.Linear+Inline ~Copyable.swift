@@ -13,7 +13,7 @@ extension Buffer.Linear {
         header: inout Header,
         storage: inout Storage<Element>.Inline<capacity>
     ) {
-        let slot = Index<Element>(header.count)
+        let slot = Index<Element>(__unchecked: (), Ordinal(header.count.rawValue))
         storage.initialize(to: consume element, at: slot)
 
         let newCount = Cardinal(header.count.rawValue.rawValue &+ 1)
@@ -38,8 +38,8 @@ extension Buffer.Linear {
         if oldCount > 1 {
             // Shift elements [1, count) down to [0, count-1)
             for i: UInt in 1 ..< oldCount {
-                let srcSlot = Index<Element>(Ordinal(i))
-                let dstSlot = Index<Element>(Ordinal(i &- 1))
+                let srcSlot = Index<Element>(__unchecked: (), Ordinal(i))
+                let dstSlot = Index<Element>(__unchecked: (), Ordinal(i &- 1))
                 let moved = storage.move(at: srcSlot)
                 storage.initialize(to: consume moved, at: dstSlot)
             }
@@ -64,7 +64,7 @@ extension Buffer.Linear {
         storage: inout Storage<Element>.Inline<capacity>
     ) -> Element {
         let newCount = Cardinal(header.count.rawValue.rawValue &- 1)
-        let lastSlot = Index<Element>(Ordinal(newCount.rawValue))
+        let lastSlot = Index<Element>(__unchecked: (), Ordinal(newCount.rawValue))
 
         let element = storage.move(at: lastSlot)
 

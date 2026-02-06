@@ -34,7 +34,7 @@ extension Buffer.Slab.Bounded.Indexed {
     /// Whether a specific slot is occupied.
     @inlinable
     public func isOccupied(at index: Index<Tag>) -> Bool {
-        let bitIndex = Bit.Index(Ordinal(index.rawValue.rawValue))
+        let bitIndex = Bit.Index(__unchecked: (), Ordinal(index.rawValue.rawValue))
         return _base.isOccupied(at: bitIndex)
     }
 
@@ -45,7 +45,7 @@ extension Buffer.Slab.Bounded.Indexed {
     /// - Precondition: The slot is not occupied.
     @inlinable
     public mutating func insert(_ element: consuming Element, at index: Index<Tag>) {
-        let bitIndex = Bit.Index(Ordinal(index.rawValue.rawValue))
+        let bitIndex = Bit.Index(__unchecked: (), Ordinal(index.rawValue.rawValue))
         _base.insert(consume element, at: bitIndex)
     }
 
@@ -54,7 +54,7 @@ extension Buffer.Slab.Bounded.Indexed {
     /// - Precondition: The slot is occupied.
     @inlinable
     public mutating func remove(at index: Index<Tag>) -> Element {
-        let bitIndex = Bit.Index(Ordinal(index.rawValue.rawValue))
+        let bitIndex = Bit.Index(__unchecked: (), Ordinal(index.rawValue.rawValue))
         return _base.remove(at: bitIndex)
     }
 

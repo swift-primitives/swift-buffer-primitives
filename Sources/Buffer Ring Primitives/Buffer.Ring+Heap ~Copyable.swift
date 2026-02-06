@@ -17,7 +17,7 @@ extension Buffer.Ring {
         storage: Storage<Element>.Heap
     ) {
         let countOffset = Index<Element>.Offset(
-            fromZero: Index<Element>(header.count)
+            fromZero: Index<Element>(__unchecked: (), Ordinal(header.count.rawValue))
         )
         let tail = Modular.advanced(header.head, by: countOffset, capacity: header.capacity)
 
@@ -86,7 +86,7 @@ extension Buffer.Ring {
     ) -> Element {
         let newCount = Cardinal(header.count.rawValue.rawValue &- 1)
         let lastOffset = Index<Element>.Offset(
-            fromZero: Index<Element>(Ordinal(newCount.rawValue))
+            fromZero: Index<Element>(__unchecked: (), Ordinal(newCount.rawValue))
         )
         let lastSlot = Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
 

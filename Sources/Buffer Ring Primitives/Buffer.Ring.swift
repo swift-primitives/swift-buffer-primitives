@@ -117,8 +117,8 @@ extension Buffer.Ring {
             let offset = first.count.rawValue.rawValue
             let secondCount = second.count.rawValue.rawValue
             for i: UInt in 0 ..< secondCount {
-                let srcIdx = Index<Element>(Ordinal(second.lowerBound.rawValue.rawValue &+ i))
-                let dstIdx = Index<Element>(Ordinal(offset &+ i))
+                let srcIdx = Index<Element>(__unchecked: (), Ordinal(second.lowerBound.rawValue.rawValue &+ i))
+                let dstIdx = Index<Element>(__unchecked: (), Ordinal(offset &+ i))
                 let element = storage.move(at: srcIdx)
                 newStorage.initialize(to: consume element, at: dstIdx)
             }

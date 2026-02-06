@@ -46,7 +46,7 @@ extension Buffer.Slab.Inline {
     /// - Precondition: The slot is not occupied.
     @inlinable
     public mutating func insert(_ element: consuming Element, at slot: Bit.Index) {
-        let storageIndex = Index<Element>(Ordinal(slot.rawValue.rawValue))
+        let storageIndex = Index<Element>(__unchecked: (), Ordinal(slot.rawValue.rawValue))
         storage.initialize(to: consume element, at: storageIndex)
         header.bitmap[slot] = true
     }
@@ -56,7 +56,7 @@ extension Buffer.Slab.Inline {
     /// - Precondition: The slot is occupied.
     @inlinable
     public mutating func remove(at slot: Bit.Index) -> Element {
-        let storageIndex = Index<Element>(Ordinal(slot.rawValue.rawValue))
+        let storageIndex = Index<Element>(__unchecked: (), Ordinal(slot.rawValue.rawValue))
         let element = storage.move(at: storageIndex)
         header.bitmap[slot] = false
         return element
@@ -73,9 +73,9 @@ extension Buffer.Slab.Inline {
     @inlinable
     public mutating func removeAll() {
         for i: UInt in 0 ..< UInt(wordCount) {
-            let slot = Bit.Index(Ordinal(i))
+            let slot = Bit.Index(__unchecked: (), Ordinal(i))
             if header.bitmap[slot] {
-                let storageIndex = Index<Element>(Ordinal(i))
+                let storageIndex = Index<Element>(__unchecked: (), Ordinal(i))
                 storage.deinitialize(at: storageIndex)
                 header.bitmap[slot] = false
             }
@@ -89,9 +89,9 @@ extension Buffer.Slab.Inline: Sequence.Drain.`Protocol` {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         for i: UInt in 0 ..< UInt(wordCount) {
-            let slot = Bit.Index(Ordinal(i))
+            let slot = Bit.Index(__unchecked: (), Ordinal(i))
             if header.bitmap[slot] {
-                let storageIndex = Index<Element>(Ordinal(i))
+                let storageIndex = Index<Element>(__unchecked: (), Ordinal(i))
                 let element = storage.move(at: storageIndex)
                 header.bitmap[slot] = false
                 body(consume element)

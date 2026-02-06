@@ -16,7 +16,7 @@ extension Buffer.Slab {
         header: inout Header,
         storage: Storage<Element>.Heap
     ) {
-        let storageIndex = Index<Element>(Ordinal(slot.rawValue.rawValue))
+        let storageIndex = Index<Element>(__unchecked: (), Ordinal(slot.rawValue.rawValue))
         storage.initialize(to: consume element, at: storageIndex)
         header.bitmap[slot] = true
     }
@@ -32,7 +32,7 @@ extension Buffer.Slab {
         header: inout Header,
         storage: Storage<Element>.Heap
     ) -> Element {
-        let storageIndex = Index<Element>(Ordinal(slot.rawValue.rawValue))
+        let storageIndex = Index<Element>(__unchecked: (), Ordinal(slot.rawValue.rawValue))
         let element = storage.move(at: storageIndex)
         header.bitmap[slot] = false
         return element
@@ -48,7 +48,7 @@ extension Buffer.Slab {
         _ body: (Index<Element>) -> Void
     ) {
         header.bitmap.ones.forEach { bitIndex in
-            let storageIndex = Index<Element>(Ordinal(bitIndex.rawValue.rawValue))
+            let storageIndex = Index<Element>(__unchecked: (), Ordinal(bitIndex.rawValue.rawValue))
             body(storageIndex)
         }
     }
@@ -72,7 +72,7 @@ extension Buffer.Slab {
         storage: Storage<Element>.Heap
     ) {
         header.bitmap.ones.forEach { bitIndex in
-            let storageIndex = Index<Element>(Ordinal(bitIndex.rawValue.rawValue))
+            let storageIndex = Index<Element>(__unchecked: (), Ordinal(bitIndex.rawValue.rawValue))
             storage.deinitialize(at: storageIndex)
             header.bitmap[bitIndex] = false
         }

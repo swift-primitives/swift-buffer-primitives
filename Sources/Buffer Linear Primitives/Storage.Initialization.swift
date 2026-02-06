@@ -16,7 +16,7 @@ extension Storage.Initialization where Element: ~Copyable {
             self = .empty
             return
         }
-        let end = Index<Element>(header.count)
+        let end = Index<Element>(__unchecked: (), Ordinal(header.count.rawValue))
         self = .one(.zero ..< end)
     }
 }

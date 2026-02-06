@@ -27,7 +27,7 @@ extension Buffer.Slab.Bounded {
         deinit {
             // Deinitialize any remaining elements not yet consumed
             while position < slots.count {
-                let storageIndex = Index<Element>(Ordinal(slots[position]))
+                let storageIndex = Index<Element>(__unchecked: (), Ordinal(slots[position]))
                 storage.deinitialize(at: storageIndex)
                 position += 1
             }
@@ -50,7 +50,7 @@ extension Buffer.Slab.Bounded: Sequence.Consume.`Protocol` {
             state: state,
             next: { state in
                 guard state.position < state.slots.count else { return nil }
-                let storageIndex = Index<Element>(Ordinal(state.slots[state.position]))
+                let storageIndex = Index<Element>(__unchecked: (), Ordinal(state.slots[state.position]))
                 let element = state.storage.move(at: storageIndex)
                 state.position += 1
                 return element

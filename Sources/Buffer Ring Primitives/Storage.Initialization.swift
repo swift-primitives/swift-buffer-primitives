@@ -24,9 +24,9 @@ extension Storage.Initialization where Element: ~Copyable {
             self = .one(header.head ..< tail)
         } else {
             self = .two(
-                first: header.head ..< Index<Element>(header.capacity),
-                second: .zero ..< Index<Element>(
-                    Index<Element>.Count(tail).subtract.saturating(header.capacity)
+                first: header.head ..< Index<Element>(__unchecked: (), Ordinal(header.capacity.rawValue)),
+                second: .zero ..< Index<Element>(__unchecked: (), Ordinal(
+                    Index<Element>.Count(tail).subtract.saturating(header.capacity).rawValue)
                 )
             )
         }
@@ -44,16 +44,16 @@ extension Storage.Initialization where Element: ~Copyable {
         }
 
         let slotCapacity = Buffer<Element>.Ring.Header.Cyclic<capacity>.slotCapacity
-        let headIndex = Index<Element>(Ordinal(header.head.rawValue))
+        let headIndex = Index<Element>(__unchecked: (), Ordinal(header.head.rawValue))
         let tail = headIndex + header.count
 
         if tail <= slotCapacity {
             self = .one(headIndex ..< tail)
         } else {
             self = .two(
-                first: headIndex ..< Index<Element>(slotCapacity),
-                second: .zero ..< Index<Element>(
-                    Index<Element>.Count(tail).subtract.saturating(slotCapacity)
+                first: headIndex ..< Index<Element>(__unchecked: (), Ordinal(slotCapacity.rawValue)),
+                second: .zero ..< Index<Element>(__unchecked: (), Ordinal(
+                    Index<Element>.Count(tail).subtract.saturating(slotCapacity).rawValue)
                 )
             )
         }

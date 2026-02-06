@@ -26,7 +26,7 @@ extension Buffer.Linear {
             // Deinitialize remaining elements from current position to count
             let count = header.count.rawValue.rawValue
             while position < count {
-                let idx = Index<Element>(Ordinal(position))
+                let idx = Index<Element>(__unchecked: (), Ordinal(position))
                 storage.deinitialize(at: idx)
                 position &+= 1
             }
@@ -44,7 +44,7 @@ extension Buffer.Linear: Sequence.Consume.`Protocol` {
             state: ConsumeState(header: h, storage: s),
             next: { state in
                 guard state.position < state.header.count.rawValue.rawValue else { return nil }
-                let idx = Index<Element>(Ordinal(state.position))
+                let idx = Index<Element>(__unchecked: (), Ordinal(state.position))
                 let element = state.storage.move(at: idx)
                 state.position &+= 1
                 return element

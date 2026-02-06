@@ -22,8 +22,8 @@ extension Buffer.Ring where Element: Copyable {
             let offset = first.count.rawValue.rawValue
             let secondCount = second.count.rawValue.rawValue
             for i: UInt in 0 ..< secondCount {
-                let srcIdx = Index<Element>(Ordinal(second.lowerBound.rawValue.rawValue &+ i))
-                let dstIdx = Index<Element>(Ordinal(offset &+ i))
+                let srcIdx = Index<Element>(__unchecked: (), Ordinal(second.lowerBound.rawValue.rawValue &+ i))
+                let dstIdx = Index<Element>(__unchecked: (), Ordinal(offset &+ i))
                 let value: Element = unsafe source.pointer(at: srcIdx).pointee
                 destination.initialize(to: value, at: dstIdx)
             }

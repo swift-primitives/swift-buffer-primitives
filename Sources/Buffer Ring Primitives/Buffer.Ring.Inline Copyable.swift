@@ -17,7 +17,7 @@ extension Buffer.Ring.Inline where Element: Copyable {
     public var peekBack: Element {
         let lastCount = Cardinal(header.count.rawValue.rawValue &- 1)
         let lastOffset = Index<Element>.Offset(
-            fromZero: Index<Element>(Ordinal(lastCount.rawValue))
+            fromZero: Index<Element>(__unchecked: (), Ordinal(lastCount.rawValue))
         )
         let lastSlot = Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
         return unsafe storage.pointer(at: lastSlot).pointee
@@ -52,7 +52,7 @@ extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
         @inlinable
         public mutating func next() -> Element? {
             guard current < total else { return nil }
-            let logicalIdx = Index<Element>(Ordinal(current))
+            let logicalIdx = Index<Element>(__unchecked: (), Ordinal(current))
             let physicalIdx = Modular.physical(
                 forLogical: logicalIdx,
                 head: header.head,

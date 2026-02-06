@@ -11,7 +11,7 @@ extension Buffer.Slab.Inline where Element: Copyable {
     /// - Precondition: The slot is occupied.
     @inlinable
     public func peek(at slot: Bit.Index) -> Element {
-        let storageIndex = Index<Element>(Ordinal(slot.rawValue.rawValue))
+        let storageIndex = Index<Element>(__unchecked: (), Ordinal(slot.rawValue.rawValue))
         return unsafe storage.pointer(at: storageIndex).pointee
     }
 }
@@ -44,7 +44,7 @@ extension Buffer.Slab.Inline: Sequence.`Protocol` where Element: Copyable {
         @inlinable
         public mutating func next() -> Element? {
             while current < max {
-                let slot = Bit.Index(Ordinal(current))
+                let slot = Bit.Index(__unchecked: (), Ordinal(current))
                 current &+= 1
                 if bitmap[slot] {
                     return unsafe (base + Int(slot.rawValue.rawValue)).pointee
