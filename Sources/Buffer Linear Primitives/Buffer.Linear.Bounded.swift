@@ -57,12 +57,6 @@ extension Buffer.Linear.Bounded {
     public mutating func removeLast() -> Element {
         Buffer.Linear.consumeBack(header: &header, storage: storage)
     }
-
-    /// Removes all elements from the buffer.
-    @inlinable
-    public mutating func removeAll() {
-        Buffer.Linear.deinitializeAll(header: &header, storage: storage)
-    }
 }
 
 // MARK: - Pointer-Based Initialization
@@ -85,8 +79,7 @@ extension Buffer.Linear.Bounded where Element: ~Copyable {
         with body: (UnsafeMutablePointer<Element>) -> Void
     ) {
         let storage = Storage<Element>.Heap.create(minimumCapacity: minimumCapacity)
-        let ptr = unsafe storage.pointer(at: .zero)
-        unsafe body(ptr)
+        unsafe body(unsafe storage.pointer(at: .zero))
         var header = Buffer.Linear.Header(capacity: storage.slotCapacity)
         header.count = count
         storage.initialization = header.initialization
@@ -98,7 +91,9 @@ extension Buffer.Linear.Bounded where Element: ~Copyable {
 
 extension Buffer.Linear.Bounded: Sequence.Drain.`Protocol` {
     @inlinable
-    public mutating func drain(_ body: (consuming Element) -> Void) {
+    public mutating func drain(
+        _ body: (consuming Element) -> Void
+    ) {
         while !isEmpty {
             body(consumeFront())
         }
@@ -108,7 +103,11 @@ extension Buffer.Linear.Bounded: Sequence.Drain.`Protocol` {
 // MARK: - Sequence.Clearable
 
 extension Buffer.Linear.Bounded: Sequence.Clearable where Element: Copyable {
-    // removeAll() already provided above
+    /// Removes all elements from the buffer.
+    @inlinable
+    public mutating func removeAll() {
+        Buffer.Linear.deinitializeAll(header: &header, storage: storage)
+    }
 }
 
 // MARK: - Property.View (.drain)

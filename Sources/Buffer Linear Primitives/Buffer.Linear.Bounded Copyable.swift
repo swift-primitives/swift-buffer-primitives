@@ -67,18 +67,16 @@ extension Buffer.Linear.Bounded where Element: Copyable {
         @inlinable
         mutating get {
             _makeUnique()
-            let ptr = unsafe storage.pointer(at: .zero)
             let count = Int(bitPattern: header.count.rawValue.rawValue)
-            let span = unsafe MutableSpan(_unsafeStart: ptr, count: count)
+            let span = unsafe MutableSpan(_unsafeStart: unsafe storage.pointer(at: .zero), count: count)
             return unsafe _overrideLifetime(span, mutating: &self)
         }
         @_lifetime(&self)
         @inlinable
         _modify {
             _makeUnique()
-            let ptr = unsafe storage.pointer(at: .zero)
             let count = Int(bitPattern: header.count.rawValue.rawValue)
-            var span = unsafe MutableSpan(_unsafeStart: ptr, count: count)
+            var span = unsafe MutableSpan(_unsafeStart: unsafe storage.pointer(at: .zero), count: count)
             yield &span
         }
     }
