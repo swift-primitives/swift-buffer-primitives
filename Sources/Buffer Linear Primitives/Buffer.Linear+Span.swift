@@ -33,7 +33,7 @@ extension Buffer.Linear where Element: Copyable {
         @inlinable
         @_lifetime(&self)
         public mutating func nextSpan(maximumCount: Cardinal) -> Swift.Span<Element> {
-            let take = min(maximumCount.rawValue, remaining)
+            let take = Swift.min(maximumCount.rawValue, remaining)
             guard take > 0 else {
                 return unsafe Swift.Span(_unsafeStart: base, count: 0)
             }
@@ -51,6 +51,11 @@ extension Buffer.Linear: Sequence.`Protocol`, Sequence.Borrowing.`Protocol` wher
         let base = unsafe UnsafePointer(storage.pointer(at: .zero))
         return unsafe Iterator(base: base, count: header.count.rawValue.rawValue)
     }
+}
+
+extension Buffer.Linear: Swift.Sequence where Element: Copyable {
+    @inlinable
+    public var underestimatedCount: Int { Int(bitPattern: header.count.rawValue.rawValue) }
 }
 
 extension Buffer.Linear.Bounded where Element: Copyable {
@@ -82,7 +87,7 @@ extension Buffer.Linear.Bounded where Element: Copyable {
         @inlinable
         @_lifetime(&self)
         public mutating func nextSpan(maximumCount: Cardinal) -> Swift.Span<Element> {
-            let take = min(maximumCount.rawValue, remaining)
+            let take = Swift.min(maximumCount.rawValue, remaining)
             guard take > 0 else {
                 return unsafe Swift.Span(_unsafeStart: base, count: 0)
             }
@@ -100,4 +105,9 @@ extension Buffer.Linear.Bounded: Sequence.`Protocol`, Sequence.Borrowing.`Protoc
         let base = unsafe UnsafePointer(storage.pointer(at: .zero))
         return unsafe Iterator(base: base, count: header.count.rawValue.rawValue)
     }
+}
+
+extension Buffer.Linear.Bounded: Swift.Sequence where Element: Copyable {
+    @inlinable
+    public var underestimatedCount: Int { Int(bitPattern: header.count.rawValue.rawValue) }
 }

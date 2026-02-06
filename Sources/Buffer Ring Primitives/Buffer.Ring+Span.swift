@@ -84,7 +84,7 @@ extension Buffer.Ring where Element: Copyable {
         @_lifetime(&self)
         public mutating func nextSpan(maximumCount: Cardinal) -> Span<Element> {
             if remaining > 0 {
-                let take = min(maximumCount.rawValue, remaining)
+                let take = Swift.min(maximumCount.rawValue, remaining)
                 let span = unsafe Swift.Span(_unsafeStart: base, count: Int(bitPattern: take))
                 unsafe base = base + Int(bitPattern: take)
                 remaining &-= take
@@ -97,7 +97,7 @@ extension Buffer.Ring where Element: Copyable {
                 unsafe secondBase = nil
                 secondCount = 0
 
-                let take = min(maximumCount.rawValue, remaining)
+                let take = Swift.min(maximumCount.rawValue, remaining)
                 let span = unsafe Swift.Span(_unsafeStart: base, count: Int(bitPattern: take))
                 unsafe base = base + Int(bitPattern: take)
                 remaining &-= take
@@ -115,6 +115,11 @@ extension Buffer.Ring: Sequence.`Protocol`, Sequence.Borrowing.`Protocol` where 
         let base = unsafe UnsafePointer(storage.pointer(at: .zero))
         return unsafe Iterator(storageBase: base, header: header)
     }
+}
+
+extension Buffer.Ring: Swift.Sequence where Element: Copyable {
+    @inlinable
+    public var underestimatedCount: Int { Int(bitPattern: header.count.rawValue.rawValue) }
 }
 
 extension Buffer.Ring.Bounded where Element: Copyable {
@@ -191,7 +196,7 @@ extension Buffer.Ring.Bounded where Element: Copyable {
         @_lifetime(&self)
         public mutating func nextSpan(maximumCount: Cardinal) -> Span<Element> {
             if remaining > 0 {
-                let take = min(maximumCount.rawValue, remaining)
+                let take = Swift.min(maximumCount.rawValue, remaining)
                 let span = unsafe Swift.Span(_unsafeStart: base, count: Int(bitPattern: take))
                 unsafe base = base + Int(bitPattern: take)
                 remaining &-= take
@@ -204,7 +209,7 @@ extension Buffer.Ring.Bounded where Element: Copyable {
                 unsafe secondBase = nil
                 secondCount = 0
 
-                let take = min(maximumCount.rawValue, remaining)
+                let take = Swift.min(maximumCount.rawValue, remaining)
                 let span = unsafe Swift.Span(_unsafeStart: base, count: Int(bitPattern: take))
                 unsafe base = base + Int(bitPattern: take)
                 remaining &-= take
@@ -222,4 +227,9 @@ extension Buffer.Ring.Bounded: Sequence.`Protocol`, Sequence.Borrowing.`Protocol
         let base = unsafe UnsafePointer(storage.pointer(at: .zero))
         return unsafe Iterator(storageBase: base, header: header)
     }
+}
+
+extension Buffer.Ring.Bounded: Swift.Sequence where Element: Copyable {
+    @inlinable
+    public var underestimatedCount: Int { Int(bitPattern: header.count.rawValue.rawValue) }
 }
