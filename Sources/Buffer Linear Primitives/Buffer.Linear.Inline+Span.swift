@@ -18,7 +18,7 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
         @_lifetime(&self)
         @inlinable
         mutating get {
-            let ptr: UnsafeMutablePointer<Element> = unsafe storage.pointer(at: .zero)
+            let ptr = unsafe UnsafeMutablePointer(mutating: storage.pointer(at: .zero))
             let count = Int(bitPattern: header.count.rawValue.rawValue)
             let span = unsafe MutableSpan(_unsafeStart: ptr, count: count)
             return unsafe _overrideLifetime(span, mutating: &self)
@@ -26,7 +26,7 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
         @_lifetime(&self)
         @inlinable
         _modify {
-            let ptr: UnsafeMutablePointer<Element> = unsafe storage.pointer(at: .zero)
+            let ptr = unsafe UnsafeMutablePointer(mutating: storage.pointer(at: .zero))
             let count = Int(bitPattern: header.count.rawValue.rawValue)
             var span = unsafe MutableSpan(_unsafeStart: ptr, count: count)
             yield &span

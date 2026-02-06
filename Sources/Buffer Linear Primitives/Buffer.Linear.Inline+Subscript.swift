@@ -10,7 +10,7 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
             yield unsafe storage.pointer(at: index).pointee
         }
         _modify {
-            yield unsafe &storage.pointer(at: index).pointee
+            yield unsafe &UnsafeMutablePointer(mutating: storage.pointer(at: index)).pointee
         }
     }
 }

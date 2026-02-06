@@ -80,7 +80,7 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
     ) {
         let cap = Index<Element>.Count(Cardinal(UInt(capacity)))
         var storage = Storage<Element>.Inline<capacity>()
-        let ptr: UnsafeMutablePointer<Element> = unsafe storage.pointer(at: .zero)
+        let ptr = unsafe UnsafeMutablePointer(mutating: storage.pointer(at: .zero))
         unsafe body(ptr)
         var header = Buffer.Linear.Header(capacity: cap)
         header.count = Index<Element>.Count(Cardinal(UInt(count)))
