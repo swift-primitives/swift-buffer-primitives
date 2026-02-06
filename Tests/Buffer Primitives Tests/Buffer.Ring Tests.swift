@@ -94,13 +94,13 @@ struct RingGrowableTests {
     @Test("reserveCapacity grows if needed")
     func reserveCapacity() {
         var buffer = Buffer<Int>.Ring(minimumCapacity: 2)
-        buffer.reserveCapacity(Index<Element>.Count(Cardinal(100)))
+        buffer.reserveCapacity(Index<Int>.Count(Cardinal(100)))
         #expect(buffer.capacity.rawValue.rawValue >= 100)
     }
 
     @Test("peekFront and peekBack (Copyable)")
     func peekFrontBack() {
-        var buffer = Buffer<Int>.Ring.with([10, 20, 30])
+        let buffer = Buffer<Int>.Ring.with([10, 20, 30])
         #expect(buffer.peekFront == 10)
         #expect(buffer.peekBack == 30)
 

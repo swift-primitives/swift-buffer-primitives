@@ -99,7 +99,7 @@ struct LinearGrowableTests {
     @Test("reserveCapacity grows if needed")
     func reserveCapacity() {
         var buffer = Buffer<Int>.Linear(minimumCapacity: 2)
-        buffer.reserveCapacity(Index<Element>.Count(Cardinal(100)))
+        buffer.reserveCapacity(100)
         #expect(buffer.capacity.rawValue.rawValue >= 100)
     }
 }

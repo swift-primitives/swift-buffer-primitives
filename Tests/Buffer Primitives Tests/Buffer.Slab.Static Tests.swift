@@ -7,9 +7,8 @@ struct SlabStaticTests {
 
     @Test("insert and remove")
     func insertRemove() {
-        let cap: Index<Element>.Count = 8
         var header: Buffer<Int>.Slab.Header = .init(capacity: 8)
-        let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
+        let storage = Storage<Int>.Heap.create(minimumCapacity: 8)
 
         let slot: Bit.Index = 3
         Buffer<Int>.Slab.insert(42, at: slot, header: &header, storage: storage)
@@ -27,9 +26,8 @@ struct SlabStaticTests {
 
     @Test("forEachOccupied visits all occupied slots")
     func forEachOccupied() {
-        let cap: Index<Element>.Count = 8
         var header: Buffer<Int>.Slab.Header = .init(capacity: 8)
-        let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
+        let storage = Storage<Int>.Heap.create(minimumCapacity: 8)
 
         Buffer<Int>.Slab.insert(10, at: 1, header: &header, storage: storage)
         Buffer<Int>.Slab.insert(30, at: 5, header: &header, storage: storage)
@@ -56,9 +54,8 @@ struct SlabStaticTests {
 
     @Test("deinitializeAll clears all occupied slots")
     func deinitializeAll() {
-        let cap: Index<Element>.Count = 8
         var header: Buffer<Int>.Slab.Header = .init(capacity: 8)
-        let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
+        let storage = Storage<Int>.Heap.create(minimumCapacity: 8)
 
         Buffer<Int>.Slab.insert(10, at: 0, header: &header, storage: storage)
         Buffer<Int>.Slab.insert(20, at: 3, header: &header, storage: storage)

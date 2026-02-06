@@ -71,8 +71,8 @@ extension Buffer.Slab.Bounded where Element == Int {
 extension Buffer.Ring.Inline where Element == Int {
     /// Creates a bounded inline ring buffer pre-filled with the given elements.
     @inlinable
-    public static func with(_ elements: [Int]) throws(Storage.Inline<Int, capacity>.Error) -> Self {
-        var buffer = try Self()
+    public static func with(_ elements: [Int]) -> Self {
+        var buffer = Self()
         for element in elements {
             _ = buffer.pushBack(element)
         }
@@ -85,8 +85,8 @@ extension Buffer.Ring.Inline where Element == Int {
 extension Buffer.Linear.Inline where Element == Int {
     /// Creates a bounded inline linear buffer pre-filled with the given elements.
     @inlinable
-    public static func with(_ elements: [Int]) throws(Storage.Inline<Int, capacity>.Error) -> Self {
-        var buffer = try Self()
+    public static func with(_ elements: [Int]) -> Self {
+        var buffer = Self()
         for element in elements {
             _ = buffer.append(element)
         }
@@ -99,8 +99,8 @@ extension Buffer.Linear.Inline where Element == Int {
 extension Buffer.Slab.Inline where Element == Int {
     /// Creates a bounded inline slab buffer pre-filled at consecutive slots.
     @inlinable
-    public static func with(_ elements: [Int]) throws(Storage.Inline<Int, wordCount>.Error) -> Self {
-        var buffer = try Self()
+    public static func with(_ elements: [Int]) -> Self {
+        var buffer = Self()
         for (i, element) in elements.enumerated() {
             buffer.insert(element, at: Bit.Index(Ordinal(UInt(i))))
         }

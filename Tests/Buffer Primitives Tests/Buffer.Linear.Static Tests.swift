@@ -7,9 +7,9 @@ struct LinearStaticTests {
 
     @Test("append increments count and stores element")
     func appendBasic() {
-        let cap: Index<Element>.Count = 8
+        let cap: Index<Int>.Count = 8
         var header = Buffer<Int>.Linear.Header(capacity: cap)
-        let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
+        let storage = Storage<Int>.Heap.create(minimumCapacity: cap)
 
         Buffer<Int>.Linear.append(10, header: &header, storage: storage)
         Buffer<Int>.Linear.append(20, header: &header, storage: storage)
@@ -27,9 +27,9 @@ struct LinearStaticTests {
 
     @Test("consumeFront removes first and shifts")
     func consumeFrontShifts() {
-        let cap: Index<Element>.Count = 8
+        let cap: Index<Int>.Count = 8
         var header = Buffer<Int>.Linear.Header(capacity: cap)
-        let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
+        let storage = Storage<Int>.Heap.create(minimumCapacity: cap)
 
         Buffer<Int>.Linear.append(10, header: &header, storage: storage)
         Buffer<Int>.Linear.append(20, header: &header, storage: storage)
@@ -51,9 +51,9 @@ struct LinearStaticTests {
 
     @Test("consumeBack removes last element")
     func consumeBack() {
-        let cap: Index<Element>.Count = 8
+        let cap: Index<Int>.Count = 8
         var header = Buffer<Int>.Linear.Header(capacity: cap)
-        let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
+        let storage = Storage<Int>.Heap.create(minimumCapacity: cap)
 
         Buffer<Int>.Linear.append(10, header: &header, storage: storage)
         Buffer<Int>.Linear.append(20, header: &header, storage: storage)
@@ -71,9 +71,9 @@ struct LinearStaticTests {
 
     @Test("deinitializeAll clears everything")
     func deinitializeAll() {
-        let cap: Index<Element>.Count = 8
+        let cap: Index<Int>.Count = 8
         var header = Buffer<Int>.Linear.Header(capacity: cap)
-        let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
+        let storage = Storage<Int>.Heap.create(minimumCapacity: cap)
 
         Buffer<Int>.Linear.append(1, header: &header, storage: storage)
         Buffer<Int>.Linear.append(2, header: &header, storage: storage)
@@ -86,9 +86,9 @@ struct LinearStaticTests {
 
     @Test("initialization stays .one for linear")
     func initializationTracking() {
-        let cap: Index<Element>.Count = 8
+        let cap: Index<Int>.Count = 8
         var header = Buffer<Int>.Linear.Header(capacity: cap)
-        let storage = Storage.Heap<Int>.create(minimumCapacity: cap)
+        let storage = Storage<Int>.Heap.create(minimumCapacity: cap)
 
         #expect(header.initialization == .empty)
 
