@@ -65,6 +65,35 @@ extension Buffer.Linear.Bounded {
     }
 }
 
+// MARK: - Pointer-Based Initialization
+
+extension Buffer.Linear.Bounded where Element: ~Copyable {
+    /// Creates a bounded linear buffer with pre-initialized elements.
+    ///
+    /// The closure receives a pointer to uninitialized storage and MUST initialize
+    /// exactly `count` elements before returning.
+    ///
+    /// - Parameters:
+    ///   - minimumCapacity: The minimum number of slots to allocate.
+    ///   - count: The number of elements the closure will initialize.
+    ///   - body: A closure that receives a pointer to uninitialized storage
+    ///     and must initialize exactly `count` elements.
+    @inlinable
+    public init(
+        minimumCapacity: Index<Element>.Count,
+        initializingCount count: Index<Element>.Count,
+        with body: (UnsafeMutablePointer<Element>) -> Void
+    ) {
+        let storage = Storage<Element>.Heap.create(minimumCapacity: minimumCapacity)
+        let ptr = unsafe storage.pointer(at: .zero)
+        unsafe body(ptr)
+        var header = Buffer.Linear.Header(capacity: storage.slotCapacity)
+        header.count = count
+        storage.initialization = header.initialization
+        self.init(header: header, storage: storage)
+    }
+}
+
 // MARK: - Sequence.Drain.Protocol
 
 extension Buffer.Linear.Bounded: Sequence.Drain.`Protocol` {

@@ -61,6 +61,34 @@ extension Buffer.Linear.Inline {
     }
 }
 
+// MARK: - Pointer-Based Initialization
+
+extension Buffer.Linear.Inline where Element: ~Copyable {
+    /// Creates an inline linear buffer with pre-initialized elements.
+    ///
+    /// The closure receives a pointer to uninitialized storage and MUST initialize
+    /// exactly `count` elements before returning.
+    ///
+    /// - Parameters:
+    ///   - count: The number of elements the closure will initialize.
+    ///   - body: A closure that receives a pointer to uninitialized storage
+    ///     and must initialize exactly `count` elements.
+    @inlinable
+    public init(
+        initializingCount count: Int,
+        with body: (UnsafeMutablePointer<Element>) -> Void
+    ) {
+        let cap = Index<Element>.Count(Cardinal(UInt(capacity)))
+        var storage = Storage<Element>.Inline<capacity>()
+        let ptr: UnsafeMutablePointer<Element> = unsafe storage.pointer(at: .zero)
+        unsafe body(ptr)
+        var header = Buffer.Linear.Header(capacity: cap)
+        header.count = Index<Element>.Count(Cardinal(UInt(count)))
+        storage.initialization = header.initialization
+        self.init(header: header, storage: storage)
+    }
+}
+
 // MARK: - Sequence.Drain.Protocol
 
 extension Buffer.Linear.Inline: Sequence.Drain.`Protocol` {

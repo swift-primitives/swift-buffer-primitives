@@ -20,6 +20,70 @@ extension Buffer.Linear.Bounded where Element: Copyable {
     }
 }
 
+// MARK: - Copy-on-Write
+
+extension Buffer.Linear.Bounded where Element: Copyable {
+    /// Ensures unique ownership of storage for mutation.
+    @usableFromInline
+    mutating func _makeUnique() {
+        if !isKnownUniquelyReferenced(&storage) {
+            let newStorage = Storage<Element>.Heap.create(minimumCapacity: header.capacity)
+            Buffer.Linear.copy(header: header, source: storage, to: newStorage)
+            let oldCount = header.count
+            storage = newStorage
+            header = Buffer.Linear.Header(capacity: newStorage.slotCapacity)
+            header.count = oldCount
+            storage.initialization = header.initialization
+        }
+    }
+}
+
+// MARK: - Subscript (Copyable with CoW)
+
+extension Buffer.Linear.Bounded where Element: Copyable {
+    /// Accesses the element at the given index with copy-on-write semantics.
+    ///
+    /// - Parameter index: The index of the element to access.
+    @inlinable
+    public subscript(index: Index<Element>) -> Element {
+        _read {
+            yield unsafe storage.pointer(at: index).pointee
+        }
+        _modify {
+            _makeUnique()
+            yield unsafe &storage.pointer(at: index).pointee
+        }
+    }
+}
+
+// MARK: - Mutable Span (Copyable with CoW)
+
+extension Buffer.Linear.Bounded where Element: Copyable {
+    /// Mutable span with copy-on-write semantics.
+    ///
+    /// Ensures unique ownership before providing mutable access.
+    public var mutableSpan: MutableSpan<Element> {
+        @_lifetime(&self)
+        @inlinable
+        mutating get {
+            _makeUnique()
+            let ptr = unsafe storage.pointer(at: .zero)
+            let count = Int(bitPattern: header.count.rawValue.rawValue)
+            let span = unsafe MutableSpan(_unsafeStart: ptr, count: count)
+            return unsafe _overrideLifetime(span, mutating: &self)
+        }
+        @_lifetime(&self)
+        @inlinable
+        _modify {
+            _makeUnique()
+            let ptr = unsafe storage.pointer(at: .zero)
+            let count = Int(bitPattern: header.count.rawValue.rawValue)
+            var span = unsafe MutableSpan(_unsafeStart: ptr, count: count)
+            yield &span
+        }
+    }
+}
+
 // MARK: - Property.View (.forEach)
 
 extension Buffer.Linear.Bounded where Element: Copyable {
