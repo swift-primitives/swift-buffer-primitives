@@ -5,8 +5,8 @@ import Buffer_Primitives_Test_Support
 @Suite("Buffer.Linear")
 struct LinearGrowableTests {
 
-    @Test("append and consumeFront")
-    func appendConsumeFront() {
+    @Test
+    func `append and consumeFront`() {
         var buffer = Buffer<Int>.Linear(minimumCapacity: 4)
         buffer.append(10)
         buffer.append(20)
@@ -18,8 +18,8 @@ struct LinearGrowableTests {
         #expect(buffer.isEmpty)
     }
 
-    @Test("append and removeLast")
-    func appendRemoveLast() {
+    @Test
+    func `append and removeLast`() {
         var buffer = Buffer<Int>.Linear(minimumCapacity: 4)
         buffer.append(10)
         buffer.append(20)
@@ -31,8 +31,8 @@ struct LinearGrowableTests {
         #expect(buffer.isEmpty)
     }
 
-    @Test("growth doubles capacity")
-    func growth() {
+    @Test
+    func `growth doubles capacity`() {
         var buffer = Buffer<Int>.Linear(minimumCapacity: 2)
         let originalCap = buffer.capacity
 
@@ -53,8 +53,8 @@ struct LinearGrowableTests {
         }
     }
 
-    @Test("drain removes all in front-to-back order")
-    func drain() {
+    @Test
+    func `drain removes all in front-to-back order`() {
         var buffer = Buffer<Int>.Linear.with([10, 20, 30])
         var drained: [Int] = []
         buffer.drain { drained.append($0) }
@@ -62,22 +62,22 @@ struct LinearGrowableTests {
         #expect(buffer.isEmpty)
     }
 
-    @Test("removeAll clears buffer")
-    func removeAll() {
+    @Test
+    func `removeAll clears buffer`() {
         var buffer = Buffer<Int>.Linear.with([1, 2, 3])
         buffer.removeAll()
         #expect(buffer.isEmpty)
     }
 
-    @Test("peekFront and peekBack (Copyable)")
-    func peekFrontBack() {
+    @Test
+    func `peekFront and peekBack (Copyable)`() {
         let buffer = Buffer<Int>.Linear.with([10, 20, 30])
         #expect(buffer.peekFront == 10)
         #expect(buffer.peekBack == 30)
     }
 
-    @Test("Sequence.Protocol iteration (Copyable)")
-    func sequenceIteration() {
+    @Test
+    func `Sequence.Protocol iteration (Copyable)`() {
         let buffer = Buffer<Int>.Linear.with([10, 20, 30])
         var collected: [Int] = []
         var iter = buffer.makeIterator()
@@ -87,8 +87,8 @@ struct LinearGrowableTests {
         #expect(collected == [10, 20, 30])
     }
 
-    @Test("single element")
-    func singleElement() {
+    @Test
+    func `single element`() {
         var buffer = Buffer<Int>.Linear(minimumCapacity: 1)
         buffer.append(42)
         #expect(buffer.count == 1)
@@ -96,8 +96,8 @@ struct LinearGrowableTests {
         #expect(buffer.isEmpty)
     }
 
-    @Test("reserveCapacity grows if needed")
-    func reserveCapacity() {
+    @Test
+    func `reserveCapacity grows if needed`() {
         var buffer = Buffer<Int>.Linear(minimumCapacity: 2)
         buffer.reserveCapacity(100)
         #expect(buffer.capacity.rawValue.rawValue >= 100)

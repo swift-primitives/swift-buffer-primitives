@@ -5,16 +5,16 @@ import Buffer_Primitives_Test_Support
 @Suite("Buffer.Slab.Header")
 struct SlabHeaderTests {
 
-    @Test("init creates empty bitmap")
-    func initDefaults() {
+    @Test
+    func `init creates empty bitmap`() {
         let header: Buffer<Int>.Slab.Header = .init(capacity: 8)
         #expect(header.isEmpty == true)
         #expect(!header.isFull == true)
         #expect(header.occupancy == 0)
     }
 
-    @Test("isOccupied tracks bitmap state")
-    func isOccupied() {
+    @Test
+    func `isOccupied tracks bitmap state`() {
         var header: Buffer<Int>.Slab.Header = .init(capacity: 8)
         let slot: Bit.Index = 3
         #expect(!header.isOccupied(at: slot) == true)
@@ -23,8 +23,8 @@ struct SlabHeaderTests {
         #expect(header.isOccupied(at: slot) == true)
     }
 
-    @Test("occupancy reflects popcount")
-    func occupancyPopcount() {
+    @Test
+    func `occupancy reflects popcount`() {
         var header: Buffer<Int>.Slab.Header = .init(capacity: 8)
         header.bitmap[0] = true
         header.bitmap[3] = true
@@ -32,8 +32,8 @@ struct SlabHeaderTests {
         #expect(header.occupancy == 3)
     }
 
-    @Test("firstVacant scans for empty slot")
-    func firstVacant() {
+    @Test
+    func `firstVacant scans for empty slot`() {
         var header: Buffer<Int>.Slab.Header = .init(capacity: 4)
         header.bitmap[0] = true
         header.bitmap[1] = true
@@ -41,8 +41,8 @@ struct SlabHeaderTests {
         #expect(vacant == 2)
     }
 
-    @Test("firstVacant returns nil when full")
-    func firstVacantFull() {
+    @Test
+    func `firstVacant returns nil when full`() {
         var header: Buffer<Int>.Slab.Header = .init(capacity: 4)
         header.bitmap[0] = true
         header.bitmap[1] = true

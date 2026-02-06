@@ -5,8 +5,8 @@ import Buffer_Primitives_Test_Support
 @Suite("Buffer.Ring.Header")
 struct RingHeaderTests {
 
-    @Test("init sets head to zero, count to zero")
-    func initDefaults() {
+    @Test
+    func `init sets head to zero, count to zero`() {
         let cap: Index<Int>.Count = 8
         let header = Buffer<Int>.Ring.Header(capacity: cap)
         #expect(header.head == 0)
@@ -14,8 +14,8 @@ struct RingHeaderTests {
         #expect(header.capacity == cap)
     }
 
-    @Test("isEmpty and isFull")
-    func emptyAndFull() {
+    @Test
+    func `isEmpty and isFull`() {
         let cap: Index<Int>.Count = 4
         var header = Buffer<Int>.Ring.Header(capacity: cap)
         #expect(header.isEmpty)
@@ -26,8 +26,8 @@ struct RingHeaderTests {
         #expect(header.isFull)
     }
 
-    @Test("initialization returns .empty when count is zero")
-    func initializationEmpty() {
+    @Test
+    func `initialization returns .empty when count is zero`() {
         let header = Buffer<Int>.Ring.Header(capacity: 4)
         switch header.initialization {
         case .empty:
@@ -37,8 +37,8 @@ struct RingHeaderTests {
         }
     }
 
-    @Test("initialization returns .one for non-wrapping elements")
-    func initializationOne() {
+    @Test
+    func `initialization returns .one for non-wrapping elements`() {
         var header = Buffer<Int>.Ring.Header(capacity: 8)
         header.count = 3
         // head=0, count=3, capacity=8 → .one(0..<3)
@@ -51,8 +51,8 @@ struct RingHeaderTests {
         }
     }
 
-    @Test("initialization returns .two for wrapping elements")
-    func initializationTwo() {
+    @Test
+    func `initialization returns .two for wrapping elements`() {
         var header = Buffer<Int>.Ring.Header(capacity: 4)
         header.head = 3
         header.count = 3
@@ -68,8 +68,8 @@ struct RingHeaderTests {
         }
     }
 
-    @Test("Copyable and Hashable")
-    func copyableHashable() {
+    @Test
+    func `Copyable and Hashable`() {
         let a = Buffer<Int>.Ring.Header(capacity: 4)
         let b = a
         #expect(a == b)

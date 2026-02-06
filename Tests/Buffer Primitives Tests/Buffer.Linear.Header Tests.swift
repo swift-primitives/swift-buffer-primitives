@@ -5,16 +5,16 @@ import Buffer_Primitives_Test_Support
 @Suite("Buffer.Linear.Header")
 struct LinearHeaderTests {
 
-    @Test("init sets count to zero")
-    func initDefaults() {
+    @Test
+    func `init sets count to zero`() {
         let cap: Index<Int>.Count = 8
         let header = Buffer<Int>.Linear.Header(capacity: 8)
         #expect(header.count == 0)
         #expect(header.capacity == cap)
     }
 
-    @Test("isEmpty and isFull")
-    func emptyAndFull() {
+    @Test
+    func `isEmpty and isFull`() {
         let cap: Index<Int>.Count = 4
         var header = Buffer<Int>.Linear.Header(capacity: cap)
         #expect(header.isEmpty)
@@ -25,8 +25,8 @@ struct LinearHeaderTests {
         #expect(header.isFull)
     }
 
-    @Test("initialization is always .empty or .one")
-    func initializationAlwaysLinear() {
+    @Test
+    func `initialization is always .empty or .one`() {
         var header = Buffer<Int>.Linear.Header(capacity: 8)
 
         switch header.initialization {

@@ -5,8 +5,8 @@ import Buffer_Primitives_Test_Support
 @Suite("Buffer.Ring")
 struct RingGrowableTests {
 
-    @Test("FIFO ordering")
-    func fifo() {
+    @Test
+    func `FIFO ordering`() {
         var buffer = Buffer<Int>.Ring(minimumCapacity: 4)
         buffer.pushBack(10)
         buffer.pushBack(20)
@@ -20,8 +20,8 @@ struct RingGrowableTests {
         #expect(buffer.isEmpty)
     }
 
-    @Test("wrap-around behavior")
-    func wrapAround() {
+    @Test
+    func `wrap-around behavior`() {
         var buffer = Buffer<Int>.Ring(minimumCapacity: 4)
 
         // Fill exactly to slotCapacity worth of elements
@@ -44,8 +44,8 @@ struct RingGrowableTests {
         #expect(buffer.popFront() == 3)
     }
 
-    @Test("growth doubles capacity")
-    func growth() {
+    @Test
+    func `growth doubles capacity`() {
         var buffer = Buffer<Int>.Ring(minimumCapacity: 2)
         let originalCap = buffer.capacity
 
@@ -67,15 +67,15 @@ struct RingGrowableTests {
         }
     }
 
-    @Test("slotCapacity invariant — capacity from storage, not request")
-    func slotCapacityInvariant() {
+    @Test
+    func `slotCapacity invariant — capacity from storage, not request`() {
         let buffer = Buffer<Int>.Ring(minimumCapacity: 3)
         // slotCapacity may be > 3 (ManagedBuffer rounds up)
         #expect(buffer.capacity.rawValue.rawValue >= 3)
     }
 
-    @Test("drain removes all elements in FIFO order")
-    func drain() {
+    @Test
+    func `drain removes all elements in FIFO order`() {
         var buffer = Buffer<Int>.Ring.with([10, 20, 30])
         var drained: [Int] = []
         buffer.drain { drained.append($0) }
@@ -83,23 +83,23 @@ struct RingGrowableTests {
         #expect(buffer.isEmpty)
     }
 
-    @Test("removeAll clears buffer")
-    func removeAll() {
+    @Test
+    func `removeAll clears buffer`() {
         var buffer = Buffer<Int>.Ring.with([1, 2, 3])
         buffer.removeAll()
         #expect(buffer.isEmpty)
         #expect(buffer.count == 0)
     }
 
-    @Test("reserveCapacity grows if needed")
-    func reserveCapacity() {
+    @Test
+    func `reserveCapacity grows if needed`() {
         var buffer = Buffer<Int>.Ring(minimumCapacity: 2)
         buffer.reserveCapacity(Index<Int>.Count(Cardinal(100)))
         #expect(buffer.capacity.rawValue.rawValue >= 100)
     }
 
-    @Test("peekFront and peekBack (Copyable)")
-    func peekFrontBack() {
+    @Test
+    func `peekFront and peekBack (Copyable)`() {
         let buffer = Buffer<Int>.Ring.with([10, 20, 30])
         #expect(buffer.peekFront == 10)
         #expect(buffer.peekBack == 30)
@@ -108,8 +108,8 @@ struct RingGrowableTests {
         #expect(buffer.count == 3)
     }
 
-    @Test("pushFront and popBack (deque behavior)")
-    func deque() {
+    @Test
+    func `pushFront and popBack (deque behavior)`() {
         var buffer = Buffer<Int>.Ring(minimumCapacity: 4)
         buffer.pushFront(10)
         buffer.pushFront(20)
@@ -118,8 +118,8 @@ struct RingGrowableTests {
         #expect(buffer.popBack() == 20)
     }
 
-    @Test("interleaved push/pop maintains order")
-    func interleaved() {
+    @Test
+    func `interleaved push/pop maintains order`() {
         var buffer = Buffer<Int>.Ring(minimumCapacity: 4)
         buffer.pushBack(1)
         buffer.pushBack(2)
@@ -130,8 +130,8 @@ struct RingGrowableTests {
         #expect(buffer.isEmpty)
     }
 
-    @Test("Sequence.Protocol iteration (Copyable)")
-    func sequenceIteration() {
+    @Test
+    func `Sequence.Protocol iteration (Copyable)`() {
         let buffer = Buffer<Int>.Ring.with([10, 20, 30])
         var collected: [Int] = []
         let iter = buffer.makeIterator()
@@ -142,8 +142,8 @@ struct RingGrowableTests {
         #expect(collected == [10, 20, 30])
     }
 
-    @Test("single element")
-    func singleElement() {
+    @Test
+    func `single element`() {
         var buffer = Buffer<Int>.Ring(minimumCapacity: 1)
         buffer.pushBack(42)
         #expect(buffer.count == 1)
@@ -151,8 +151,8 @@ struct RingGrowableTests {
         #expect(buffer.isEmpty)
     }
 
-    @Test("empty buffer operations")
-    func emptyOperations() {
+    @Test
+    func `empty buffer operations`() {
         let buffer = Buffer<Int>.Ring(minimumCapacity: 4)
         #expect(buffer.isEmpty)
         #expect(buffer.count == 0)

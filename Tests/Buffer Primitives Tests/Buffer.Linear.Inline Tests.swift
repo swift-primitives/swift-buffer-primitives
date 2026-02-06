@@ -5,8 +5,8 @@ import Buffer_Primitives_Test_Support
 @Suite("Buffer.Linear.Inline")
 struct LinearBoundedInlineTests {
 
-    @Test("append and consumeFront")
-    func appendConsumeFront() throws {
+    @Test
+    func `append and consumeFront`() throws {
         var buffer = Buffer<Int>.Linear.Inline<4>()
         _ = buffer.append(10)
         _ = buffer.append(20)
@@ -20,8 +20,8 @@ struct LinearBoundedInlineTests {
         #expect(buffer.isEmpty == true)
     }
 
-    @Test("append and removeLast")
-    func appendRemoveLast() throws {
+    @Test
+    func `append and removeLast`() throws {
         var buffer = Buffer<Int>.Linear.Inline<4>()
         _ = buffer.append(10)
         _ = buffer.append(20)
@@ -33,8 +33,8 @@ struct LinearBoundedInlineTests {
         #expect(buffer.isEmpty == true)
     }
 
-    @Test("full rejection — append returns element when full")
-    func fullRejection() throws {
+    @Test
+    func `full rejection — append returns element when full`() throws {
         var buffer = Buffer<Int>.Linear.Inline<4>()
 
         _ = buffer.append(0)
@@ -47,16 +47,16 @@ struct LinearBoundedInlineTests {
         #expect(rejected == 999)
     }
 
-    @Test("peekFront and peekBack (Copyable)")
-    func peekFrontBack() throws {
+    @Test
+    func `peekFront and peekBack (Copyable)`() throws {
         let buffer = Buffer<Int>.Linear.Inline<8>.with([10, 20, 30])
         #expect(buffer.peekFront == 10)
         #expect(buffer.peekBack == 30)
         #expect(buffer.count == 3)
     }
 
-    @Test("drain removes all elements in front-to-back order")
-    func drain() throws {
+    @Test
+    func `drain removes all elements in front-to-back order`() throws {
         var buffer = Buffer<Int>.Linear.Inline<8>.with([10, 20, 30])
         var drained: [Int] = []
         buffer.drain { drained.append($0) }
@@ -64,16 +64,16 @@ struct LinearBoundedInlineTests {
         #expect(buffer.isEmpty == true)
     }
 
-    @Test("removeAll clears buffer")
-    func removeAll() throws {
+    @Test
+    func `removeAll clears buffer`() throws {
         var buffer = Buffer<Int>.Linear.Inline<8>.with([1, 2, 3])
         buffer.removeAll()
         #expect(buffer.isEmpty == true)
         #expect(buffer.count == 0)
     }
 
-    @Test("Sequence.Protocol iteration (Copyable)")
-    func sequenceIteration() throws {
+    @Test
+    func `Sequence.Protocol iteration (Copyable)`() throws {
         let buffer = Buffer<Int>.Linear.Inline<8>.with([10, 20, 30])
         var collected: [Int] = []
         var iter = buffer.makeIterator()
@@ -83,8 +83,8 @@ struct LinearBoundedInlineTests {
         #expect(collected == [10, 20, 30])
     }
 
-    @Test("single element")
-    func singleElement() throws {
+    @Test
+    func `single element`() throws {
         var buffer = Buffer<Int>.Linear.Inline<1>()
         _ = buffer.append(42)
         #expect(buffer.count == 1)

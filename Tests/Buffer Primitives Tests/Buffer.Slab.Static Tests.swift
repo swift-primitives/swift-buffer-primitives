@@ -5,8 +5,8 @@ import Buffer_Primitives_Test_Support
 @Suite("Buffer.Slab Static Operations")
 struct SlabStaticTests {
 
-    @Test("insert and remove")
-    func insertRemove() {
+    @Test
+    func `insert and remove`() {
         var header: Buffer<Int>.Slab.Header = .init(capacity: 8)
         let storage = Storage<Int>.Heap.create(minimumCapacity: 8)
 
@@ -24,8 +24,8 @@ struct SlabStaticTests {
         storage.initialization = .empty
     }
 
-    @Test("forEachOccupied visits all occupied slots")
-    func forEachOccupied() {
+    @Test
+    func `forEachOccupied visits all occupied slots`() {
         var header: Buffer<Int>.Slab.Header = .init(capacity: 8)
         let storage = Storage<Int>.Heap.create(minimumCapacity: 8)
 
@@ -42,9 +42,9 @@ struct SlabStaticTests {
         Buffer<Int>.Slab.deinitializeAll(header: &header, storage: storage)
     }
 
-    @Test("firstVacant finds first empty slot")
-    func firstVacant() {
-        var header: Buffer<Int>.Slab.Header = .init(capacity: 4)
+    @Test
+    func `firstVacant finds first empty slot`() {
+        let header: Buffer<Int>.Slab.Header = .init(capacity: 4)
         header.bitmap[0] = true
         header.bitmap[1] = true
 
@@ -52,8 +52,8 @@ struct SlabStaticTests {
         #expect(vacant == 2)
     }
 
-    @Test("deinitializeAll clears all occupied slots")
-    func deinitializeAll() {
+    @Test
+    func `deinitializeAll clears all occupied slots`() {
         var header: Buffer<Int>.Slab.Header = .init(capacity: 8)
         let storage = Storage<Int>.Heap.create(minimumCapacity: 8)
 

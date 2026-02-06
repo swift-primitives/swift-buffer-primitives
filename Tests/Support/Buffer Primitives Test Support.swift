@@ -1,5 +1,16 @@
 // MARK: - Ring Factory Methods
 
+extension Buffer.Ring: ExpressibleByArrayLiteral {
+    public init(arrayLiteral elements: Element...) {
+        let cap: Index<Element>.Count = .init(Cardinal(max(UInt(elements.count), 0)))
+        var buffer = Self(minimumCapacity: cap)
+        for element in elements {
+            buffer.pushBack(element)
+        }
+        self = buffer
+    }
+}
+
 extension Buffer.Ring where Element == Int {
     /// Creates a growable ring buffer pre-filled with the given elements.
     @inlinable

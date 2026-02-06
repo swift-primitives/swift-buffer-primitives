@@ -5,8 +5,8 @@ import Buffer_Primitives_Test_Support
 @Suite("Buffer.Ring Static Operations")
 struct RingStaticTests {
 
-    @Test("pushBack/popFront FIFO ordering")
-    func fifoOrdering() {
+    @Test
+    func `pushBack/popFront FIFO ordering`() {
         let cap: Index<Int>.Count = 4
         var header = Buffer<Int>.Ring.Header(capacity: cap)
         let storage = Storage<Int>.Heap.create(minimumCapacity: cap)
@@ -29,8 +29,8 @@ struct RingStaticTests {
         storage.initialization = .empty
     }
 
-    @Test("pushFront/popBack ordering")
-    func pushFrontPopBack() {
+    @Test
+    func `pushFront/popBack ordering`() {
         let cap: Index<Int>.Count = 4
         var header = Buffer<Int>.Ring.Header(capacity: cap)
         let storage = Storage<Int>.Heap.create(minimumCapacity: cap)
@@ -48,8 +48,8 @@ struct RingStaticTests {
         storage.initialization = .empty
     }
 
-    @Test("wrap-around correctness")
-    func wrapAround() {
+    @Test
+    func `wrap-around correctness`() {
         let cap: Index<Int>.Count = 4
         var header = Buffer<Int>.Ring.Header(capacity: cap)
         let storage = Storage<Int>.Heap.create(minimumCapacity: cap)
@@ -84,8 +84,8 @@ struct RingStaticTests {
         storage.initialization = .empty
     }
 
-    @Test("physicalSlot logical-to-physical mapping")
-    func physicalSlotMapping() {
+    @Test
+    func `physicalSlot logical-to-physical mapping`() {
         var header = Buffer<Int>.Ring.Header(capacity: 8)
         header.head = 5
         header.count = 4
@@ -99,8 +99,8 @@ struct RingStaticTests {
         #expect(p3 == 0)
     }
 
-    @Test("initialization sync through operations")
-    func initializationSync() {
+    @Test
+    func `initialization sync through operations`() {
         let cap: Index<Int>.Count = 4
         var header = Buffer<Int>.Ring.Header(capacity: cap)
         let storage = Storage<Int>.Heap.create(minimumCapacity: cap)
@@ -134,8 +134,8 @@ struct RingStaticTests {
         #expect(header.initialization == .empty)
     }
 
-    @Test("deinitializeAll clears everything")
-    func deinitializeAll() {
+    @Test
+    func `deinitializeAll clears everything`() {
         let cap: Index<Int>.Count = 4
         var header = Buffer<Int>.Ring.Header(capacity: cap)
         let storage = Storage<Int>.Heap.create(minimumCapacity: cap)

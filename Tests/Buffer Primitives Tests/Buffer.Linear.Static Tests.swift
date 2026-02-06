@@ -5,8 +5,8 @@ import Buffer_Primitives_Test_Support
 @Suite("Buffer.Linear Static Operations")
 struct LinearStaticTests {
 
-    @Test("append increments count and stores element")
-    func appendBasic() {
+    @Test
+    func `append increments count and stores element`() {
         let cap: Index<Int>.Count = 8
         var header = Buffer<Int>.Linear.Header(capacity: cap)
         let storage = Storage<Int>.Heap.create(minimumCapacity: cap)
@@ -25,8 +25,8 @@ struct LinearStaticTests {
         storage.initialization = .empty
     }
 
-    @Test("consumeFront removes first and shifts")
-    func consumeFrontShifts() {
+    @Test
+    func `consumeFront removes first and shifts`() {
         let cap: Index<Int>.Count = 8
         var header = Buffer<Int>.Linear.Header(capacity: cap)
         let storage = Storage<Int>.Heap.create(minimumCapacity: cap)
@@ -49,8 +49,8 @@ struct LinearStaticTests {
         storage.initialization = .empty
     }
 
-    @Test("consumeBack removes last element")
-    func consumeBack() {
+    @Test
+    func `consumeBack removes last element`() {
         let cap: Index<Int>.Count = 8
         var header = Buffer<Int>.Linear.Header(capacity: cap)
         let storage = Storage<Int>.Heap.create(minimumCapacity: cap)
@@ -69,8 +69,8 @@ struct LinearStaticTests {
         storage.initialization = .empty
     }
 
-    @Test("deinitializeAll clears everything")
-    func deinitializeAll() {
+    @Test
+    func `deinitializeAll clears everything`() {
         let cap: Index<Int>.Count = 8
         var header = Buffer<Int>.Linear.Header(capacity: cap)
         let storage = Storage<Int>.Heap.create(minimumCapacity: cap)
@@ -84,8 +84,8 @@ struct LinearStaticTests {
         #expect(header.isEmpty)
     }
 
-    @Test("initialization stays .one for linear")
-    func initializationTracking() {
+    @Test
+    func `initialization stays .one for linear`() {
         let cap: Index<Int>.Count = 8
         var header = Buffer<Int>.Linear.Header(capacity: cap)
         let storage = Storage<Int>.Heap.create(minimumCapacity: cap)
