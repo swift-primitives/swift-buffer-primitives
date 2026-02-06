@@ -246,7 +246,12 @@ public enum Buffer<Element: ~Copyable> {
 
         deinit {
             // Slab deinit is NOT automatic — bitmap drives cleanup.
-            header.bitmap.ones.forEach { bitIndex in
+            // Note: `let ones` extracts the Copyable Ones.View before the
+            // closure to avoid a MoveOnlyChecker crash (swift-frontend signal 11)
+            // when a closure in deinit borrows one ~Copyable field (header)
+            // while capturing another (storage).
+            let ones = header.bitmap.ones
+            ones.forEach { bitIndex in
                 storage.deinitialize(at: bitIndex.retag())
             }
             storage.initialization = .empty
@@ -277,7 +282,9 @@ public enum Buffer<Element: ~Copyable> {
 
             deinit {
                 // Slab deinit is NOT automatic — bitmap drives cleanup.
-                header.bitmap.ones.forEach { bitIndex in
+                // Note: extract Ones.View to avoid MoveOnlyChecker crash.
+                let ones = header.bitmap.ones
+                ones.forEach { bitIndex in
                     storage.deinitialize(at: bitIndex.retag())
                 }
                 storage.initialization = .empty
