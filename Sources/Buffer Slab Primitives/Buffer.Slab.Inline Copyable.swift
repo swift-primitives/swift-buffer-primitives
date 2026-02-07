@@ -61,6 +61,15 @@ extension Buffer.Slab.Inline: Sequence.`Protocol` where Element: Copyable {
     }
 }
 
+// MARK: - Swift.Sequence
+// Blocked on Storage.Inline conditional Copyable (INV-INLINE-004a).
+// Uncomment when @_rawLayout is replaced with conditionally-Copyable InlineArray.
+//
+// extension Buffer.Slab.Inline: Swift.Sequence where Element: Copyable {
+//     @inlinable
+//     public var underestimatedCount: Int { Int(bitPattern: header.bitmap.popcount.rawValue.rawValue) }
+// }
+
 // MARK: - Property.View (.forEach)
 
 extension Buffer.Slab.Inline where Element: Copyable {

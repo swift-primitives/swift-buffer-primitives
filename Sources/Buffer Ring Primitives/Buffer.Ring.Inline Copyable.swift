@@ -70,6 +70,15 @@ extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
     }
 }
 
+// MARK: - Swift.Sequence
+// Blocked on Storage.Inline conditional Copyable (INV-INLINE-004a).
+// Uncomment when @_rawLayout is replaced with conditionally-Copyable InlineArray.
+//
+// extension Buffer.Ring.Inline: Swift.Sequence where Element: Copyable {
+//     @inlinable
+//     public var underestimatedCount: Int { Int(bitPattern: header.count.rawValue.rawValue) }
+// }
+
 // MARK: - Property.View (.forEach)
 
 extension Buffer.Ring.Inline where Element: Copyable {

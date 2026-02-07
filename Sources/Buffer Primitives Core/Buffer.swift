@@ -390,6 +390,7 @@ extension Buffer.Ring.Bounded: @unchecked Sendable where Element: Sendable {}
 // If Swift adds InlineArray.init(unsafeUninitializedCapacity:), Storage.Inline
 // could migrate and this conformance can be restored.
 // extension Buffer.Ring.Inline: Copyable where Element: Copyable {}
+// extension Buffer.Ring.Inline: Swift.Sequence where Element: Copyable {}
 extension Buffer.Ring.Inline: Sendable where Element: Sendable {}
 
 // MARK: - Conditional Conformances (Linear)
@@ -407,6 +408,7 @@ extension Buffer.Linear.Bounded: @unchecked Sendable where Element: Sendable {}
 // If Swift adds InlineArray.init(unsafeUninitializedCapacity:), Storage.Inline
 // could migrate and this conformance can be restored.
 // extension Buffer.Linear.Inline: Copyable where Element: Copyable {}
+// extension Buffer.Linear.Inline: Swift.Sequence where Element: Copyable {}
 extension Buffer.Linear.Inline: Sendable where Element: Sendable {}
 
 // MARK: - Conditional Conformances (Slab)
@@ -424,4 +426,5 @@ extension Buffer.Slab.Bounded.Indexed: @unchecked Sendable where Element: Sendab
 // If Swift adds InlineArray.init(unsafeUninitializedCapacity:), Storage.Inline
 // could migrate and this conformance can be restored.
 // extension Buffer.Slab.Inline: Copyable where Element: Copyable {}
+// extension Buffer.Slab.Inline: Swift.Sequence where Element: Copyable {}
 extension Buffer.Slab.Inline: Sendable where Element: Sendable {}
