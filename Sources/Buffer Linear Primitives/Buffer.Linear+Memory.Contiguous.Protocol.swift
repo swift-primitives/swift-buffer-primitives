@@ -3,12 +3,18 @@
 extension Buffer.Linear where Element: ~Copyable {
     /// Read-only span of all buffer elements.
     ///
-    /// Delegates to `Storage.Heap`'s span implementation.
+    /// Pointer from storage, count from buffer header (source of truth).
+    /// Buffer header and storage header may diverge between growth events,
+    /// so we must NOT delegate to `storage.span`.
     public var span: Span<Element> {
         @_lifetime(borrow self)
         @inlinable
         borrowing get {
-            let span = storage.span
+            let count = Int(bitPattern: header.count.rawValue.rawValue)
+            let span = unsafe Span(
+                _unsafeStart: storage.pointer(at: .zero),
+                count: count
+            )
             return unsafe _overrideLifetime(span, borrowing: self)
         }
     }
@@ -19,14 +25,20 @@ extension Buffer.Linear where Element: ~Copyable {
         @inlinable
         mutating get {
             let count = Int(bitPattern: header.count.rawValue.rawValue)
-            let span = unsafe MutableSpan(_unsafeStart: unsafe storage.pointer(at: .zero), count: count)
+            let span = unsafe MutableSpan(
+                _unsafeStart: unsafe storage.pointer(at: .zero),
+                count: count
+            )
             return unsafe _overrideLifetime(span, mutating: &self)
         }
         @_lifetime(&self)
         @inlinable
         _modify {
             let count = Int(bitPattern: header.count.rawValue.rawValue)
-            var span = unsafe MutableSpan(_unsafeStart: unsafe storage.pointer(at: .zero), count: count)
+            var span = unsafe MutableSpan(
+                _unsafeStart: unsafe storage.pointer(at: .zero),
+                count: count
+            )
             yield &span
         }
     }
@@ -36,13 +48,15 @@ extension Buffer.Linear where Element: ~Copyable {
 
 extension Buffer.Linear: Memory.Contiguous.`Protocol` where Element: Copyable {
     /// Unsafe read access for C interop with unannotated APIs.
-    ///
-    /// Delegates to `Storage.Heap`'s existing implementation.
     @inlinable
     public func withUnsafeBufferPointer<R, E: Swift.Error>(
         _ body: (UnsafeBufferPointer<Element>) throws(E) -> R
     ) throws(E) -> R {
-        unsafe try storage.withUnsafeBufferPointer(body)
+        let count = Int(bitPattern: header.count.rawValue.rawValue)
+        return try unsafe body(UnsafeBufferPointer(
+            start: count > 0 ? storage.pointer(at: .zero) : nil,
+            count: count
+        ))
     }
 }
 

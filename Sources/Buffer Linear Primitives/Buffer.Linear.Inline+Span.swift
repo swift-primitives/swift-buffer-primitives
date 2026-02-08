@@ -3,31 +3,40 @@
 extension Buffer.Linear.Inline where Element: ~Copyable {
     /// Read-only span of all buffer elements.
     ///
-    /// Delegates to `Storage.Inline`'s span implementation.
+    /// Pointer from storage, count from buffer header (source of truth).
     public var span: Span<Element> {
         @_lifetime(borrow self)
         @inlinable
         borrowing get {
-            let span = storage.span
+            let count = Int(bitPattern: header.count.rawValue.rawValue)
+            let span = unsafe Span(
+                _unsafeStart: storage.pointer(at: .zero),
+                count: count
+            )
             return unsafe _overrideLifetime(span, borrowing: self)
         }
     }
 
     /// Mutable span of all buffer elements.
-    ///
-    /// Delegates to `Storage.Inline`'s mutableSpan implementation.
     public var mutableSpan: MutableSpan<Element> {
         @_lifetime(&self)
         @inlinable
         mutating get {
-            let span = storage.mutableSpan
+            let count = Int(bitPattern: header.count.rawValue.rawValue)
+            let span = unsafe MutableSpan(
+                _unsafeStart: unsafe UnsafeMutablePointer(mutating: storage.pointer(at: .zero)),
+                count: count
+            )
             return unsafe _overrideLifetime(span, mutating: &self)
         }
         @_lifetime(&self)
         @inlinable
         _modify {
-            var span = storage.mutableSpan
-            defer { span = unsafe _overrideLifetime(span, mutating: &self) }
+            let count = Int(bitPattern: header.count.rawValue.rawValue)
+            var span = unsafe MutableSpan(
+                _unsafeStart: unsafe UnsafeMutablePointer(mutating: storage.pointer(at: .zero)),
+                count: count
+            )
             yield &span
         }
     }
