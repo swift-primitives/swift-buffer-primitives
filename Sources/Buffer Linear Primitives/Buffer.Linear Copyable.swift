@@ -34,6 +34,75 @@ extension Buffer.Linear where Element: Copyable {
     }
 }
 
+// MARK: - CoW-Safe Mutations
+
+extension Buffer.Linear where Element: Copyable {
+
+    /// Appends an element to the back of the buffer (CoW-safe).
+    ///
+    /// Ensures unique ownership, then grows if full.
+    @inlinable
+    public mutating func append(_ element: consuming Element) {
+        _makeUnique()
+        if header.isFull {
+            _grow()
+        }
+        Buffer.Linear.append(consume element, header: &header, storage: storage)
+    }
+
+    /// Removes and returns the first element (CoW-safe).
+    ///
+    /// - Precondition: The buffer is not empty.
+    @inlinable
+    public mutating func consumeFront() -> Element {
+        _makeUnique()
+        return Buffer.Linear.consumeFront(header: &header, storage: storage)
+    }
+
+    /// Removes and returns the last element (CoW-safe).
+    ///
+    /// - Precondition: The buffer is not empty.
+    @inlinable
+    public mutating func removeLast() -> Element {
+        _makeUnique()
+        return Buffer.Linear.consumeBack(header: &header, storage: storage)
+    }
+
+    /// Removes all elements from the buffer (CoW-safe).
+    @inlinable
+    public mutating func removeAll() {
+        _makeUnique()
+        Buffer.Linear.deinitializeAll(header: &header, storage: storage)
+    }
+
+    /// Ensures the buffer can hold at least `minimumCapacity` elements (CoW-safe).
+    @inlinable
+    public mutating func reserveCapacity(_ minimumCapacity: Index<Element>.Count) {
+        _makeUnique()
+        if minimumCapacity.rawValue.rawValue > header.capacity.rawValue.rawValue {
+            _growTo(minimumCapacity)
+        }
+    }
+}
+
+// MARK: - Subscript (Copyable with CoW)
+
+extension Buffer.Linear where Element: Copyable {
+    /// Accesses the element at the given index with copy-on-write semantics.
+    ///
+    /// - Parameter index: The index of the element to access.
+    @inlinable
+    public subscript(index: Index<Element>) -> Element {
+        _read {
+            yield unsafe storage.pointer(at: index).pointee
+        }
+        _modify {
+            _makeUnique()
+            yield unsafe &storage.pointer(at: index).pointee
+        }
+    }
+}
+
 // MARK: - Property.View (.forEach)
 
 extension Buffer.Linear where Element: Copyable {
