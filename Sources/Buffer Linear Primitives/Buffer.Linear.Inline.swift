@@ -1,6 +1,6 @@
 // MARK: - Extensions for Linear.Inline (declared in Core)
 
-extension Buffer.Linear.Inline {
+extension Buffer.Linear.Inline where Element: ~Copyable {
 
     /// Creates a bounded inline linear buffer with fixed capacity.
     ///
@@ -91,7 +91,7 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
 
 // MARK: - Sequence.Drain.Protocol
 
-extension Buffer.Linear.Inline: Sequence.Drain.`Protocol` {
+extension Buffer.Linear.Inline: Sequence.Drain.`Protocol` where Element: Copyable {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         while !isEmpty {
@@ -108,7 +108,7 @@ extension Buffer.Linear.Inline: Sequence.Clearable where Element: Copyable {
 
 // MARK: - Property.View (.drain)
 
-extension Buffer.Linear.Inline {
+extension Buffer.Linear.Inline where Element: ~Copyable {
     @inlinable
     public var drain: Property<Sequence.Drain, Self>.View {
         mutating _read {

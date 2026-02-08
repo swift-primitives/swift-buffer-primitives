@@ -1,6 +1,6 @@
 // MARK: - Static Operations for ~Copyable Elements on Storage.Inline
 
-extension Buffer.Linear {
+extension Buffer.Linear where Element: ~Copyable {
 
     // MARK: Append (Inline)
 

@@ -2,7 +2,7 @@ public import Sequence_Primitives
 
 // MARK: - Extensions for Linear (declared in Core)
 
-extension Buffer.Linear {
+extension Buffer.Linear where Element: ~Copyable {
 
     /// Creates a growable linear buffer with at least the given capacity.
     ///
@@ -110,7 +110,7 @@ extension Buffer.Linear {
 
 // MARK: - Sequence.Drain.Protocol
 
-extension Buffer.Linear: Sequence.Drain.`Protocol` {
+extension Buffer.Linear: Sequence.Drain.`Protocol` where Element: Copyable {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         while !isEmpty {
@@ -127,7 +127,7 @@ extension Buffer.Linear: Sequence.Clearable where Element: Copyable {
 
 // MARK: - Property.View (.drain)
 
-extension Buffer.Linear {
+extension Buffer.Linear where Element: ~Copyable {
     @inlinable
     public var drain: Property<Sequence.Drain, Self>.View {
         mutating _read {

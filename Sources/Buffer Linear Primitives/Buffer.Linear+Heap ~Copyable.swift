@@ -2,7 +2,7 @@ public import Buffer_Primitives_Core
 
 // MARK: - Static Operations for ~Copyable Elements on Storage.Heap
 
-extension Buffer.Linear {
+extension Buffer.Linear where Element: ~Copyable {
 
     // MARK: Append
 

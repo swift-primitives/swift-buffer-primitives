@@ -1,6 +1,6 @@
-// MARK: - Span (~Copyable)
+// MARK: - Span / MutableSpan for Linear
 
-extension Buffer.Linear.Bounded where Element: ~Copyable {
+extension Buffer.Linear where Element: ~Copyable {
     /// Read-only span of all buffer elements.
     ///
     /// Delegates to `Storage.Heap`'s span implementation.
@@ -32,9 +32,9 @@ extension Buffer.Linear.Bounded where Element: ~Copyable {
     }
 }
 
-// MARK: - Memory.Contiguous.Protocol Conformance for Linear.Bounded
+// MARK: - Memory.Contiguous.Protocol Conformance for Linear
 
-extension Buffer.Linear.Bounded: Memory.Contiguous.`Protocol` where Element: Copyable {
+extension Buffer.Linear: Memory.Contiguous.`Protocol` where Element: Copyable {
     /// Unsafe read access for C interop with unannotated APIs.
     ///
     /// Delegates to `Storage.Heap`'s existing implementation.
@@ -46,7 +46,7 @@ extension Buffer.Linear.Bounded: Memory.Contiguous.`Protocol` where Element: Cop
     }
 }
 
-extension Buffer.Linear.Bounded where Element: Copyable {
+extension Buffer.Linear where Element: Copyable {
     /// Unsafe mutable access for C interop with unannotated APIs.
     @inlinable
     public mutating func withUnsafeMutableBufferPointer<R, E: Swift.Error>(

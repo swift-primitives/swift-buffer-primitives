@@ -1,6 +1,6 @@
 // MARK: - Sequence.Consume.Protocol for Linear.Bounded
 
-extension Buffer.Linear.Bounded {
+extension Buffer.Linear.Bounded where Element: ~Copyable {
     /// State for consuming iteration — deinitializes remaining elements on early exit.
     ///
     /// Class-based because `Sequence.Consume.Protocol.ConsumeState` must be Copyable,
@@ -35,7 +35,7 @@ extension Buffer.Linear.Bounded {
     }
 }
 
-extension Buffer.Linear.Bounded: Sequence.Consume.`Protocol` {
+extension Buffer.Linear.Bounded: Sequence.Consume.`Protocol` where Element: Copyable {
     @inlinable
     public consuming func consume() -> Sequence.Consume.View<Element, ConsumeState> {
         let h = header

@@ -1,6 +1,6 @@
 // MARK: - Extensions for Linear.Bounded (declared in Core)
 
-extension Buffer.Linear.Bounded {
+extension Buffer.Linear.Bounded where Element: ~Copyable {
 
     /// Creates a bounded linear buffer with at least the given capacity.
     ///
@@ -89,7 +89,7 @@ extension Buffer.Linear.Bounded where Element: ~Copyable {
 
 // MARK: - Sequence.Drain.Protocol
 
-extension Buffer.Linear.Bounded: Sequence.Drain.`Protocol` {
+extension Buffer.Linear.Bounded: Sequence.Drain.`Protocol` where Element: Copyable {
     @inlinable
     public mutating func drain(
         _ body: (consuming Element) -> Void
@@ -112,7 +112,7 @@ extension Buffer.Linear.Bounded: Sequence.Clearable where Element: Copyable {
 
 // MARK: - Property.View (.drain)
 
-extension Buffer.Linear.Bounded {
+extension Buffer.Linear.Bounded where Element: ~Copyable {
     @inlinable
     public var drain: Property<Sequence.Drain, Self>.View {
         mutating _read {
