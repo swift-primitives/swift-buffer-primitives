@@ -49,7 +49,7 @@ struct LinearBoundedInlineTests {
 
     @Test
     func `peekFront and peekBack (Copyable)`() throws {
-        let buffer = Buffer<Int>.Linear.Inline<8>.with([10, 20, 30])
+        let buffer = Buffer<Int>.Linear.Inline<8>([10, 20, 30])
         #expect(buffer.peekFront == 10)
         #expect(buffer.peekBack == 30)
         #expect(buffer.count == 3)
@@ -57,7 +57,7 @@ struct LinearBoundedInlineTests {
 
     @Test
     func `drain removes all elements in front-to-back order`() throws {
-        var buffer = Buffer<Int>.Linear.Inline<8>.with([10, 20, 30])
+        var buffer = Buffer<Int>.Linear.Inline<8>([10, 20, 30])
         var drained: [Int] = []
         buffer.drain { drained.append($0) }
         #expect(drained == [10, 20, 30])
@@ -66,7 +66,7 @@ struct LinearBoundedInlineTests {
 
     @Test
     func `removeAll clears buffer`() throws {
-        var buffer = Buffer<Int>.Linear.Inline<8>.with([1, 2, 3])
+        var buffer = Buffer<Int>.Linear.Inline<8>([1, 2, 3])
         buffer.removeAll()
         #expect(buffer.isEmpty == true)
         #expect(buffer.count == 0)
@@ -74,7 +74,7 @@ struct LinearBoundedInlineTests {
 
     @Test
     func `Sequence.Protocol iteration (Copyable)`() throws {
-        let buffer = Buffer<Int>.Linear.Inline<8>.with([10, 20, 30])
+        let buffer = Buffer<Int>.Linear.Inline<8>([10, 20, 30])
         var collected: [Int] = []
         var iter = buffer.makeIterator()
         while let value = iter.next() {

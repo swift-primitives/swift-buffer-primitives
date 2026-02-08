@@ -1,4 +1,4 @@
-import Range_Primitives
+import Vector_Primitives
 import Index_Primitives
 
 /// Namespace for buffer primitives.

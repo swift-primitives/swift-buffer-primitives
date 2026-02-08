@@ -1,4 +1,4 @@
-// MARK: - Ring Factory Methods
+// MARK: - Ring
 
 extension Buffer.Ring: ExpressibleByArrayLiteral {
     public init(arrayLiteral elements: Element...) {
@@ -12,109 +12,98 @@ extension Buffer.Ring: ExpressibleByArrayLiteral {
 }
 
 extension Buffer.Ring where Element == Int {
-    /// Creates a growable ring buffer pre-filled with the given elements.
     @inlinable
-    public static func with(_ elements: [Int], minimumCapacity: UInt = 0) -> Self {
+    public init(_ elements: [Int], minimumCapacity: UInt = 0) {
         let cap: Index<Element>.Count = .init(Cardinal(Swift.max(UInt(elements.count), minimumCapacity)))
         var buffer = Self(minimumCapacity: cap)
         for element in elements {
             buffer.pushBack(element)
         }
-        return buffer
+        self = buffer
     }
 }
 
 extension Buffer.Ring.Bounded where Element == Int {
-    /// Creates a bounded ring buffer pre-filled with the given elements.
     @inlinable
-    public static func with(_ elements: [Int], capacity: UInt) -> Self {
+    public init(_ elements: [Int], capacity: UInt) {
         var buffer = Self(minimumCapacity: .init(Cardinal(capacity)))
         for element in elements {
             _ = buffer.pushBack(element)
         }
-        return buffer
+        self = buffer
     }
 }
 
-// MARK: - Linear Factory Methods
+// MARK: - Linear
 
-extension Buffer.Linear where Element == Int {
-    /// Creates a growable linear buffer pre-filled with the given elements.
-    @inlinable
-    public static func with(_ elements: [Int], minimumCapacity: UInt = 0) -> Self {
-        let cap: Index<Element>.Count = .init(Cardinal(Swift.max(UInt(elements.count), minimumCapacity)))
+extension Buffer.Linear: ExpressibleByArrayLiteral {
+    public init(arrayLiteral elements: Element...) {
+        let cap: Index<Element>.Count = .init(Cardinal(Swift.max(UInt(elements.count), 0)))
         var buffer = Self(minimumCapacity: cap)
         for element in elements {
             buffer.append(element)
         }
-        return buffer
+        self = buffer
     }
 }
 
-extension Buffer.Linear.Bounded where Element == Int {
-    /// Creates a bounded linear buffer pre-filled with the given elements.
+extension Buffer.Linear.Bounded {
     @inlinable
-    public static func with(_ elements: [Int], capacity: UInt) -> Self {
+    public init(_ elements: [Element], capacity: UInt) {
         var buffer = Self(minimumCapacity: .init(Cardinal(capacity)))
         for element in elements {
             _ = buffer.append(element)
         }
-        return buffer
+        self = buffer
     }
 }
 
-// MARK: - Slab Factory Methods
+// MARK: - Slab
 
-extension Buffer.Slab.Bounded where Element == Int {
-    /// Creates a bounded slab buffer pre-filled at consecutive slots.
+extension Buffer.Slab.Bounded {
     @inlinable
-    public static func with(_ elements: [Int], capacity: UInt) -> Self {
+    public init(_ elements: [Element], capacity: UInt) {
         var buffer = Self(minimumCapacity: .init(Cardinal(capacity)))
         for (i, element) in elements.enumerated() {
             buffer.insert(element, at: Bit.Index(Ordinal(UInt(i))))
         }
-        return buffer
+        self = buffer
     }
 }
 
-// MARK: - Inline Ring Factory Methods
-
-extension Buffer.Ring.Inline where Element == Int {
-    /// Creates a bounded inline ring buffer pre-filled with the given elements.
+extension Buffer.Slab.Inline {
     @inlinable
-    public static func with(_ elements: [Int]) -> Self {
+    public init(_ elements: [Element]) {
+        var buffer = Self()
+        for (i, element) in elements.enumerated() {
+            buffer.insert(element, at: Bit.Index(Ordinal(UInt(i))))
+        }
+        self = buffer
+    }
+}
+
+// MARK: - Inline Ring
+
+extension Buffer.Ring.Inline {
+    @inlinable
+    public init(_ elements: [Element]) {
         var buffer = Self()
         for element in elements {
             _ = buffer.pushBack(element)
         }
-        return buffer
+        self = buffer
     }
 }
 
-// MARK: - Inline Linear Factory Methods
+// MARK: - Inline Linear
 
-extension Buffer.Linear.Inline where Element == Int {
-    /// Creates a bounded inline linear buffer pre-filled with the given elements.
+extension Buffer.Linear.Inline {
     @inlinable
-    public static func with(_ elements: [Int]) -> Self {
+    public init(_ elements: [Element]) {
         var buffer = Self()
         for element in elements {
             _ = buffer.append(element)
         }
-        return buffer
-    }
-}
-
-// MARK: - Inline Slab Factory Methods
-
-extension Buffer.Slab.Inline where Element == Int {
-    /// Creates a bounded inline slab buffer pre-filled at consecutive slots.
-    @inlinable
-    public static func with(_ elements: [Int]) -> Self {
-        var buffer = Self()
-        for (i, element) in elements.enumerated() {
-            buffer.insert(element, at: Bit.Index(Ordinal(UInt(i))))
-        }
-        return buffer
+        self = buffer
     }
 }

@@ -55,7 +55,7 @@ struct LinearGrowableTests {
 
     @Test
     func `drain removes all in front-to-back order`() {
-        var buffer = Buffer<Int>.Linear.with([10, 20, 30])
+        var buffer: Buffer<Int>.Linear = [10, 20, 30]
         var drained: [Int] = []
         buffer.drain { drained.append($0) }
         #expect(drained == [10, 20, 30])
@@ -64,21 +64,21 @@ struct LinearGrowableTests {
 
     @Test
     func `removeAll clears buffer`() {
-        var buffer = Buffer<Int>.Linear.with([1, 2, 3])
+        var buffer: Buffer<Int>.Linear = [1, 2, 3]
         buffer.removeAll()
         #expect(buffer.isEmpty)
     }
 
     @Test
     func `peekFront and peekBack (Copyable)`() {
-        let buffer = Buffer<Int>.Linear.with([10, 20, 30])
+        let buffer: Buffer<Int>.Linear = [10, 20, 30]
         #expect(buffer.peekFront == 10)
         #expect(buffer.peekBack == 30)
     }
 
     @Test
     func `Sequence.Protocol iteration (Copyable)`() {
-        let buffer = Buffer<Int>.Linear.with([10, 20, 30])
+        let buffer: Buffer<Int>.Linear = [10, 20, 30]
         var collected: [Int] = []
         var iter = buffer.makeIterator()
         while let value = iter.next() {
@@ -111,7 +111,7 @@ struct LinearCoWTests {
 
     @Test
     func `copy shares elements initially`() {
-        var original = Buffer<Int>.Linear.with([1, 2, 3])
+        var original: Buffer<Int>.Linear = [1, 2, 3]
         var copy = original
 
         var originalElements: [Int] = []
@@ -125,7 +125,7 @@ struct LinearCoWTests {
 
     @Test
     func `append to copy does not affect original`() {
-        var original = Buffer<Int>.Linear.with([1, 2, 3])
+        var original: Buffer<Int>.Linear = [1, 2, 3]
         var copy = original
 
         copy.append(99)
@@ -139,7 +139,7 @@ struct LinearCoWTests {
 
     @Test
     func `append to original does not affect copy`() {
-        var original = Buffer<Int>.Linear.with([1, 2, 3])
+        var original: Buffer<Int>.Linear = [1, 2, 3]
         var copy = original
 
         original.append(99)
@@ -153,7 +153,7 @@ struct LinearCoWTests {
 
     @Test
     func `subscript set on copy does not affect original`() {
-        var original = Buffer<Int>.Linear.with([10, 20, 30])
+        var original: Buffer<Int>.Linear = [10, 20, 30]
         var copy = original
 
         copy[1] = 999
@@ -164,7 +164,7 @@ struct LinearCoWTests {
 
     @Test
     func `multiple copies are independent`() {
-        var original = Buffer<Int>.Linear.with([1, 2])
+        var original: Buffer<Int>.Linear = [1, 2]
 
         var copy1 = original
         var copy2 = original
@@ -184,7 +184,7 @@ struct LinearCoWTests {
 
     @Test
     func `removeLast on copy does not affect original`() {
-        var original = Buffer<Int>.Linear.with([1, 2, 3])
+        var original: Buffer<Int>.Linear = [1, 2, 3]
         var copy = original
 
         let removed = copy.removeLast()
@@ -197,7 +197,7 @@ struct LinearCoWTests {
 
     @Test
     func `consumeFront on copy does not affect original`() {
-        var original = Buffer<Int>.Linear.with([1, 2, 3])
+        var original: Buffer<Int>.Linear = [1, 2, 3]
         var copy = original
 
         let consumed = copy.consumeFront()
@@ -210,7 +210,7 @@ struct LinearCoWTests {
 
     @Test
     func `removeAll on copy does not affect original`() {
-        var original = Buffer<Int>.Linear.with([1, 2, 3])
+        var original: Buffer<Int>.Linear = [1, 2, 3]
         var copy = original
 
         copy.removeAll()
@@ -223,7 +223,7 @@ struct LinearCoWTests {
 
     @Test
     func `reserveCapacity on copy does not affect original`() {
-        var original = Buffer<Int>.Linear.with([1, 2, 3])
+        var original: Buffer<Int>.Linear = [1, 2, 3]
         var copy = original
 
         copy.reserveCapacity(1000)

@@ -76,7 +76,7 @@ struct RingGrowableTests {
 
     @Test
     func `drain removes all elements in FIFO order`() {
-        var buffer = Buffer<Int>.Ring.with([10, 20, 30])
+        var buffer: Buffer<Int>.Ring = [10, 20, 30]
         var drained: [Int] = []
         buffer.drain { drained.append($0) }
         #expect(drained == [10, 20, 30])
@@ -85,7 +85,7 @@ struct RingGrowableTests {
 
     @Test
     func `removeAll clears buffer`() {
-        var buffer = Buffer<Int>.Ring.with([1, 2, 3])
+        var buffer: Buffer<Int>.Ring = [1, 2, 3]
         buffer.removeAll()
         #expect(buffer.isEmpty)
         #expect(buffer.count == 0)
@@ -100,7 +100,7 @@ struct RingGrowableTests {
 
     @Test
     func `peekFront and peekBack (Copyable)`() {
-        let buffer = Buffer<Int>.Ring.with([10, 20, 30])
+        let buffer: Buffer<Int>.Ring = [10, 20, 30]
         #expect(buffer.peekFront == 10)
         #expect(buffer.peekBack == 30)
 
@@ -132,7 +132,7 @@ struct RingGrowableTests {
 
     @Test
     func `Sequence.Protocol iteration (Copyable)`() {
-        let buffer = Buffer<Int>.Ring.with([10, 20, 30])
+        let buffer: Buffer<Int>.Ring = [10, 20, 30]
         var collected: [Int] = []
         let iter = buffer.makeIterator()
         var it = iter
