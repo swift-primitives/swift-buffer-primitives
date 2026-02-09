@@ -16,6 +16,27 @@ extension Buffer.Slab.Inline where Element: Copyable {
     }
 }
 
+// MARK: - Array Initialization
+
+extension Buffer.Slab.Inline where Element: Copyable {
+
+    /// Creates an inline slab buffer populated with the given elements.
+    ///
+    /// Elements are inserted at sequential slot indices starting from zero.
+    ///
+    /// - Parameter elements: The elements to populate the buffer with.
+    /// - Throws: ``Error/capacityExceeded`` if `elements.count` exceeds `wordCount`.
+    @inlinable
+    public init(_ elements: [Element]) throws(Error) {
+        guard elements.count <= wordCount else { throw .capacityExceeded }
+        var buffer = Self()
+        for (i, element) in elements.enumerated() {
+            buffer.insert(element, at: Bit.Index(Ordinal(UInt(i))))
+        }
+        self = buffer
+    }
+}
+
 // MARK: - Sequence.Protocol
 
 extension Buffer.Slab.Inline: Sequence.`Protocol` where Element: Copyable {

@@ -54,8 +54,8 @@ struct SlabBoundedTests {
     }
 
     @Test
-    func `drain removes all elements`() {
-        var buffer = Buffer<Int>.Slab.Bounded([10, 20, 30], capacity: 8)
+    func `drain removes all elements`() throws {
+        var buffer = try Buffer<Int>.Slab.Bounded([10, 20, 30], capacity: 8)
         var drained: [Int] = []
         buffer.drain { drained.append($0) }
         #expect(buffer.isEmpty == true)
@@ -63,8 +63,8 @@ struct SlabBoundedTests {
     }
 
     @Test
-    func `removeAll clears buffer`() {
-        var buffer = Buffer<Int>.Slab.Bounded([1, 2, 3], capacity: 8)
+    func `removeAll clears buffer`() throws {
+        var buffer = try Buffer<Int>.Slab.Bounded([1, 2, 3], capacity: 8)
         buffer.removeAll()
         #expect(buffer.isEmpty == true)
         #expect(buffer.occupancy == 0)

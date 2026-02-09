@@ -86,23 +86,23 @@ struct RingBoundedTests {
     }
 
     @Test
-    func `peekFront and peekBack (Copyable)`() {
-        var buffer = Buffer<Int>.Ring.Bounded([10, 20, 30], capacity: 4)
+    func `peekFront and peekBack (Copyable)`() throws {
+        var buffer = try Buffer<Int>.Ring.Bounded([10, 20, 30], capacity: 4)
         #expect(buffer.peekFront == 10)
         #expect(buffer.peekBack == 30)
         #expect(buffer.count == 3)
     }
 
     @Test
-    func `removeAll clears buffer`() {
-        var buffer = Buffer<Int>.Ring.Bounded([1, 2, 3], capacity: 4)
+    func `removeAll clears buffer`() throws {
+        var buffer = try Buffer<Int>.Ring.Bounded([1, 2, 3], capacity: 4)
         buffer.removeAll()
         #expect(buffer.isEmpty)
     }
 
     @Test
-    func `Sequence.Protocol iteration (Copyable)`() {
-        let buffer = Buffer<Int>.Ring.Bounded([10, 20, 30], capacity: 4)
+    func `Sequence.Protocol iteration (Copyable)`() throws {
+        let buffer = try Buffer<Int>.Ring.Bounded([10, 20, 30], capacity: 4)
         var collected: [Int] = []
         var iter = buffer.makeIterator()
         while let value = iter.next() {

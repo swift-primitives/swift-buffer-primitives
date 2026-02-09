@@ -19,8 +19,27 @@ extension Buffer.Ring.Inline where Element: Copyable {
         let lastOffset = Index<Element>.Offset(
             fromZero: Index<Element>(__unchecked: (), Ordinal(lastCount.rawValue))
         )
-        let lastSlot = Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
+        let lastSlot = Index.Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
         return unsafe storage.pointer(at: lastSlot).pointee
+    }
+}
+
+// MARK: - Array Initialization
+
+extension Buffer.Ring.Inline where Element: Copyable {
+
+    /// Creates an inline ring buffer populated with the given elements.
+    ///
+    /// - Parameter elements: The elements to populate the buffer with.
+    /// - Throws: ``Error/capacityExceeded`` if `elements.count` exceeds `capacity`.
+    @inlinable
+    public init(_ elements: [Element]) throws(Error) {
+        guard elements.count <= capacity else { throw .capacityExceeded }
+        var buffer = Self()
+        for element in elements {
+            _ = buffer.pushBack(element)
+        }
+        self = buffer
     }
 }
 
@@ -53,7 +72,7 @@ extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
         public mutating func next() -> Element? {
             guard current < total else { return nil }
             let logicalIdx = Index<Element>(__unchecked: (), Ordinal(current))
-            let physicalIdx = Modular.physical(
+            let physicalIdx = Index.Modular.physical(
                 forLogical: logicalIdx,
                 head: header.head,
                 capacity: header.capacity

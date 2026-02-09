@@ -3,17 +3,18 @@ import Index_Primitives
 
 /// Namespace for buffer primitives.
 ///
-/// Buffer provides three disciplines for managing elements in storage:
+/// Buffer provides four disciplines for managing elements in storage:
 /// - ``Buffer/Linear``: Contiguous front-to-back storage
 /// - ``Buffer/Ring``: Circular FIFO/LIFO storage with wrap-around
 /// - ``Buffer/Slab``: Sparse index-addressable slot storage
+/// - ``Buffer/Slots``: Metadata-parametric random-access slots
 ///
 /// Each discipline follows a three-layer architecture:
 /// 1. **Header** — Pure cursor/bookkeeping state (Layer 1)
 /// 2. **Static Operations** — Expert-level functions on `Storage.Heap` (Layer 2)
 /// 3. **Composed Types** — User-facing types that delegate to static ops (Layer 3)
 ///
-/// - Note: `Ring`, `Linear`, `Slab`, and all their nested types are declared
+/// - Note: `Ring`, `Linear`, `Slab`, `Slots`, and all their nested types are declared
 ///   inside the enum body (not in extensions) due to Swift compiler constraints
 ///   on nested types within `~Copyable` generic types.
 public enum Buffer<Element: ~Copyable> {
@@ -62,6 +63,12 @@ public enum Buffer<Element: ~Copyable> {
                 self.header = header
                 self.storage = storage
             }
+
+            /// Errors that can occur during bounded ring buffer operations.
+            public enum Error: Swift.Error, Sendable, Equatable {
+                /// The number of elements exceeds the buffer's capacity.
+                case capacityExceeded
+            }
         }
 
         // MARK: - Inline (Fixed-Capacity, Stack-Allocated)
@@ -85,6 +92,12 @@ public enum Buffer<Element: ~Copyable> {
             package init(header: Header, storage: consuming Storage<Element>.Inline<capacity>) {
                 self.header = header
                 self.storage = storage
+            }
+
+            /// Errors that can occur during inline ring buffer operations.
+            public enum Error: Swift.Error, Sendable, Equatable {
+                /// The number of elements exceeds the buffer's capacity.
+                case capacityExceeded
             }
         }
 
@@ -177,6 +190,12 @@ public enum Buffer<Element: ~Copyable> {
                 self.header = header
                 self.storage = storage
             }
+
+            /// Errors that can occur during bounded linear buffer operations.
+            public enum Error: Swift.Error, Sendable, Equatable {
+                /// The number of elements exceeds the buffer's capacity.
+                case capacityExceeded
+            }
         }
 
         // MARK: - Inline (Fixed-Capacity, Stack-Allocated)
@@ -196,6 +215,12 @@ public enum Buffer<Element: ~Copyable> {
             package init(header: Header, storage: consuming Storage<Element>.Inline<capacity>) {
                 self.header = header
                 self.storage = storage
+            }
+
+            /// Errors that can occur during inline linear buffer operations.
+            public enum Error: Swift.Error, Sendable, Equatable {
+                /// The number of elements exceeds the buffer's capacity.
+                case capacityExceeded
             }
         }
 
@@ -289,6 +314,12 @@ public enum Buffer<Element: ~Copyable> {
                 storage.initialization = .empty
             }
 
+            /// Errors that can occur during bounded slab buffer operations.
+            public enum Error: Swift.Error, Sendable, Equatable {
+                /// The number of elements exceeds the buffer's capacity.
+                case capacityExceeded
+            }
+
             // MARK: - Bounded.Indexed
 
             /// Phantom-typed wrapper providing `Index<Tag>` access to slab storage.
@@ -328,6 +359,12 @@ public enum Buffer<Element: ~Copyable> {
             ) {
                 self.header = header
                 self.storage = storage
+            }
+
+            /// Errors that can occur during inline slab buffer operations.
+            public enum Error: Swift.Error, Sendable, Equatable {
+                /// The number of elements exceeds the buffer's capacity.
+                case capacityExceeded
             }
         }
 
@@ -369,6 +406,65 @@ public enum Buffer<Element: ~Copyable> {
                 public init() {
                     self.bitmap = .init()
                 }
+            }
+        }
+    }
+
+    // MARK: - Slots
+
+    /// A fixed-capacity slots buffer backed by split storage.
+    ///
+    /// Provides metadata-parametric random-access slots with a single
+    /// heap allocation containing both metadata and element arrays.
+    ///
+    /// ## Metadata-Driven Storage
+    ///
+    /// Unlike Linear/Ring (range-tracked) and Slab (bitmap-tracked),
+    /// Slots performs **no element lifecycle management**. The consumer
+    /// determines slot occupancy through the metadata values — for example,
+    /// a Swiss-table hash map uses `0x80` for empty and `h2` hash bits
+    /// for occupied.
+    ///
+    /// ## Consumer-Managed Element Lifecycle
+    ///
+    /// `Buffer.Slots` has no deinit for elements. Any consumer that
+    /// initializes element slots must deinitialize them before releasing
+    /// the buffer, typically via ``deinitialize(where:)``.
+    /// This is a capability boundary — the same contract as
+    /// `Storage.Split`.
+    ///
+    /// ## No Growth
+    ///
+    /// Fixed-capacity. Consumers requiring growth must allocate a new
+    /// `Buffer.Slots` and re-insert elements (e.g., hash table rehash).
+    public struct Slots<Metadata: BitwiseCopyable>: ~Copyable {
+        @usableFromInline
+        package var header: Header
+
+        @usableFromInline
+        package var storage: Storage<Element>.Split<Metadata>
+
+        @inlinable
+        package init(header: Header, storage: Storage<Element>.Split<Metadata>) {
+            self.header = header
+            self.storage = storage
+        }
+
+        // MARK: - Header
+
+        /// Pure state for a slots buffer.
+        ///
+        /// The header is trivial — just capacity. Unlike Linear (count),
+        /// Ring (head + count), or Slab (bitmap), Slots has no mutable
+        /// cursor state. All state lives in the metadata array.
+        public struct Header: Copyable, Sendable, Hashable {
+            /// Total slot capacity.
+            public let capacity: Index<Element>.Count
+
+            /// Creates a header with the specified capacity.
+            @inlinable
+            public init(capacity: Index<Element>.Count) {
+                self.capacity = capacity
             }
         }
     }
@@ -427,3 +523,8 @@ extension Buffer.Slab.Bounded.Indexed: @unchecked Sendable where Element: Sendab
 // extension Buffer.Slab.Inline: Copyable where Element: Copyable {}
 // extension Buffer.Slab.Inline: Swift.Sequence where Element: Copyable {}
 extension Buffer.Slab.Inline: Sendable where Element: Sendable {}
+
+// MARK: - Conditional Conformances (Slots)
+
+extension Buffer.Slots: Copyable where Element: Copyable {}
+extension Buffer.Slots: @unchecked Sendable where Element: Sendable {}

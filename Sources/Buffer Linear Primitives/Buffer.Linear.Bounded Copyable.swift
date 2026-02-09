@@ -20,6 +20,27 @@ extension Buffer.Linear.Bounded where Element: Copyable {
     }
 }
 
+// MARK: - Array Initialization
+
+extension Buffer.Linear.Bounded where Element: Copyable {
+
+    /// Creates a bounded linear buffer populated with the given elements.
+    ///
+    /// - Parameters:
+    ///   - elements: The elements to populate the buffer with.
+    ///   - capacity: The fixed capacity for the buffer.
+    /// - Throws: ``Error/capacityExceeded`` if `elements.count` exceeds `capacity`.
+    @inlinable
+    public init(_ elements: [Element], capacity: UInt) throws(Error) {
+        guard elements.count <= Int(capacity) else { throw .capacityExceeded }
+        var buffer = Self(minimumCapacity: .init(Cardinal(capacity)))
+        for element in elements {
+            _ = buffer.append(element)
+        }
+        self = buffer
+    }
+}
+
 // MARK: - Copy-on-Write
 
 extension Buffer.Linear.Bounded where Element: Copyable {

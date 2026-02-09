@@ -20,6 +20,25 @@ extension Buffer.Linear.Inline where Element: Copyable {
     }
 }
 
+// MARK: - Array Initialization
+
+extension Buffer.Linear.Inline where Element: Copyable {
+
+    /// Creates an inline linear buffer populated with the given elements.
+    ///
+    /// - Parameter elements: The elements to populate the buffer with.
+    /// - Throws: ``Error/capacityExceeded`` if `elements.count` exceeds `capacity`.
+    @inlinable
+    public init(_ elements: [Element]) throws(Error) {
+        guard elements.count <= capacity else { throw .capacityExceeded }
+        var buffer = Self()
+        for element in elements {
+            _ = buffer.append(element)
+        }
+        self = buffer
+    }
+}
+
 // MARK: - Sequence.Protocol
 
 extension Buffer.Linear.Inline: Sequence.`Protocol` where Element: Copyable {

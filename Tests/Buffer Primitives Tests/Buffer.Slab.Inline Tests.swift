@@ -68,7 +68,7 @@ struct SlabBoundedInlineTests {
 
     @Test
     func `drain removes all elements`() throws {
-        var buffer = Buffer<Int>.Slab.Inline<8>([10, 20, 30])
+        var buffer = try Buffer<Int>.Slab.Inline<8>([10, 20, 30])
         var drained: [Int] = []
         buffer.drain { drained.append($0) }
         #expect(buffer.isEmpty == true)
@@ -77,7 +77,7 @@ struct SlabBoundedInlineTests {
 
     @Test
     func `removeAll clears buffer`() throws {
-        var buffer = Buffer<Int>.Slab.Inline<8>([1, 2, 3])
+        var buffer = try Buffer<Int>.Slab.Inline<8>([1, 2, 3])
         buffer.removeAll()
         #expect(buffer.isEmpty == true)
         #expect(buffer.occupancy == 0)
@@ -94,7 +94,7 @@ struct SlabBoundedInlineTests {
 
     @Test
     func `Sequence.Protocol iteration (Copyable)`() throws {
-        let buffer = Buffer<Int>.Slab.Inline<8>([10, 20, 30])
+        let buffer = try Buffer<Int>.Slab.Inline<8>([10, 20, 30])
         var collected: [Int] = []
         var iter = buffer.makeIterator()
         while let value = iter.next() {

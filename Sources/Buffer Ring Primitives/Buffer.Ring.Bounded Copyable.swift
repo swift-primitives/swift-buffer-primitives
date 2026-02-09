@@ -19,8 +19,29 @@ extension Buffer.Ring.Bounded where Element: Copyable {
         let lastOffset = Index<Element>.Offset(
             fromZero: Index<Element>(__unchecked: (), Ordinal(lastCount.rawValue))
         )
-        let lastSlot = Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
+        let lastSlot = Index.Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
         return unsafe storage.pointer(at: lastSlot).pointee
+    }
+}
+
+// MARK: - Array Initialization
+
+extension Buffer.Ring.Bounded where Element: Copyable {
+
+    /// Creates a bounded ring buffer populated with the given elements.
+    ///
+    /// - Parameters:
+    ///   - elements: The elements to populate the buffer with.
+    ///   - capacity: The fixed capacity for the buffer.
+    /// - Throws: ``Error/capacityExceeded`` if `elements.count` exceeds `capacity`.
+    @inlinable
+    public init(_ elements: [Element], capacity: UInt) throws(Error) {
+        guard elements.count <= Int(capacity) else { throw .capacityExceeded }
+        var buffer = Self(minimumCapacity: .init(Cardinal(capacity)))
+        for element in elements {
+            _ = buffer.pushBack(element)
+        }
+        self = buffer
     }
 }
 

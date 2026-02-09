@@ -19,7 +19,7 @@ extension Buffer.Ring where Element: Copyable {
         let lastOffset = Index<Element>.Offset(
             fromZero: Index<Element>(__unchecked: (), Ordinal(lastCount.rawValue))
         )
-        let lastSlot = Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
+        let lastSlot = Index.Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
         return unsafe storage.pointer(at: lastSlot).pointee
     }
 

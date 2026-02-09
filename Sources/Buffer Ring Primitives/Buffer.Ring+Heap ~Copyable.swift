@@ -19,7 +19,7 @@ extension Buffer.Ring {
         let countOffset = Index<Element>.Offset(
             fromZero: Index<Element>(__unchecked: (), Ordinal(header.count.rawValue))
         )
-        let tail = Modular.advanced(header.head, by: countOffset, capacity: header.capacity)
+        let tail = Index.Modular.advanced(header.head, by: countOffset, capacity: header.capacity)
 
         storage.initialize(to: consume element, at: tail)
 
@@ -42,7 +42,7 @@ extension Buffer.Ring {
     ) -> Element {
         let element = storage.move(at: header.head)
 
-        header.head = Modular.successor(of: header.head, capacity: header.capacity)
+        header.head = Index.Modular.successor(of: header.head, capacity: header.capacity)
 
         let newCount = Cardinal(header.count.rawValue.rawValue &- 1)
         header.count = Index<Element>.Count(newCount)
@@ -64,7 +64,7 @@ extension Buffer.Ring {
         header: inout Header,
         storage: Storage<Element>.Heap
     ) {
-        header.head = Modular.predecessor(of: header.head, capacity: header.capacity)
+        header.head = Index.Modular.predecessor(of: header.head, capacity: header.capacity)
 
         storage.initialize(to: consume element, at: header.head)
 
@@ -88,7 +88,7 @@ extension Buffer.Ring {
         let lastOffset = Index<Element>.Offset(
             fromZero: Index<Element>(__unchecked: (), Ordinal(newCount.rawValue))
         )
-        let lastSlot = Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
+        let lastSlot = Index.Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
 
         let element = storage.move(at: lastSlot)
 
@@ -107,7 +107,7 @@ extension Buffer.Ring {
         forLogical logicalIndex: Index<Element>,
         header: Header
     ) -> Index<Element> {
-        Modular.physical(
+        Index.Modular.physical(
             forLogical: logicalIndex,
             head: header.head,
             capacity: header.capacity
