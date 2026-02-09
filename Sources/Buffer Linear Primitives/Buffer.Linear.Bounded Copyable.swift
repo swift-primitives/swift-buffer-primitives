@@ -44,6 +44,20 @@ extension Buffer.Linear.Bounded where Element: Copyable {
 // MARK: - Copy-on-Write
 
 extension Buffer.Linear.Bounded where Element: Copyable {
+    /// Ensures this buffer has unique storage, returning whether a copy was made.
+    ///
+    /// Use this to coordinate CoW across multiple components that share
+    /// a reference-counted buffer.
+    @inlinable
+    @discardableResult
+    public mutating func ensureUnique() -> Bool {
+        if !isKnownUniquelyReferenced(&storage) {
+            _makeUnique()
+            return true
+        }
+        return false
+    }
+
     /// Ensures unique ownership of storage for mutation.
     @usableFromInline
     mutating func _makeUnique() {
@@ -56,6 +70,19 @@ extension Buffer.Linear.Bounded where Element: Copyable {
             header.count = oldCount
             storage.initialization = header.initialization
         }
+    }
+}
+
+// MARK: - CoW-Safe Mutations
+
+extension Buffer.Linear.Bounded where Element: Copyable {
+    /// Removes and returns the element at the given index (CoW-safe).
+    ///
+    /// - Precondition: The index must be in bounds.
+    @inlinable
+    public mutating func remove(at index: Index<Element>) -> Element {
+        _makeUnique()
+        return Buffer.Linear.remove(at: index, header: &header, storage: storage)
     }
 }
 

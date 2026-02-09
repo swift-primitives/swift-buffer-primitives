@@ -51,6 +51,34 @@ extension Buffer.Linear where Element: ~Copyable {
         return element
     }
 
+    // MARK: Remove At
+
+    /// Removes and returns the element at the given index, shifting subsequent elements left.
+    ///
+    /// Uses `moveInitialize(from:count:)` (memmove semantics) for overlapping regions.
+    ///
+    /// - Precondition: `index < header.count` (in bounds).
+    @inlinable
+    public static func remove(
+        at index: Index<Element>,
+        header: inout Header,
+        storage: Storage<Element>.Heap
+    ) -> Element {
+        precondition(index < header.count, "Index out of bounds")
+        let element = storage.move(at: index)
+        let indexInt = Int(bitPattern: index.position)
+        let countInt = Int(bitPattern: header.count)
+        let followingCount = countInt - indexInt - 1
+        if followingCount > 0 {
+            let dst = unsafe storage.pointer(at: index)
+            let src = unsafe storage.pointer(at: index + .one)
+            unsafe dst.moveInitialize(from: src, count: followingCount)
+        }
+        header.count = header.count.subtract.saturating(.one)
+        storage.initialization = header.initialization
+        return element
+    }
+
     // MARK: Consume Back
 
     /// Removes and returns the last element (at slot `count - 1`).

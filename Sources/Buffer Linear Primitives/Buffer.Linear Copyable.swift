@@ -19,6 +19,20 @@ extension Buffer.Linear where Element: Copyable {
         return unsafe storage.pointer(at: lastIdx).pointee
     }
 
+    /// Ensures this buffer has unique storage, returning whether a copy was made.
+    ///
+    /// Use this to coordinate CoW across multiple components that share
+    /// a reference-counted buffer.
+    @inlinable
+    @discardableResult
+    public mutating func ensureUnique() -> Bool {
+        if !isKnownUniquelyReferenced(&storage) {
+            _makeUnique()
+            return true
+        }
+        return false
+    }
+
     /// Ensures this buffer has unique storage (copy-on-write).
     @inlinable
     mutating func _makeUnique() {
@@ -66,6 +80,15 @@ extension Buffer.Linear where Element: Copyable {
     public mutating func removeLast() -> Element {
         _makeUnique()
         return Buffer.Linear.consumeBack(header: &header, storage: storage)
+    }
+
+    /// Removes and returns the element at the given index (CoW-safe).
+    ///
+    /// - Precondition: The index must be in bounds.
+    @inlinable
+    public mutating func remove(at index: Index<Element>) -> Element {
+        _makeUnique()
+        return Buffer.Linear.remove(at: index, header: &header, storage: storage)
     }
 
     /// Removes all elements from the buffer (CoW-safe).

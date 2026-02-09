@@ -1,5 +1,17 @@
 public import Buffer_Primitives_Core
 
+// MARK: - Storage Uniqueness
+
+extension Buffer.Slots where Element: Copyable {
+    /// Returns `true` if the underlying storage is uniquely referenced.
+    ///
+    /// Use this to implement copy-on-write for types that embed `Buffer.Slots`.
+    @inlinable
+    public mutating func isStorageUnique() -> Bool {
+        isKnownUniquelyReferenced(&storage)
+    }
+}
+
 // MARK: - Payload Subscript (Copyable Only)
 
 extension Buffer.Slots where Element: Copyable {

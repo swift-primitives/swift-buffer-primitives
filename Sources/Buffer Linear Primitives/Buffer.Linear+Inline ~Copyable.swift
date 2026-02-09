@@ -49,6 +49,34 @@ extension Buffer.Linear where Element: ~Copyable {
         return element
     }
 
+    // MARK: Remove At (Inline)
+
+    /// Removes and returns the element at the given index, shifting subsequent elements left.
+    ///
+    /// Uses element-by-element move/initialize loop (Inline has no bulk range operations).
+    ///
+    /// - Precondition: `index < header.count` (in bounds).
+    @inlinable
+    public static func remove<let capacity: Int>(
+        at index: Index<Element>,
+        header: inout Header,
+        storage: inout Storage<Element>.Inline<capacity>
+    ) -> Element {
+        precondition(index < header.count, "Index out of bounds")
+        let element = storage.move(at: index)
+        var src = index + .one
+        var dst = index
+        let end = header.count.map(Ordinal.init)
+        while src < end {
+            let moved = storage.move(at: src)
+            storage.initialize(to: consume moved, at: dst)
+            src += .one
+            dst += .one
+        }
+        header.count = header.count.subtract.saturating(.one)
+        return element
+    }
+
     // MARK: Consume Back (Inline)
 
     /// Removes and returns the last element (at slot `count - 1`).

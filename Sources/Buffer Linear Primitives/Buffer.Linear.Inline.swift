@@ -54,6 +54,14 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
         Buffer.Linear.consumeBack(header: &header, storage: &storage)
     }
 
+    /// Removes and returns the element at the given index, shifting subsequent elements left.
+    ///
+    /// - Precondition: The index must be in bounds.
+    @inlinable
+    public mutating func remove(at index: Index<Element>) -> Element {
+        Buffer.Linear.remove(at: index, header: &header, storage: &storage)
+    }
+
     /// Removes all elements from the buffer.
     @inlinable
     public mutating func removeAll() {
