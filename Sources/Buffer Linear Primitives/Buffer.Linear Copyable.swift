@@ -15,7 +15,7 @@ extension Buffer.Linear where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var peekBack: Element {
-        let lastIdx = Index<Element>(__unchecked: (), Ordinal(header.count.rawValue.rawValue &- 1))
+        let lastIdx = header.count.subtract.saturating(.one).map(Ordinal.init)
         return unsafe storage.pointer(at: lastIdx).pointee
     }
 
@@ -79,7 +79,7 @@ extension Buffer.Linear where Element: Copyable {
     @inlinable
     public mutating func reserveCapacity(_ minimumCapacity: Index<Element>.Count) {
         _makeUnique()
-        if minimumCapacity.rawValue.rawValue > header.capacity.rawValue.rawValue {
+        if minimumCapacity > header.capacity {
             _growTo(minimumCapacity)
         }
     }

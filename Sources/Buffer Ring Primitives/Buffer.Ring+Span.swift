@@ -13,7 +13,7 @@ extension Buffer.Ring where Element: Copyable {
 
         /// Remaining elements in the current region.
         @usableFromInline
-        var remaining: UInt
+        var remaining: Index<Element>.Count
 
         /// Start of the second region (nil if no second region or already consumed).
         @usableFromInline
@@ -21,7 +21,7 @@ extension Buffer.Ring where Element: Copyable {
 
         /// Element count in the second region.
         @usableFromInline
-        var secondCount: UInt
+        var secondCount: Index<Element>.Count
 
         @inlinable
         internal init(
@@ -31,24 +31,21 @@ extension Buffer.Ring where Element: Copyable {
             switch header.initialization {
             case .empty:
                 unsafe self.base = storageBase
-                self.remaining = 0
+                self.remaining = .zero
                 unsafe self.secondBase = nil
-                self.secondCount = 0
+                self.secondCount = .zero
 
             case .one(let range):
-                let startOrd = range.lowerBound.rawValue.rawValue
-                unsafe self.base = storageBase + Int(bitPattern: startOrd)
-                self.remaining = range.count.rawValue.rawValue
+                unsafe self.base = storageBase + Int(bitPattern: range.lowerBound)
+                self.remaining = range.count
                 unsafe self.secondBase = nil
-                self.secondCount = 0
+                self.secondCount = .zero
 
             case .two(let first, let second):
-                let firstStart = first.lowerBound.rawValue.rawValue
-                unsafe self.base = storageBase + Int(bitPattern: firstStart)
-                self.remaining = first.count.rawValue.rawValue
-                let secondStart = second.lowerBound.rawValue.rawValue
-                unsafe self.secondBase = storageBase + Int(bitPattern: secondStart)
-                self.secondCount = second.count.rawValue.rawValue
+                unsafe self.base = storageBase + Int(bitPattern: first.lowerBound)
+                self.remaining = first.count
+                unsafe self.secondBase = storageBase + Int(bitPattern: second.lowerBound)
+                self.secondCount = second.count
             }
         }
 
@@ -56,22 +53,22 @@ extension Buffer.Ring where Element: Copyable {
 
         @inlinable
         public mutating func next() -> Element? {
-            if remaining > 0 {
+            if remaining > .zero {
                 let element = unsafe base.pointee
                 unsafe base = base + 1
-                remaining &-= 1
+                remaining = remaining.subtract.saturating(.one)
                 return element
             }
 
-            if let second = unsafe secondBase, secondCount > 0 {
+            if let second = unsafe secondBase, secondCount > .zero {
                 unsafe base = second
                 remaining = secondCount
                 unsafe secondBase = nil
-                secondCount = 0
+                secondCount = .zero
 
                 let element = unsafe base.pointee
                 unsafe base = base + 1
-                remaining &-= 1
+                remaining = remaining.subtract.saturating(.one)
                 return element
             }
 
@@ -83,24 +80,24 @@ extension Buffer.Ring where Element: Copyable {
         @inlinable
         @_lifetime(&self)
         public mutating func nextSpan(maximumCount: Cardinal) -> Span<Element> {
-            if remaining > 0 {
-                let take = Swift.min(maximumCount.rawValue, remaining)
+            if remaining > .zero {
+                let take = Index<Element>.Count.min(.init(maximumCount), remaining)
                 let span = unsafe Swift.Span(_unsafeStart: base, count: Int(bitPattern: take))
                 unsafe base = base + Int(bitPattern: take)
-                remaining &-= take
+                remaining = remaining.subtract.saturating(take)
                 return span
             }
 
-            if let second = unsafe secondBase, secondCount > 0 {
+            if let second = unsafe secondBase, secondCount > .zero {
                 unsafe base = second
                 remaining = secondCount
                 unsafe secondBase = nil
-                secondCount = 0
+                secondCount = .zero
 
-                let take = Swift.min(maximumCount.rawValue, remaining)
+                let take = Index<Element>.Count.min(.init(maximumCount), remaining)
                 let span = unsafe Swift.Span(_unsafeStart: base, count: Int(bitPattern: take))
                 unsafe base = base + Int(bitPattern: take)
-                remaining &-= take
+                remaining = remaining.subtract.saturating(take)
                 return span
             }
 
@@ -119,7 +116,7 @@ extension Buffer.Ring: Sequence.`Protocol`, Sequence.Borrowing.`Protocol` where 
 
 extension Buffer.Ring: Swift.Sequence where Element: Copyable {
     @inlinable
-    public var underestimatedCount: Int { Int(bitPattern: header.count.rawValue.rawValue) }
+    public var underestimatedCount: Int { Int(bitPattern: header.count) }
 }
 
 extension Buffer.Ring.Bounded where Element: Copyable {
@@ -131,13 +128,13 @@ extension Buffer.Ring.Bounded where Element: Copyable {
         var base: UnsafePointer<Element>
 
         @usableFromInline
-        var remaining: UInt
+        var remaining: Index<Element>.Count
 
         @usableFromInline
         var secondBase: UnsafePointer<Element>?
 
         @usableFromInline
-        var secondCount: UInt
+        var secondCount: Index<Element>.Count
 
         @inlinable
         internal init(
@@ -147,45 +144,42 @@ extension Buffer.Ring.Bounded where Element: Copyable {
             switch header.initialization {
             case .empty:
                 unsafe self.base = storageBase
-                self.remaining = 0
+                self.remaining = .zero
                 unsafe self.secondBase = nil
-                self.secondCount = 0
+                self.secondCount = .zero
 
             case .one(let range):
-                let startOrd = range.lowerBound.rawValue.rawValue
-                unsafe self.base = storageBase + Int(bitPattern: startOrd)
-                self.remaining = range.count.rawValue.rawValue
+                unsafe self.base = storageBase + Int(bitPattern: range.lowerBound)
+                self.remaining = range.count
                 unsafe self.secondBase = nil
-                self.secondCount = 0
+                self.secondCount = .zero
 
             case .two(let first, let second):
-                let firstStart = first.lowerBound.rawValue.rawValue
-                unsafe self.base = storageBase + Int(bitPattern: firstStart)
-                self.remaining = first.count.rawValue.rawValue
-                let secondStart = second.lowerBound.rawValue.rawValue
-                unsafe self.secondBase = storageBase + Int(bitPattern: secondStart)
-                self.secondCount = second.count.rawValue.rawValue
+                unsafe self.base = storageBase + Int(bitPattern: first.lowerBound)
+                self.remaining = first.count
+                unsafe self.secondBase = storageBase + Int(bitPattern: second.lowerBound)
+                self.secondCount = second.count
             }
         }
 
         @inlinable
         public mutating func next() -> Element? {
-            if remaining > 0 {
+            if remaining > .zero {
                 let element = unsafe base.pointee
                 unsafe base = base + 1
-                remaining &-= 1
+                remaining = remaining.subtract.saturating(.one)
                 return element
             }
 
-            if let second = unsafe secondBase, secondCount > 0 {
+            if let second = unsafe secondBase, secondCount > .zero {
                 unsafe base = second
                 remaining = secondCount
                 unsafe secondBase = nil
-                secondCount = 0
+                secondCount = .zero
 
                 let element = unsafe base.pointee
                 unsafe base = base + 1
-                remaining &-= 1
+                remaining = remaining.subtract.saturating(.one)
                 return element
             }
 
@@ -195,24 +189,24 @@ extension Buffer.Ring.Bounded where Element: Copyable {
         @inlinable
         @_lifetime(&self)
         public mutating func nextSpan(maximumCount: Cardinal) -> Span<Element> {
-            if remaining > 0 {
-                let take = Swift.min(maximumCount.rawValue, remaining)
+            if remaining > .zero {
+                let take = Index<Element>.Count.min(.init(maximumCount), remaining)
                 let span = unsafe Swift.Span(_unsafeStart: base, count: Int(bitPattern: take))
                 unsafe base = base + Int(bitPattern: take)
-                remaining &-= take
+                remaining = remaining.subtract.saturating(take)
                 return span
             }
 
-            if let second = unsafe secondBase, secondCount > 0 {
+            if let second = unsafe secondBase, secondCount > .zero {
                 unsafe base = second
                 remaining = secondCount
                 unsafe secondBase = nil
-                secondCount = 0
+                secondCount = .zero
 
-                let take = Swift.min(maximumCount.rawValue, remaining)
+                let take = Index<Element>.Count.min(.init(maximumCount), remaining)
                 let span = unsafe Swift.Span(_unsafeStart: base, count: Int(bitPattern: take))
                 unsafe base = base + Int(bitPattern: take)
-                remaining &-= take
+                remaining = remaining.subtract.saturating(take)
                 return span
             }
 
@@ -231,5 +225,5 @@ extension Buffer.Ring.Bounded: Sequence.`Protocol`, Sequence.Borrowing.`Protocol
 
 extension Buffer.Ring.Bounded: Swift.Sequence where Element: Copyable {
     @inlinable
-    public var underestimatedCount: Int { Int(bitPattern: header.count.rawValue.rawValue) }
+    public var underestimatedCount: Int { Int(bitPattern: header.count) }
 }

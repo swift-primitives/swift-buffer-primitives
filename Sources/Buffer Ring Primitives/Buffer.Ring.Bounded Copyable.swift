@@ -15,10 +15,8 @@ extension Buffer.Ring.Bounded where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var peekBack: Element {
-        let lastCount = Cardinal(header.count.rawValue.rawValue &- 1)
-        let lastOffset = Index<Element>.Offset(
-            fromZero: Index<Element>(__unchecked: (), Ordinal(lastCount.rawValue))
-        )
+        let lastIndex = header.count.subtract.saturating(.one).map(Ordinal.init)
+        let lastOffset = Index<Element>.Offset(fromZero: lastIndex)
         let lastSlot = Index.Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
         return unsafe storage.pointer(at: lastSlot).pointee
     }

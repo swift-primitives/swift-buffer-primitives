@@ -12,13 +12,13 @@ extension Buffer.Slab.Bounded {
         let storage: Storage<Element>.Heap
 
         @usableFromInline
-        var slots: [UInt]
+        var slots: [Bit.Index]
 
         @usableFromInline
         var position: Int
 
         @inlinable
-        package init(storage: Storage<Element>.Heap, slots: [UInt]) {
+        package init(storage: Storage<Element>.Heap, slots: [Bit.Index]) {
             self.storage = storage
             self.slots = slots
             self.position = 0
@@ -27,8 +27,7 @@ extension Buffer.Slab.Bounded {
         deinit {
             // Deinitialize any remaining elements not yet consumed
             while position < slots.count {
-                let storageIndex = Index<Element>(__unchecked: (), Ordinal(slots[position]))
-                storage.deinitialize(at: storageIndex)
+                storage.deinitialize(at: slots[position].retag(Element.self))
                 position += 1
             }
             storage.initialization = .empty
@@ -40,9 +39,9 @@ extension Buffer.Slab.Bounded: Sequence.Consume.`Protocol` {
     @inlinable
     public consuming func consume() -> Sequence.Consume.View<Element, ConsumeState> {
         // Snapshot occupied slot indices before consuming
-        var slots: [UInt] = []
+        var slots: [Bit.Index] = []
         header.bitmap.ones.forEach { bitIndex in
-            slots.append(bitIndex.rawValue.rawValue)
+            slots.append(bitIndex)
             header.bitmap[bitIndex] = false
         }
         let state = ConsumeState(storage: storage, slots: slots)
@@ -50,8 +49,7 @@ extension Buffer.Slab.Bounded: Sequence.Consume.`Protocol` {
             state: state,
             next: { state in
                 guard state.position < state.slots.count else { return nil }
-                let storageIndex = Index<Element>(__unchecked: (), Ordinal(state.slots[state.position]))
-                let element = state.storage.move(at: storageIndex)
+                let element = state.storage.move(at: state.slots[state.position].retag(Element.self))
                 state.position += 1
                 return element
             }

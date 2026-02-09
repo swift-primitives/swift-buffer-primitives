@@ -38,12 +38,13 @@ extension Buffer.Slab.Header.Static where Element: ~Copyable {
     /// Returns `nil` if all slots are full.
     @inlinable
     public func firstVacant(max: Bit.Index.Count) -> Bit.Index? {
-        let maxRaw = max.rawValue.rawValue
-        for i: UInt in 0 ..< maxRaw {
-            let idx = Bit.Index(__unchecked: (), Ordinal(i))
+        var idx: Bit.Index = .zero
+        let end = max.map(Ordinal.init)
+        while idx < end {
             if !bitmap[idx] {
                 return idx
             }
+            idx += .one
         }
         return nil
     }

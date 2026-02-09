@@ -59,14 +59,13 @@ extension Buffer.Slots where Element: ~Copyable {
     public func deinitialize(where isOccupied: (Metadata) -> Bool) {
         let laneField = storage.laneField
         let elementField = storage.elementField
-        var i: UInt = 0
-        let cap = header.capacity.rawValue.rawValue
-        while i < cap {
-            let slot = Index<Element>(__unchecked: (), Ordinal(i))
+        var slot: Index<Element> = .zero
+        let end = header.capacity.map(Ordinal.init)
+        while slot < end {
             if isOccupied(storage[laneField, at: slot]) {
                 storage.deinitialize(elementField, at: slot)
             }
-            i &+= 1
+            slot += .one
         }
     }
 }

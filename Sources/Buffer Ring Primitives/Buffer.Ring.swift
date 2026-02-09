@@ -87,7 +87,7 @@ extension Buffer.Ring {
     /// Ensures the buffer can hold at least `minimumCapacity` elements.
     @inlinable
     public mutating func reserveCapacity(_ minimumCapacity: Index<Element>.Count) {
-        if minimumCapacity.rawValue.rawValue > header.capacity.rawValue.rawValue {
+        if minimumCapacity > header.capacity {
             _growTo(minimumCapacity)
         }
     }
@@ -96,10 +96,11 @@ extension Buffer.Ring {
 
     @inlinable
     mutating func _grow() {
-        let newCap = Cardinal(header.capacity.rawValue.rawValue == 0
-            ? UInt(1)
-            : header.capacity.rawValue.rawValue &<< 1)
-        _growTo(Index<Element>.Count(newCap))
+        if header.capacity == .zero {
+            _growTo(.one)
+        } else {
+            _growTo(header.capacity.map { Cardinal($0.rawValue &<< 1) })
+        }
     }
 
     @inlinable
@@ -114,13 +115,14 @@ extension Buffer.Ring {
         case .two(let first, let second):
             storage.move(range: first, to: newStorage)
             // Move second range after first range's elements in destination
-            let offset = first.count.rawValue.rawValue
-            let secondCount = second.count.rawValue.rawValue
-            for i: UInt in 0 ..< secondCount {
-                let srcIdx = Index<Element>(__unchecked: (), Ordinal(second.lowerBound.rawValue.rawValue &+ i))
-                let dstIdx = Index<Element>(__unchecked: (), Ordinal(offset &+ i))
-                let element = storage.move(at: srcIdx)
-                newStorage.initialize(to: consume element, at: dstIdx)
+            var src = second.lowerBound
+            var dst = first.count.map(Ordinal.init)
+            let end = second.lowerBound + second.count
+            while src < end {
+                let element = storage.move(at: src)
+                newStorage.initialize(to: consume element, at: dst)
+                src += .one
+                dst += .one
             }
         }
         let oldCount = header.count

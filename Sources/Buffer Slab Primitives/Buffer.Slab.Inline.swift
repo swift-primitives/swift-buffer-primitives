@@ -30,7 +30,7 @@ extension Buffer.Slab.Inline {
     /// Whether all storage slots are occupied.
     @inlinable
     public var isFull: Bool {
-        header.occupancy.rawValue.rawValue >= UInt(wordCount)
+        header.occupancy >= Bit.Index.Count(UInt(wordCount))
     }
 
     /// Whether a specific slot is occupied.
@@ -46,8 +46,7 @@ extension Buffer.Slab.Inline {
     /// - Precondition: The slot is not occupied.
     @inlinable
     public mutating func insert(_ element: consuming Element, at slot: Bit.Index) {
-        let storageIndex = Index<Element>(__unchecked: (), Ordinal(slot.rawValue.rawValue))
-        storage.initialize(to: consume element, at: storageIndex)
+        storage.initialize(to: consume element, at: slot.retag(Element.self))
         header.bitmap[slot] = true
     }
 
@@ -56,8 +55,7 @@ extension Buffer.Slab.Inline {
     /// - Precondition: The slot is occupied.
     @inlinable
     public mutating func remove(at slot: Bit.Index) -> Element {
-        let storageIndex = Index<Element>(__unchecked: (), Ordinal(slot.rawValue.rawValue))
-        let element = storage.move(at: storageIndex)
+        let element = storage.move(at: slot.retag(Element.self))
         header.bitmap[slot] = false
         return element
     }
@@ -65,20 +63,21 @@ extension Buffer.Slab.Inline {
     /// Returns the first vacant slot, or `nil` if all slots are full.
     @inlinable
     public func firstVacant() -> Bit.Index? {
-        let max = Bit.Index.Count(Cardinal(UInt(wordCount)))
+        let max = Bit.Index.Count(UInt(wordCount))
         return header.firstVacant(max: max)
     }
 
     /// Removes all elements from the buffer.
     @inlinable
     public mutating func removeAll() {
-        for i: UInt in 0 ..< UInt(wordCount) {
-            let slot = Bit.Index(__unchecked: (), Ordinal(i))
+        var slot: Bit.Index = .zero
+        let end = Bit.Index.Count(UInt(wordCount)).map(Ordinal.init)
+        while slot < end {
             if header.bitmap[slot] {
-                let storageIndex = Index<Element>(__unchecked: (), Ordinal(i))
-                storage.deinitialize(at: storageIndex)
+                storage.deinitialize(at: slot.retag(Element.self))
                 header.bitmap[slot] = false
             }
+            slot += .one
         }
     }
 }
@@ -88,14 +87,15 @@ extension Buffer.Slab.Inline {
 extension Buffer.Slab.Inline: Sequence.Drain.`Protocol` {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
-        for i: UInt in 0 ..< UInt(wordCount) {
-            let slot = Bit.Index(__unchecked: (), Ordinal(i))
+        var slot: Bit.Index = .zero
+        let end = Bit.Index.Count(UInt(wordCount)).map(Ordinal.init)
+        while slot < end {
             if header.bitmap[slot] {
-                let storageIndex = Index<Element>(__unchecked: (), Ordinal(i))
-                let element = storage.move(at: storageIndex)
+                let element = storage.move(at: slot.retag(Element.self))
                 header.bitmap[slot] = false
                 body(consume element)
             }
+            slot += .one
         }
     }
 }

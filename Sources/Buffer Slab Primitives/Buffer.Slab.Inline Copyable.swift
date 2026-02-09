@@ -11,7 +11,7 @@ extension Buffer.Slab.Inline where Element: Copyable {
     /// - Precondition: The slot is occupied.
     @inlinable
     public func peek(at slot: Bit.Index) -> Element {
-        let storageIndex = Index<Element>(__unchecked: (), Ordinal(slot.rawValue.rawValue))
+        let storageIndex = slot.retag(Element.self)
         return unsafe storage.pointer(at: storageIndex).pointee
     }
 }
@@ -50,25 +50,25 @@ extension Buffer.Slab.Inline: Sequence.`Protocol` where Element: Copyable {
         @usableFromInline
         let bitmap: Bit.Vector.Static<wordCount>
         @usableFromInline
-        var current: UInt
+        var current: Bit.Index
         @usableFromInline
-        let max: UInt
+        let end: Bit.Index
 
         @inlinable
-        init(base: UnsafePointer<Element>, bitmap: Bit.Vector.Static<wordCount>, max: UInt) {
+        init(base: UnsafePointer<Element>, bitmap: Bit.Vector.Static<wordCount>, end: Bit.Index) {
             self.base = base
             self.bitmap = bitmap
-            self.current = 0
-            self.max = max
+            self.current = .zero
+            self.end = end
         }
 
         @inlinable
         public mutating func next() -> Element? {
-            while current < max {
-                let slot = Bit.Index(__unchecked: (), Ordinal(current))
-                current &+= 1
+            while current < end {
+                let slot = current
+                current += .one
                 if bitmap[slot] {
-                    return unsafe (base + Int(slot.rawValue.rawValue)).pointee
+                    return unsafe (base + Int(bitPattern: slot)).pointee
                 }
             }
             return nil
@@ -78,7 +78,8 @@ extension Buffer.Slab.Inline: Sequence.`Protocol` where Element: Copyable {
     @inlinable
     public borrowing func makeIterator() -> Iterator {
         let base = unsafe storage.pointer(at: .zero)
-        return Iterator(base: base, bitmap: header.bitmap, max: UInt(wordCount))
+        let end = Bit.Index.Count(UInt(wordCount)).map(Ordinal.init)
+        return Iterator(base: base, bitmap: header.bitmap, end: end)
     }
 }
 

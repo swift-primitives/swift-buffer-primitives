@@ -15,11 +15,10 @@ extension Buffer.Linear where Element: ~Copyable {
         header: inout Header,
         storage: Storage<Element>.Heap
     ) {
-        let slot = Index<Element>(__unchecked: (), Ordinal(header.count.rawValue))
+        let slot = header.count.map(Ordinal.init)
         storage.initialize(to: consume element, at: slot)
 
-        let newCount = Cardinal(header.count.rawValue.rawValue &+ 1)
-        header.count = Index<Element>.Count(newCount)
+        header.count = header.count.add.saturating(.one)
 
         storage.initialization = header.initialization
     }
@@ -38,16 +37,14 @@ extension Buffer.Linear where Element: ~Copyable {
     ) -> Element {
         let element = storage.move(at: .zero)
 
-        let oldCount = header.count.rawValue.rawValue
-        if oldCount > 1 {
+        if header.count > .one {
             // Shift elements [1, count) down to [0, count-1)
-            let shiftStart = Index<Element>(__unchecked: (), Ordinal(1))
-            let shiftEnd = Index<Element>(__unchecked: (), Ordinal(oldCount))
+            let shiftStart = Index<Element>.Count.one.map(Ordinal.init)
+            let shiftEnd = header.count.map(Ordinal.init)
             storage.move(range: shiftStart ..< shiftEnd, to: storage)
         }
 
-        let newCount = Cardinal(oldCount &- 1)
-        header.count = Index<Element>.Count(newCount)
+        header.count = header.count.subtract.saturating(.one)
 
         storage.initialization = header.initialization
 
@@ -64,12 +61,12 @@ extension Buffer.Linear where Element: ~Copyable {
         header: inout Header,
         storage: Storage<Element>.Heap
     ) -> Element {
-        let newCount = Cardinal(header.count.rawValue.rawValue &- 1)
-        let lastSlot = Index<Element>(__unchecked: (), Ordinal(newCount.rawValue))
+        let newCount = header.count.subtract.saturating(.one)
+        let lastSlot = newCount.map(Ordinal.init)
 
         let element = storage.move(at: lastSlot)
 
-        header.count = Index<Element>.Count(newCount)
+        header.count = newCount
 
         storage.initialization = header.initialization
 

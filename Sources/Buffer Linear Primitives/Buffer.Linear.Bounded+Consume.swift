@@ -24,11 +24,10 @@ extension Buffer.Linear.Bounded where Element: ~Copyable {
 
         deinit {
             // Deinitialize remaining elements from current position to count
-            let count = header.count.rawValue.rawValue
-            while position < count {
-                let idx = Index<Element>(__unchecked: (), Ordinal(position))
-                storage.deinitialize(at: idx)
-                position &+= 1
+            var current = Index<Element>.Count(Cardinal(position))
+            while current < header.count {
+                storage.deinitialize(at: current.map(Ordinal.init))
+                current = current.add.saturating(.one)
             }
             storage.initialization = .empty
         }
@@ -43,9 +42,9 @@ extension Buffer.Linear.Bounded: Sequence.Consume.`Protocol` where Element: Copy
         return Sequence.Consume.View(
             state: ConsumeState(header: h, storage: s),
             next: { state in
-                guard state.position < state.header.count.rawValue.rawValue else { return nil }
-                let idx = Index<Element>(__unchecked: (), Ordinal(state.position))
-                let element = state.storage.move(at: idx)
+                let current = Index<Element>.Count(Cardinal(state.position))
+                guard current < state.header.count else { return nil }
+                let element = state.storage.move(at: current.map(Ordinal.init))
                 state.position &+= 1
                 return element
             }

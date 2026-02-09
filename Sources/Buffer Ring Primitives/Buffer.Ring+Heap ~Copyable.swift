@@ -16,15 +16,12 @@ extension Buffer.Ring {
         header: inout Header,
         storage: Storage<Element>.Heap
     ) {
-        let countOffset = Index<Element>.Offset(
-            fromZero: Index<Element>(__unchecked: (), Ordinal(header.count.rawValue))
-        )
+        let countOffset = Index<Element>.Offset(fromZero: header.count.map(Ordinal.init))
         let tail = Index.Modular.advanced(header.head, by: countOffset, capacity: header.capacity)
 
         storage.initialize(to: consume element, at: tail)
 
-        let newCount = Cardinal(header.count.rawValue.rawValue &+ 1)
-        header.count = Index<Element>.Count(newCount)
+        header.count = header.count.add.saturating(.one)
 
         storage.initialization = header.initialization
     }
@@ -44,8 +41,7 @@ extension Buffer.Ring {
 
         header.head = Index.Modular.successor(of: header.head, capacity: header.capacity)
 
-        let newCount = Cardinal(header.count.rawValue.rawValue &- 1)
-        header.count = Index<Element>.Count(newCount)
+        header.count = header.count.subtract.saturating(.one)
 
         storage.initialization = header.initialization
 
@@ -68,8 +64,7 @@ extension Buffer.Ring {
 
         storage.initialize(to: consume element, at: header.head)
 
-        let newCount = Cardinal(header.count.rawValue.rawValue &+ 1)
-        header.count = Index<Element>.Count(newCount)
+        header.count = header.count.add.saturating(.one)
 
         storage.initialization = header.initialization
     }
@@ -84,15 +79,13 @@ extension Buffer.Ring {
         header: inout Header,
         storage: Storage<Element>.Heap
     ) -> Element {
-        let newCount = Cardinal(header.count.rawValue.rawValue &- 1)
-        let lastOffset = Index<Element>.Offset(
-            fromZero: Index<Element>(__unchecked: (), Ordinal(newCount.rawValue))
-        )
+        let newCount = header.count.subtract.saturating(.one)
+        let lastOffset = Index<Element>.Offset(fromZero: newCount.map(Ordinal.init))
         let lastSlot = Index.Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
 
         let element = storage.move(at: lastSlot)
 
-        header.count = Index<Element>.Count(newCount)
+        header.count = newCount
 
         storage.initialization = header.initialization
 

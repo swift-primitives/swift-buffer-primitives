@@ -15,10 +15,8 @@ extension Buffer.Ring.Inline where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var peekBack: Element {
-        let lastCount = Cardinal(header.count.rawValue.rawValue &- 1)
-        let lastOffset = Index<Element>.Offset(
-            fromZero: Index<Element>(__unchecked: (), Ordinal(lastCount.rawValue))
-        )
+        let lastIndex = header.count.subtract.saturating(.one).map(Ordinal.init)
+        let lastOffset = Index<Element>.Offset(fromZero: lastIndex)
         let lastSlot = Index.Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
         return unsafe storage.pointer(at: lastSlot).pointee
     }
@@ -56,29 +54,28 @@ extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
         @usableFromInline
         let header: Buffer.Ring.Header
         @usableFromInline
-        var current: UInt
+        var current: Index<Element>
         @usableFromInline
-        let total: UInt
+        let end: Index<Element>
 
         @inlinable
         init(base: UnsafePointer<Element>, header: Buffer.Ring.Header) {
             self.base = base
             self.header = header
-            self.current = 0
-            self.total = header.count.rawValue.rawValue
+            self.current = .zero
+            self.end = header.count.map(Ordinal.init)
         }
 
         @inlinable
         public mutating func next() -> Element? {
-            guard current < total else { return nil }
-            let logicalIdx = Index<Element>(__unchecked: (), Ordinal(current))
+            guard current < end else { return nil }
             let physicalIdx = Index.Modular.physical(
-                forLogical: logicalIdx,
+                forLogical: current,
                 head: header.head,
                 capacity: header.capacity
             )
-            current &+= 1
-            return unsafe (base + Int(physicalIdx.ordinal.rawValue)).pointee
+            current += .one
+            return unsafe (base + Int(bitPattern: physicalIdx)).pointee
         }
     }
 

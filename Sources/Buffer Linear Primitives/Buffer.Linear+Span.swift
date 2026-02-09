@@ -9,10 +9,10 @@ extension Buffer.Linear where Element: Copyable {
         var base: UnsafePointer<Element>
 
         @usableFromInline
-        var remaining: UInt
+        var remaining: Index<Element>.Count
 
         @inlinable
-        internal init(base: UnsafePointer<Element>, count: UInt) {
+        internal init(base: UnsafePointer<Element>, count: Index<Element>.Count) {
             unsafe self.base = base
             self.remaining = count
         }
@@ -21,10 +21,10 @@ extension Buffer.Linear where Element: Copyable {
 
         @inlinable
         public mutating func next() -> Element? {
-            guard remaining > 0 else { return nil }
+            guard remaining > .zero else { return nil }
             let element = unsafe base.pointee
             unsafe base = base + 1
-            remaining &-= 1
+            remaining = remaining.subtract.saturating(.one)
             return element
         }
 
@@ -33,13 +33,13 @@ extension Buffer.Linear where Element: Copyable {
         @inlinable
         @_lifetime(&self)
         public mutating func nextSpan(maximumCount: Cardinal) -> Swift.Span<Element> {
-            let take = Swift.min(maximumCount.rawValue, remaining)
-            guard take > 0 else {
+            let take = Index<Element>.Count.min(.init(maximumCount), remaining)
+            guard take > .zero else {
                 return unsafe Swift.Span(_unsafeStart: base, count: 0)
             }
             let span = unsafe Swift.Span(_unsafeStart: base, count: Int(bitPattern: take))
             unsafe base = base + Int(bitPattern: take)
-            remaining &-= take
+            remaining = remaining.subtract.saturating(take)
             return span
         }
     }
@@ -49,13 +49,13 @@ extension Buffer.Linear: Sequence.`Protocol`, Sequence.Borrowing.`Protocol` wher
     @inlinable
     public borrowing func makeIterator() -> Iterator {
         let base = unsafe UnsafePointer(storage.pointer(at: .zero))
-        return unsafe Iterator(base: base, count: header.count.rawValue.rawValue)
+        return unsafe Iterator(base: base, count: header.count)
     }
 }
 
 extension Buffer.Linear: Swift.Sequence where Element: Copyable {
     @inlinable
-    public var underestimatedCount: Int { Int(bitPattern: header.count.rawValue.rawValue) }
+    public var underestimatedCount: Int { Int(bitPattern: header.count) }
 }
 
 extension Buffer.Linear.Bounded where Element: Copyable {
@@ -67,33 +67,33 @@ extension Buffer.Linear.Bounded where Element: Copyable {
         var base: UnsafePointer<Element>
 
         @usableFromInline
-        var remaining: UInt
+        var remaining: Index<Element>.Count
 
         @inlinable
-        internal init(base: UnsafePointer<Element>, count: UInt) {
+        internal init(base: UnsafePointer<Element>, count: Index<Element>.Count) {
             unsafe self.base = base
             self.remaining = count
         }
 
         @inlinable
         public mutating func next() -> Element? {
-            guard remaining > 0 else { return nil }
+            guard remaining > .zero else { return nil }
             let element = unsafe base.pointee
             unsafe base = base + 1
-            remaining &-= 1
+            remaining = remaining.subtract.saturating(.one)
             return element
         }
 
         @inlinable
         @_lifetime(&self)
         public mutating func nextSpan(maximumCount: Cardinal) -> Swift.Span<Element> {
-            let take = Swift.min(maximumCount.rawValue, remaining)
-            guard take > 0 else {
+            let take = Index<Element>.Count.min(.init(maximumCount), remaining)
+            guard take > .zero else {
                 return unsafe Swift.Span(_unsafeStart: base, count: 0)
             }
             let span = unsafe Swift.Span(_unsafeStart: base, count: Int(bitPattern: take))
             unsafe base = base + Int(bitPattern: take)
-            remaining &-= take
+            remaining = remaining.subtract.saturating(take)
             return span
         }
     }
@@ -103,11 +103,11 @@ extension Buffer.Linear.Bounded: Sequence.`Protocol`, Sequence.Borrowing.`Protoc
     @inlinable
     public borrowing func makeIterator() -> Iterator {
         let base = unsafe UnsafePointer(storage.pointer(at: .zero))
-        return unsafe Iterator(base: base, count: header.count.rawValue.rawValue)
+        return unsafe Iterator(base: base, count: header.count)
     }
 }
 
 extension Buffer.Linear.Bounded: Swift.Sequence where Element: Copyable {
     @inlinable
-    public var underestimatedCount: Int { Int(bitPattern: header.count.rawValue.rawValue) }
+    public var underestimatedCount: Int { Int(bitPattern: header.count) }
 }

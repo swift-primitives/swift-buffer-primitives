@@ -15,7 +15,7 @@ extension Buffer.Linear.Bounded where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var peekBack: Element {
-        let lastIdx = Index<Element>(__unchecked: (), Ordinal(header.count.rawValue.rawValue &- 1))
+        let lastIdx = header.count.subtract.saturating(.one).map(Ordinal.init)
         return unsafe storage.pointer(at: lastIdx).pointee
     }
 }
@@ -88,7 +88,7 @@ extension Buffer.Linear.Bounded where Element: Copyable {
         @inlinable
         mutating get {
             _makeUnique()
-            let count = Int(bitPattern: header.count.rawValue.rawValue)
+            let count = Int(bitPattern: header.count)
             let span = unsafe MutableSpan(_unsafeStart: unsafe storage.pointer(at: .zero), count: count)
             return unsafe _overrideLifetime(span, mutating: &self)
         }
@@ -96,7 +96,7 @@ extension Buffer.Linear.Bounded where Element: Copyable {
         @inlinable
         _modify {
             _makeUnique()
-            let count = Int(bitPattern: header.count.rawValue.rawValue)
+            let count = Int(bitPattern: header.count)
             var span = unsafe MutableSpan(_unsafeStart: unsafe storage.pointer(at: .zero), count: count)
             yield &span
         }

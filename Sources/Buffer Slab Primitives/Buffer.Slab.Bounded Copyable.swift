@@ -10,7 +10,7 @@ extension Buffer.Slab.Bounded where Element: Copyable {
     /// - Precondition: The slot is occupied.
     @inlinable
     public func peek(at slot: Bit.Index) -> Element {
-        let storageIndex = Index<Element>(__unchecked: (), Ordinal(slot.rawValue.rawValue))
+        let storageIndex = slot.retag(Element.self)
         return unsafe storage.pointer(at: storageIndex).pointee
     }
 }

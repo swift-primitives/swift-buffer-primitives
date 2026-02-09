@@ -15,7 +15,7 @@ extension Buffer.Linear.Inline where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var peekBack: Element {
-        let lastIdx = Index<Element>(__unchecked: (), Ordinal(header.count.rawValue.rawValue &- 1))
+        let lastIdx = header.count.subtract.saturating(.one).map(Ordinal.init)
         return unsafe storage.pointer(at: lastIdx).pointee
     }
 }
@@ -51,22 +51,22 @@ extension Buffer.Linear.Inline: Sequence.`Protocol` where Element: Copyable {
         @usableFromInline
         let base: UnsafePointer<Element>
         @usableFromInline
-        var current: UInt
+        var current: Index<Element>
         @usableFromInline
-        let total: UInt
+        let end: Index<Element>
 
         @inlinable
-        init(base: UnsafePointer<Element>, total: UInt) {
+        init(base: UnsafePointer<Element>, end: Index<Element>) {
             unsafe self.base = base
-            self.current = 0
-            self.total = total
+            self.current = .zero
+            self.end = end
         }
 
         @inlinable
         public mutating func next() -> Element? {
-            guard current < total else { return nil }
-            let element = unsafe (base + Int(current)).pointee
-            current &+= 1
+            guard current < end else { return nil }
+            let element = unsafe (base + Int(bitPattern: current)).pointee
+            current += .one
             return element
         }
     }
@@ -74,7 +74,7 @@ extension Buffer.Linear.Inline: Sequence.`Protocol` where Element: Copyable {
     @inlinable
     public borrowing func makeIterator() -> Iterator {
         let base = unsafe storage.pointer(at: .zero)
-        return unsafe Iterator(base: base, total: header.count.rawValue.rawValue)
+        return unsafe Iterator(base: base, end: header.count.map(Ordinal.init))
     }
 }
 

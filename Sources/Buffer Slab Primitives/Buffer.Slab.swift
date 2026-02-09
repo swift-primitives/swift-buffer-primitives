@@ -11,7 +11,7 @@ extension Buffer.Slab {
     public init(minimumCapacity: Index<Element>.Count) {
         let storage = Storage<Element>.Heap.create(minimumCapacity: minimumCapacity)
         let actualCapacity = storage.slotCapacity
-        let bitCapacity = Bit.Index.Count(Cardinal(actualCapacity.rawValue.rawValue))
+        let bitCapacity = actualCapacity.retag(Bit.self)
         self.init(
             header: Buffer<Element>.Slab.Header(capacity: bitCapacity),
             storage: storage
@@ -67,7 +67,7 @@ extension Buffer.Slab: Sequence.Drain.`Protocol` {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         header.bitmap.ones.forEach { bitIndex in
-            let storageIndex = Index<Element>(__unchecked: (), Ordinal(bitIndex.rawValue.rawValue))
+            let storageIndex = bitIndex.retag(Element.self)
             let element = storage.move(at: storageIndex)
             header.bitmap[bitIndex] = false
             body(consume element)

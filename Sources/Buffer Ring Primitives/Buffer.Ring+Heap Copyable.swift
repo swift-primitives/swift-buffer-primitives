@@ -19,13 +19,14 @@ extension Buffer.Ring where Element: Copyable {
             source.copy(range: range, to: destination)
         case .two(let first, let second):
             source.copy(range: first, to: destination)
-            let offset = first.count.rawValue.rawValue
-            let secondCount = second.count.rawValue.rawValue
-            for i: UInt in 0 ..< secondCount {
-                let srcIdx = Index<Element>(__unchecked: (), Ordinal(second.lowerBound.rawValue.rawValue &+ i))
-                let dstIdx = Index<Element>(__unchecked: (), Ordinal(offset &+ i))
-                let value: Element = unsafe source.pointer(at: srcIdx).pointee
-                destination.initialize(to: value, at: dstIdx)
+            var src = second.lowerBound
+            var dst = first.count.map(Ordinal.init)
+            let end = second.lowerBound + second.count
+            while src < end {
+                let value: Element = unsafe source.pointer(at: src).pointee
+                destination.initialize(to: value, at: dst)
+                src += .one
+                dst += .one
             }
         }
     }

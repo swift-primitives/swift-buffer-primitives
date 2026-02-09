@@ -13,11 +13,10 @@ extension Buffer.Linear where Element: ~Copyable {
         header: inout Header,
         storage: inout Storage<Element>.Inline<capacity>
     ) {
-        let slot = Index<Element>(__unchecked: (), Ordinal(header.count.rawValue))
+        let slot = header.count.map(Ordinal.init)
         storage.initialize(to: consume element, at: slot)
 
-        let newCount = Cardinal(header.count.rawValue.rawValue &+ 1)
-        header.count = Index<Element>.Count(newCount)
+        header.count = header.count.add.saturating(.one)
     }
 
     // MARK: Consume Front (Inline)
@@ -32,19 +31,20 @@ extension Buffer.Linear where Element: ~Copyable {
     ) -> Element {
         let element = storage.move(at: .zero)
 
-        let oldCount = header.count.rawValue.rawValue
-        if oldCount > 1 {
+        if header.count > .one {
             // Shift elements [1, count) down to [0, count-1)
-            for i: UInt in 1 ..< oldCount {
-                let srcSlot = Index<Element>(__unchecked: (), Ordinal(i))
-                let dstSlot = Index<Element>(__unchecked: (), Ordinal(i &- 1))
-                let moved = storage.move(at: srcSlot)
-                storage.initialize(to: consume moved, at: dstSlot)
+            var src = Index<Element>.Count.one.map(Ordinal.init)
+            var dst: Index<Element> = .zero
+            let end = header.count.map(Ordinal.init)
+            while src < end {
+                let moved = storage.move(at: src)
+                storage.initialize(to: consume moved, at: dst)
+                src += .one
+                dst += .one
             }
         }
 
-        let newCount = Cardinal(oldCount &- 1)
-        header.count = Index<Element>.Count(newCount)
+        header.count = header.count.subtract.saturating(.one)
 
         return element
     }
@@ -59,12 +59,12 @@ extension Buffer.Linear where Element: ~Copyable {
         header: inout Header,
         storage: inout Storage<Element>.Inline<capacity>
     ) -> Element {
-        let newCount = Cardinal(header.count.rawValue.rawValue &- 1)
-        let lastSlot = Index<Element>(__unchecked: (), Ordinal(newCount.rawValue))
+        let newCount = header.count.subtract.saturating(.one)
+        let lastSlot = newCount.map(Ordinal.init)
 
         let element = storage.move(at: lastSlot)
 
-        header.count = Index<Element>.Count(newCount)
+        header.count = newCount
 
         return element
     }

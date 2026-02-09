@@ -8,9 +8,7 @@ extension Buffer.Slab.Bounded.Indexed {
     /// Creates an indexed bounded slab buffer with at least the given capacity.
     @inlinable
     public init(minimumCapacity: Index<Tag>.Count) {
-        let storageCount = Index<Element>.Count(
-            Cardinal(minimumCapacity.rawValue.rawValue)
-        )
+        let storageCount = minimumCapacity.retag(Element.self)
         self.init(
             _base: Buffer.Slab.Bounded(minimumCapacity: storageCount)
         )
@@ -19,8 +17,7 @@ extension Buffer.Slab.Bounded.Indexed {
     /// The number of occupied slots.
     @inlinable
     public var occupancy: Index<Tag>.Count {
-        let raw = _base.occupancy.rawValue.rawValue
-        return Index<Tag>.Count(Cardinal(raw))
+        return _base.occupancy.retag(Tag.self)
     }
 
     /// Whether no slots are occupied.
@@ -34,7 +31,7 @@ extension Buffer.Slab.Bounded.Indexed {
     /// Whether a specific slot is occupied.
     @inlinable
     public func isOccupied(at index: Index<Tag>) -> Bool {
-        let bitIndex = Bit.Index(__unchecked: (), Ordinal(index.rawValue.rawValue))
+        let bitIndex = index.retag(Bit.self)
         return _base.isOccupied(at: bitIndex)
     }
 
@@ -45,7 +42,7 @@ extension Buffer.Slab.Bounded.Indexed {
     /// - Precondition: The slot is not occupied.
     @inlinable
     public mutating func insert(_ element: consuming Element, at index: Index<Tag>) {
-        let bitIndex = Bit.Index(__unchecked: (), Ordinal(index.rawValue.rawValue))
+        let bitIndex = index.retag(Bit.self)
         _base.insert(consume element, at: bitIndex)
     }
 
@@ -54,7 +51,7 @@ extension Buffer.Slab.Bounded.Indexed {
     /// - Precondition: The slot is occupied.
     @inlinable
     public mutating func remove(at index: Index<Tag>) -> Element {
-        let bitIndex = Bit.Index(__unchecked: (), Ordinal(index.rawValue.rawValue))
+        let bitIndex = index.retag(Bit.self)
         return _base.remove(at: bitIndex)
     }
 
@@ -62,7 +59,7 @@ extension Buffer.Slab.Bounded.Indexed {
     @inlinable
     public func firstVacant() -> Index<Tag>? {
         guard let bitIndex = _base.firstVacant() else { return nil }
-        return Index<Tag>(Ordinal(bitIndex.rawValue.rawValue))
+        return bitIndex.retag(Tag.self)
     }
 
     /// Removes all elements from the buffer.

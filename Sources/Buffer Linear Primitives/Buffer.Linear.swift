@@ -72,7 +72,7 @@ extension Buffer.Linear where Element: ~Copyable {
     /// Ensures the buffer can hold at least `minimumCapacity` elements.
     @inlinable
     public mutating func reserveCapacity(_ minimumCapacity: Index<Element>.Count) {
-        if minimumCapacity.rawValue.rawValue > header.capacity.rawValue.rawValue {
+        if minimumCapacity > header.capacity {
             _growTo(minimumCapacity)
         }
     }
@@ -81,10 +81,11 @@ extension Buffer.Linear where Element: ~Copyable {
 
     @inlinable
     mutating func _grow() {
-        let newCap = Cardinal(header.capacity.rawValue.rawValue == 0
-            ? UInt(1)
-            : header.capacity.rawValue.rawValue &<< 1)
-        _growTo(Index<Element>.Count(newCap))
+        if header.capacity == .zero {
+            _growTo(.one)
+        } else {
+            _growTo(header.capacity.map { Cardinal($0.rawValue &<< 1) })
+        }
     }
 
     @inlinable

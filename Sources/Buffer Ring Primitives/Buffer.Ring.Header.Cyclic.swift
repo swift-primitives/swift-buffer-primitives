@@ -14,7 +14,7 @@ extension Buffer.Ring.Header.Cyclic where Element: ~Copyable {
 
     /// Whether the buffer is at capacity.
     @inlinable
-    public var isFull: Bool { count.rawValue.rawValue == UInt(capacity) }
+    public var isFull: Bool { count == Self.slotCapacity }
 
     /// The total slot capacity as `Index<Element>.Count` (compile-time constant).
     @inlinable
