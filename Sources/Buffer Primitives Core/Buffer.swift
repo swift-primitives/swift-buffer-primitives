@@ -224,6 +224,31 @@ public enum Buffer<Element: ~Copyable> {
             }
         }
 
+        // MARK: - Small (Inline + Heap Spill)
+
+        /// A linear buffer that starts with inline storage and spills to heap
+        /// when capacity is exceeded.
+        ///
+        /// Elements are stored contiguously at slots `0 ..< count`.
+        /// In inline mode, uses `Storage<Element>.Inline<inlineCapacity>`.
+        /// After spill, uses `Storage<Element>.Heap` (growable).
+        public struct Small<let inlineCapacity: Int>: ~Copyable {
+            @usableFromInline
+            package var _inlineBuffer: Inline<inlineCapacity>
+
+            @usableFromInline
+            package var _heapBuffer: Buffer<Element>.Linear?
+
+            @inlinable
+            package init(
+                _inlineBuffer: consuming Inline<inlineCapacity>,
+                _heapBuffer: consuming Buffer<Element>.Linear?
+            ) {
+                self._inlineBuffer = _inlineBuffer
+                self._heapBuffer = _heapBuffer
+            }
+        }
+
         // MARK: - Header
 
         /// Pure cursor state for a linear (contiguous) buffer.
@@ -505,6 +530,10 @@ extension Buffer.Linear.Bounded: @unchecked Sendable where Element: Sendable {}
 // extension Buffer.Linear.Inline: Copyable where Element: Copyable {}
 // extension Buffer.Linear.Inline: Swift.Sequence where Element: Copyable {}
 extension Buffer.Linear.Inline: Sendable where Element: Sendable {}
+
+// Cannot conform to Copyable: contains Inline which uses @_rawLayout (INV-INLINE-004a).
+// extension Buffer.Linear.Small: Copyable where Element: Copyable {}
+extension Buffer.Linear.Small: Sendable where Element: Sendable {}
 
 // MARK: - Conditional Conformances (Slab)
 
