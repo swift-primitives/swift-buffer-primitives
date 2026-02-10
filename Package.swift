@@ -46,6 +46,7 @@ let package = Package(
         .package(path: "../swift-cyclic-index-primitives"),
         .package(path: "../swift-memory-primitives"),
         .package(path: "../swift-bit-vector-primitives"),
+        .package(path: "../swift-finite-primitives"),
         .package(path: "../swift-sequence-primitives"),
     ],
     targets: [
@@ -72,6 +73,7 @@ let package = Package(
             name: "Buffer Linear Primitives",
             dependencies: [
                 "Buffer Primitives Core",
+                .product(name: "Finite Primitives", package: "swift-finite-primitives"),
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
