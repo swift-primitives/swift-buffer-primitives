@@ -124,6 +124,58 @@ public enum Buffer<Element: ~Copyable> {
                 self._inlineBuffer = _inlineBuffer
                 self._heapBuffer = _heapBuffer
             }
+
+            /// A snapshot of small ring buffer cursor state for save/restore.
+            ///
+            /// Tracks whether the buffer was heap-backed at checkpoint time
+            /// so restore can route to the correct storage.
+            public struct Checkpoint: Copyable, Sendable, Comparable {
+                @usableFromInline
+                package let head: Index<Element>
+
+                @usableFromInline
+                package let count: Index<Element>.Count
+
+                @usableFromInline
+                package let wasOnHeap: Bool
+
+                @inlinable
+                package init(head: Index<Element>, count: Index<Element>.Count, wasOnHeap: Bool) {
+                    self.head = head
+                    self.count = count
+                    self.wasOnHeap = wasOnHeap
+                }
+
+                @inlinable
+                public static func < (lhs: Self, rhs: Self) -> Bool {
+                    lhs.count > rhs.count
+                }
+            }
+        }
+
+        // MARK: - Checkpoint
+
+        /// A snapshot of ring buffer cursor state for save/restore.
+        ///
+        /// Captures head and count at a point in time. Restore replays
+        /// the cursor state without modifying storage contents.
+        public struct Checkpoint: Copyable, Sendable, Comparable {
+            @usableFromInline
+            package let head: Index<Element>
+
+            @usableFromInline
+            package let count: Index<Element>.Count
+
+            @inlinable
+            package init(head: Index<Element>, count: Index<Element>.Count) {
+                self.head = head
+                self.count = count
+            }
+
+            @inlinable
+            public static func < (lhs: Self, rhs: Self) -> Bool {
+                lhs.count > rhs.count
+            }
         }
 
         // MARK: - Header

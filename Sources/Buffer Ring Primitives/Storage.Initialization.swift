@@ -31,6 +31,24 @@ extension Storage.Initialization where Element: ~Copyable {
     }
 }
 
+// MARK: - forEach per [IMPL-031]
+
+extension Storage.Initialization where Element: ~Copyable {
+    /// Calls `body` with each initialized range.
+    ///
+    /// Per [IMPL-031], enums with uniform operations provide `.forEach`.
+    @inlinable
+    public func forEach(_ body: (Range<Index<Element>>) -> Void) {
+        switch self {
+        case .empty: break
+        case .one(let range): body(range)
+        case .two(let first, let second):
+            body(first)
+            body(second)
+        }
+    }
+}
+
 extension Storage.Initialization where Element: ~Copyable {
     @inlinable
     public init<let capacity: Int>(

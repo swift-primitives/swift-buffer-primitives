@@ -186,6 +186,33 @@ extension Buffer.Ring.Small where Element: Copyable {
     }
 }
 
+// MARK: - Subscript (Copyable with CoW)
+
+extension Buffer.Ring.Small where Element: Copyable {
+    /// Accesses the element at the given logical index with copy-on-write semantics.
+    ///
+    /// - Parameter index: The logical index of the element to access.
+    @inlinable
+    public subscript(index: Index<Element>) -> Element {
+        _read {
+            switch _heapBuffer {
+            case .some(let heap):
+                yield heap[index]
+            case .none:
+                yield _inlineBuffer[index]
+            }
+        }
+        _modify {
+            if _heapBuffer != nil {
+                _heapBuffer!._makeUnique()
+                yield &_heapBuffer![index]
+            } else {
+                yield &_inlineBuffer[index]
+            }
+        }
+    }
+}
+
 // MARK: - Property.View (.forEach)
 
 extension Buffer.Ring.Small where Element: Copyable {
