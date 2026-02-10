@@ -30,12 +30,14 @@ public enum Buffer<Element: ~Copyable> {
     /// `storage.initialization` is kept in sync with header state,
     /// so `Storage.Heap`'s own deinit handles cleanup automatically.
     public struct Ring: ~Copyable {
-        public var header: Header
+        @usableFromInline
+        package var header: Header
 
-        public var storage: Storage<Element>.Heap
+        @usableFromInline
+        package var storage: Storage<Element>.Heap
 
         @inlinable
-        public init(header: Header, storage: Storage<Element>.Heap) {
+        package init(header: Header, storage: Storage<Element>.Heap) {
             self.header = header
             self.storage = storage
         }
@@ -50,12 +52,14 @@ public enum Buffer<Element: ~Copyable> {
         /// `storage.initialization` is kept in sync with header state,
         /// so `Storage.Heap`'s own deinit handles cleanup automatically.
         public struct Bounded: ~Copyable {
-            public var header: Header
+            @usableFromInline
+            package var header: Header
 
-            public var storage: Storage<Element>.Heap
+            @usableFromInline
+            package var storage: Storage<Element>.Heap
 
             @inlinable
-            public init(header: Header, storage: Storage<Element>.Heap) {
+            package init(header: Header, storage: Storage<Element>.Heap) {
                 self.header = header
                 self.storage = storage
             }
@@ -78,12 +82,14 @@ public enum Buffer<Element: ~Copyable> {
         /// deinitialize on drop when Element is Copyable. When Element is
         /// ~Copyable, deinit handles cleanup.
         public struct Inline<let capacity: Int>: ~Copyable {
-            public var header: Header
+            @usableFromInline
+            package var header: Header
 
-            public var storage: Storage<Element>.Inline<capacity>
+            @usableFromInline
+            package var storage: Storage<Element>.Inline<capacity>
 
             @inlinable
-            public init(header: Header, storage: consuming Storage<Element>.Inline<capacity>) {
+            package init(header: Header, storage: consuming Storage<Element>.Inline<capacity>) {
                 self.header = header
                 self.storage = storage
             }
@@ -104,12 +110,14 @@ public enum Buffer<Element: ~Copyable> {
         /// ring-buffer wrap-around. After spill, elements are linearized into
         /// a growable `Buffer<Element>.Ring`.
         public struct Small<let inlineCapacity: Int>: ~Copyable {
-            public var _inlineBuffer: Inline<inlineCapacity>
+            @usableFromInline
+            package var _inlineBuffer: Inline<inlineCapacity>
 
-            public var _heapBuffer: Buffer<Element>.Ring?
+            @usableFromInline
+            package var _heapBuffer: Buffer<Element>.Ring?
 
             @inlinable
-            public init(
+            package init(
                 _inlineBuffer: consuming Inline<inlineCapacity>,
                 _heapBuffer: consuming Buffer<Element>.Ring?
             ) {

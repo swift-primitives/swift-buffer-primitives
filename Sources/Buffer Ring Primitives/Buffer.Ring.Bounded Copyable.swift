@@ -1,22 +1,3 @@
-// MARK: - Copy-on-Write for Ring.Bounded
-
-extension Buffer.Ring.Bounded where Element: Copyable {
-
-    /// Ensures this buffer has unique storage (copy-on-write).
-    @inlinable
-    public mutating func _makeUnique() {
-        if !isKnownUniquelyReferenced(&storage) {
-            let newStorage = Storage<Element>.Heap.create(minimumCapacity: header.capacity)
-            Buffer.Ring.copy(header: header, source: storage, to: newStorage)
-            let oldCount = header.count
-            storage = newStorage
-            header = .init(capacity: newStorage.slotCapacity)
-            header.count = oldCount
-            storage.initialization = header.initialization
-        }
-    }
-}
-
 // MARK: - Copyable Conformances for Ring.Bounded
 
 extension Buffer.Ring.Bounded where Element: Copyable {
