@@ -71,6 +71,14 @@ extension Buffer.Linear where Element: ~Copyable {
         Buffer.Linear.remove(at: index, header: &header, storage: storage)
     }
 
+    /// Swaps the elements at positions `i` and `j` in-place.
+    ///
+    /// - Precondition: Both indices must be in bounds.
+    @inlinable
+    public mutating func swap(at i: Index<Element>, with j: Index<Element>) {
+        Buffer.Linear.swap(at: i, with: j, storage: storage)
+    }
+
     /// Removes all elements from the buffer.
     @inlinable
     public mutating func removeAll() {

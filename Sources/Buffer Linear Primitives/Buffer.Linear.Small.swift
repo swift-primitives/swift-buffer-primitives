@@ -84,6 +84,18 @@ extension Buffer.Linear.Small where Element: ~Copyable {
         }
     }
 
+    /// Swaps the elements at positions `i` and `j` in-place.
+    ///
+    /// - Precondition: Both indices must be in bounds.
+    @inlinable
+    public mutating func swap(at i: Index<Element>, with j: Index<Element>) {
+        if _heapBuffer != nil {
+            _heapBuffer!.swap(at: i, with: j)
+        } else {
+            _inlineBuffer.swap(at: i, with: j)
+        }
+    }
+
     /// Removes all elements from the buffer.
     ///
     /// Resets to inline mode.
@@ -113,6 +125,53 @@ extension Buffer.Linear.Small where Element: ~Copyable {
         } else {
             removeAll()
         }
+    }
+}
+
+// MARK: - Append (~Copyable)
+
+extension Buffer.Linear.Small where Element: ~Copyable {
+
+    /// Appends an element to the back of the buffer.
+    ///
+    /// If inline storage is full, spills to heap automatically using moves.
+    @inlinable
+    public mutating func append(_ element: consuming Element) {
+        if _heapBuffer != nil {
+            _heapBuffer!.append(consume element)
+        } else if !_inlineBuffer.isFull {
+            _ = _inlineBuffer.append(consume element)
+        } else {
+            _spillToHeapMoving()
+            _heapBuffer!.append(consume element)
+        }
+    }
+
+    /// Moves inline elements to heap storage and activates heap mode.
+    @usableFromInline
+    mutating func _spillToHeapMoving() {
+        let currentCount = _inlineBuffer.count
+        let newCapacity = Index<Element>.Count(Cardinal(UInt(inlineCapacity * 2)))
+        let newStorage = Storage<Element>.Heap.create(minimumCapacity: newCapacity)
+
+        // Move elements one-by-one from inline to heap
+        var slot: Index<Element> = .zero
+        let end = currentCount.map(Ordinal.init)
+        while slot < end {
+            let moved = _inlineBuffer.storage.move(at: slot)
+            newStorage.initialize(to: consume moved, at: slot)
+            slot += .one
+        }
+
+        // Reset inline header
+        _inlineBuffer.header.count = .zero
+        _inlineBuffer.storage.initialization = .empty
+
+        var newHeader = Buffer.Linear.Header(capacity: newStorage.slotCapacity)
+        newHeader.count = currentCount
+        newStorage.initialization = newHeader.initialization
+
+        _heapBuffer = Buffer<Element>.Linear(header: newHeader, storage: newStorage)
     }
 }
 

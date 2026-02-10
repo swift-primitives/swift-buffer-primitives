@@ -101,6 +101,24 @@ extension Buffer.Linear where Element: ~Copyable {
         return element
     }
 
+    // MARK: Swap At
+
+    /// Swaps the elements at positions `i` and `j` in-place.
+    ///
+    /// - Precondition: Both indices must be in bounds (`< header.count`).
+    @inlinable
+    public static func swap(
+        at i: Index<Element>, with j: Index<Element>,
+        storage: Storage<Element>.Heap
+    ) {
+        guard i != j else { return }
+        let ptrI = unsafe storage.pointer(at: i)
+        let ptrJ = unsafe storage.pointer(at: j)
+        let temp = unsafe ptrI.move()
+        unsafe ptrI.initialize(to: ptrJ.move())
+        unsafe ptrJ.initialize(to: temp)
+    }
+
     // MARK: Deinitialize All
 
     /// Deinitializes all elements tracked by the header.
