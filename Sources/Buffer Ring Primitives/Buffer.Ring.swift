@@ -133,6 +133,23 @@ extension Buffer.Ring {
         // head is 0 after linearization
         storage.initialization = header.initialization
     }
+
+    /// Reduces capacity to match the current count, releasing unused memory.
+    ///
+    /// After calling this method, `capacity == count`. The ring buffer is
+    /// linearized during compaction.
+    ///
+    /// - Complexity: O(n) where n is the number of elements.
+    @inlinable
+    public mutating func compact() {
+        guard header.count < header.capacity else { return }
+        if header.isEmpty {
+            storage = Storage<Element>.Heap.create(minimumCapacity: .zero)
+            header = .init(capacity: storage.slotCapacity)
+            return
+        }
+        _growTo(header.count)
+    }
 }
 
 // MARK: - Sequence.Drain.Protocol

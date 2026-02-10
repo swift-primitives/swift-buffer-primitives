@@ -22,8 +22,8 @@ extension Buffer.Ring where Element: Copyable {
     }
 
     /// Ensures this buffer has unique storage (copy-on-write).
-    @inlinable
-    mutating func _makeUnique() {
+    @usableFromInline
+    package mutating func _makeUnique() {
         if !isKnownUniquelyReferenced(&storage) {
             let newStorage = Storage<Element>.Heap.create(minimumCapacity: header.capacity)
             Buffer.Ring.copy(header: header, source: storage, to: newStorage)

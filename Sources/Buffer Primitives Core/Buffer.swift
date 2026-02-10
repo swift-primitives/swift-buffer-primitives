@@ -101,6 +101,31 @@ public enum Buffer<Element: ~Copyable> {
             }
         }
 
+        // MARK: - Small (Inline + Heap Spill)
+
+        /// A ring buffer that starts with inline storage and spills to heap
+        /// when capacity is exceeded.
+        ///
+        /// In inline mode, uses `Storage<Element>.Inline<inlineCapacity>` with
+        /// ring-buffer wrap-around. After spill, elements are linearized into
+        /// a growable `Buffer<Element>.Ring`.
+        public struct Small<let inlineCapacity: Int>: ~Copyable {
+            @usableFromInline
+            package var _inlineBuffer: Inline<inlineCapacity>
+
+            @usableFromInline
+            package var _heapBuffer: Buffer<Element>.Ring?
+
+            @inlinable
+            package init(
+                _inlineBuffer: consuming Inline<inlineCapacity>,
+                _heapBuffer: consuming Buffer<Element>.Ring?
+            ) {
+                self._inlineBuffer = _inlineBuffer
+                self._heapBuffer = _heapBuffer
+            }
+        }
+
         // MARK: - Header
 
         /// Pure cursor state for a dynamic-capacity ring buffer.
@@ -512,6 +537,10 @@ extension Buffer.Ring.Bounded: @unchecked Sendable where Element: Sendable {}
 // extension Buffer.Ring.Inline: Copyable where Element: Copyable {}
 // extension Buffer.Ring.Inline: Swift.Sequence where Element: Copyable {}
 extension Buffer.Ring.Inline: Sendable where Element: Sendable {}
+
+// Cannot conform to Copyable: contains Inline which uses @_rawLayout (INV-INLINE-004a).
+// extension Buffer.Ring.Small: Copyable where Element: Copyable {}
+extension Buffer.Ring.Small: Sendable where Element: Sendable {}
 
 // MARK: - Conditional Conformances (Linear)
 

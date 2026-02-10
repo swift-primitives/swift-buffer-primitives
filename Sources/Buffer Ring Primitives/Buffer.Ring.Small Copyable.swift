@@ -1,0 +1,202 @@
+// MARK: - Copyable Conformances for Ring.Small
+
+extension Buffer.Ring.Small where Element: Copyable {
+
+    /// Returns the front element without removing it.
+    ///
+    /// - Precondition: The buffer is not empty.
+    @inlinable
+    public var peekFront: Element {
+        switch _heapBuffer {
+        case .some(let heap): return heap.peekFront
+        case .none: return _inlineBuffer.peekFront
+        }
+    }
+
+    /// Returns the back element without removing it.
+    ///
+    /// - Precondition: The buffer is not empty.
+    @inlinable
+    public var peekBack: Element {
+        switch _heapBuffer {
+        case .some(let heap): return heap.peekBack
+        case .none: return _inlineBuffer.peekBack
+        }
+    }
+
+    /// Ensures this buffer has unique heap storage, returning whether a copy was made.
+    ///
+    /// In inline mode, storage is always unique (value type). In heap mode,
+    /// delegates to the heap buffer's CoW check.
+    @inlinable
+    @discardableResult
+    public mutating func ensureUnique() -> Bool {
+        if _heapBuffer != nil {
+            _heapBuffer!._makeUnique()
+            return true
+        }
+        return false
+    }
+
+    /// Ensures the buffer can hold at least `minimumCapacity` elements.
+    ///
+    /// May trigger spill to heap if the requested capacity exceeds inline capacity.
+    @inlinable
+    public mutating func reserveCapacity(_ minimumCapacity: Index<Element>.Count) {
+        if _heapBuffer != nil {
+            _heapBuffer!.reserveCapacity(minimumCapacity)
+        } else if minimumCapacity > Index<Element>.Count(Cardinal(UInt(inlineCapacity))) {
+            _spillToHeap(minimumCapacity: minimumCapacity)
+        }
+    }
+}
+
+// MARK: - Spill to Heap (Copyable)
+
+extension Buffer.Ring.Small where Element: Copyable {
+
+    /// Copies inline ring elements to heap storage and activates heap mode.
+    @usableFromInline
+    mutating func _spillToHeap() {
+        let currentCount = _inlineBuffer.count
+        let newCapacity = Index<Element>.Count(Cardinal(UInt(inlineCapacity * 2)))
+        let newStorage = Storage<Element>.Heap.create(minimumCapacity: newCapacity)
+
+        Buffer.Ring.linearize(
+            header: _inlineBuffer.header,
+            source: _inlineBuffer.storage,
+            to: newStorage
+        )
+
+        var newHeader = Buffer.Ring.Header(capacity: newStorage.slotCapacity)
+        newHeader.count = currentCount
+        newStorage.initialization = newHeader.initialization
+
+        _heapBuffer = Buffer<Element>.Ring(header: newHeader, storage: newStorage)
+    }
+
+    /// Copies inline ring elements to heap storage with at least the given capacity.
+    @usableFromInline
+    mutating func _spillToHeap(minimumCapacity: Index<Element>.Count) {
+        let currentCount = _inlineBuffer.count
+        let newStorage = Storage<Element>.Heap.create(minimumCapacity: minimumCapacity)
+
+        Buffer.Ring.linearize(
+            header: _inlineBuffer.header,
+            source: _inlineBuffer.storage,
+            to: newStorage
+        )
+
+        var newHeader = Buffer.Ring.Header(capacity: newStorage.slotCapacity)
+        newHeader.count = currentCount
+        newStorage.initialization = newHeader.initialization
+
+        _heapBuffer = Buffer<Element>.Ring(header: newHeader, storage: newStorage)
+    }
+}
+
+// MARK: - CoW-Safe Mutations
+
+extension Buffer.Ring.Small where Element: Copyable {
+
+    /// Pushes an element to the back (CoW-safe).
+    @inlinable
+    public mutating func pushBack(_ element: consuming Element) {
+        if _heapBuffer != nil {
+            _heapBuffer!._makeUnique()
+            _heapBuffer!.pushBack(consume element)
+        } else if !_inlineBuffer.isFull {
+            _ = _inlineBuffer.pushBack(consume element)
+        } else {
+            _spillToHeap()
+            _heapBuffer!.pushBack(consume element)
+        }
+    }
+
+    /// Removes and returns the element at the front (CoW-safe).
+    ///
+    /// - Precondition: The buffer is not empty.
+    @inlinable
+    public mutating func popFront() -> Element {
+        if _heapBuffer != nil {
+            _heapBuffer!._makeUnique()
+            return _heapBuffer!.popFront()
+        } else {
+            return _inlineBuffer.popFront()
+        }
+    }
+
+    /// Pushes an element to the front (CoW-safe).
+    @inlinable
+    public mutating func pushFront(_ element: consuming Element) {
+        if _heapBuffer != nil {
+            _heapBuffer!._makeUnique()
+            _heapBuffer!.pushFront(consume element)
+        } else if !_inlineBuffer.isFull {
+            _ = _inlineBuffer.pushFront(consume element)
+        } else {
+            _spillToHeap()
+            _heapBuffer!.pushFront(consume element)
+        }
+    }
+
+    /// Removes and returns the element at the back (CoW-safe).
+    ///
+    /// - Precondition: The buffer is not empty.
+    @inlinable
+    public mutating func popBack() -> Element {
+        if _heapBuffer != nil {
+            _heapBuffer!._makeUnique()
+            return _heapBuffer!.popBack()
+        } else {
+            return _inlineBuffer.popBack()
+        }
+    }
+
+    /// Removes all elements from the buffer (CoW-safe).
+    ///
+    /// Resets to inline mode.
+    @inlinable
+    public mutating func removeAll() {
+        if _heapBuffer != nil {
+            _heapBuffer!.removeAll()
+            _heapBuffer = nil
+            _inlineBuffer.removeAll()
+        } else {
+            _inlineBuffer.removeAll()
+        }
+    }
+
+    /// Removes all elements from the buffer (CoW-safe).
+    ///
+    /// - Parameter keepingCapacity: If `true` and the buffer has spilled,
+    ///   stays in heap mode. If `false`, resets to inline mode.
+    @inlinable
+    public mutating func removeAll(keepingCapacity: Bool) {
+        if keepingCapacity {
+            if _heapBuffer != nil {
+                _heapBuffer!._makeUnique()
+                _heapBuffer!.removeAll()
+            } else {
+                _inlineBuffer.removeAll()
+            }
+        } else {
+            removeAll()
+        }
+    }
+}
+
+// MARK: - Property.View (.forEach)
+
+extension Buffer.Ring.Small where Element: Copyable {
+    @inlinable
+    public var forEach: Property<Sequence.ForEach, Self>.View {
+        mutating _read {
+            yield unsafe Property<Sequence.ForEach, Self>.View(&self)
+        }
+        mutating _modify {
+            var view = unsafe Property<Sequence.ForEach, Self>.View(&self)
+            yield &view
+        }
+    }
+}
