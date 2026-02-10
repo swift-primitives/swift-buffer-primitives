@@ -105,6 +105,18 @@ extension Buffer.Linear.Small where Element: Copyable {
         }
     }
 
+    /// Replaces the element at the given index, returning the old element (CoW-safe).
+    ///
+    /// - Precondition: The index must be in bounds.
+    @inlinable
+    public mutating func replace(at index: Index<Element>, with newElement: consuming Element) -> Element {
+        if _heapBuffer != nil {
+            return _heapBuffer!.replace(at: index, with: consume newElement)
+        } else {
+            return _inlineBuffer.replace(at: index, with: consume newElement)
+        }
+    }
+
     /// Removes all elements from the buffer (CoW-safe).
     ///
     /// Resets to inline mode.

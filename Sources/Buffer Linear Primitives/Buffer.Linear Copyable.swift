@@ -91,6 +91,15 @@ extension Buffer.Linear where Element: Copyable {
         return Buffer.Linear.remove(at: index, header: &header, storage: storage)
     }
 
+    /// Replaces the element at the given index, returning the old element (CoW-safe).
+    ///
+    /// - Precondition: The index must be in bounds.
+    @inlinable
+    public mutating func replace(at index: Index<Element>, with newElement: consuming Element) -> Element {
+        _makeUnique()
+        return Buffer.Linear.replace(at: index, with: consume newElement, storage: storage)
+    }
+
     /// Removes all elements from the buffer (CoW-safe).
     @inlinable
     public mutating func removeAll() {

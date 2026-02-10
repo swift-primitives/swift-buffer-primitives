@@ -62,6 +62,14 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
         Buffer.Linear.remove(at: index, header: &header, storage: &storage)
     }
 
+    /// Replaces the element at the given index, returning the old element.
+    ///
+    /// - Precondition: The index must be in bounds.
+    @inlinable
+    public mutating func replace(at index: Index<Element>, with newElement: consuming Element) -> Element {
+        Buffer.Linear.replace(at: index, with: consume newElement, storage: &storage)
+    }
+
     /// Swaps the elements at positions `i` and `j` in-place.
     ///
     /// - Precondition: Both indices must be in bounds.

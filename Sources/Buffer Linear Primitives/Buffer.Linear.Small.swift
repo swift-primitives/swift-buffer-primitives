@@ -84,6 +84,18 @@ extension Buffer.Linear.Small where Element: ~Copyable {
         }
     }
 
+    /// Replaces the element at the given index, returning the old element.
+    ///
+    /// - Precondition: The index must be in bounds.
+    @inlinable
+    public mutating func replace(at index: Index<Element>, with newElement: consuming Element) -> Element {
+        if _heapBuffer != nil {
+            return _heapBuffer!.replace(at: index, with: consume newElement)
+        } else {
+            return _inlineBuffer.replace(at: index, with: consume newElement)
+        }
+    }
+
     /// Swaps the elements at positions `i` and `j` in-place.
     ///
     /// - Precondition: Both indices must be in bounds.

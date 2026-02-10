@@ -77,6 +77,21 @@ extension Buffer.Linear where Element: ~Copyable {
         return element
     }
 
+    // MARK: Replace At (Inline)
+
+    /// Replaces the element at the given index, returning the old element.
+    /// Does NOT change count — the slot remains initialized.
+    @inlinable
+    public static func replace<let capacity: Int>(
+        at index: Index<Element>,
+        with newElement: consuming Element,
+        storage: inout Storage<Element>.Inline<capacity>
+    ) -> Element {
+        let old = storage.move(at: index)
+        storage.initialize(to: consume newElement, at: index)
+        return old
+    }
+
     // MARK: Consume Back (Inline)
 
     /// Removes and returns the last element (at slot `count - 1`).
