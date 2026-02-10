@@ -1,6 +1,6 @@
 // MARK: - Extensions for Ring.Bounded (declared in Core)
 
-extension Buffer.Ring.Bounded {
+extension Buffer.Ring.Bounded where Element: ~Copyable {
 
     /// Creates a bounded ring buffer with at least the given capacity.
     ///
@@ -77,7 +77,7 @@ extension Buffer.Ring.Bounded {
 
 // MARK: - Sequence.Drain.Protocol
 
-extension Buffer.Ring.Bounded: Sequence.Drain.`Protocol` {
+extension Buffer.Ring.Bounded: Sequence.Drain.`Protocol` where Element: Copyable {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         while !isEmpty {
@@ -94,7 +94,7 @@ extension Buffer.Ring.Bounded: Sequence.Clearable where Element: Copyable {
 
 // MARK: - Property.View (.drain)
 
-extension Buffer.Ring.Bounded {
+extension Buffer.Ring.Bounded where Element: ~Copyable {
     @inlinable
     public var drain: Property<Sequence.Drain, Self>.View {
         mutating _read {

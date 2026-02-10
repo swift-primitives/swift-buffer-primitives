@@ -1,6 +1,6 @@
 // MARK: - Static Operations for ~Copyable Elements on Storage.Inline
 
-extension Buffer.Ring {
+extension Buffer.Ring where Element: ~Copyable {
 
     // MARK: Push Back (Inline)
 

@@ -7,7 +7,7 @@ public import Sequence_Primitives
 
 // MARK: - Extensions for Ring (declared in Core)
 
-extension Buffer.Ring {
+extension Buffer.Ring where Element: ~Copyable {
 
     /// Creates a growable ring buffer with at least the given capacity.
     ///
@@ -154,7 +154,7 @@ extension Buffer.Ring {
 
 // MARK: - Sequence.Drain.Protocol
 
-extension Buffer.Ring: Sequence.Drain.`Protocol` {
+extension Buffer.Ring: Sequence.Drain.`Protocol` where Element: Copyable {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         while !isEmpty {
@@ -171,7 +171,7 @@ extension Buffer.Ring: Sequence.Clearable where Element: Copyable {
 
 // MARK: - Property.View (.drain)
 
-extension Buffer.Ring {
+extension Buffer.Ring where Element: ~Copyable {
     @inlinable
     public var drain: Property<Sequence.Drain, Self>.View {
         mutating _read {

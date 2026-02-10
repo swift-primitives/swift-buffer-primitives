@@ -1,6 +1,6 @@
 // MARK: - Extensions for Ring.Inline (declared in Core)
 
-extension Buffer.Ring.Inline {
+extension Buffer.Ring.Inline where Element: ~Copyable {
 
     /// Creates a bounded inline ring buffer with fixed capacity.
     ///
@@ -75,7 +75,7 @@ extension Buffer.Ring.Inline {
 
 // MARK: - Sequence.Drain.Protocol
 
-extension Buffer.Ring.Inline: Sequence.Drain.`Protocol` {
+extension Buffer.Ring.Inline: Sequence.Drain.`Protocol` where Element: Copyable {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         while !isEmpty {
@@ -92,7 +92,7 @@ extension Buffer.Ring.Inline: Sequence.Clearable where Element: Copyable {
 
 // MARK: - Property.View (.drain)
 
-extension Buffer.Ring.Inline {
+extension Buffer.Ring.Inline where Element: ~Copyable {
     @inlinable
     public var drain: Property<Sequence.Drain, Self>.View {
         mutating _read {

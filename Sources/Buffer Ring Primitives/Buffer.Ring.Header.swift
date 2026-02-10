@@ -15,7 +15,7 @@ extension Buffer.Ring.Header where Element: ~Copyable {
     public var isFull: Bool { count == capacity }
 }
 
-extension Buffer.Ring.Header {
+extension Buffer.Ring.Header where Element: ~Copyable {
     /// Compute the `Storage.Initialization` state from ring header.
     ///
     /// Returns `.empty`, `.one`, or `.two` depending on whether elements
