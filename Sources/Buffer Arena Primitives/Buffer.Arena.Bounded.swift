@@ -10,12 +10,12 @@ extension Buffer.Arena.Bounded {
     @inlinable
     public init(minimumCapacity: Index<Element>.Count) {
         precondition(
-            Int(bitPattern: minimumCapacity) <= Int(UInt32.max),
+            minimumCapacity <= Buffer<Element>.Arena.Header.maximumCapacity,
             "Arena: capacity exceeds UInt32.max"
         )
         let storage = Storage<Element>.Heap.create(minimumCapacity: minimumCapacity)
         let capacity = storage.slotCapacity
-        let meta = Buffer<Element>.Arena.allocateMeta(capacity: capacity)
+        let meta = Buffer<Element>.Arena.Meta.allocate(capacity: capacity)
         self.init(
             header: Buffer<Element>.Arena.Header(capacity: capacity),
             storage: storage,
@@ -53,11 +53,11 @@ extension Buffer.Arena.Bounded {
     /// Allocates a slot without initializing the element.
     ///
     /// - Throws: `.full` if the arena has no available slots.
-    /// Caller MUST initialize the element at `position.slotIndex` before use.
+    /// Caller MUST initialize the element at `position.slot` before use.
     @inlinable
-    public mutating func allocateSlot() throws(Error) -> Buffer<Element>.Arena.Position {
+    public mutating func allocate() throws(Error) -> Buffer<Element>.Arena.Position {
         guard !header.isFull else { throw .full }
-        return Buffer<Element>.Arena.allocateSlot(header: &header, meta: _meta)
+        return Buffer<Element>.Arena.allocate(header: &header, meta: _meta)
     }
 
     // MARK: - Remove
@@ -72,7 +72,7 @@ extension Buffer.Arena.Bounded {
         guard Buffer<Element>.Arena.isValid(position, header: header, meta: _meta) else {
             throw .invalidPosition
         }
-        let element = storage.move(at: position.slotIndex)
+        let element = storage.move(at: position.slot)
         Buffer<Element>.Arena._releaseSlot(position.index, header: &header, meta: _meta)
         return element
     }
@@ -91,8 +91,8 @@ extension Buffer.Arena.Bounded {
     ///
     /// - Precondition: `slot` is occupied.
     @inlinable
-    public mutating func freeSlot(at slot: Index<Element>) {
-        Buffer<Element>.Arena.freeSlot(
+    public mutating func free(at slot: Index<Element>) {
+        Buffer<Element>.Arena.free(
             at: slot, header: &header, storage: storage, meta: _meta
         )
     }
@@ -100,7 +100,7 @@ extension Buffer.Arena.Bounded {
     /// Deinitializes all occupied elements and resets the arena to empty state.
     @inlinable
     public mutating func removeAll() {
-        Buffer<Element>.Arena.deinitializeAll(
+        Buffer<Element>.Arena.deinitialize(
             header: &header, storage: storage, meta: _meta
         )
     }
@@ -141,7 +141,9 @@ extension Buffer.Arena.Bounded {
 
     /// Visits each occupied slot index.
     @inlinable
-    public func forEachOccupied(_ body: (Index<Element>) -> Void) {
-        Buffer<Element>.Arena.forEachOccupied(header: header, meta: _meta, body)
+    public var forEach: Property<Sequence.ForEach, Self>.View {
+        mutating _read {
+            yield unsafe Property<Sequence.ForEach, Self>.View(&self)
+        }
     }
 }

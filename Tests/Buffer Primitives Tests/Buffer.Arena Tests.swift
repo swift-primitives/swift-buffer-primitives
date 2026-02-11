@@ -26,7 +26,7 @@ struct ArenaTests {
         let p2 = arena.insert(30)
         #expect(arena.occupied == 3)
 
-        let removed = arena.remove(at: p1.slotIndex)
+        let removed = arena.remove(at: p1.slot)
         #expect(removed == 20)
         #expect(arena.occupied == 2)
         #expect(arena.isValid(p0) == true)
@@ -38,7 +38,7 @@ struct ArenaTests {
     func `stale handle detection after reuse`() {
         var arena = Buffer<Int>.Arena(minimumCapacity: 4)
         let p1 = arena.insert(100)
-        arena.freeSlot(at: p1.slotIndex)
+        arena.free(at: p1.slot)
 
         // Reallocate same slot (LIFO freelist)
         let p2 = arena.insert(200)
@@ -56,8 +56,8 @@ struct ArenaTests {
         let p2 = arena.insert(2)
 
         // Free in order: 2, 0 (skip 1)
-        arena.freeSlot(at: p2.slotIndex)
-        arena.freeSlot(at: p0.slotIndex)
+        arena.free(at: p2.slot)
+        arena.free(at: p0.slot)
 
         // LIFO: next allocate should reuse slot 0 (last freed), then slot 2
         let r0 = arena.insert(10)
@@ -67,17 +67,17 @@ struct ArenaTests {
     }
 
     @Test
-    func `forEachOccupied visits correct slots`() {
+    func `forEach occupied visits correct slots`() {
         var arena = Buffer<Int>.Arena(minimumCapacity: 8)
         let p0 = arena.insert(10)
         _ = arena.insert(20)
         let p2 = arena.insert(30)
 
         // Free the middle one
-        arena.freeSlot(at: Index<Int>(Ordinal(UInt(1))))
+        arena.free(at: Index<Int>(Ordinal(UInt(1))))
 
         var visited: [UInt32] = []
-        arena.forEachOccupied { slot in
+        arena.forEach.occupied { (slot: Index<Int>) in
             visited.append(UInt32(slot.rawValue.rawValue))
         }
         #expect(visited.sorted() == [p0.index, p2.index].sorted())
@@ -133,8 +133,8 @@ struct ArenaTests {
         let p3 = arena.insert(3)
 
         // Free some to populate freelist
-        arena.freeSlot(at: p1.slotIndex)
-        arena.freeSlot(at: p3.slotIndex)
+        arena.free(at: p1.slot)
+        arena.free(at: p3.slot)
 
         // Fill freelist slots
         let r1 = arena.insert(11)
@@ -156,10 +156,10 @@ struct ArenaTests {
     func `isOccupied matches token parity`() {
         var arena = Buffer<Int>.Arena(minimumCapacity: 4)
         let pos = arena.insert(42)
-        #expect(arena.isOccupied(pos.slotIndex) == true)
+        #expect(arena.isOccupied(pos.slot) == true)
 
-        arena.freeSlot(at: pos.slotIndex)
-        #expect(arena.isOccupied(pos.slotIndex) == false)
+        arena.free(at: pos.slot)
+        #expect(arena.isOccupied(pos.slot) == false)
     }
 
     @Test
@@ -167,11 +167,11 @@ struct ArenaTests {
         var arena = Buffer<Int>.Arena(minimumCapacity: 4)
         let pos = arena.insert(42)
 
-        let t = arena.token(at: pos.slotIndex)
+        let t = arena.token(at: pos.slot)
         #expect(t == pos.token)
         #expect(t & 1 == 1) // occupied = odd
 
-        let reconstructed = arena.position(forOccupied: pos.slotIndex)
+        let reconstructed = arena.position(forOccupied: pos.slot)
         #expect(reconstructed == pos)
     }
 
@@ -179,7 +179,7 @@ struct ArenaTests {
     func `remove with invalid position throws`() {
         var arena = Buffer<Int>.Arena(minimumCapacity: 4)
         let pos = arena.insert(42)
-        arena.freeSlot(at: pos.slotIndex)
+        arena.free(at: pos.slot)
 
         do {
             _ = try arena.remove(at: pos)
@@ -199,13 +199,13 @@ struct ArenaTests {
     }
 
     @Test
-    func `allocateSlot reserves slot without initialization`() {
+    func `allocate reserves slot without initialization`() {
         var arena = Buffer<Int>.Arena(minimumCapacity: 4)
 
-        let pos = arena.allocateSlot()
+        let pos = arena.allocate()
         #expect(arena.occupied == 1)
         #expect(arena.isValid(pos) == true)
-        #expect(arena.isOccupied(pos.slotIndex) == true)
+        #expect(arena.isOccupied(pos.slot) == true)
 
         // Slot allocated but element uninitialized.
         // Int is trivial — deinit at arena teardown is safe.
@@ -218,7 +218,7 @@ struct ArenaTests {
 
         for i in 1..<100 {
             let stale = lastPos
-            arena.freeSlot(at: lastPos.slotIndex)
+            arena.free(at: lastPos.slot)
             lastPos = arena.insert(i)
 
             // Same slot reused (LIFO, only one free slot)
@@ -231,7 +231,7 @@ struct ArenaTests {
         }
 
         // Final token should reflect many generations
-        let finalToken = arena.token(at: lastPos.slotIndex)
+        let finalToken = arena.token(at: lastPos.slot)
         #expect(finalToken == lastPos.token)
         #expect(finalToken & 1 == 1) // occupied = odd
         #expect(finalToken > 100)
@@ -338,7 +338,7 @@ struct ArenaBoundedTests {
         }
 
         #expect(arena.isFull == true)
-        arena.freeSlot(at: positions[0].slotIndex)
+        arena.free(at: positions[0].slot)
         #expect(arena.isFull == false)
 
         let pNew = try arena.insert(99)
@@ -365,10 +365,10 @@ struct ArenaBoundedTests {
         let p1 = try arena.insert(20)
         _ = try arena.insert(30)
 
-        let removed = arena.remove(at: p1.slotIndex)
+        let removed = arena.remove(at: p1.slot)
         #expect(removed == 20)
         #expect(arena.occupied == 2)
-        #expect(arena.isOccupied(p1.slotIndex) == false)
+        #expect(arena.isOccupied(p1.slot) == false)
     }
 
     @Test
@@ -376,22 +376,22 @@ struct ArenaBoundedTests {
         var arena = Buffer<Int>.Arena.Bounded(minimumCapacity: 4)
         let pos = try arena.insert(42)
 
-        let t = arena.token(at: pos.slotIndex)
+        let t = arena.token(at: pos.slot)
         #expect(t == pos.token)
         #expect(t & 1 == 1)
 
-        let reconstructed = arena.position(forOccupied: pos.slotIndex)
+        let reconstructed = arena.position(forOccupied: pos.slot)
         #expect(reconstructed == pos)
     }
 
     @Test
-    func `allocateSlot in bounded arena`() throws {
+    func `allocate in bounded arena`() throws {
         var arena = Buffer<Int>.Arena.Bounded(minimumCapacity: 4)
 
-        let pos = try arena.allocateSlot()
+        let pos = try arena.allocate()
         #expect(arena.occupied == 1)
         #expect(arena.isValid(pos) == true)
-        #expect(arena.isOccupied(pos.slotIndex) == true)
+        #expect(arena.isOccupied(pos.slot) == true)
     }
 
     @Test

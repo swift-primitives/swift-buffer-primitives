@@ -842,7 +842,7 @@ public enum Buffer<Element: ~Copyable> {
             // TRACKING: swiftlang/swift MoveOnlyChecker deinit closure crash
             let hw = Int(bitPattern: header.highWater)
             for i in 0..<hw {
-                if _meta[i].token & 1 == 1 {
+                if _meta[i].isOccupied {
                     storage.deinitialize(at: Index<Element>(Ordinal(UInt(i))))
                 }
             }
@@ -879,10 +879,14 @@ public enum Buffer<Element: ~Copyable> {
             }
 
             deinit {
-                // WORKAROUND: Same as Arena deinit above.
+                // WORKAROUND: Uses `for i in` instead of `.forEach` closure
+                // WHY: Closures capturing ~Copyable fields of `self` inside deinit trigger
+                //      CopiedLoadBorrowEliminationVisitor segfault (swift-frontend signal 11)
+                // WHEN TO REMOVE: When MoveOnlyChecker deinit closure crash is fixed
+                // TRACKING: swiftlang/swift MoveOnlyChecker deinit closure crash
                 let hw = Int(bitPattern: header.highWater)
                 for i in 0..<hw {
-                    if _meta[i].token & 1 == 1 {
+                    if _meta[i].isOccupied {
                         storage.deinitialize(at: Index<Element>(Ordinal(UInt(i))))
                     }
                 }
@@ -907,7 +911,7 @@ public enum Buffer<Element: ~Copyable> {
         /// - Even token (including 0) → free or virgin
         /// - Odd token → occupied
         ///
-        /// `nextFree` links freed slots into a LIFO free-list.
+        /// `link` chains freed slots into a LIFO free-list.
         /// `UInt32.max` = end of list (no next).
         ///
         /// 8 bytes per slot. Stored in a single contiguous allocation.
@@ -916,19 +920,23 @@ public enum Buffer<Element: ~Copyable> {
             /// Parity-tagged generation counter. Even = free, odd = occupied.
             public var token: UInt32
 
-            /// Index of the next free slot, or `UInt32.max` if none.
-            public var nextFree: UInt32
+            /// Free-list link: index of the next free slot, or `UInt32.max` if none.
+            public var link: UInt32
 
             /// Creates metadata with the given token and free-list link.
             @inlinable
-            public init(token: UInt32, nextFree: UInt32) {
+            public init(token: UInt32, link: UInt32) {
                 self.token = token
-                self.nextFree = nextFree
+                self.link = link
             }
+
+            /// Whether this slot is currently occupied (odd token = occupied).
+            @inlinable
+            public var isOccupied: Bool { token & 1 == 1 }
 
             /// Virgin slot metadata: token 0 (free, never allocated), no next.
             @inlinable
-            public static var virgin: Meta { Meta(token: 0, nextFree: .max) }
+            public static var virgin: Meta { Meta(token: 0, link: .max) }
         }
 
         // MARK: - Position
@@ -936,7 +944,7 @@ public enum Buffer<Element: ~Copyable> {
         /// An external handle to a slot in an arena buffer.
         ///
         /// Compact 8-byte representation: `(index: UInt32, token: UInt32)`.
-        /// The `slotIndex` computed property provides typed `Index<Element>`
+        /// The `slot` computed property provides typed `Index<Element>`
         /// at API boundaries per [IMPL-010].
         ///
         /// Phantom-typed via `Buffer<Element>` parameterization — handles
@@ -958,7 +966,7 @@ public enum Buffer<Element: ~Copyable> {
 
             /// Typed slot index for API boundary use.
             @inlinable
-            public var slotIndex: Index<Element> {
+            public var slot: Index<Element> {
                 Index<Element>(Ordinal(UInt(index)))
             }
         }
@@ -976,7 +984,7 @@ public enum Buffer<Element: ~Copyable> {
         /// 2. Slot `i` is virgin iff `i ≥ highWater`
         /// 3. Slot `i` is occupied iff `meta[i].token` is odd
         /// 4. Slot `i` is free iff `meta[i].token` is even and `i < highWater`
-        /// 5. Free-list from `freeHeadRaw` is finite, acyclic, within `[0, highWater)`
+        /// 5. Free-list from `freeHead` is finite, acyclic, within `[0, highWater)`
         /// 6. All slots `< highWater` are either occupied or on the free-list
         public struct Header: Copyable, Sendable {
             /// Number of currently occupied slots.
@@ -989,7 +997,7 @@ public enum Buffer<Element: ~Copyable> {
             public var capacity: Index<Element>.Count
 
             /// Free-list head. `UInt32.max` = empty free-list.
-            public var freeHeadRaw: UInt32
+            public var freeHead: UInt32
 
             /// Creates a header for an empty arena with the given capacity.
             @inlinable
@@ -997,17 +1005,17 @@ public enum Buffer<Element: ~Copyable> {
                 self.occupied = .zero
                 self.highWater = .zero
                 self.capacity = capacity
-                self.freeHeadRaw = .max
+                self.freeHead = .max
             }
 
             /// Whether the free-list contains any slots.
             @inlinable
-            public var hasFree: Bool { freeHeadRaw != .max }
+            public var hasFree: Bool { freeHead != .max }
 
-            /// Typed free-list head index, or `nil` if the free-list is empty.
+            /// Maximum arena capacity (UInt32.max — constraint of per-slot Meta representation).
             @inlinable
-            public var freeHeadIndex: Index<Element>? {
-                hasFree ? Index<Element>(Ordinal(UInt(freeHeadRaw))) : nil
+            public static var maximumCapacity: Index<Element>.Count {
+                Index<Element>.Count(Cardinal(UInt(UInt32.max)))
             }
 
             /// Whether the arena is full (no free slots and no virgin slots).

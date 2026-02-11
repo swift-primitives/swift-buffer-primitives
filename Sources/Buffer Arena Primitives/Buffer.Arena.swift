@@ -11,7 +11,7 @@ extension Buffer.Arena {
     public init(minimumCapacity: Index<Element>.Count) {
         let storage = Storage<Element>.Heap.create(minimumCapacity: minimumCapacity)
         let capacity = storage.slotCapacity
-        let meta = Buffer<Element>.Arena.allocateMeta(capacity: capacity)
+        let meta = Buffer<Element>.Arena.Meta.allocate(capacity: capacity)
         self.init(
             header: Header(capacity: capacity),
             storage: storage,
@@ -43,11 +43,11 @@ extension Buffer.Arena {
     /// Allocates a slot without initializing the element.
     ///
     /// Grows automatically if capacity is exhausted.
-    /// Caller MUST initialize the element at `position.slotIndex` before use.
+    /// Caller MUST initialize the element at `position.slot` before use.
     @inlinable
-    public mutating func allocateSlot() -> Position {
+    public mutating func allocate() -> Position {
         ensureCapacity()
-        return Buffer<Element>.Arena.allocateSlot(header: &header, meta: _meta)
+        return Buffer<Element>.Arena.allocate(header: &header, meta: _meta)
     }
 
     // MARK: - Remove
@@ -76,8 +76,8 @@ extension Buffer.Arena {
     ///
     /// - Precondition: `slot` is occupied.
     @inlinable
-    public mutating func freeSlot(at slot: Index<Element>) {
-        Buffer<Element>.Arena.freeSlot(
+    public mutating func free(at slot: Index<Element>) {
+        Buffer<Element>.Arena.free(
             at: slot, header: &header, storage: storage, meta: _meta
         )
     }
@@ -85,7 +85,7 @@ extension Buffer.Arena {
     /// Deinitializes all occupied elements and resets the arena to empty state.
     @inlinable
     public mutating func removeAll() {
-        Buffer<Element>.Arena.deinitializeAll(
+        Buffer<Element>.Arena.deinitialize(
             header: &header, storage: storage, meta: _meta
         )
     }
@@ -124,8 +124,10 @@ extension Buffer.Arena {
 
     /// Visits each occupied slot index.
     @inlinable
-    public func forEachOccupied(_ body: (Index<Element>) -> Void) {
-        Buffer<Element>.Arena.forEachOccupied(header: header, meta: _meta, body)
+    public var forEach: Property<Sequence.ForEach, Self>.View {
+        mutating _read {
+            yield unsafe Property<Sequence.ForEach, Self>.View(&self)
+        }
     }
 
     // MARK: - Growth
@@ -134,11 +136,9 @@ extension Buffer.Arena {
     @inlinable
     package mutating func ensureCapacity() {
         guard header.isFull else { return }
-        let policy = Buffer<Element>.Growth.Policy.doubling
-        var newCap = policy.newCapacity(from: header.capacity)
+        var newCap = Buffer<Element>.Growth.Policy.doubling.newCapacity(from: header.capacity)
         // Enforce UInt32.max capacity bound
-        let maxCap = Index<Element>.Count(Cardinal(UInt(UInt32.max)))
-        newCap = Index<Element>.Count.min(newCap, maxCap)
+        newCap = Index<Element>.Count.min(newCap, Header.maximumCapacity)
         precondition(newCap > header.capacity, "Arena: cannot grow beyond UInt32.max capacity")
         grow(to: newCap)
     }
@@ -149,16 +149,12 @@ extension Buffer.Arena {
         let newStorage = Storage<Element>.Heap.create(minimumCapacity: newMinimumCapacity)
         let newCapacity = newStorage.slotCapacity
         // Move occupied elements preserving indices
-        let hw = Int(bitPattern: header.highWater)
-        for i in 0..<hw {
-            if _meta[i].token & 1 == 1 {
-                let slot = Index<Element>(Ordinal(UInt(i)))
-                newStorage.initialize(to: storage.move(at: slot), at: slot)
-            }
+        Buffer<Element>.Arena.forEach(occupied: header, meta: _meta) { slot in
+            newStorage.initialize(to: storage.move(at: slot), at: slot)
         }
         storage.initialization = .empty
         // Grow meta
-        _meta = Buffer<Element>.Arena.growMeta(
+        _meta = Buffer<Element>.Arena.Meta.grow(
             from: _meta, oldCapacity: header.capacity, newCapacity: newCapacity
         )
         header.capacity = newCapacity
