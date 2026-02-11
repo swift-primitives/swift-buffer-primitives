@@ -50,6 +50,14 @@ extension Buffer.Slab.Bounded where Element: ~Copyable {
         Buffer<Element>.Slab.remove(at: slot, header: &header, storage: storage)
     }
 
+    /// Replaces the element at the given slot and returns the old element.
+    ///
+    /// - Precondition: The slot is occupied.
+    @inlinable
+    public mutating func update(at slot: Bit.Index, with element: consuming Element) -> Element {
+        Buffer<Element>.Slab.update(at: slot, with: consume element, storage: storage)
+    }
+
     /// Returns the first vacant slot, or `nil` if all slots are full.
     @inlinable
     public func firstVacant() -> Bit.Index? {

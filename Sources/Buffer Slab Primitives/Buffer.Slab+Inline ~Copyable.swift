@@ -34,6 +34,24 @@ extension Buffer.Slab {
         return element
     }
 
+    // MARK: Update (Inline)
+
+    /// Replaces the element at the given slot and returns the old element.
+    ///
+    /// The bitmap is unchanged — the slot remains occupied.
+    ///
+    /// - Precondition: The slot is occupied.
+    @inlinable
+    public static func update<let capacity: Int>(
+        at slot: Bit.Index,
+        with element: consuming Element,
+        storage: inout Storage<Element>.Inline<capacity>
+    ) -> Element {
+        let old = storage.move(at: slot.retag(Element.self))
+        storage.initialize(to: consume element, at: slot.retag(Element.self))
+        return old
+    }
+
     // MARK: For Each Occupied (Inline)
 
     /// Visits each occupied slot, passing the storage index.

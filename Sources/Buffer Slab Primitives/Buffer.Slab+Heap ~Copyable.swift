@@ -36,6 +36,24 @@ extension Buffer.Slab where Element: ~Copyable {
         return element
     }
 
+    // MARK: Update
+
+    /// Replaces the element at the given slot and returns the old element.
+    ///
+    /// The bitmap is unchanged — the slot remains occupied.
+    ///
+    /// - Precondition: The slot is occupied.
+    @inlinable
+    public static func update(
+        at slot: Bit.Index,
+        with element: consuming Element,
+        storage: Storage<Element>.Heap
+    ) -> Element {
+        let old = storage.move(at: slot.retag(Element.self))
+        storage.initialize(to: consume element, at: slot.retag(Element.self))
+        return old
+    }
+
     // MARK: For Each Occupied
 
     /// Visits each occupied slot, passing the storage index and a pointer to the element.

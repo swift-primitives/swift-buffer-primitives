@@ -4,7 +4,7 @@
 // stores `Header.Static<wordCount>` (compile-time, Copyable). Operations are inlined
 // directly rather than delegating to the static ops.
 
-extension Buffer.Slab.Inline {
+extension Buffer.Slab.Inline where Element: ~Copyable {
 
     /// Creates an inline slab buffer with all slots vacant.
     ///
@@ -60,6 +60,16 @@ extension Buffer.Slab.Inline {
         return element
     }
 
+    /// Replaces the element at the given slot and returns the old element.
+    ///
+    /// - Precondition: The slot is occupied.
+    @inlinable
+    public mutating func update(at slot: Bit.Index, with element: consuming Element) -> Element {
+        let old = storage.move(at: slot.retag(Element.self))
+        storage.initialize(to: consume element, at: slot.retag(Element.self))
+        return old
+    }
+
     /// Returns the first vacant slot, or `nil` if all slots are full.
     @inlinable
     public func firstVacant() -> Bit.Index? {
@@ -107,7 +117,7 @@ extension Buffer.Slab.Inline: Sequence.Clearable where Element: Copyable {
 
 // MARK: - Property.View (.drain)
 
-extension Buffer.Slab.Inline {
+extension Buffer.Slab.Inline where Element: ~Copyable {
     @inlinable
     public var drain: Property<Sequence.Drain, Self>.View {
         mutating _read {
