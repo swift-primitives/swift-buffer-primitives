@@ -4,7 +4,7 @@
 ---
 version: 1.0.0
 last_updated: 2026-02-11
-status: IN_PROGRESS
+status: DECISION
 tier: 1
 ---
 -->
@@ -267,9 +267,9 @@ This means the non-mutating vs. mutating trade-off is **not a real trade-off**: 
 
 ## Outcome
 
-**Status**: RECOMMENDATION
+**Status**: DECISION
 
-**Recommended**: **Option B — Property.View.Read at the List layer**
+**Chosen**: **Option B — Property.View.Read at the List layer** (with `Read.Typed<Element>.Valued<N>` to avoid constraint poisoning)
 
 Rationale:
 
@@ -285,6 +285,7 @@ Implementation notes:
 - `Property.View.Read` extensions in `List.Linked ~Copyable.swift` and `List.Linked.Bounded.swift` (operations files).
 - `list.first` / `list.last` remain as non-mutating Copyable convenience (already exist).
 - Buffer.Linked retains `peekFront` / `peekBack` / `forEachReversed` as direct methods — the Property.View.Read extensions delegate to these.
+- **Implementation note**: `Property.View.Read` alone is insufficient when both `Element` and `N` are generic — method-level generics on `Property.View.Read` extensions cause constraint poisoning through the `Tag == List<Element>.Linked<N>.Peek` path. The solution is `Property.View.Read.Typed<Element>.Valued<N>`, where `Element` and `N` are the type's own parameters, not method-level generics. This type was created in swift-property-primitives to solve this problem.
 
 ## References
 
