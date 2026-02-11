@@ -197,6 +197,102 @@ struct ArenaTests {
         _ = arena.insert(30)
         // arena deinitialized at function exit — no crash verifies cleanup
     }
+
+    @Test
+    func `allocateSlot reserves slot without initialization`() {
+        var arena = Buffer<Int>.Arena(minimumCapacity: 4)
+
+        let pos = arena.allocateSlot()
+        #expect(arena.occupied == 1)
+        #expect(arena.isValid(pos) == true)
+        #expect(arena.isOccupied(pos.slotIndex) == true)
+
+        // Slot allocated but element uninitialized.
+        // Int is trivial — deinit at arena teardown is safe.
+    }
+
+    @Test
+    func `alloc free thrashing preserves generation integrity`() {
+        var arena = Buffer<Int>.Arena(minimumCapacity: 4)
+        var lastPos = arena.insert(0)
+
+        for i in 1..<100 {
+            let stale = lastPos
+            arena.freeSlot(at: lastPos.slotIndex)
+            lastPos = arena.insert(i)
+
+            // Same slot reused (LIFO, only one free slot)
+            #expect(lastPos.index == stale.index)
+            // Token always advances
+            #expect(lastPos.token != stale.token)
+            // Stale handle invalid, new handle valid
+            #expect(arena.isValid(stale) == false)
+            #expect(arena.isValid(lastPos) == true)
+        }
+
+        // Final token should reflect many generations
+        let finalToken = arena.token(at: lastPos.slotIndex)
+        #expect(finalToken == lastPos.token)
+        #expect(finalToken & 1 == 1) // occupied = odd
+        #expect(finalToken > 100)
+    }
+
+    @Test
+    func `fill drain fill cycle`() throws {
+        var arena = Buffer<Int>.Arena(minimumCapacity: 4)
+
+        for cycle in 0..<5 {
+            var positions: [Buffer<Int>.Arena.Position] = []
+
+            for i in 0..<20 {
+                positions.append(arena.insert(cycle * 1000 + i))
+            }
+            #expect(arena.occupied == 20)
+
+            for (i, pos) in positions.enumerated() {
+                #expect(arena.isValid(pos) == true)
+                let value = try arena.remove(at: pos)
+                #expect(value == cycle * 1000 + i)
+            }
+            #expect(arena.isEmpty == true)
+        }
+    }
+
+    @Test
+    func `random operations match dictionary model`() throws {
+        var arena = Buffer<Int>.Arena(minimumCapacity: 4)
+        var model: [UInt32: (position: Buffer<Int>.Arena.Position, value: Int)] = [:]
+        var seed: UInt64 = 42
+
+        for round in 0..<200 {
+            seed = seed &* 6364136223846793005 &+ 1442695040888963407
+            let shouldInsert = model.isEmpty || (model.count < 50 && seed % 3 != 0)
+
+            if shouldInsert {
+                let value = round * 7
+                let pos = arena.insert(value)
+                model[pos.index] = (pos, value)
+            } else {
+                let keys = Array(model.keys)
+                let idx = Int(seed >> 32) % keys.count
+                let (pos, expectedValue) = model[keys[idx]]!
+                let value = try arena.remove(at: pos)
+                #expect(value == expectedValue)
+                model.removeValue(forKey: keys[idx])
+            }
+
+            let actualCount = Int(bitPattern: arena.occupied)
+            #expect(actualCount == model.count)
+        }
+
+        // Drain remaining — all positions still valid, values intact
+        for (_, entry) in model {
+            #expect(arena.isValid(entry.position) == true)
+            let value = try arena.remove(at: entry.position)
+            #expect(value == entry.value)
+        }
+        #expect(arena.isEmpty == true)
+    }
 }
 
 @Suite("Buffer.Arena.Bounded")
@@ -248,6 +344,54 @@ struct ArenaBoundedTests {
         let pNew = try arena.insert(99)
         #expect(arena.isValid(pNew) == true)
         #expect(arena.isValid(positions[0]) == false)
+    }
+
+    @Test
+    func `removeAll in bounded arena`() throws {
+        var arena = Buffer<Int>.Arena.Bounded(minimumCapacity: 4)
+        let p0 = try arena.insert(10)
+        let p1 = try arena.insert(20)
+        arena.removeAll()
+
+        #expect(arena.isEmpty == true)
+        #expect(arena.isValid(p0) == false)
+        #expect(arena.isValid(p1) == false)
+    }
+
+    @Test
+    func `remove by slot index in bounded arena`() throws {
+        var arena = Buffer<Int>.Arena.Bounded(minimumCapacity: 4)
+        _ = try arena.insert(10)
+        let p1 = try arena.insert(20)
+        _ = try arena.insert(30)
+
+        let removed = arena.remove(at: p1.slotIndex)
+        #expect(removed == 20)
+        #expect(arena.occupied == 2)
+        #expect(arena.isOccupied(p1.slotIndex) == false)
+    }
+
+    @Test
+    func `token and position in bounded arena`() throws {
+        var arena = Buffer<Int>.Arena.Bounded(minimumCapacity: 4)
+        let pos = try arena.insert(42)
+
+        let t = arena.token(at: pos.slotIndex)
+        #expect(t == pos.token)
+        #expect(t & 1 == 1)
+
+        let reconstructed = arena.position(forOccupied: pos.slotIndex)
+        #expect(reconstructed == pos)
+    }
+
+    @Test
+    func `allocateSlot in bounded arena`() throws {
+        var arena = Buffer<Int>.Arena.Bounded(minimumCapacity: 4)
+
+        let pos = try arena.allocateSlot()
+        #expect(arena.occupied == 1)
+        #expect(arena.isValid(pos) == true)
+        #expect(arena.isOccupied(pos.slotIndex) == true)
     }
 
     @Test
