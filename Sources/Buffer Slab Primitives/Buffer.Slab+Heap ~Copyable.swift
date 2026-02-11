@@ -2,7 +2,7 @@ public import Buffer_Primitives_Core
 
 // MARK: - Static Operations for ~Copyable Elements on Storage.Heap
 
-extension Buffer.Slab {
+extension Buffer.Slab where Element: ~Copyable {
 
     // MARK: Insert
 

@@ -9,3 +9,5 @@
 | [linked-buffer-n-parameterization](linked-buffer-n-parameterization.md) | Tier 1: N-parameter analysis for Buffer.Linked singly/doubly-linked support | 2026-02-11 | DECISION |
 | [noncopyable-view-types-for-peek-reversed](noncopyable-view-types-for-peek-reversed.md) | Tier 1: View type design for Peek/Reversed on ~Copyable Buffer.Linked | 2026-02-11 | DECISION |
 | [inline-small-linked-buffer-design](inline-small-linked-buffer-design.md) | Tier 2: Inline and Small variants for Buffer.Linked using Storage.Inline | 2026-02-11 | DECISION |
+| [arena-buffer-design](arena-buffer-design.md) | Tier 2: Arena buffer discipline with generation-based stale-reference detection | 2026-02-11 | IN_PROGRESS |
+| [slab-first-principles](slab-first-principles.md) | Tier 2: First-principles analysis of "slab" in CS literature vs Buffer.Slab implementation | 2026-02-11 | DECISION |

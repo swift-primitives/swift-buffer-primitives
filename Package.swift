@@ -41,6 +41,10 @@ let package = Package(
             targets: ["Buffer Slots Primitives"]
         ),
         .library(
+            name: "Buffer Arena Primitives",
+            targets: ["Buffer Arena Primitives"]
+        ),
+        .library(
             name: "Buffer Primitives Test Support",
             targets: ["Buffer Primitives Test Support"]
         ),
@@ -104,7 +108,15 @@ let package = Package(
                 "Buffer Primitives Core",
             ]
         ),
-        // Umbrella: Re-exports Core, Ring, Linear, Slab, Linked, Slots
+        // Arena: Generation-token arena static ops and composed types
+        .target(
+            name: "Buffer Arena Primitives",
+            dependencies: [
+                "Buffer Primitives Core",
+                .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
+            ]
+        ),
+        // Umbrella: Re-exports Core, Ring, Linear, Slab, Linked, Slots, Arena
         .target(
             name: "Buffer Primitives",
             dependencies: [
@@ -114,6 +126,7 @@ let package = Package(
                 "Buffer Slab Primitives",
                 "Buffer Linked Primitives",
                 "Buffer Slots Primitives",
+                "Buffer Arena Primitives",
             ]
         ),
         .target(

@@ -1,6 +1,6 @@
 // MARK: - Extensions for Slab.Bounded (declared in Core)
 
-extension Buffer.Slab.Bounded {
+extension Buffer.Slab.Bounded where Element: ~Copyable {
 
     /// Creates a bounded slab buffer with at least the given capacity.
     ///
@@ -80,7 +80,7 @@ extension Buffer.Slab.Bounded: Sequence.Drain.`Protocol` {
 
 // MARK: - Property.View (.drain)
 
-extension Buffer.Slab.Bounded {
+extension Buffer.Slab.Bounded where Element: ~Copyable {
     @inlinable
     public var drain: Property<Sequence.Drain, Self>.View {
         mutating _read {

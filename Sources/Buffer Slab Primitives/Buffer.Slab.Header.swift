@@ -7,7 +7,7 @@
 
 import Buffer_Primitives_Core
 
-extension Buffer.Slab.Header {
+extension Buffer.Slab.Header where Element: ~Copyable {
     /// The number of occupied slots.
     @inlinable
     public var occupancy: Bit.Index.Count {

@@ -3,19 +3,20 @@ import Index_Primitives
 
 /// Namespace for buffer primitives.
 ///
-/// Buffer provides five disciplines for managing elements in storage:
+/// Buffer provides six disciplines for managing elements in storage:
 /// - ``Buffer/Linear``: Contiguous front-to-back storage
 /// - ``Buffer/Ring``: Circular FIFO/LIFO storage with wrap-around
 /// - ``Buffer/Slab``: Sparse index-addressable slot storage
 /// - ``Buffer/Linked``: Doubly-linked list backed by pool storage
 /// - ``Buffer/Slots``: Metadata-parametric random-access slots
+/// - ``Buffer/Arena``: Generation-token arena with O(1) alloc/free
 ///
 /// Each discipline follows a three-layer architecture:
 /// 1. **Header** — Pure cursor/bookkeeping state (Layer 1)
 /// 2. **Static Operations** — Expert-level functions on `Storage.Heap` (Layer 2)
 /// 3. **Composed Types** — User-facing types that delegate to static ops (Layer 3)
 ///
-/// - Note: `Ring`, `Linear`, `Slab`, `Linked`, `Slots`, and all their nested types are
+/// - Note: `Ring`, `Linear`, `Slab`, `Linked`, `Slots`, `Arena`, and all their nested types are
 ///   declared inside the enum body (not in extensions) due to Swift compiler constraints
 ///   on nested types within `~Copyable` generic types.
 public enum Buffer<Element: ~Copyable> {
@@ -786,6 +787,242 @@ public enum Buffer<Element: ~Copyable> {
             }
         }
     }
+
+    // MARK: - Arena
+
+    /// A growable arena buffer backed by heap storage with generation-based
+    /// stale-reference detection.
+    ///
+    /// Provides O(1) slot allocation via free-list, O(1) deallocation with
+    /// slot recycling, and generation token validation for detecting stale
+    /// handles. Token parity (odd = occupied, even = free) is the sole
+    /// occupancy oracle — no separate bitmap.
+    ///
+    /// Unlike Ring and Linear, Arena's `storage.initialization` stays `.empty` —
+    /// generation tokens are the source of truth. **deinit MUST explicitly
+    /// iterate meta and deinitialize each occupied slot (odd token).**
+    ///
+    /// ## Dual Access
+    ///
+    /// - **Owner/internal** (`Index<Element>`): Unchecked slot access for the
+    ///   data structure that owns the arena (e.g., Tree).
+    /// - **External** (`Position`): Validated handle access for external
+    ///   consumers. Detects stale references via generation tokens.
+    ///
+    /// ## Capacity Bound
+    ///
+    /// Arena capacity is bounded to `UInt32.max` — a constraint of the
+    /// per-slot metadata representation.
+    public struct Arena: ~Copyable {
+        @usableFromInline
+        package var header: Header
+
+        @usableFromInline
+        package var storage: Storage<Element>.Heap
+
+        @usableFromInline
+        package var _meta: UnsafeMutablePointer<Meta>
+
+        @inlinable
+        package init(
+            header: Header,
+            storage: Storage<Element>.Heap,
+            _meta: UnsafeMutablePointer<Meta>
+        ) {
+            self.header = header
+            self.storage = storage
+            self._meta = _meta
+        }
+
+        deinit {
+            // WORKAROUND: Uses `for i in` instead of `.forEach` closure
+            // WHY: Closures capturing ~Copyable fields of `self` inside deinit trigger
+            //      CopiedLoadBorrowEliminationVisitor segfault (swift-frontend signal 11)
+            // WHEN TO REMOVE: When MoveOnlyChecker deinit closure crash is fixed
+            // TRACKING: swiftlang/swift MoveOnlyChecker deinit closure crash
+            let hw = Int(bitPattern: header.highWater)
+            for i in 0..<hw {
+                if _meta[i].token & 1 == 1 {
+                    storage.deinitialize(at: Index<Element>(Ordinal(UInt(i))))
+                }
+            }
+            storage.initialization = .empty
+            _meta.deallocate()
+        }
+
+        // MARK: - Bounded (Fixed-Capacity, Heap-Allocated)
+
+        /// A fixed-capacity arena buffer backed by heap storage.
+        ///
+        /// Allocation throws `.full` when capacity is exhausted.
+        /// Otherwise identical to `Arena` — same token scheme, same
+        /// dual-access pattern, same deinit.
+        public struct Bounded: ~Copyable {
+            @usableFromInline
+            package var header: Header
+
+            @usableFromInline
+            package var storage: Storage<Element>.Heap
+
+            @usableFromInline
+            package var _meta: UnsafeMutablePointer<Meta>
+
+            @inlinable
+            package init(
+                header: Header,
+                storage: Storage<Element>.Heap,
+                _meta: UnsafeMutablePointer<Meta>
+            ) {
+                self.header = header
+                self.storage = storage
+                self._meta = _meta
+            }
+
+            deinit {
+                // WORKAROUND: Same as Arena deinit above.
+                let hw = Int(bitPattern: header.highWater)
+                for i in 0..<hw {
+                    if _meta[i].token & 1 == 1 {
+                        storage.deinitialize(at: Index<Element>(Ordinal(UInt(i))))
+                    }
+                }
+                storage.initialization = .empty
+                _meta.deallocate()
+            }
+
+            /// Errors that can occur during bounded arena buffer operations.
+            public enum Error: Swift.Error, Sendable, Equatable {
+                /// A `Position` handle refers to a freed or never-allocated slot.
+                case invalidPosition
+                /// The arena is full — no free slots remain and capacity is fixed.
+                case full
+            }
+        }
+
+        // MARK: - Meta
+
+        /// Per-slot metadata: generation token + free-list link.
+        ///
+        /// Token parity is the sole occupancy oracle:
+        /// - Even token (including 0) → free or virgin
+        /// - Odd token → occupied
+        ///
+        /// `nextFree` links freed slots into a LIFO free-list.
+        /// `UInt32.max` = end of list (no next).
+        ///
+        /// 8 bytes per slot. Stored in a single contiguous allocation.
+        @frozen
+        public struct Meta: BitwiseCopyable {
+            /// Parity-tagged generation counter. Even = free, odd = occupied.
+            public var token: UInt32
+
+            /// Index of the next free slot, or `UInt32.max` if none.
+            public var nextFree: UInt32
+
+            /// Creates metadata with the given token and free-list link.
+            @inlinable
+            public init(token: UInt32, nextFree: UInt32) {
+                self.token = token
+                self.nextFree = nextFree
+            }
+
+            /// Virgin slot metadata: token 0 (free, never allocated), no next.
+            @inlinable
+            public static var virgin: Meta { Meta(token: 0, nextFree: .max) }
+        }
+
+        // MARK: - Position
+
+        /// An external handle to a slot in an arena buffer.
+        ///
+        /// Compact 8-byte representation: `(index: UInt32, token: UInt32)`.
+        /// The `slotIndex` computed property provides typed `Index<Element>`
+        /// at API boundaries per [IMPL-010].
+        ///
+        /// Phantom-typed via `Buffer<Element>` parameterization — handles
+        /// from different arenas cannot be mixed at compile time.
+        @frozen
+        public struct Position: Copyable, Sendable, Equatable, Hashable {
+            /// Compact slot coordinate (UInt32 for 8-byte handle).
+            public let index: UInt32
+
+            /// Generation at allocation time. Must match current token for validity.
+            public let token: UInt32
+
+            /// Creates a position handle with the given slot index and token.
+            @inlinable
+            public init(index: UInt32, token: UInt32) {
+                self.index = index
+                self.token = token
+            }
+
+            /// Typed slot index for API boundary use.
+            @inlinable
+            public var slotIndex: Index<Element> {
+                Index<Element>(Ordinal(UInt(index)))
+            }
+        }
+
+        // MARK: - Header
+
+        /// Pure cursor state for an arena buffer.
+        ///
+        /// Copyable and Sendable — typed counts per [IMPL-006] (same-width,
+        /// zero-cost) plus compact UInt32 free-list head per [IMPL-010].
+        ///
+        /// ## Invariants
+        ///
+        /// 1. `.zero ≤ occupied ≤ highWater ≤ capacity`
+        /// 2. Slot `i` is virgin iff `i ≥ highWater`
+        /// 3. Slot `i` is occupied iff `meta[i].token` is odd
+        /// 4. Slot `i` is free iff `meta[i].token` is even and `i < highWater`
+        /// 5. Free-list from `freeHeadRaw` is finite, acyclic, within `[0, highWater)`
+        /// 6. All slots `< highWater` are either occupied or on the free-list
+        public struct Header: Copyable, Sendable {
+            /// Number of currently occupied slots.
+            public var occupied: Index<Element>.Count
+
+            /// First virgin slot index (explicit, not derived from count).
+            public var highWater: Index<Element>.Count
+
+            /// Total allocated slot count.
+            public var capacity: Index<Element>.Count
+
+            /// Free-list head. `UInt32.max` = empty free-list.
+            public var freeHeadRaw: UInt32
+
+            /// Creates a header for an empty arena with the given capacity.
+            @inlinable
+            public init(capacity: Index<Element>.Count) {
+                self.occupied = .zero
+                self.highWater = .zero
+                self.capacity = capacity
+                self.freeHeadRaw = .max
+            }
+
+            /// Whether the free-list contains any slots.
+            @inlinable
+            public var hasFree: Bool { freeHeadRaw != .max }
+
+            /// Typed free-list head index, or `nil` if the free-list is empty.
+            @inlinable
+            public var freeHeadIndex: Index<Element>? {
+                hasFree ? Index<Element>(Ordinal(UInt(freeHeadRaw))) : nil
+            }
+
+            /// Whether the arena is full (no free slots and no virgin slots).
+            @inlinable
+            public var isFull: Bool { !hasFree && highWater >= capacity }
+        }
+
+        // MARK: - Error
+
+        /// Errors that can occur during arena buffer operations.
+        public enum Error: Swift.Error, Sendable, Equatable {
+            /// A `Position` handle refers to a freed or never-allocated slot.
+            case invalidPosition
+        }
+    }
 }
 
 // MARK: - Conditional Conformances (Ring)
@@ -871,3 +1108,13 @@ extension Buffer.Linked.Inline: Sendable where Element: Sendable {}
 // Cannot conform to Copyable: contains Inline which uses @_rawLayout (INV-INLINE-004a).
 // extension Buffer.Linked.Small: Copyable where Element: Copyable {}
 extension Buffer.Linked.Small: Sendable where Element: Sendable {}
+
+// MARK: - Conditional Conformances (Arena)
+
+// Cannot conform to Copyable: Arena has deinit (manages _meta allocation lifecycle).
+// extension Buffer.Arena: Copyable where Element: Copyable {}
+extension Buffer.Arena: @unchecked Sendable where Element: Sendable {}
+
+// Cannot conform to Copyable: Arena.Bounded has deinit (manages _meta allocation lifecycle).
+// extension Buffer.Arena.Bounded: Copyable where Element: Copyable {}
+extension Buffer.Arena.Bounded: @unchecked Sendable where Element: Sendable {}
