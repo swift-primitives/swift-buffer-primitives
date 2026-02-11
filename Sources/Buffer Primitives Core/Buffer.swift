@@ -542,15 +542,20 @@ public enum Buffer<Element: ~Copyable> {
     /// `Buffer.Slots` and re-insert elements (e.g., hash table rehash).
     // MARK: - Linked
 
-    /// A doubly-linked list backed by pool storage.
+    /// A linked list backed by pool storage, parameterized by link count.
     ///
     /// Uses `Storage<Node>.Pool` for O(1) node allocation/deallocation
     /// with slot reuse. Supports double-ended insert/remove operations.
     ///
+    /// ## Link Count (N)
+    ///
+    /// - `Buffer<Element>.Linked<1>`: Singly-linked (next only, 1 link per node)
+    /// - `Buffer<Element>.Linked<2>`: Doubly-linked (next + prev, 2 links per node)
+    ///
     /// ## Pool-Backed Linked List
     ///
     /// Unlike Ring and Linear (contiguous) or Slab (sparse), Linked stores
-    /// elements in pool-allocated nodes with explicit prev/next links.
+    /// elements in pool-allocated nodes with explicit links.
     /// This provides O(1) insert/remove at both ends without shifting.
     ///
     /// ## Reference-Semantic Storage
@@ -562,16 +567,29 @@ public enum Buffer<Element: ~Copyable> {
     ///
     /// ## Node Layout
     ///
-    /// Each node stores the element value plus prev/next `Index<Node>` links.
+    /// Each node stores the element value plus `InlineArray<N, Index<Node>>` links.
+    /// Convention: `links[0]` = next, `links[1]` = prev (when N >= 2).
     /// The pool's sentinel (`capacity.map(Ordinal.init)`) serves as the
     /// null link (end-of-list).
+    ///
+    /// ## Performance
+    ///
+    /// | Operation | N=1 (singly) | N=2 (doubly) |
+    /// |-----------|:------------:|:------------:|
+    /// | insertFront | O(1) | O(1) |
+    /// | insertBack | O(1) | O(1) |
+    /// | removeFront | O(1) | O(1) |
+    /// | removeBack | O(n) traverse | O(1) |
+    /// | forEach | O(n) | O(n) |
+    /// | forEachReversed | N/A | O(n) |
+    /// | Memory per node | Element + 1 Index | Element + 2 Index |
     ///
     /// ## Automatic Cleanup
     ///
     /// `Storage<Node>.Pool`'s deinit iterates `_allocationBits.ones` and
     /// deinitializes all allocated nodes (including their elements).
     /// No explicit cleanup is needed in `Buffer.Linked`.
-    public struct Linked: ~Copyable {
+    public struct Linked<let N: Int>: ~Copyable {
         @usableFromInline
         package var header: Header
 
@@ -586,11 +604,12 @@ public enum Buffer<Element: ~Copyable> {
 
         // MARK: - Node
 
-        /// A doubly-linked list node containing an element and prev/next links.
+        /// A linked list node containing an element and N links.
         ///
-        /// Nodes are stored in `Storage<Node>.Pool` slots. The prev/next
-        /// fields are `Index<Node>` values pointing to other slots in the
-        /// same pool. The pool's sentinel marks end-of-list.
+        /// Nodes are stored in `Storage<Node>.Pool` slots. Links are
+        /// `Index<Node>` values pointing to other slots in the same pool.
+        /// Convention: `links[0]` = next, `links[1]` = prev (when N >= 2).
+        /// The pool's sentinel marks end-of-list.
         ///
         /// `@frozen` because cross-module partial consumption of ~Copyable
         /// types requires known layout.
@@ -599,18 +618,14 @@ public enum Buffer<Element: ~Copyable> {
             /// The element value stored in this node.
             public var element: Element
 
-            /// Index of the next node in the list. Sentinel = end.
-            public var next: Index<Node>
-
-            /// Index of the previous node in the list. Sentinel = end.
-            public var prev: Index<Node>
+            /// Links to other nodes. `links[0]` = next, `links[1]` = prev (N >= 2).
+            public var links: InlineArray<N, Index<Node>>
 
             /// Creates a node with the given element and links.
             @inlinable
-            public init(element: consuming Element, next: Index<Node>, prev: Index<Node>) {
+            public init(element: consuming Element, links: InlineArray<N, Index<Node>>) {
                 self.element = element
-                self.next = next
-                self.prev = prev
+                self.links = links
             }
         }
 

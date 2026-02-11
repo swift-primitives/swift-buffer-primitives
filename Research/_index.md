@@ -6,3 +6,5 @@
 | [dependency-reuse-audit](dependency-reuse-audit.md) | Audit: dependency reuse opportunities in converged buffer design | 2026-02-03 | DECISION |
 | [metadata-parametric-slots](metadata-parametric-slots.md) | Tier 2: Metadata-parametric random-access slots buffer discipline | 2026-02-07 | IN_PROGRESS |
 | [noncopyable-optional-access-patterns](noncopyable-optional-access-patterns.md) | Tier 2: Access patterns for ~Copyable optionals in borrowing contexts | 2026-02-09 | DECISION |
+| [linked-buffer-n-parameterization](linked-buffer-n-parameterization.md) | Tier 1: N-parameter analysis for Buffer.Linked singly/doubly-linked support | 2026-02-11 | DECISION |
+| [noncopyable-view-types-for-peek-reversed](noncopyable-view-types-for-peek-reversed.md) | Tier 1: View type design for Peek/Reversed on ~Copyable Buffer.Linked | 2026-02-11 | RECOMMENDATION |
