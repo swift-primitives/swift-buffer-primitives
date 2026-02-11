@@ -319,6 +319,20 @@ extension Buffer.Linked where Element: ~Copyable {
     public mutating func ensureCapacity(_ minimumCapacity: Int) throws(Error) {
         try ensureCapacity(Index<Node>.Count(Cardinal(UInt(minimumCapacity))))
     }
+
+    /// Ensures there is room for at least `additional` more nodes.
+    ///
+    /// Reads count internally and grows if needed. Designed for use by
+    /// `Small` wrappers where partial consumption of a `~Copyable`
+    /// optional prevents external count reads.
+    ///
+    /// - Parameter additional: The number of additional nodes to reserve.
+    /// - Complexity: O(n) where n is the number of elements (if growth occurs).
+    @inlinable
+    public mutating func reserveAdditionalCapacity(_ additional: Index<Node>.Count) throws(Error) {
+        let needed = header.count.retag(Node.self) + additional
+        try ensureCapacity(needed)
+    }
 }
 
 // MARK: - Traversal

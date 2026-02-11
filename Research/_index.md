@@ -8,3 +8,4 @@
 | [noncopyable-optional-access-patterns](noncopyable-optional-access-patterns.md) | Tier 2: Access patterns for ~Copyable optionals in borrowing contexts | 2026-02-09 | DECISION |
 | [linked-buffer-n-parameterization](linked-buffer-n-parameterization.md) | Tier 1: N-parameter analysis for Buffer.Linked singly/doubly-linked support | 2026-02-11 | DECISION |
 | [noncopyable-view-types-for-peek-reversed](noncopyable-view-types-for-peek-reversed.md) | Tier 1: View type design for Peek/Reversed on ~Copyable Buffer.Linked | 2026-02-11 | DECISION |
+| [inline-small-linked-buffer-design](inline-small-linked-buffer-design.md) | Tier 2: Inline and Small variants for Buffer.Linked using Storage.Inline | 2026-02-11 | DECISION |
