@@ -7,8 +7,7 @@ extension Buffer.Ring where Element: ~Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public func withFront<R: ~Copyable>(_ body: (borrowing Element) -> R) -> R {
-        let ptr = unsafe storage.pointer(at: header.head)
-        return body(unsafe ptr.pointee)
+        return body(unsafe storage.pointer(at: header.head).pointee)
     }
 
     /// Calls `body` with a borrow of the back element.
@@ -16,10 +15,11 @@ extension Buffer.Ring where Element: ~Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public func withBack<R: ~Copyable>(_ body: (borrowing Element) -> R) -> R {
-        let lastIndex = header.count.subtract.saturating(.one).map(Ordinal.init)
-        let lastOffset = Index<Element>.Offset(fromZero: lastIndex)
-        let lastSlot = Index.Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
-        return body(unsafe storage.pointer(at: lastSlot).pointee)
+        return body(unsafe storage.pointer(at: Index.Modular.advanced(
+            header.head,
+            by: Index<Element>.Offset(fromZero: header.count.subtract.saturating(.one).map(Ordinal.init)),
+            capacity: header.capacity
+        )).pointee)
     }
 }
 
@@ -32,8 +32,7 @@ extension Buffer.Ring.Bounded where Element: ~Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public func withFront<R: ~Copyable>(_ body: (borrowing Element) -> R) -> R {
-        let ptr = unsafe storage.pointer(at: header.head)
-        return body(unsafe ptr.pointee)
+        return body(unsafe storage.pointer(at: header.head).pointee)
     }
 
     /// Calls `body` with a borrow of the back element.
@@ -41,10 +40,11 @@ extension Buffer.Ring.Bounded where Element: ~Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public func withBack<R: ~Copyable>(_ body: (borrowing Element) -> R) -> R {
-        let lastIndex = header.count.subtract.saturating(.one).map(Ordinal.init)
-        let lastOffset = Index<Element>.Offset(fromZero: lastIndex)
-        let lastSlot = Index.Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
-        return body(unsafe storage.pointer(at: lastSlot).pointee)
+        return body(unsafe storage.pointer(at: Index.Modular.advanced(
+            header.head,
+            by: Index<Element>.Offset(fromZero: header.count.subtract.saturating(.one).map(Ordinal.init)),
+            capacity: header.capacity
+        )).pointee)
     }
 }
 
@@ -57,8 +57,7 @@ extension Buffer.Ring.Inline where Element: ~Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public func withFront<R: ~Copyable>(_ body: (borrowing Element) -> R) -> R {
-        let ptr = unsafe storage.pointer(at: header.head)
-        return body(unsafe ptr.pointee)
+        return body(unsafe storage.pointer(at: header.head).pointee)
     }
 
     /// Calls `body` with a borrow of the back element.
@@ -66,10 +65,11 @@ extension Buffer.Ring.Inline where Element: ~Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public func withBack<R: ~Copyable>(_ body: (borrowing Element) -> R) -> R {
-        let lastIndex = header.count.subtract.saturating(.one).map(Ordinal.init)
-        let lastOffset = Index<Element>.Offset(fromZero: lastIndex)
-        let lastSlot = Index.Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
-        return body(unsafe storage.pointer(at: lastSlot).pointee)
+        return body(unsafe storage.pointer(at: Index.Modular.advanced(
+            header.head,
+            by: Index<Element>.Offset(fromZero: header.count.subtract.saturating(.one).map(Ordinal.init)),
+            capacity: header.capacity
+        )).pointee)
     }
 }
 

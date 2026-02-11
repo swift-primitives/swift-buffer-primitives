@@ -103,9 +103,8 @@ extension Buffer.Linear where Element: ~Copyable {
         storage: inout Storage<Element>.Inline<capacity>
     ) -> Element {
         let newCount = header.count.subtract.saturating(.one)
-        let lastSlot = newCount.map(Ordinal.init)
 
-        let element = storage.move(at: lastSlot)
+        let element = storage.move(at: newCount.map(Ordinal.init))
 
         header.count = newCount
 
@@ -137,14 +136,8 @@ extension Buffer.Linear where Element: ~Copyable {
         header: inout Header,
         storage: inout Storage<Element>.Inline<capacity>
     ) {
-        switch header.initialization {
-        case .empty:
-            break
-        case .one(let range):
+        header.initialization.forEach { range in
             storage.deinitialize(range: range)
-        case .two(_, _):
-            // Linear buffers never have .two — but handle gracefully
-            break
         }
         header.count = .zero
         storage.initialization = .empty

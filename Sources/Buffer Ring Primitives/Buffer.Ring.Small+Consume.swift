@@ -38,11 +38,11 @@ extension Buffer.Ring.Small where Element: Copyable {
     @inlinable
     public mutating func consume() -> Sequence.Consume.View<Element, ConsumeState> {
         if _heapBuffer != nil {
-            let h = _heapBuffer!.header
-            let s = _heapBuffer!.storage
+            let header = _heapBuffer!.header
+            let storage = _heapBuffer!.storage
             _heapBuffer = nil
             return Sequence.Consume.View(
-                state: ConsumeState(header: h, storage: s),
+                state: ConsumeState(header: header, storage: storage),
                 next: { state in
                     guard !state.header.isEmpty else { return nil }
                     return Buffer.Ring.popFront(header: &state.header, storage: state.storage)

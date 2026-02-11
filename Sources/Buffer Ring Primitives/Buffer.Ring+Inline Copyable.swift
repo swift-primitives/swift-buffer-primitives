@@ -12,29 +12,10 @@ extension Buffer.Ring where Element: Copyable {
         source: borrowing Storage<Element>.Inline<capacity>,
         to destination: Storage<Element>.Heap
     ) {
-        switch header.initialization {
-        case .empty:
-            break
-        case .one(let range):
-            var dstSlot: Index<Element> = .zero
+        header.initialization.linearize { range, offset in
             var srcSlot = range.lowerBound
+            var dstSlot = offset
             while srcSlot < range.upperBound {
-                let value: Element = unsafe source.pointer(at: srcSlot).pointee
-                destination.initialize(to: value, at: dstSlot)
-                srcSlot = srcSlot.successor.saturating()
-                dstSlot = dstSlot.successor.saturating()
-            }
-        case .two(let first, let second):
-            var dstSlot: Index<Element> = .zero
-            var srcSlot = first.lowerBound
-            while srcSlot < first.upperBound {
-                let value: Element = unsafe source.pointer(at: srcSlot).pointee
-                destination.initialize(to: value, at: dstSlot)
-                srcSlot = srcSlot.successor.saturating()
-                dstSlot = dstSlot.successor.saturating()
-            }
-            srcSlot = second.lowerBound
-            while srcSlot < second.upperBound {
                 let value: Element = unsafe source.pointer(at: srcSlot).pointee
                 destination.initialize(to: value, at: dstSlot)
                 srcSlot = srcSlot.successor.saturating()

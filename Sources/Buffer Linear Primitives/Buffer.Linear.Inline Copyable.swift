@@ -15,8 +15,7 @@ extension Buffer.Linear.Inline where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var peekBack: Element {
-        let lastIdx = header.count.subtract.saturating(.one).map(Ordinal.init)
-        return unsafe storage.pointer(at: lastIdx).pointee
+        return unsafe storage.pointer(at: header.count.subtract.saturating(.one).map(Ordinal.init)).pointee
     }
 }
 
@@ -79,8 +78,11 @@ extension Buffer.Linear.Inline: Sequence.`Protocol` where Element: Copyable {
 }
 
 // MARK: - Swift.Sequence
-// Blocked on Storage.Inline conditional Copyable (INV-INLINE-004a).
-// Uncomment when @_rawLayout is replaced with conditionally-Copyable InlineArray.
+// WORKAROUND: Swift.Sequence conformance commented out
+// WHY: Storage.Inline uses @_rawLayout which is unconditionally ~Copyable,
+//      preventing the Copyable requirement for Swift.Sequence conformance
+// WHEN TO REMOVE: When @_rawLayout is replaced with conditionally-Copyable InlineArray
+// TRACKING: INV-INLINE-004a
 //
 // extension Buffer.Linear.Inline: Swift.Sequence where Element: Copyable {
 //     @inlinable

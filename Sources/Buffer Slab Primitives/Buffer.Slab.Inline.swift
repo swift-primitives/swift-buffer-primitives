@@ -63,8 +63,7 @@ extension Buffer.Slab.Inline {
     /// Returns the first vacant slot, or `nil` if all slots are full.
     @inlinable
     public func firstVacant() -> Bit.Index? {
-        let max = Bit.Index.Count(UInt(wordCount))
-        return header.firstVacant(max: max)
+        return header.firstVacant(max: Bit.Index.Count(UInt(wordCount)))
     }
 
     /// Removes all elements from the buffer.

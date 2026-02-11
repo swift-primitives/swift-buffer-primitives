@@ -11,10 +11,7 @@ extension Buffer.Linear where Element: Copyable {
         source: borrowing Storage<Element>.Inline<capacity>,
         to destination: Storage<Element>.Heap
     ) {
-        switch header.initialization {
-        case .empty:
-            break
-        case .one(let range):
+        header.initialization.forEach { range in
             var dstSlot: Index<Element> = .zero
             var srcSlot = range.lowerBound
             while srcSlot < range.upperBound {
@@ -23,9 +20,6 @@ extension Buffer.Linear where Element: Copyable {
                 srcSlot = srcSlot.successor.saturating()
                 dstSlot = dstSlot.successor.saturating()
             }
-        case .two(_, _):
-            // Linear buffers never have .two
-            break
         }
     }
 }

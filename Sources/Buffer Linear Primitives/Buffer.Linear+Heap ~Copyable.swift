@@ -66,13 +66,14 @@ extension Buffer.Linear where Element: ~Copyable {
     ) -> Element {
         precondition(index < header.count, "Index out of bounds")
         let element = storage.move(at: index)
-        let indexInt = Int(bitPattern: index.position)
-        let countInt = Int(bitPattern: header.count)
-        let followingCount = countInt - indexInt - 1
-        if followingCount > 0 {
-            let dst = unsafe storage.pointer(at: index)
-            let src = unsafe storage.pointer(at: index + .one)
-            unsafe dst.moveInitialize(from: src, count: followingCount)
+        let nextSlot = index + .one
+        let followingCount = header.count.subtract.saturating(nextSlot.map(Cardinal.init))
+        if followingCount > .zero {
+            unsafe storage.pointer(at: index)
+                .moveInitialize(
+                    from: storage.pointer(at: nextSlot),
+                    count: Int(bitPattern: followingCount)
+                )
         }
         header.count = header.count.subtract.saturating(.one)
         storage.initialization = header.initialization
@@ -105,9 +106,8 @@ extension Buffer.Linear where Element: ~Copyable {
         storage: Storage<Element>.Heap
     ) -> Element {
         let newCount = header.count.subtract.saturating(.one)
-        let lastSlot = newCount.map(Ordinal.init)
 
-        let element = storage.move(at: lastSlot)
+        let element = storage.move(at: newCount.map(Ordinal.init))
 
         header.count = newCount
 
@@ -142,14 +142,8 @@ extension Buffer.Linear where Element: ~Copyable {
         header: inout Header,
         storage: Storage<Element>.Heap
     ) {
-        switch header.initialization {
-        case .empty:
-            break
-        case .one(let range):
+        header.initialization.forEach { range in
             storage.deinitialize(range: range)
-        case .two(_, _):
-            // Linear buffers never have .two — but handle gracefully
-            break
         }
         header.count = .zero
         storage.initialization = .empty

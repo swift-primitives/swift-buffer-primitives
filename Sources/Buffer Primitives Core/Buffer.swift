@@ -373,11 +373,11 @@ public enum Buffer<Element: ~Copyable> {
         }
 
         deinit {
-            // Slab deinit is NOT automatic — bitmap drives cleanup.
-            // Note: uses `for...in` instead of `forEach` to avoid a
-            // MoveOnlyChecker crash (swift-frontend signal 11) — closures
-            // capturing ~Copyable fields of `self` inside deinit trigger
-            // CopiedLoadBorrowEliminationVisitor to segfault.
+            // WORKAROUND: Uses `for...in` instead of `.forEach` closure
+            // WHY: Closures capturing ~Copyable fields of `self` inside deinit trigger
+            //      CopiedLoadBorrowEliminationVisitor segfault (swift-frontend signal 11)
+            // WHEN TO REMOVE: When MoveOnlyChecker deinit closure crash is fixed
+            // TRACKING: swiftlang/swift MoveOnlyChecker deinit closure crash
             for bitIndex in header.bitmap.ones {
                 storage.deinitialize(at: bitIndex.retag())
             }
@@ -408,9 +408,11 @@ public enum Buffer<Element: ~Copyable> {
             }
 
             deinit {
-                // Slab deinit is NOT automatic — bitmap drives cleanup.
-                // Note: uses `for...in` instead of `forEach` to avoid a
-                // MoveOnlyChecker crash (swift-frontend signal 11).
+                // WORKAROUND: Uses `for...in` instead of `.forEach` closure
+                // WHY: Closures capturing ~Copyable fields of `self` inside deinit trigger
+                //      CopiedLoadBorrowEliminationVisitor segfault (swift-frontend signal 11)
+                // WHEN TO REMOVE: When MoveOnlyChecker deinit closure crash is fixed
+                // TRACKING: swiftlang/swift MoveOnlyChecker deinit closure crash
                 for bitIndex in header.bitmap.ones {
                     storage.deinitialize(at: bitIndex.retag())
                 }

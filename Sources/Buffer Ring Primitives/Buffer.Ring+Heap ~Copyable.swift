@@ -115,14 +115,8 @@ extension Buffer.Ring where Element: ~Copyable {
         header: inout Header,
         storage: Storage<Element>.Heap
     ) {
-        switch header.initialization {
-        case .empty:
-            break
-        case .one(let range):
+        header.initialization.forEach { range in
             storage.deinitialize(range: range)
-        case .two(let first, let second):
-            storage.deinitialize(range: first)
-            storage.deinitialize(range: second)
         }
         header.count = .zero
         header.head = .zero

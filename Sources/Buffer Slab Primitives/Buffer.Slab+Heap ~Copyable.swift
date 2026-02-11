@@ -16,8 +16,7 @@ extension Buffer.Slab {
         header: inout Header,
         storage: Storage<Element>.Heap
     ) {
-        let storageIndex = slot.retag(Element.self)
-        storage.initialize(to: consume element, at: storageIndex)
+        storage.initialize(to: consume element, at: slot.retag(Element.self))
         header.bitmap[slot] = true
     }
 
@@ -32,8 +31,7 @@ extension Buffer.Slab {
         header: inout Header,
         storage: Storage<Element>.Heap
     ) -> Element {
-        let storageIndex = slot.retag(Element.self)
-        let element = storage.move(at: storageIndex)
+        let element = storage.move(at: slot.retag(Element.self))
         header.bitmap[slot] = false
         return element
     }
@@ -48,8 +46,7 @@ extension Buffer.Slab {
         _ body: (Index<Element>) -> Void
     ) {
         header.bitmap.ones.forEach { bitIndex in
-            let storageIndex = bitIndex.retag(Element.self)
-            body(storageIndex)
+            body(bitIndex.retag(Element.self))
         }
     }
 
@@ -72,8 +69,7 @@ extension Buffer.Slab {
         storage: Storage<Element>.Heap
     ) {
         header.bitmap.ones.forEach { bitIndex in
-            let storageIndex = bitIndex.retag(Element.self)
-            storage.deinitialize(at: storageIndex)
+            storage.deinitialize(at: bitIndex.retag(Element.self))
             header.bitmap[bitIndex] = false
         }
     }

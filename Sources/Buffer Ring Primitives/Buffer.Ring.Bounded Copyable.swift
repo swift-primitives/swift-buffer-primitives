@@ -15,10 +15,11 @@ extension Buffer.Ring.Bounded where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var peekBack: Element {
-        let lastIndex = header.count.subtract.saturating(.one).map(Ordinal.init)
-        let lastOffset = Index<Element>.Offset(fromZero: lastIndex)
-        let lastSlot = Index.Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
-        return unsafe storage.pointer(at: lastSlot).pointee
+        return unsafe storage.pointer(at: Index.Modular.advanced(
+            header.head,
+            by: Index<Element>.Offset(fromZero: header.count.subtract.saturating(.one).map(Ordinal.init)),
+            capacity: header.capacity
+        )).pointee
     }
 
     /// Ensures this buffer has unique storage (copy-on-write).

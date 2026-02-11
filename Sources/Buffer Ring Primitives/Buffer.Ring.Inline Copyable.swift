@@ -15,10 +15,11 @@ extension Buffer.Ring.Inline where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var peekBack: Element {
-        let lastIndex = header.count.subtract.saturating(.one).map(Ordinal.init)
-        let lastOffset = Index<Element>.Offset(fromZero: lastIndex)
-        let lastSlot = Index.Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
-        return unsafe storage.pointer(at: lastSlot).pointee
+        return unsafe storage.pointer(at: Index.Modular.advanced(
+            header.head,
+            by: Index<Element>.Offset(fromZero: header.count.subtract.saturating(.one).map(Ordinal.init)),
+            capacity: header.capacity
+        )).pointee
     }
 }
 
@@ -87,8 +88,11 @@ extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
 }
 
 // MARK: - Swift.Sequence
-// Blocked on Storage.Inline conditional Copyable (INV-INLINE-004a).
-// Uncomment when @_rawLayout is replaced with conditionally-Copyable InlineArray.
+// WORKAROUND: Swift.Sequence conformance commented out
+// WHY: Storage.Inline uses @_rawLayout which is unconditionally ~Copyable,
+//      preventing the Copyable requirement for Swift.Sequence conformance
+// WHEN TO REMOVE: When @_rawLayout is replaced with conditionally-Copyable InlineArray
+// TRACKING: INV-INLINE-004a
 //
 // extension Buffer.Ring.Inline: Swift.Sequence where Element: Copyable {
 //     @inlinable

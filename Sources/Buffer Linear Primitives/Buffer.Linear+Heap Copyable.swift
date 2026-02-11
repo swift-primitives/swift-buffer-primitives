@@ -11,14 +11,8 @@ extension Buffer.Linear where Element: Copyable {
         source: Storage<Element>.Heap,
         to destination: Storage<Element>.Heap
     ) {
-        switch header.initialization {
-        case .empty:
-            break
-        case .one(let range):
+        header.initialization.forEach { range in
             source.copy(range: range, to: destination)
-        case .two(_, _):
-            // Linear buffers never have .two
-            break
         }
     }
 }

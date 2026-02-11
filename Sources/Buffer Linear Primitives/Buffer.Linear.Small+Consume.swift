@@ -45,11 +45,11 @@ extension Buffer.Linear.Small where Element: Copyable {
     @inlinable
     public mutating func consume() -> Sequence.Consume.View<Element, ConsumeState> {
         if _heapBuffer != nil {
-            let h = _heapBuffer!.header
-            let s = _heapBuffer!.storage
+            let header = _heapBuffer!.header
+            let storage = _heapBuffer!.storage
             _heapBuffer = nil
             return Sequence.Consume.View(
-                state: ConsumeState(storage: s, count: h.count),
+                state: ConsumeState(storage: storage, count: header.count),
                 next: { state in
                     guard state.position < state.count else { return nil }
                     let element = state.storage.move(at: state.position)

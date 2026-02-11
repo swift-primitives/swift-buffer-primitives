@@ -116,13 +116,8 @@ extension Buffer.Linear where Element: ~Copyable {
     mutating func _growTo(_ minimumCapacity: Index<Element>.Count) {
         let newStorage = Storage<Element>.Heap.create(minimumCapacity: minimumCapacity)
         // Move elements to new storage — linear is always contiguous
-        switch header.initialization {
-        case .empty:
-            break
-        case .one(let range):
+        header.initialization.forEach { range in
             storage.move(range: range, to: newStorage)
-        case .two(_, _):
-            break
         }
         let oldCount = header.count
         storage.initialization = .empty

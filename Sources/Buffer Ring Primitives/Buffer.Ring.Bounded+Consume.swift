@@ -31,10 +31,10 @@ extension Buffer.Ring.Bounded {
 extension Buffer.Ring.Bounded: Sequence.Consume.`Protocol` {
     @inlinable
     public consuming func consume() -> Sequence.Consume.View<Element, ConsumeState> {
-        let h = header
-        let s = storage
+        let header = header
+        let storage = storage
         return Sequence.Consume.View(
-            state: ConsumeState(header: h, storage: s),
+            state: ConsumeState(header: header, storage: storage),
             next: { state in
                 guard !state.header.isEmpty else { return nil }
                 return Buffer.Ring.popFront(header: &state.header, storage: state.storage)
