@@ -411,6 +411,6 @@ struct LinearSmallTests {
             slot += .one
             modelIdx += 1
         }
-        #expect(buffer.count == Index<Int>.Count(Cardinal(UInt(model.count))))
+        #expect(buffer.count == Index<Int>.Count(UInt(model.count)))
     }
 }

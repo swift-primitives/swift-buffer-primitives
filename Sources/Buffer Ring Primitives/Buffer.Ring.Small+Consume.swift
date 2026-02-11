@@ -63,7 +63,7 @@ extension Buffer.Ring.Small where Element: Copyable {
 
             // Reset inline state
             _inlineBuffer.header = Buffer.Ring.Header(
-                capacity: Index<Element>.Count(Cardinal(UInt(inlineCapacity)))
+                capacity: Index<Element>.Count(UInt(inlineCapacity))
             )
             _inlineBuffer.storage.initialization = .empty
 

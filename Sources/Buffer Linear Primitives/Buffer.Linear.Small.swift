@@ -33,7 +33,7 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     public var capacity: Index<Element>.Count {
         switch _heapBuffer {
         case .some(let heap): return heap.capacity
-        case .none: return Index<Element>.Count(Cardinal(UInt(inlineCapacity)))
+        case .none: return Index<Element>.Count(UInt(inlineCapacity))
         }
     }
 
@@ -163,7 +163,7 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     @usableFromInline
     mutating func _spillToHeapMoving() {
         let currentCount = _inlineBuffer.count
-        let newCapacity = Index<Element>.Count(Cardinal(UInt(inlineCapacity * 2)))
+        let newCapacity = Index<Element>.Count(UInt(inlineCapacity * 2))
         let newStorage = Storage<Element>.Heap.create(minimumCapacity: newCapacity)
 
         // Move elements one-by-one from inline to heap
@@ -195,7 +195,7 @@ extension Buffer.Linear.Small where Element: Copyable {
     @usableFromInline
     mutating func _spillToHeap() {
         let currentCount = _inlineBuffer.count
-        let newCapacity = Index<Element>.Count(Cardinal(UInt(inlineCapacity * 2)))
+        let newCapacity = Index<Element>.Count(UInt(inlineCapacity * 2))
         let newStorage = Storage<Element>.Heap.create(minimumCapacity: newCapacity)
 
         Buffer.Linear.copy(

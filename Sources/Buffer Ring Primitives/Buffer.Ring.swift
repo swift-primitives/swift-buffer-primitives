@@ -107,23 +107,8 @@ extension Buffer.Ring where Element: ~Copyable {
     mutating func _growTo(_ minimumCapacity: Index<Element>.Count) {
         let newStorage = Storage<Element>.Heap.create(minimumCapacity: minimumCapacity)
         // Move elements to new storage in linearized order
-        switch header.initialization {
-        case .empty:
-            break
-        case .one(let range):
-            storage.move(range: range, to: newStorage)
-        case .two(let first, let second):
-            storage.move(range: first, to: newStorage)
-            // Move second range after first range's elements in destination
-            var src = second.lowerBound
-            var dst = first.count.map(Ordinal.init)
-            let end = second.lowerBound + second.count
-            while src < end {
-                let element = storage.move(at: src)
-                newStorage.initialize(to: consume element, at: dst)
-                src += .one
-                dst += .one
-            }
+        header.initialization.linearize { range, offset in
+            storage.move(range: range, to: newStorage, at: offset)
         }
         let oldCount = header.count
         storage.initialization = .empty

@@ -33,7 +33,7 @@ extension Buffer.Ring.Small where Element: ~Copyable {
     public var capacity: Index<Element>.Count {
         switch _heapBuffer {
         case .some(let heap): return heap.capacity
-        case .none: return Index<Element>.Count(Cardinal(UInt(inlineCapacity)))
+        case .none: return Index<Element>.Count(UInt(inlineCapacity))
         }
     }
 
@@ -146,7 +146,7 @@ extension Buffer.Ring.Small where Element: ~Copyable {
     @usableFromInline
     mutating func _spillToHeapMoving() {
         let currentCount = _inlineBuffer.count
-        let newCapacity = Index<Element>.Count(Cardinal(UInt(inlineCapacity * 2)))
+        let newCapacity = Index<Element>.Count(UInt(inlineCapacity * 2))
         let newStorage = Storage<Element>.Heap.create(minimumCapacity: newCapacity)
 
         // Move elements in logical (FIFO) order from wrapped inline to linear heap
@@ -154,35 +154,15 @@ extension Buffer.Ring.Small where Element: ~Copyable {
         case .empty:
             break
         case .one(let range):
-            var dstSlot: Index<Element> = .zero
-            var srcSlot = range.lowerBound
-            while srcSlot < range.upperBound {
-                let element = _inlineBuffer.storage.move(at: srcSlot)
-                newStorage.initialize(to: consume element, at: dstSlot)
-                srcSlot = srcSlot.successor.saturating()
-                dstSlot = dstSlot.successor.saturating()
-            }
+            _inlineBuffer.storage.move(range: range, to: newStorage)
         case .two(let first, let second):
-            var dstSlot: Index<Element> = .zero
-            var srcSlot = first.lowerBound
-            while srcSlot < first.upperBound {
-                let element = _inlineBuffer.storage.move(at: srcSlot)
-                newStorage.initialize(to: consume element, at: dstSlot)
-                srcSlot = srcSlot.successor.saturating()
-                dstSlot = dstSlot.successor.saturating()
-            }
-            srcSlot = second.lowerBound
-            while srcSlot < second.upperBound {
-                let element = _inlineBuffer.storage.move(at: srcSlot)
-                newStorage.initialize(to: consume element, at: dstSlot)
-                srcSlot = srcSlot.successor.saturating()
-                dstSlot = dstSlot.successor.saturating()
-            }
+            _inlineBuffer.storage.move(range: first, to: newStorage)
+            _inlineBuffer.storage.move(range: second, to: newStorage, at: first.count.map(Ordinal.init))
         }
 
         // Reset inline state
         _inlineBuffer.header = Buffer.Ring.Header(
-            capacity: Index<Element>.Count(Cardinal(UInt(inlineCapacity)))
+            capacity: Index<Element>.Count(UInt(inlineCapacity))
         )
         _inlineBuffer.storage.initialization = .empty
 

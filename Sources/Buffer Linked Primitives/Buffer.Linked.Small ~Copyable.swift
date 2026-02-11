@@ -49,7 +49,7 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     public var capacity: Index<Element>.Count {
         switch _heapBuffer {
         case .some(let heap): return heap.capacity.retag(Element.self)
-        case .none: return Index<Element>.Count(Cardinal(UInt(inlineCapacity)))
+        case .none: return Index<Element>.Count(UInt(inlineCapacity))
         }
     }
 

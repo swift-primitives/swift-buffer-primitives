@@ -7,7 +7,7 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
     /// The capacity is determined by the compile-time generic parameter.
     @inlinable
     public init() {
-        let cap = Index<Element>.Count(Cardinal(UInt(capacity)))
+        let cap = Index<Element>.Count(UInt(capacity))
         self.init(
             header: Buffer.Linear.Header(capacity: cap),
             storage: .init()
@@ -102,12 +102,12 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
         initializingCount count: Int,
         with body: (UnsafeMutablePointer<Element>) -> Void
     ) {
-        let cap = Index<Element>.Count(Cardinal(UInt(capacity)))
+        let cap = Index<Element>.Count(UInt(capacity))
         var storage = Storage<Element>.Inline<capacity>()
         let ptr = unsafe UnsafeMutablePointer(mutating: storage.pointer(at: .zero))
         unsafe body(ptr)
         var header = Buffer.Linear.Header(capacity: cap)
-        header.count = Index<Element>.Count(Cardinal(UInt(count)))
+        header.count = Index<Element>.Count(UInt(count))
         storage.initialization = header.initialization
         self.init(header: header, storage: storage)
     }

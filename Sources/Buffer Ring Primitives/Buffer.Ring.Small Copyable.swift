@@ -45,7 +45,7 @@ extension Buffer.Ring.Small where Element: Copyable {
     public mutating func reserveCapacity(_ minimumCapacity: Index<Element>.Count) {
         if _heapBuffer != nil {
             _heapBuffer!.reserveCapacity(minimumCapacity)
-        } else if minimumCapacity > Index<Element>.Count(Cardinal(UInt(inlineCapacity))) {
+        } else if minimumCapacity > Index<Element>.Count(UInt(inlineCapacity)) {
             _spillToHeap(minimumCapacity: minimumCapacity)
         }
     }
@@ -59,7 +59,7 @@ extension Buffer.Ring.Small where Element: Copyable {
     @usableFromInline
     mutating func _spillToHeap() {
         let currentCount = _inlineBuffer.count
-        let newCapacity = Index<Element>.Count(Cardinal(UInt(inlineCapacity * 2)))
+        let newCapacity = Index<Element>.Count(UInt(inlineCapacity * 2))
         let newStorage = Storage<Element>.Heap.create(minimumCapacity: newCapacity)
 
         Buffer.Ring.linearize(

@@ -44,7 +44,7 @@ extension Buffer.Linear.Small where Element: Copyable {
     public mutating func reserveCapacity(_ minimumCapacity: Index<Element>.Count) {
         if _heapBuffer != nil {
             _heapBuffer!.reserveCapacity(minimumCapacity)
-        } else if minimumCapacity > Index<Element>.Count(Cardinal(UInt(inlineCapacity))) {
+        } else if minimumCapacity > Index<Element>.Count(UInt(inlineCapacity)) {
             _spillToHeap(minimumCapacity: minimumCapacity)
         }
     }

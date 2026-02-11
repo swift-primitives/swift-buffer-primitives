@@ -42,7 +42,7 @@ extension Buffer.Linked where Element: ~Copyable {
         capacity: Int
     ) throws(Storage<Node>.Pool.Error) -> Self {
         precondition(capacity > 0, "capacity must be positive")
-        return try create(capacity: Index<Node>.Count(Cardinal(UInt(capacity))))
+        return try create(capacity: Index<Node>.Count(UInt(capacity)))
     }
 }
 
@@ -251,7 +251,7 @@ extension Buffer.Linked where Element: ~Copyable {
         let rawMin = Int(bitPattern: minimumCapacity)
         let rawCurrent = Int(bitPattern: storage.capacity)
         let rawNew = Swift.max(rawMin, rawCurrent * 2, 4)
-        let newCapacity = Index<Node>.Count(Cardinal(UInt(rawNew)))
+        let newCapacity = Index<Node>.Count(UInt(rawNew))
 
         let newPool: Storage<Node>.Pool
         do {
@@ -317,7 +317,7 @@ extension Buffer.Linked where Element: ~Copyable {
     /// - Complexity: O(n) where n is the number of elements (if growth occurs).
     @inlinable
     public mutating func ensureCapacity(_ minimumCapacity: Int) throws(Error) {
-        try ensureCapacity(Index<Node>.Count(Cardinal(UInt(minimumCapacity))))
+        try ensureCapacity(Index<Node>.Count(UInt(minimumCapacity)))
     }
 
     /// Ensures there is room for at least `additional` more nodes.

@@ -19,7 +19,7 @@ extension Buffer.Ring.Header.Cyclic where Element: ~Copyable {
     /// The total slot capacity as `Index<Element>.Count` (compile-time constant).
     @inlinable
     public static var slotCapacity: Index<Element>.Count {
-        Index<Element>.Count(Cardinal(UInt(capacity)))
+        Index<Element>.Count(UInt(capacity))
     }
 }
 

@@ -9,7 +9,7 @@ extension Buffer.Ring.Inline where Element: ~Copyable {
     /// - Throws: `Storage.Inline.Error` if the element type exceeds slot constraints.
     @inlinable
     public init() {
-        let cap = Index<Element>.Count(Cardinal(UInt(capacity)))
+        let cap = Index<Element>.Count(UInt(capacity))
         self.init(
             header: Buffer.Ring.Header(capacity: cap),
             storage: .init()
