@@ -157,6 +157,7 @@ for target in package.targets where ![.system, .binary, .plugin, .macro].contain
         .enableUpcomingFeature("InternalImportsByDefault"),
         .enableUpcomingFeature("MemberImportVisibility"),
         .enableExperimentalFeature("Lifetimes"),
+        .enableExperimentalFeature("RawLayout"),
         .strictMemorySafety(),
     ]
     target.swiftSettings = (target.swiftSettings ?? []) + settings

@@ -9,9 +9,10 @@ extension Property.View where Base: ~Copyable {
     public func occupied<Element>(
         _ body: (Index<Element>) -> Void
     ) where Tag == Sequence.ForEach, Base == Buffer<Element>.Arena {
+        let meta = unsafe base.pointee._arenaStorage.metaBase
         Buffer<Element>.Arena.forEach(
             occupied: unsafe base.pointee.header,
-            meta: unsafe base.pointee._meta,
+            meta: meta,
             body
         )
     }
@@ -26,9 +27,10 @@ extension Property.View where Base: ~Copyable {
     public func occupied<Element>(
         _ body: (Index<Element>) -> Void
     ) where Tag == Sequence.ForEach, Base == Buffer<Element>.Arena.Bounded {
+        let meta = unsafe base.pointee._arenaStorage.metaBase
         Buffer<Element>.Arena.forEach(
             occupied: unsafe base.pointee.header,
-            meta: unsafe base.pointee._meta,
+            meta: meta,
             body
         )
     }

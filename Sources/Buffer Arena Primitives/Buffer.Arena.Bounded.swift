@@ -4,7 +4,7 @@ extension Buffer.Arena.Bounded {
 
     /// Creates a fixed-capacity arena buffer with at least the given capacity.
     ///
-    /// Actual capacity comes from `storage.slotCapacity`.
+    /// Actual capacity comes from `arenaStorage.slotCapacity`.
     ///
     /// - Precondition: Requested capacity does not exceed `UInt32.max`.
     @inlinable
@@ -13,13 +13,11 @@ extension Buffer.Arena.Bounded {
             minimumCapacity <= Buffer<Element>.Arena.Header.maximumCapacity,
             "Arena: capacity exceeds UInt32.max"
         )
-        let storage = Storage<Element>.Heap.create(minimumCapacity: minimumCapacity)
-        let capacity = storage.slotCapacity
-        let meta = Buffer<Element>.Arena.Meta.allocate(capacity: capacity)
+        let arenaStorage = Storage<Element>.Arena(minimumCapacity: minimumCapacity)
+        let capacity = arenaStorage.slotCapacity
         self.init(
             header: Buffer<Element>.Arena.Header(capacity: capacity),
-            storage: storage,
-            _meta: meta
+            _arenaStorage: arenaStorage
         )
     }
 
@@ -45,9 +43,12 @@ extension Buffer.Arena.Bounded {
         _ element: consuming Element
     ) throws(Error) -> Buffer<Element>.Arena.Position {
         guard !header.isFull else { throw .full }
-        return Buffer<Element>.Arena.insert(
-            consume element, header: &header, storage: storage, meta: _meta
+        let meta = unsafe _arenaStorage.metaBase
+        let position = Buffer<Element>.Arena.insert(
+            consume element, header: &header, arenaStorage: _arenaStorage, meta: meta
         )
+        _arenaStorage.highWater = header.highWater
+        return position
     }
 
     /// Allocates a slot without initializing the element.
@@ -57,7 +58,10 @@ extension Buffer.Arena.Bounded {
     @inlinable
     public mutating func allocate() throws(Error) -> Buffer<Element>.Arena.Position {
         guard !header.isFull else { throw .full }
-        return Buffer<Element>.Arena.allocate(header: &header, meta: _meta)
+        let meta = unsafe _arenaStorage.metaBase
+        let position = Buffer<Element>.Arena.allocate(header: &header, meta: meta)
+        _arenaStorage.highWater = header.highWater
+        return position
     }
 
     // MARK: - Remove
@@ -69,11 +73,12 @@ extension Buffer.Arena.Bounded {
     public mutating func remove(
         at position: Buffer<Element>.Arena.Position
     ) throws(Error) -> Element {
-        guard Buffer<Element>.Arena.isValid(position, header: header, meta: _meta) else {
+        let meta = unsafe _arenaStorage.metaBase
+        guard Buffer<Element>.Arena.isValid(position, header: header, meta: meta) else {
             throw .invalidPosition
         }
-        let element = storage.move(at: position.slot)
-        Buffer<Element>.Arena._releaseSlot(position.index, header: &header, meta: _meta)
+        let element = _arenaStorage.move(at: position.slot)
+        Buffer<Element>.Arena._releaseSlot(position.index, header: &header, meta: meta)
         return element
     }
 
@@ -82,8 +87,9 @@ extension Buffer.Arena.Bounded {
     /// - Precondition: `slot` is occupied.
     @inlinable
     public mutating func remove(at slot: Index<Element>) -> Element {
-        Buffer<Element>.Arena.remove(
-            at: slot, header: &header, storage: storage, meta: _meta
+        let meta = unsafe _arenaStorage.metaBase
+        return Buffer<Element>.Arena.remove(
+            at: slot, header: &header, arenaStorage: _arenaStorage, meta: meta
         )
     }
 
@@ -92,16 +98,18 @@ extension Buffer.Arena.Bounded {
     /// - Precondition: `slot` is occupied.
     @inlinable
     public mutating func free(at slot: Index<Element>) {
+        let meta = unsafe _arenaStorage.metaBase
         Buffer<Element>.Arena.free(
-            at: slot, header: &header, storage: storage, meta: _meta
+            at: slot, header: &header, arenaStorage: _arenaStorage, meta: meta
         )
     }
 
     /// Deinitializes all occupied elements and resets the arena to empty state.
     @inlinable
     public mutating func removeAll() {
+        let meta = unsafe _arenaStorage.metaBase
         Buffer<Element>.Arena.deinitialize(
-            header: &header, storage: storage, meta: _meta
+            header: &header, arenaStorage: _arenaStorage, meta: meta
         )
     }
 
@@ -110,13 +118,15 @@ extension Buffer.Arena.Bounded {
     /// Returns whether the given position handle is still valid.
     @inlinable
     public func isValid(_ position: Buffer<Element>.Arena.Position) -> Bool {
-        Buffer<Element>.Arena.isValid(position, header: header, meta: _meta)
+        let meta = unsafe _arenaStorage.metaBase
+        return Buffer<Element>.Arena.isValid(position, header: header, meta: meta)
     }
 
     /// Returns whether the slot at the given index is occupied.
     @inlinable
     public func isOccupied(_ slot: Index<Element>) -> Bool {
-        Buffer<Element>.Arena.isOccupied(slot, meta: _meta)
+        let meta = unsafe _arenaStorage.metaBase
+        return Buffer<Element>.Arena.isOccupied(slot, meta: meta)
     }
 
     // MARK: - Token Access
@@ -124,7 +134,8 @@ extension Buffer.Arena.Bounded {
     /// Returns the current generation token for the given slot.
     @inlinable
     public func token(at slot: Index<Element>) -> UInt32 {
-        Buffer<Element>.Arena.token(at: slot, meta: _meta)
+        let meta = unsafe _arenaStorage.metaBase
+        return Buffer<Element>.Arena.token(at: slot, meta: meta)
     }
 
     /// Constructs a Position handle from an occupied slot.
@@ -134,7 +145,22 @@ extension Buffer.Arena.Bounded {
     public func position(
         forOccupied slot: Index<Element>
     ) -> Buffer<Element>.Arena.Position {
-        Buffer<Element>.Arena.position(forOccupied: slot, meta: _meta)
+        let meta = unsafe _arenaStorage.metaBase
+        return Buffer<Element>.Arena.position(forOccupied: slot, meta: meta)
+    }
+
+    // MARK: - Element Access
+
+    /// Pointer to the element at the given slot index.
+    ///
+    /// Use this to read or mutate elements in-place without removing them
+    /// from the arena. The pointer is valid until the arena is deallocated.
+    ///
+    /// - Precondition: `slot` is within `[.zero, highWater)`.
+    @unsafe
+    @inlinable
+    public func pointer(at slot: Index<Element>) -> UnsafeMutablePointer<Element> {
+        unsafe _arenaStorage.elementPointer(at: slot)
     }
 
     // MARK: - Iteration
@@ -145,5 +171,44 @@ extension Buffer.Arena.Bounded {
         mutating _read {
             yield unsafe Property<Sequence.ForEach, Self>.View(&self)
         }
+    }
+}
+
+// MARK: - Copy-on-Write Support
+
+extension Buffer.Arena.Bounded where Element: Copyable {
+
+    /// Ensures the underlying storage is uniquely referenced, copying if needed.
+    ///
+    /// Returns `true` if a copy was made; `false` if already unique.
+    @inlinable
+    @discardableResult
+    public mutating func ensureUnique() -> Bool {
+        if !Swift.isKnownUniquelyReferenced(&_arenaStorage) {
+            _makeUnique()
+            return true
+        }
+        return false
+    }
+
+    /// Creates an independent deep copy, preserving all slot indices and tokens.
+    ///
+    /// The copy has an identical occupied set, free-list state, and generation
+    /// tokens. Slot indices used as cross-references (parent/child pointers in
+    /// trees, next/prev in lists) remain valid in the copy.
+    @usableFromInline
+    package mutating func _makeUnique() {
+        let newArenaStorage = Storage<Element>.Arena(minimumCapacity: header.capacity)
+        let oldMeta = unsafe _arenaStorage.metaBase
+        let newMeta = unsafe newArenaStorage.metaBase
+        let hw = Int(bitPattern: header.highWater)
+        unsafe newMeta.update(from: oldMeta, count: hw)
+        Buffer<Element>.Arena.forEach(occupied: header, meta: oldMeta) { slot in
+            unsafe newArenaStorage.initialize(
+                to: _arenaStorage.elementPointer(at: slot).pointee, at: slot
+            )
+        }
+        newArenaStorage.highWater = header.highWater
+        self = Self(header: header, _arenaStorage: newArenaStorage)
     }
 }

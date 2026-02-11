@@ -1,6 +1,6 @@
 public import Buffer_Primitives_Core
 
-// MARK: - Static Operations for ~Copyable Elements on Storage.Heap
+// MARK: - Static Operations for ~Copyable Elements on Storage.Arena
 
 extension Buffer.Arena {
 
@@ -68,12 +68,12 @@ extension Buffer.Arena {
     public static func free(
         at slot: Index<Element>,
         header: inout Header,
-        storage: Storage<Element>.Heap,
+        arenaStorage: Storage<Element>.Arena,
         meta: UnsafeMutablePointer<Meta>
     ) {
         let rawSlot = UInt32(slot.rawValue.rawValue)
         precondition(meta[Int(rawSlot)].isOccupied, "Arena: slot is not occupied")
-        storage.deinitialize(at: slot)
+        arenaStorage.deinitialize(at: slot)
         _releaseSlot(rawSlot, header: &header, meta: meta)
     }
 
@@ -86,11 +86,11 @@ extension Buffer.Arena {
     public static func insert(
         _ element: consuming Element,
         header: inout Header,
-        storage: Storage<Element>.Heap,
+        arenaStorage: Storage<Element>.Arena,
         meta: UnsafeMutablePointer<Meta>
     ) -> Position {
         let position = allocate(header: &header, meta: meta)
-        storage.initialize(to: consume element, at: position.slot)
+        arenaStorage.initialize(to: consume element, at: position.slot)
         return position
     }
 
@@ -103,12 +103,12 @@ extension Buffer.Arena {
     public static func remove(
         at slot: Index<Element>,
         header: inout Header,
-        storage: Storage<Element>.Heap,
+        arenaStorage: Storage<Element>.Arena,
         meta: UnsafeMutablePointer<Meta>
     ) -> Element {
         let rawSlot = UInt32(slot.rawValue.rawValue)
         precondition(meta[Int(rawSlot)].isOccupied, "Arena: slot is not occupied")
-        let element = storage.move(at: slot)
+        let element = arenaStorage.move(at: slot)
         _releaseSlot(rawSlot, header: &header, meta: meta)
         return element
     }
@@ -122,13 +122,13 @@ extension Buffer.Arena {
     public static func remove(
         at position: Position,
         header: inout Header,
-        storage: Storage<Element>.Heap,
+        arenaStorage: Storage<Element>.Arena,
         meta: UnsafeMutablePointer<Meta>
     ) throws(Error) -> Element {
         guard isValid(position, header: header, meta: meta) else {
             throw .invalidPosition
         }
-        let element = storage.move(at: position.slot)
+        let element = arenaStorage.move(at: position.slot)
         _releaseSlot(position.index, header: &header, meta: meta)
         return element
     }
@@ -208,56 +208,19 @@ extension Buffer.Arena {
     @inlinable
     public static func deinitialize(
         header: inout Header,
-        storage: Storage<Element>.Heap,
+        arenaStorage: Storage<Element>.Arena,
         meta: UnsafeMutablePointer<Meta>
     ) {
         let hw = Int(bitPattern: header.highWater)
         for i in 0..<hw {
             if meta[i].isOccupied {
-                storage.deinitialize(at: Index<Element>(Ordinal(UInt(i))))
+                arenaStorage.deinitialize(at: Index<Element>(Ordinal(UInt(i))))
                 meta[i].token &+= 1
             }
         }
         header.occupied = .zero
         header.freeHead = .max
         header.highWater = .zero
-    }
-}
-
-// MARK: - Meta Static Operations
-
-extension Buffer.Arena.Meta {
-
-    /// Allocates a meta buffer for the given capacity, initialized with virgin metadata.
-    @inlinable
-    public static func allocate(
-        capacity: Index<Element>.Count
-    ) -> UnsafeMutablePointer<Self> {
-        let cap = Int(bitPattern: capacity)
-        let meta = UnsafeMutablePointer<Self>.allocate(capacity: cap)
-        meta.initialize(repeating: .virgin, count: cap)
-        return meta
-    }
-
-    /// Grows the meta allocation to the new capacity.
-    ///
-    /// Copies existing meta prefix and initializes the new region with virgin metadata.
-    /// Deallocates the old meta buffer.
-    ///
-    /// - Precondition: `newCapacity > oldCapacity`.
-    @inlinable
-    public static func grow(
-        from oldMeta: UnsafeMutablePointer<Self>,
-        oldCapacity: Index<Element>.Count,
-        newCapacity: Index<Element>.Count
-    ) -> UnsafeMutablePointer<Self> {
-        let oldCap = Int(bitPattern: oldCapacity)
-        let newCap = Int(bitPattern: newCapacity)
-        precondition(newCap > oldCap, "Arena: new capacity must exceed old capacity")
-        let newMeta = UnsafeMutablePointer<Self>.allocate(capacity: newCap)
-        newMeta.initialize(from: oldMeta, count: oldCap)
-        (newMeta + oldCap).initialize(repeating: .virgin, count: newCap - oldCap)
-        oldMeta.deallocate()
-        return newMeta
+        arenaStorage.highWater = .zero
     }
 }

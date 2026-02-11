@@ -818,36 +818,15 @@ public enum Buffer<Element: ~Copyable> {
         package var header: Header
 
         @usableFromInline
-        package var storage: Storage<Element>.Heap
-
-        @usableFromInline
-        package var _meta: UnsafeMutablePointer<Meta>
+        package var _arenaStorage: Storage<Element>.Arena
 
         @inlinable
         package init(
             header: Header,
-            storage: Storage<Element>.Heap,
-            _meta: UnsafeMutablePointer<Meta>
+            _arenaStorage: Storage<Element>.Arena
         ) {
             self.header = header
-            self.storage = storage
-            self._meta = _meta
-        }
-
-        deinit {
-            // WORKAROUND: Uses `for i in` instead of `.forEach` closure
-            // WHY: Closures capturing ~Copyable fields of `self` inside deinit trigger
-            //      CopiedLoadBorrowEliminationVisitor segfault (swift-frontend signal 11)
-            // WHEN TO REMOVE: When MoveOnlyChecker deinit closure crash is fixed
-            // TRACKING: swiftlang/swift MoveOnlyChecker deinit closure crash
-            let hw = Int(bitPattern: header.highWater)
-            for i in 0..<hw {
-                if _meta[i].isOccupied {
-                    storage.deinitialize(at: Index<Element>(Ordinal(UInt(i))))
-                }
-            }
-            storage.initialization = .empty
-            _meta.deallocate()
+            self._arenaStorage = _arenaStorage
         }
 
         // MARK: - Bounded (Fixed-Capacity, Heap-Allocated)
@@ -862,36 +841,15 @@ public enum Buffer<Element: ~Copyable> {
             package var header: Header
 
             @usableFromInline
-            package var storage: Storage<Element>.Heap
-
-            @usableFromInline
-            package var _meta: UnsafeMutablePointer<Meta>
+            package var _arenaStorage: Storage<Element>.Arena
 
             @inlinable
             package init(
                 header: Header,
-                storage: Storage<Element>.Heap,
-                _meta: UnsafeMutablePointer<Meta>
+                _arenaStorage: Storage<Element>.Arena
             ) {
                 self.header = header
-                self.storage = storage
-                self._meta = _meta
-            }
-
-            deinit {
-                // WORKAROUND: Uses `for i in` instead of `.forEach` closure
-                // WHY: Closures capturing ~Copyable fields of `self` inside deinit trigger
-                //      CopiedLoadBorrowEliminationVisitor segfault (swift-frontend signal 11)
-                // WHEN TO REMOVE: When MoveOnlyChecker deinit closure crash is fixed
-                // TRACKING: swiftlang/swift MoveOnlyChecker deinit closure crash
-                let hw = Int(bitPattern: header.highWater)
-                for i in 0..<hw {
-                    if _meta[i].isOccupied {
-                        storage.deinitialize(at: Index<Element>(Ordinal(UInt(i))))
-                    }
-                }
-                storage.initialization = .empty
-                _meta.deallocate()
+                self._arenaStorage = _arenaStorage
             }
 
             /// Errors that can occur during bounded arena buffer operations.
@@ -903,41 +861,104 @@ public enum Buffer<Element: ~Copyable> {
             }
         }
 
+        // MARK: - Inline (Fixed-Capacity, Stack-Allocated)
+
+        /// A fixed-capacity arena buffer backed by inline (stack-allocated) storage.
+        ///
+        /// Provides the same token-based occupancy tracking and LIFO free-list
+        /// as heap-backed `Arena` and `Bounded`, but stored entirely inline.
+        /// Allocation throws `.full` when capacity is exhausted.
+        ///
+        /// Uses `InlineArray` for per-slot `Meta` (generation tokens + free-list
+        /// links) and `@_rawLayout` for element storage.
+        public struct Inline<let inlineCapacity: Int>: ~Copyable {
+            @_rawLayout(likeArrayOf: Element, count: inlineCapacity)
+            @usableFromInline
+            package struct _Elements: ~Copyable, @unchecked Sendable {
+                @usableFromInline package init() {}
+            }
+
+            @usableFromInline
+            package var header: Header
+
+            @usableFromInline
+            package var _meta: InlineArray<inlineCapacity, Meta>
+
+            @usableFromInline
+            package var _elements: _Elements
+
+            @inlinable
+            package init(
+                header: Header,
+                _meta: InlineArray<inlineCapacity, Meta>,
+                _elements: consuming _Elements
+            ) {
+                self.header = header
+                self._meta = _meta
+                self._elements = _elements
+            }
+
+            /// Errors that can occur during inline arena buffer operations.
+            public enum Error: Swift.Error, Sendable, Equatable {
+                /// A `Position` handle refers to a freed or never-allocated slot.
+                case invalidPosition
+                /// The arena is full — no free slots remain and capacity is fixed.
+                case full
+            }
+
+            deinit {
+                // WORKAROUND: Uses `for i in` instead of `.forEach` closure
+                // WHY: Closures capturing ~Copyable fields of `self` inside deinit trigger
+                //      CopiedLoadBorrowEliminationVisitor segfault (swift-frontend signal 11)
+                // WHEN TO REMOVE: When MoveOnlyChecker deinit closure crash is fixed
+                let hw = Int(bitPattern: header.highWater)
+                let stride = MemoryLayout<Element>.stride
+                for i in 0..<hw {
+                    if _meta[i].isOccupied {
+                        // Use borrowing pointer + mutating cast: safe in deinit (we own the memory).
+                        unsafe withUnsafePointer(to: _elements) { (ptr: UnsafePointer<_Elements>) -> Void in
+                            unsafe UnsafeMutableRawPointer(mutating: UnsafeRawPointer(ptr))
+                                .advanced(by: i * stride)
+                                .assumingMemoryBound(to: Element.self)
+                                .deinitialize(count: 1)
+                        }
+                    }
+                }
+            }
+        }
+
+        // MARK: - Small (Inline + Heap Spill)
+
+        /// An arena buffer that starts with inline storage and spills to heap
+        /// when capacity is exceeded.
+        ///
+        /// In inline mode, uses `Inline<inlineCapacity>` with full arena
+        /// discipline (tokens, free-list). After spill, elements are moved
+        /// to a growable `Buffer<Element>.Arena`. Once spilled, the buffer
+        /// never returns to inline mode.
+        public struct Small<let inlineCapacity: Int>: ~Copyable {
+            @usableFromInline
+            package var _inlineBuffer: Inline<inlineCapacity>
+
+            @usableFromInline
+            package var _heapBuffer: Buffer<Element>.Arena?
+
+            @inlinable
+            package init(
+                _inlineBuffer: consuming Inline<inlineCapacity>,
+                _heapBuffer: consuming Buffer<Element>.Arena?
+            ) {
+                self._inlineBuffer = _inlineBuffer
+                self._heapBuffer = _heapBuffer
+            }
+        }
+
         // MARK: - Meta
 
         /// Per-slot metadata: generation token + free-list link.
         ///
-        /// Token parity is the sole occupancy oracle:
-        /// - Even token (including 0) → free or virgin
-        /// - Odd token → occupied
-        ///
-        /// `link` chains freed slots into a LIFO free-list.
-        /// `UInt32.max` = end of list (no next).
-        ///
-        /// 8 bytes per slot. Stored in a single contiguous allocation.
-        @frozen
-        public struct Meta: BitwiseCopyable {
-            /// Parity-tagged generation counter. Even = free, odd = occupied.
-            public var token: UInt32
-
-            /// Free-list link: index of the next free slot, or `UInt32.max` if none.
-            public var link: UInt32
-
-            /// Creates metadata with the given token and free-list link.
-            @inlinable
-            public init(token: UInt32, link: UInt32) {
-                self.token = token
-                self.link = link
-            }
-
-            /// Whether this slot is currently occupied (odd token = occupied).
-            @inlinable
-            public var isOccupied: Bool { token & 1 == 1 }
-
-            /// Virgin slot metadata: token 0 (free, never allocated), no next.
-            @inlinable
-            public static var virgin: Meta { Meta(token: 0, link: .max) }
-        }
+        /// Canonical definition lives at `Storage<Element>.Arena.Meta`.
+        public typealias Meta = Storage<Element>.Arena.Meta
 
         // MARK: - Position
 
@@ -1119,10 +1140,16 @@ extension Buffer.Linked.Small: Sendable where Element: Sendable {}
 
 // MARK: - Conditional Conformances (Arena)
 
-// Cannot conform to Copyable: Arena has deinit (manages _meta allocation lifecycle).
-// extension Buffer.Arena: Copyable where Element: Copyable {}
+extension Buffer.Arena: Copyable where Element: Copyable {}
 extension Buffer.Arena: @unchecked Sendable where Element: Sendable {}
 
-// Cannot conform to Copyable: Arena.Bounded has deinit (manages _meta allocation lifecycle).
-// extension Buffer.Arena.Bounded: Copyable where Element: Copyable {}
+extension Buffer.Arena.Bounded: Copyable where Element: Copyable {}
 extension Buffer.Arena.Bounded: @unchecked Sendable where Element: Sendable {}
+
+// Cannot conform to Copyable: @_rawLayout is unconditionally ~Copyable (INV-INLINE-004a).
+// extension Buffer.Arena.Inline: Copyable where Element: Copyable {}
+extension Buffer.Arena.Inline: Sendable where Element: Sendable {}
+
+// Cannot conform to Copyable: contains Inline which uses @_rawLayout (INV-INLINE-004a).
+// extension Buffer.Arena.Small: Copyable where Element: Copyable {}
+extension Buffer.Arena.Small: Sendable where Element: Sendable {}
