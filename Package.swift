@@ -33,6 +33,10 @@ let package = Package(
             targets: ["Buffer Slab Primitives"]
         ),
         .library(
+            name: "Buffer Linked Primitives",
+            targets: ["Buffer Linked Primitives"]
+        ),
+        .library(
             name: "Buffer Slots Primitives",
             targets: ["Buffer Slots Primitives"]
         ),
@@ -85,6 +89,14 @@ let package = Package(
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
+        // Linked: Doubly-linked list backed by pool storage
+        .target(
+            name: "Buffer Linked Primitives",
+            dependencies: [
+                "Buffer Primitives Core",
+                .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
+            ]
+        ),
         // Slots: Metadata-parametric random-access slots static ops and composed types
         .target(
             name: "Buffer Slots Primitives",
@@ -92,7 +104,7 @@ let package = Package(
                 "Buffer Primitives Core",
             ]
         ),
-        // Umbrella: Re-exports Core, Ring, Linear, Slab, Slots
+        // Umbrella: Re-exports Core, Ring, Linear, Slab, Linked, Slots
         .target(
             name: "Buffer Primitives",
             dependencies: [
@@ -100,6 +112,7 @@ let package = Package(
                 "Buffer Ring Primitives",
                 "Buffer Linear Primitives",
                 "Buffer Slab Primitives",
+                "Buffer Linked Primitives",
                 "Buffer Slots Primitives",
             ]
         ),

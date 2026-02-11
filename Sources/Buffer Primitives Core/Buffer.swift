@@ -3,10 +3,11 @@ import Index_Primitives
 
 /// Namespace for buffer primitives.
 ///
-/// Buffer provides four disciplines for managing elements in storage:
+/// Buffer provides five disciplines for managing elements in storage:
 /// - ``Buffer/Linear``: Contiguous front-to-back storage
 /// - ``Buffer/Ring``: Circular FIFO/LIFO storage with wrap-around
 /// - ``Buffer/Slab``: Sparse index-addressable slot storage
+/// - ``Buffer/Linked``: Doubly-linked list backed by pool storage
 /// - ``Buffer/Slots``: Metadata-parametric random-access slots
 ///
 /// Each discipline follows a three-layer architecture:
@@ -14,8 +15,8 @@ import Index_Primitives
 /// 2. **Static Operations** — Expert-level functions on `Storage.Heap` (Layer 2)
 /// 3. **Composed Types** — User-facing types that delegate to static ops (Layer 3)
 ///
-/// - Note: `Ring`, `Linear`, `Slab`, `Slots`, and all their nested types are declared
-///   inside the enum body (not in extensions) due to Swift compiler constraints
+/// - Note: `Ring`, `Linear`, `Slab`, `Linked`, `Slots`, and all their nested types are
+///   declared inside the enum body (not in extensions) due to Swift compiler constraints
 ///   on nested types within `~Copyable` generic types.
 public enum Buffer<Element: ~Copyable> {
 
@@ -539,6 +540,116 @@ public enum Buffer<Element: ~Copyable> {
     ///
     /// Fixed-capacity. Consumers requiring growth must allocate a new
     /// `Buffer.Slots` and re-insert elements (e.g., hash table rehash).
+    // MARK: - Linked
+
+    /// A doubly-linked list backed by pool storage.
+    ///
+    /// Uses `Storage<Node>.Pool` for O(1) node allocation/deallocation
+    /// with slot reuse. Supports double-ended insert/remove operations.
+    ///
+    /// ## Pool-Backed Linked List
+    ///
+    /// Unlike Ring and Linear (contiguous) or Slab (sparse), Linked stores
+    /// elements in pool-allocated nodes with explicit prev/next links.
+    /// This provides O(1) insert/remove at both ends without shifting.
+    ///
+    /// ## Reference-Semantic Storage
+    ///
+    /// `Storage<Node>.Pool` is a `final class`, making the pool reference
+    /// always Copyable. This enables `Buffer.Linked` to be conditionally
+    /// Copyable when `Element: Copyable`, with CoW semantics via
+    /// `isKnownUniquelyReferenced`.
+    ///
+    /// ## Node Layout
+    ///
+    /// Each node stores the element value plus prev/next `Index<Node>` links.
+    /// The pool's sentinel (`capacity.map(Ordinal.init)`) serves as the
+    /// null link (end-of-list).
+    ///
+    /// ## Automatic Cleanup
+    ///
+    /// `Storage<Node>.Pool`'s deinit iterates `_allocationBits.ones` and
+    /// deinitializes all allocated nodes (including their elements).
+    /// No explicit cleanup is needed in `Buffer.Linked`.
+    public struct Linked: ~Copyable {
+        @usableFromInline
+        package var header: Header
+
+        @usableFromInline
+        package var storage: Storage<Node>.Pool
+
+        @inlinable
+        package init(header: Header, storage: Storage<Node>.Pool) {
+            self.header = header
+            self.storage = storage
+        }
+
+        // MARK: - Node
+
+        /// A doubly-linked list node containing an element and prev/next links.
+        ///
+        /// Nodes are stored in `Storage<Node>.Pool` slots. The prev/next
+        /// fields are `Index<Node>` values pointing to other slots in the
+        /// same pool. The pool's sentinel marks end-of-list.
+        ///
+        /// `@frozen` because cross-module partial consumption of ~Copyable
+        /// types requires known layout.
+        @frozen
+        public struct Node: ~Copyable {
+            /// The element value stored in this node.
+            public var element: Element
+
+            /// Index of the next node in the list. Sentinel = end.
+            public var next: Index<Node>
+
+            /// Index of the previous node in the list. Sentinel = end.
+            public var prev: Index<Node>
+
+            /// Creates a node with the given element and links.
+            @inlinable
+            public init(element: consuming Element, next: Index<Node>, prev: Index<Node>) {
+                self.element = element
+                self.next = next
+                self.prev = prev
+            }
+        }
+
+        // MARK: - Header
+
+        /// Pure cursor state for a linked list buffer.
+        ///
+        /// Tracks head, tail, count, and the sentinel value derived from
+        /// the pool's capacity. Copyable and Sendable — just a few integers.
+        public struct Header: Copyable, Sendable {
+            /// Index of the first node. Sentinel = empty list.
+            public var head: Index<Node>
+
+            /// Index of the last node. Sentinel = empty list.
+            public var tail: Index<Node>
+
+            /// Number of elements in the list.
+            public var count: Index<Element>.Count
+
+            /// Sentinel value (pool capacity as ordinal). Marks end-of-list.
+            public let sentinel: Index<Node>
+
+            /// Creates a header for an empty list with the given sentinel.
+            @inlinable
+            public init(sentinel: Index<Node>) {
+                self.head = sentinel
+                self.tail = sentinel
+                self.count = .zero
+                self.sentinel = sentinel
+            }
+        }
+
+        /// Errors that can occur during linked list operations.
+        public enum Error: Swift.Error, Sendable, Equatable {
+            /// The pool is exhausted — no free nodes remain.
+            case capacityExhausted
+        }
+    }
+
     public struct Slots<Metadata: BitwiseCopyable>: ~Copyable {
         @usableFromInline
         package var header: Header
@@ -638,3 +749,11 @@ extension Buffer.Slab.Inline: Sendable where Element: Sendable {}
 
 extension Buffer.Slots: Copyable where Element: Copyable {}
 extension Buffer.Slots: @unchecked Sendable where Element: Sendable {}
+
+// MARK: - Conditional Conformances (Linked)
+
+extension Buffer.Linked.Node: Copyable where Element: Copyable {}
+extension Buffer.Linked.Node: @unchecked Sendable where Element: Sendable {}
+
+extension Buffer.Linked: Copyable where Element: Copyable {}
+extension Buffer.Linked: @unchecked Sendable where Element: Sendable {}
