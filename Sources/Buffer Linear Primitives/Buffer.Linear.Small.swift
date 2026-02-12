@@ -136,6 +136,18 @@ extension Buffer.Linear.Small where Element: ~Copyable {
         }
     }
 
+    /// Removes elements beyond the specified count.
+    ///
+    /// If `newCount >= count`, this method has no effect.
+    @inlinable
+    public mutating func truncate(to newCount: Index<Element>.Count) {
+        if _heapBuffer != nil {
+            heap.truncate(to: newCount)
+        } else {
+            _inlineBuffer.truncate(to: newCount)
+        }
+    }
+
     /// Removes all elements from the buffer.
     ///
     /// - Parameter keepingCapacity: If `true` and the buffer has spilled,

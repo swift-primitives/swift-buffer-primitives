@@ -35,8 +35,8 @@ extension Buffer.Slab.Inline where Element: ~Copyable {
 
     /// Whether a specific slot is occupied.
     @inlinable
-    public func isOccupied(at slot: Bit.Index) -> Bool {
-        header.isOccupied(at: slot)
+    public func isOccupied(at slot: Bit.Index.Bounded<wordCount>) -> Bool {
+        header.isOccupied(at: Bit.Index(slot))
     }
 
     // MARK: - Mutations

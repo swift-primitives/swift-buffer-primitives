@@ -171,4 +171,24 @@ extension Buffer.Linear where Element: ~Copyable {
         header.count = .zero
         storage.initialization = .empty
     }
+
+    // MARK: Truncate (Inline)
+
+    /// Deinitializes elements beyond `newCount`, keeping elements `0..<newCount`.
+    ///
+    /// If `newCount >= header.count`, this is a no-op.
+    ///
+    /// - Precondition: `newCount >= 0`.
+    @inlinable
+    public static func truncate<let capacity: Int>(
+        to newCount: Index<Element>.Count,
+        header: inout Header,
+        storage: inout Storage<Element>.Inline<capacity>
+    ) {
+        guard newCount < header.count else { return }
+        let start = newCount.map(Ordinal.init)
+        let end = header.count.map(Ordinal.init)
+        storage.deinitialize(range: start ..< end)
+        header.count = newCount
+    }
 }

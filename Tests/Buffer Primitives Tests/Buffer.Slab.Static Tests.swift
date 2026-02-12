@@ -44,7 +44,7 @@ struct SlabStaticTests {
 
     @Test
     func `firstVacant finds first empty slot`() {
-        let header: Buffer<Int>.Slab.Header = .init(capacity: 4)
+        var header: Buffer<Int>.Slab.Header = .init(capacity: 4)
         header.bitmap[0] = true
         header.bitmap[1] = true
 

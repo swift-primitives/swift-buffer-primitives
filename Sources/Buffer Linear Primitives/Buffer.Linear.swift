@@ -93,6 +93,14 @@ extension Buffer.Linear where Element: ~Copyable {
         Buffer.Linear.deinitializeAll(header: &header, storage: storage)
     }
 
+    /// Removes elements beyond the specified count.
+    ///
+    /// If `newCount >= count`, this method has no effect.
+    @inlinable
+    public mutating func truncate(to newCount: Index<Element>.Count) {
+        Buffer.Linear.truncate(to: newCount, header: &header, storage: storage)
+    }
+
     /// Ensures the buffer can hold at least `minimumCapacity` elements.
     @inlinable
     public mutating func reserveCapacity(_ minimumCapacity: Index<Element>.Count) {

@@ -63,7 +63,7 @@ extension Buffer.Slab.Small where Element: ~Copyable {
     public func isOccupied(at slot: Bit.Index) -> Bool {
         switch _heapBuffer {
         case .some(let heap): return heap.header.isOccupied(at: slot)
-        case .none: return _inlineBuffer.isOccupied(at: slot)
+        case .none: return _inlineBuffer.isOccupied(at: Bit.Index.Bounded<inlineCapacity>(slot)!)
         }
     }
 

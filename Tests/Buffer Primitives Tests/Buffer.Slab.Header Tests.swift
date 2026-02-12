@@ -37,7 +37,7 @@ struct SlabHeaderTests {
         var header: Buffer<Int>.Slab.Header = .init(capacity: 4)
         header.bitmap[0] = true
         header.bitmap[1] = true
-        let vacant = header.firstVacant(max: header.bitmap.capacity)
+        let vacant = header.firstVacant(max: header.bitmap.capacity.maximum)
         #expect(vacant == 2)
     }
 
@@ -48,7 +48,7 @@ struct SlabHeaderTests {
         header.bitmap[1] = true
         header.bitmap[2] = true
         header.bitmap[3] = true
-        let vacant = header.firstVacant(max: header.bitmap.capacity)
+        let vacant = header.firstVacant(max: header.bitmap.capacity.maximum)
         #expect(vacant == nil)
     }
 }
