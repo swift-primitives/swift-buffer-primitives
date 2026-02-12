@@ -29,7 +29,7 @@ extension Buffer.Linked where Element: Copyable {
     @discardableResult
     public mutating func ensureUnique() -> Bool {
         if !isKnownUniquelyReferenced(&storage) {
-            _makeUnique()
+            storage = storage.copy()
             return true
         }
         return false

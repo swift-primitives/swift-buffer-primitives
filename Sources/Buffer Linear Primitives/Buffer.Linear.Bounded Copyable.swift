@@ -51,7 +51,7 @@ extension Buffer.Linear.Bounded where Element: Copyable {
     @discardableResult
     public mutating func ensureUnique() -> Bool {
         if !isKnownUniquelyReferenced(&storage) {
-            _makeUnique()
+            self = copy()
             return true
         }
         return false
@@ -61,14 +61,19 @@ extension Buffer.Linear.Bounded where Element: Copyable {
     @usableFromInline
     mutating func _makeUnique() {
         if !isKnownUniquelyReferenced(&storage) {
-            let newStorage = Storage<Element>.Heap.create(minimumCapacity: header.capacity)
-            Buffer.Linear.copy(header: header, source: storage, to: newStorage)
-            let oldCount = header.count
-            storage = newStorage
-            header = Buffer.Linear.Header(capacity: newStorage.slotCapacity)
-            header.count = oldCount
-            storage.initialization = header.initialization
+            self = copy()
         }
+    }
+
+    /// Returns an independent copy of this buffer with its own storage.
+    @usableFromInline
+    func copy() -> Self {
+        let newStorage = Storage<Element>.Heap.create(minimumCapacity: header.capacity)
+        Buffer.Linear.copy(header: header, source: storage, to: newStorage)
+        var newHeader = Buffer.Linear.Header(capacity: newStorage.slotCapacity)
+        newHeader.count = header.count
+        newStorage.initialization = newHeader.initialization
+        return Self(header: newHeader, storage: newStorage)
     }
 }
 
