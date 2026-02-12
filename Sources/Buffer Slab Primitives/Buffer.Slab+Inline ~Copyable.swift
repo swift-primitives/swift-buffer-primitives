@@ -10,12 +10,12 @@ extension Buffer.Slab {
     @inlinable
     public static func insert<let capacity: Int>(
         _ element: consuming Element,
-        at slot: Bit.Index,
+        at slot: Bit.Index.Bounded<capacity>,
         header: inout Header,
         storage: inout Storage<Element>.Inline<capacity>
     ) {
         storage.initialize(to: consume element, at: slot.retag(Element.self))
-        header.bitmap[slot] = true
+        header.bitmap[Bit.Index(slot)] = true
     }
 
     // MARK: Remove (Inline)
@@ -25,12 +25,12 @@ extension Buffer.Slab {
     /// - Precondition: The slot is occupied.
     @inlinable
     public static func remove<let capacity: Int>(
-        at slot: Bit.Index,
+        at slot: Bit.Index.Bounded<capacity>,
         header: inout Header,
         storage: inout Storage<Element>.Inline<capacity>
     ) -> Element {
         let element = storage.move(at: slot.retag(Element.self))
-        header.bitmap[slot] = false
+        header.bitmap[Bit.Index(slot)] = false
         return element
     }
 
@@ -43,7 +43,7 @@ extension Buffer.Slab {
     /// - Precondition: The slot is occupied.
     @inlinable
     public static func update<let capacity: Int>(
-        at slot: Bit.Index,
+        at slot: Bit.Index.Bounded<capacity>,
         with element: consuming Element,
         storage: inout Storage<Element>.Inline<capacity>
     ) -> Element {
@@ -75,7 +75,7 @@ extension Buffer.Slab {
         storage: inout Storage<Element>.Inline<capacity>
     ) {
         header.bitmap.ones.forEach { bitIndex in
-            storage.deinitialize(at: bitIndex.retag(Element.self))
+            storage.deinitialize(at: Index<Element>.Bounded<capacity>(bitIndex.retag(Element.self))!)
             header.bitmap[bitIndex] = false
         }
     }

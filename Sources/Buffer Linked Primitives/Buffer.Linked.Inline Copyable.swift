@@ -21,7 +21,8 @@ extension Buffer.Linked.Inline where Element: Copyable {
     public var first: Element? {
         let sentinel = header.sentinel
         guard header.head != sentinel else { return nil }
-        let ptr = unsafe storage.pointer(at: header.head)
+        let bounded = Index<Buffer<Element>.Linked<N>.Node>.Bounded<capacity>(header.head)!
+        let ptr: UnsafePointer<Buffer<Element>.Linked<N>.Node> = unsafe storage.pointer(at: bounded)
         return unsafe ptr.pointee.element
     }
 
@@ -32,7 +33,8 @@ extension Buffer.Linked.Inline where Element: Copyable {
     public var last: Element? {
         let sentinel = header.sentinel
         guard header.tail != sentinel else { return nil }
-        let ptr = unsafe storage.pointer(at: header.tail)
+        let bounded = Index<Buffer<Element>.Linked<N>.Node>.Bounded<capacity>(header.tail)!
+        let ptr: UnsafePointer<Buffer<Element>.Linked<N>.Node> = unsafe storage.pointer(at: bounded)
         return unsafe ptr.pointee.element
     }
 }
@@ -82,7 +84,8 @@ extension Buffer.Linked.Inline: Sequence.`Protocol` where Element: Copyable {
     /// Elements are yielded from front to back.
     @inlinable
     public borrowing func makeIterator() -> Iterator {
-        let base = unsafe storage.pointer(at: .zero)
+        let bounded = Index<Buffer<Element>.Linked<N>.Node>.Bounded<capacity>(.zero)!
+        let base: UnsafePointer<Buffer<Element>.Linked<N>.Node> = unsafe storage.pointer(at: bounded)
         return unsafe Iterator(base: base, head: header.head, sentinel: header.sentinel)
     }
 }

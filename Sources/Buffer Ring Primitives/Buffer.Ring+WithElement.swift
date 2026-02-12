@@ -57,7 +57,9 @@ extension Buffer.Ring.Inline where Element: ~Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public func withFront<R: ~Copyable>(_ body: (borrowing Element) -> R) -> R {
-        return body(unsafe storage.pointer(at: header.head).pointee)
+        let bounded = Index<Element>.Bounded<capacity>(header.head)!
+        let ptr: UnsafePointer<Element> = unsafe storage.pointer(at: bounded)
+        return body(unsafe ptr.pointee)
     }
 
     /// Calls `body` with a borrow of the back element.
@@ -65,11 +67,15 @@ extension Buffer.Ring.Inline where Element: ~Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public func withBack<R: ~Copyable>(_ body: (borrowing Element) -> R) -> R {
-        return body(unsafe storage.pointer(at: Index.Modular.advanced(
-            header.head,
-            by: Index<Element>.Offset(fromZero: header.count.subtract.saturating(.one).map(Ordinal.init)),
-            capacity: header.capacity
-        )).pointee)
+        let bounded = Index<Element>.Bounded<capacity>(
+            Index.Modular.advanced(
+                header.head,
+                by: Index<Element>.Offset(fromZero: header.count.subtract.saturating(.one).map(Ordinal.init)),
+                capacity: header.capacity
+            )
+        )!
+        let ptr: UnsafePointer<Element> = unsafe storage.pointer(at: bounded)
+        return body(unsafe ptr.pointee)
     }
 }
 

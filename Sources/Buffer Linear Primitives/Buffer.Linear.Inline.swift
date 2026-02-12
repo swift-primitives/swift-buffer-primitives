@@ -58,24 +58,42 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
     ///
     /// - Precondition: The index must be in bounds.
     @inlinable
-    public mutating func remove(at index: Index<Element>) -> Element {
+    public mutating func remove(at index: Index<Element>.Bounded<capacity>) -> Element {
         Buffer.Linear.remove(at: index, header: &header, storage: &storage)
+    }
+
+    /// Package convenience — accepts unbounded index for Small delegation.
+    @inlinable
+    package mutating func remove(at index: Index<Element>) -> Element {
+        remove(at: Index<Element>.Bounded<capacity>(index)!)
     }
 
     /// Replaces the element at the given index, returning the old element.
     ///
     /// - Precondition: The index must be in bounds.
     @inlinable
-    public mutating func replace(at index: Index<Element>, with newElement: consuming Element) -> Element {
+    public mutating func replace(at index: Index<Element>.Bounded<capacity>, with newElement: consuming Element) -> Element {
         Buffer.Linear.replace(at: index, with: consume newElement, storage: &storage)
+    }
+
+    /// Package convenience — accepts unbounded index for Small delegation.
+    @inlinable
+    package mutating func replace(at index: Index<Element>, with newElement: consuming Element) -> Element {
+        replace(at: Index<Element>.Bounded<capacity>(index)!, with: consume newElement)
     }
 
     /// Swaps the elements at positions `i` and `j` in-place.
     ///
     /// - Precondition: Both indices must be in bounds.
     @inlinable
-    public mutating func swap(at i: Index<Element>, with j: Index<Element>) {
+    public mutating func swap(at i: Index<Element>.Bounded<capacity>, with j: Index<Element>.Bounded<capacity>) {
         Buffer.Linear.swap(at: i, with: j, storage: &storage)
+    }
+
+    /// Package convenience — accepts unbounded indices for Small delegation.
+    @inlinable
+    package mutating func swap(at i: Index<Element>, with j: Index<Element>) {
+        swap(at: Index<Element>.Bounded<capacity>(i)!, with: Index<Element>.Bounded<capacity>(j)!)
     }
 
     /// Removes all elements from the buffer.
@@ -104,7 +122,7 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
     ) {
         let cap = Index<Element>.Count(UInt(capacity))
         var storage = Storage<Element>.Inline<capacity>()
-        let ptr = unsafe UnsafeMutablePointer(mutating: storage.pointer(at: .zero))
+        let ptr = unsafe UnsafeMutablePointer(mutating: storage.pointer(at: Index<Element>.Bounded<capacity>(.zero)!))
         unsafe body(ptr)
         var header = Buffer.Linear.Header(capacity: cap)
         header.count = Index<Element>.Count(UInt(count))

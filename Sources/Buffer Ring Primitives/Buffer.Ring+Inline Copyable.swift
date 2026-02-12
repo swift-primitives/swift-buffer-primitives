@@ -16,7 +16,9 @@ extension Buffer.Ring where Element: Copyable {
             var srcSlot = range.lowerBound
             var dstSlot = offset
             while srcSlot < range.upperBound {
-                let value: Element = unsafe source.pointer(at: srcSlot).pointee
+                let bounded = Index<Element>.Bounded<capacity>(srcSlot)!
+                let ptr: UnsafePointer<Element> = unsafe source.pointer(at: bounded)
+                let value: Element = unsafe ptr.pointee
                 destination.initialize(to: value, at: dstSlot)
                 srcSlot = srcSlot.successor.saturating()
                 dstSlot = dstSlot.successor.saturating()

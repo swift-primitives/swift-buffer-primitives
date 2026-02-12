@@ -114,7 +114,8 @@ extension Buffer.Ring.Small: Sequence.`Protocol`, Sequence.Borrowing.`Protocol` 
             let base = unsafe UnsafePointer(heap.storage.pointer(at: .zero))
             return unsafe Iterator(storageBase: base, header: heap.header)
         case .none:
-            let base = unsafe _inlineBuffer.storage.pointer(at: .zero)
+            let bounded = Index<Element>.Bounded<inlineCapacity>(.zero)!
+            let base: UnsafePointer<Element> = unsafe _inlineBuffer.storage.pointer(at: bounded)
             return unsafe Iterator(storageBase: base, header: _inlineBuffer.header)
         }
     }

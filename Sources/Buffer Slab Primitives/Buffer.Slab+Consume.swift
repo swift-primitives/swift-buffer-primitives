@@ -5,23 +5,23 @@ extension Buffer.Slab {
     ///
     /// Class-based because `Sequence.Consume.Protocol.ConsumeState` must be Copyable,
     /// and cleanup-on-drop requires a deinit. The bitmap IS the consume state —
-    /// `pop.first()` provides destructive iteration through occupied slots.
+    /// linear scan provides destructive iteration through occupied slots.
     @safe
     public final class ConsumeState: @unchecked Sendable {
         @usableFromInline
         let storage: Storage<Element>.Heap
 
         @usableFromInline
-        var bitmap: Bit.Vector
+        var bitmap: Bit.Vector.Bounded
 
         @inlinable
-        package init(storage: Storage<Element>.Heap, bitmap: consuming Bit.Vector) {
+        package init(storage: Storage<Element>.Heap, bitmap: consuming Bit.Vector.Bounded) {
             self.storage = storage
             self.bitmap = bitmap
         }
 
         deinit {
-            while let slot = bitmap.pop.first() {
+            bitmap.ones.forEach { slot in
                 storage.deinitialize(at: slot.retag(Element.self))
             }
             storage.initialization = .empty
@@ -36,8 +36,15 @@ extension Buffer.Slab: Sequence.Consume.`Protocol` {
         return Sequence.Consume.View(
             state: state,
             next: { state in
-                guard let slot = state.bitmap.pop.first() else { return nil }
-                return state.storage.move(at: slot.retag(Element.self))
+                var slot: Bit.Index = .zero
+                while slot < state.bitmap.count {
+                    if state.bitmap[slot] {
+                        state.bitmap[slot] = false
+                        return state.storage.move(at: slot.retag(Element.self))
+                    }
+                    slot += .one
+                }
+                return nil
             }
         )
     }

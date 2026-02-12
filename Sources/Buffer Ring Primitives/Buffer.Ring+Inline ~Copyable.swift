@@ -14,7 +14,9 @@ extension Buffer.Ring where Element: ~Copyable {
         storage: inout Storage<Element>.Inline<capacity>
     ) {
         let countOffset = Index<Element>.Offset(fromZero: header.count.map(Ordinal.init))
-        let tail = Index.Modular.advanced(header.head, by: countOffset, capacity: header.capacity)
+        let tail = Index<Element>.Bounded<capacity>(
+            Index.Modular.advanced(header.head, by: countOffset, capacity: header.capacity)
+        )!
 
         storage.initialize(to: consume element, at: tail)
 
@@ -31,7 +33,8 @@ extension Buffer.Ring where Element: ~Copyable {
         header: inout Header,
         storage: inout Storage<Element>.Inline<capacity>
     ) -> Element {
-        let element = storage.move(at: header.head)
+        let bounded = Index<Element>.Bounded<capacity>(header.head)!
+        let element = storage.move(at: bounded)
 
         header.head = Index.Modular.successor(of: header.head, capacity: header.capacity)
 
@@ -53,7 +56,8 @@ extension Buffer.Ring where Element: ~Copyable {
     ) {
         header.head = Index.Modular.predecessor(of: header.head, capacity: header.capacity)
 
-        storage.initialize(to: consume element, at: header.head)
+        let bounded = Index<Element>.Bounded<capacity>(header.head)!
+        storage.initialize(to: consume element, at: bounded)
 
         header.count = header.count.add.saturating(.one)
     }
@@ -70,7 +74,9 @@ extension Buffer.Ring where Element: ~Copyable {
     ) -> Element {
         let newCount = header.count.subtract.saturating(.one)
         let lastOffset = Index<Element>.Offset(fromZero: newCount.map(Ordinal.init))
-        let lastSlot = Index.Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
+        let lastSlot = Index<Element>.Bounded<capacity>(
+            Index.Modular.advanced(header.head, by: lastOffset, capacity: header.capacity)
+        )!
 
         let element = storage.move(at: lastSlot)
 

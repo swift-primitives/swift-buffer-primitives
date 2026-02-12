@@ -9,10 +9,12 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
     @inlinable
     public subscript(index: Index<Element>) -> Element {
         _read {
-            yield unsafe storage.pointer(at: index).pointee
+            let bounded = Index<Element>.Bounded<capacity>(index)!
+            yield unsafe storage.pointer(at: bounded).pointee
         }
         _modify {
-            yield unsafe &UnsafeMutablePointer(mutating: storage.pointer(at: index)).pointee
+            let bounded = Index<Element>.Bounded<capacity>(index)!
+            yield unsafe &storage.pointer(at: bounded).pointee
         }
     }
 
@@ -26,12 +28,10 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
     @inlinable
     public subscript(index: Index<Element>.Bounded<capacity>) -> Element {
         _read {
-            let unbounded = Index<Element>(index)
-            yield unsafe storage.pointer(at: unbounded).pointee
+            yield unsafe storage.pointer(at: index).pointee
         }
         _modify {
-            let unbounded = Index<Element>(index)
-            yield unsafe &UnsafeMutablePointer(mutating: storage.pointer(at: unbounded)).pointee
+            yield unsafe &storage.pointer(at: index).pointee
         }
     }
 }

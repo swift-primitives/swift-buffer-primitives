@@ -291,9 +291,10 @@ extension Buffer.Linked.Small where Element: ~Copyable {
         let sentinel = _inlineBuffer.header.sentinel
         var current = _inlineBuffer.header.head
         while current != sentinel {
-            let nextSlot: Index<Buffer<Element>.Linked<N>.Node> = unsafe _inlineBuffer.storage.pointer(at: current).pointee.links[0]
-            let node = _inlineBuffer.storage.move(at: current)
-            _inlineBuffer._deallocateSlot(current)
+            let boundedCurrent = Index<Buffer<Element>.Linked<N>.Node>.Bounded<inlineCapacity>(current)!
+            let nextSlot: Index<Buffer<Element>.Linked<N>.Node> = unsafe _inlineBuffer.storage.pointer(at: boundedCurrent).pointee.links[0]
+            let node = _inlineBuffer.storage.move(at: boundedCurrent)
+            _inlineBuffer._deallocateSlot(boundedCurrent)
             try! heap.insert.back(node.element)
             current = nextSlot
         }

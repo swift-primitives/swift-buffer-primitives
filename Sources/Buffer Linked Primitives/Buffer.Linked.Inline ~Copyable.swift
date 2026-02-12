@@ -53,20 +53,21 @@ extension Buffer.Linked.Inline where Element: ~Copyable {
 extension Buffer.Linked.Inline where Element: ~Copyable {
     /// Allocates a slot: prefer free-list, then virgin cursor.
     ///
-    /// - Returns: Index of the allocated slot.
+    /// - Returns: Bounded index of the allocated slot.
     /// - Throws: `Error.capacityExceeded` if no free or virgin slots remain.
     /// - Complexity: O(1)
     @usableFromInline
-    mutating func _allocateSlot() throws(Error) -> Index<Buffer<Element>.Linked<N>.Node> {
+    mutating func _allocateSlot() throws(Error) -> Index<Buffer<Element>.Linked<N>.Node>.Bounded<capacity> {
         let sentinel = header.sentinel
 
         // Try free list first (reused slots)
         if freeHead != sentinel {
             let slot = freeHead
+            let bounded = Index<Buffer<Element>.Linked<N>.Node>.Bounded<capacity>(slot)!
             // Load next-free from raw bytes in deinitialized slot
-            let raw = unsafe UnsafeRawPointer(storage.pointer(at: slot))
+            let raw = unsafe UnsafeRawPointer(storage.pointer(at: bounded))
             freeHead = unsafe raw.load(as: Index<Buffer<Element>.Linked<N>.Node>.self)
-            return slot
+            return bounded
         }
 
         // Try virgin cursor
@@ -75,8 +76,9 @@ extension Buffer.Linked.Inline where Element: ~Copyable {
         }
 
         let slot = nextUnused
+        let bounded = Index<Buffer<Element>.Linked<N>.Node>.Bounded<capacity>(slot)!
         nextUnused = nextUnused + .one
-        return slot
+        return bounded
     }
 
     /// Deallocates a slot: push to free-list.
@@ -84,16 +86,16 @@ extension Buffer.Linked.Inline where Element: ~Copyable {
     /// The caller MUST have already moved the node out of the slot
     /// (via `storage.move(at:)`) before calling this.
     ///
-    /// - Parameter slot: A slot index previously returned by `_allocateSlot()`.
+    /// - Parameter slot: A bounded slot index previously returned by `_allocateSlot()`.
     /// - Complexity: O(1)
     @usableFromInline
-    mutating func _deallocateSlot(_ slot: Index<Buffer<Element>.Linked<N>.Node>) {
+    mutating func _deallocateSlot(_ slot: Index<Buffer<Element>.Linked<N>.Node>.Bounded<capacity>) {
         // Store current freeHead as raw bytes in the deinitialized slot
         let raw = unsafe UnsafeMutableRawPointer(
             mutating: storage.pointer(at: slot)
         )
         unsafe raw.storeBytes(of: freeHead, as: Index<Buffer<Element>.Linked<N>.Node>.self)
-        freeHead = slot
+        freeHead = Index<Buffer<Element>.Linked<N>.Node>(slot)
     }
 }
 
@@ -159,18 +161,20 @@ extension Buffer.Linked.Inline where Element: ~Copyable {
         storage.initialize(to: node, at: slot)
 
         // Link old head's prev to new node (doubly-linked only).
+        let unbounded = Index<Buffer<Element>.Linked<N>.Node>(slot)
         if header.head != sentinel {
             if N >= 2 {
+                let boundedHead = Index<Buffer<Element>.Linked<N>.Node>.Bounded<capacity>(header.head)!
                 unsafe UnsafeMutablePointer(
-                    mutating: storage.pointer(at: header.head)
-                ).pointee.links[1] = slot
+                    mutating: storage.pointer(at: boundedHead)
+                ).pointee.links[1] = unbounded
             }
         } else {
             // List was empty — new node is also tail.
-            header.tail = slot
+            header.tail = unbounded
         }
 
-        header.head = slot
+        header.head = unbounded
         header.count += .one
     }
 
@@ -189,16 +193,18 @@ extension Buffer.Linked.Inline where Element: ~Copyable {
         storage.initialize(to: node, at: slot)
 
         // Link old tail's next to new node.
+        let unbounded = Index<Buffer<Element>.Linked<N>.Node>(slot)
         if header.tail != sentinel {
+            let boundedTail = Index<Buffer<Element>.Linked<N>.Node>.Bounded<capacity>(header.tail)!
             unsafe UnsafeMutablePointer(
-                mutating: storage.pointer(at: header.tail)
-            ).pointee.links[0] = slot
+                mutating: storage.pointer(at: boundedTail)
+            ).pointee.links[0] = unbounded
         } else {
             // List was empty — new node is also head.
-            header.head = slot
+            header.head = unbounded
         }
 
-        header.tail = slot
+        header.tail = unbounded
         header.count += .one
     }
 }
@@ -211,16 +217,17 @@ extension Buffer.Linked.Inline where Element: ~Copyable {
         let sentinel = header.sentinel
         guard header.head != sentinel else { return nil }
 
-        let slot = header.head
-        let node = storage.move(at: slot)
+        let boundedSlot = Index<Buffer<Element>.Linked<N>.Node>.Bounded<capacity>(header.head)!
+        let node = storage.move(at: boundedSlot)
 
         // Unlink.
         let nextSlot = node.links[0]
         header.head = nextSlot
         if nextSlot != sentinel {
             if N >= 2 {
+                let boundedNext = Index<Buffer<Element>.Linked<N>.Node>.Bounded<capacity>(nextSlot)!
                 unsafe UnsafeMutablePointer(
-                    mutating: storage.pointer(at: nextSlot)
+                    mutating: storage.pointer(at: boundedNext)
                 ).pointee.links[1] = sentinel
             }
         } else {
@@ -228,7 +235,7 @@ extension Buffer.Linked.Inline where Element: ~Copyable {
             header.tail = sentinel
         }
 
-        _deallocateSlot(slot)
+        _deallocateSlot(boundedSlot)
         header.count = header.count.subtract.saturating(.one)
         return node.element
     }
@@ -238,32 +245,35 @@ extension Buffer.Linked.Inline where Element: ~Copyable {
         let sentinel = header.sentinel
         guard header.tail != sentinel else { return nil }
 
-        let slot = header.tail
+        let boundedSlot = Index<Buffer<Element>.Linked<N>.Node>.Bounded<capacity>(header.tail)!
 
         if N >= 2 {
             // O(1) doubly-linked removal using prev link.
-            let prevSlot = unsafe storage.pointer(at: slot).pointee.links[1]
-            let node = storage.move(at: slot)
+            let prevSlot = unsafe storage.pointer(at: boundedSlot).pointee.links[1]
+            let node = storage.move(at: boundedSlot)
 
             header.tail = prevSlot
             if prevSlot != sentinel {
+                let boundedPrev = Index<Buffer<Element>.Linked<N>.Node>.Bounded<capacity>(prevSlot)!
                 unsafe UnsafeMutablePointer(
-                    mutating: storage.pointer(at: prevSlot)
+                    mutating: storage.pointer(at: boundedPrev)
                 ).pointee.links[0] = sentinel
             } else {
                 header.head = sentinel
             }
 
-            _deallocateSlot(slot)
+            _deallocateSlot(boundedSlot)
             header.count = header.count.subtract.saturating(.one)
             return node.element
         } else {
             // O(n) singly-linked: traverse from head to find predecessor.
+            let slot = Index<Buffer<Element>.Linked<N>.Node>(boundedSlot)
             var prevSlot = sentinel
             if header.head != slot {
                 var current = header.head
                 while current != sentinel {
-                    let nextSlot = unsafe storage.pointer(at: current).pointee.links[0]
+                    let boundedCurrent = Index<Buffer<Element>.Linked<N>.Node>.Bounded<capacity>(current)!
+                    let nextSlot = unsafe storage.pointer(at: boundedCurrent).pointee.links[0]
                     if nextSlot == slot {
                         prevSlot = current
                         break
@@ -272,18 +282,19 @@ extension Buffer.Linked.Inline where Element: ~Copyable {
                 }
             }
 
-            let node = storage.move(at: slot)
+            let node = storage.move(at: boundedSlot)
 
             header.tail = prevSlot
             if prevSlot != sentinel {
+                let boundedPrev = Index<Buffer<Element>.Linked<N>.Node>.Bounded<capacity>(prevSlot)!
                 unsafe UnsafeMutablePointer(
-                    mutating: storage.pointer(at: prevSlot)
+                    mutating: storage.pointer(at: boundedPrev)
                 ).pointee.links[0] = sentinel
             } else {
                 header.head = sentinel
             }
 
-            _deallocateSlot(slot)
+            _deallocateSlot(boundedSlot)
             header.count = header.count.subtract.saturating(.one)
             return node.element
         }
@@ -387,7 +398,8 @@ extension Buffer.Linked.Inline where Element: ~Copyable {
         let sentinel = header.sentinel
         var current = header.head
         while current != sentinel {
-            let ptr = unsafe storage.pointer(at: current)
+            let bounded = Index<Buffer<Element>.Linked<N>.Node>.Bounded<capacity>(current)!
+            let ptr: UnsafePointer<Buffer<Element>.Linked<N>.Node> = unsafe storage.pointer(at: bounded)
             try body(unsafe ptr.pointee.element)
             current = unsafe ptr.pointee.links[0]
         }
@@ -404,7 +416,8 @@ extension Buffer.Linked.Inline where Element: ~Copyable {
         let sentinel = header.sentinel
         var current = header.tail
         while current != sentinel {
-            let ptr = unsafe storage.pointer(at: current)
+            let bounded = Index<Buffer<Element>.Linked<N>.Node>.Bounded<capacity>(current)!
+            let ptr: UnsafePointer<Buffer<Element>.Linked<N>.Node> = unsafe storage.pointer(at: bounded)
             try body(unsafe ptr.pointee.element)
             current = unsafe ptr.pointee.links[1]
         }
@@ -423,7 +436,8 @@ extension Buffer.Linked.Inline where Element: ~Copyable {
     public func peekFront<R, E: Swift.Error>(_ body: (borrowing Element) throws(E) -> R) throws(E) -> R? {
         let sentinel = header.sentinel
         guard header.head != sentinel else { return nil }
-        let ptr = unsafe storage.pointer(at: header.head)
+        let bounded = Index<Buffer<Element>.Linked<N>.Node>.Bounded<capacity>(header.head)!
+        let ptr: UnsafePointer<Buffer<Element>.Linked<N>.Node> = unsafe storage.pointer(at: bounded)
         return try body(unsafe ptr.pointee.element)
     }
 
@@ -436,7 +450,8 @@ extension Buffer.Linked.Inline where Element: ~Copyable {
     public func peekBack<R, E: Swift.Error>(_ body: (borrowing Element) throws(E) -> R) throws(E) -> R? {
         let sentinel = header.sentinel
         guard header.tail != sentinel else { return nil }
-        let ptr = unsafe storage.pointer(at: header.tail)
+        let bounded = Index<Buffer<Element>.Linked<N>.Node>.Bounded<capacity>(header.tail)!
+        let ptr: UnsafePointer<Buffer<Element>.Linked<N>.Node> = unsafe storage.pointer(at: bounded)
         return try body(unsafe ptr.pointee.element)
     }
 }

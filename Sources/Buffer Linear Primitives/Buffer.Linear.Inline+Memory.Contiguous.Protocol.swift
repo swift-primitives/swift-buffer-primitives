@@ -9,8 +9,9 @@ extension Buffer.Linear.Inline: Memory.Contiguous.`Protocol` where Element: Copy
     public func withUnsafeBufferPointer<R, E: Swift.Error>(
         _ body: (UnsafeBufferPointer<Element>) throws(E) -> R
     ) throws(E) -> R {
+        let bounded = Index<Element>.Bounded<capacity>(.zero)!
         return try unsafe body(UnsafeBufferPointer(
-            start: !header.isEmpty ? UnsafePointer(storage.pointer(at: .zero)) : nil,
+            start: !header.isEmpty ? UnsafePointer(storage.pointer(at: bounded)) : nil,
             count: header.count
         ))
     }
@@ -24,8 +25,9 @@ extension Buffer.Linear.Inline where Element: Copyable {
     public mutating func withUnsafeMutableBufferPointer<R, E: Swift.Error>(
         _ body: (UnsafeMutableBufferPointer<Element>) throws(E) -> R
     ) throws(E) -> R {
+        let bounded = Index<Element>.Bounded<capacity>(.zero)!
         return try unsafe body(UnsafeMutableBufferPointer(
-            start: !header.isEmpty ? UnsafeMutablePointer(mutating: storage.pointer(at: .zero)) : nil,
+            start: !header.isEmpty ? storage.pointer(at: bounded) : nil,
             count: header.count
         ))
     }

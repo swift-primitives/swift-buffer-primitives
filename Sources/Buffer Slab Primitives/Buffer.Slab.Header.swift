@@ -17,13 +17,13 @@ extension Buffer.Slab.Header where Element: ~Copyable {
     /// Whether no slots are occupied.
     @inlinable
     public var isEmpty: Bool {
-        bitmap.isEmpty
+        bitmap.popcount == .zero
     }
-    
+
     /// Whether all slots are occupied.
     @inlinable
     public var isFull: Bool {
-        bitmap.isFull
+        bitmap.popcount >= bitmap.capacity.maximum
     }
     
     /// Checks whether a specific slot is occupied.

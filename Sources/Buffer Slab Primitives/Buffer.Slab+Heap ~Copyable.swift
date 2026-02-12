@@ -75,7 +75,7 @@ extension Buffer.Slab where Element: ~Copyable {
     public static func firstVacant(
         header: borrowing Header
     ) -> Bit.Index? {
-        header.firstVacant(max: header.bitmap.capacity)
+        header.firstVacant(max: header.bitmap.capacity.maximum)
     }
 
     // MARK: Deinitialize All

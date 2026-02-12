@@ -502,9 +502,8 @@ public enum Buffer<Element: ~Copyable> {
                 let end = Bit.Index.Count(UInt(wordCount)).map(Ordinal.init)
                 while slot < end {
                     if header.bitmap[slot] {
-                        unsafe UnsafeMutablePointer(
-                            mutating: storage.pointer(at: slot.retag(Element.self))
-                        ).deinitialize(count: 1)
+                        let elementSlot = Index<Element>.Bounded<wordCount>(slot.retag(Element.self))!
+                        unsafe storage.pointer(at: elementSlot).deinitialize(count: 1)
                     }
                     slot += .one
                 }
@@ -553,12 +552,12 @@ public enum Buffer<Element: ~Copyable> {
         /// Blueprint: `Experiments/initialization-consistency/Sources/main.swift:249-311`
         public struct Header: ~Copyable {
             /// Bitmap tracking which slots are occupied.
-            public var bitmap: Bit.Vector
+            public var bitmap: Bit.Vector.Bounded
 
             /// Creates a header with the given slot capacity, all vacant.
             @inlinable
             public init(capacity: Bit.Index.Count) {
-                self.bitmap = Bit.Vector(capacity: capacity)
+                self.bitmap = try! Bit.Vector.Bounded(capacity: capacity, count: capacity)
             }
 
             // MARK: - Header.Static

@@ -14,7 +14,7 @@ extension Buffer.Slab.Small where Element: Copyable {
         case .some(let heap):
             return unsafe heap.storage.pointer(at: slot.retag(Element.self)).pointee
         case .none:
-            return unsafe _inlineBuffer.storage.pointer(at: slot.retag(Element.self)).pointee
+            return _inlineBuffer.peek(at: slot)
         }
     }
 }

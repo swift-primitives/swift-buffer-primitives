@@ -10,9 +10,19 @@ extension Buffer.Slab.Inline where Element: Copyable {
     ///
     /// - Precondition: The slot is occupied.
     @inlinable
-    public func peek(at slot: Bit.Index) -> Element {
-        let storageIndex = slot.retag(Element.self)
-        return unsafe storage.pointer(at: storageIndex).pointee
+    public func peek(at slot: Bit.Index.Bounded<wordCount>) -> Element {
+        return unsafe storage.pointer(at: slot.retag(Element.self)).pointee
+    }
+}
+
+extension Buffer.Slab.Inline where Element: Copyable {
+
+    /// Reads the element at the given slot without removing it.
+    ///
+    /// Package-scoped unbounded overload — narrows internally for Small delegation.
+    @inlinable
+    package func peek(at slot: Bit.Index) -> Element {
+        peek(at: Bit.Index.Bounded<wordCount>(slot)!)
     }
 }
 
@@ -31,7 +41,7 @@ extension Buffer.Slab.Inline where Element: Copyable {
         guard elements.count <= wordCount else { throw .capacityExceeded }
         var buffer = Self()
         for (i, element) in elements.enumerated() {
-            buffer.insert(element, at: Bit.Index(Ordinal(UInt(i))))
+            buffer.insert(element, at: Bit.Index.Bounded<wordCount>(Bit.Index(Ordinal(UInt(i))))!)
         }
         self = buffer
     }
@@ -77,7 +87,7 @@ extension Buffer.Slab.Inline: Sequence.`Protocol` where Element: Copyable {
 
     @inlinable
     public borrowing func makeIterator() -> Iterator {
-        let base = unsafe storage.pointer(at: .zero)
+        let base: UnsafePointer<Element> = unsafe storage.pointer(at: Index<Element>.Bounded<wordCount>(.zero)!)
         let end = Bit.Index.Count(UInt(wordCount)).map(Ordinal.init)
         return Iterator(base: base, bitmap: header.bitmap, end: end)
     }

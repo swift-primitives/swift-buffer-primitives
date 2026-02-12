@@ -72,7 +72,7 @@ extension Buffer.Slab.Small where Element: ~Copyable {
     public func firstVacant() -> Bit.Index? {
         switch _heapBuffer {
         case .some(let heap): return heap.firstVacant()
-        case .none: return _inlineBuffer.firstVacant()
+        case .none: return _inlineBuffer.firstVacant().map { Bit.Index($0) }
         }
     }
 
@@ -148,7 +148,7 @@ extension Buffer.Slab.Small where Element: ~Copyable {
         let end = Bit.Index.Count(UInt(inlineCapacity)).map(Ordinal.init)
         while slot < end {
             if _inlineBuffer.header.bitmap[slot] {
-                let element = _inlineBuffer.storage.move(at: slot.retag(Element.self))
+                let element = _inlineBuffer.storage.move(at: Index<Element>.Bounded<inlineCapacity>(slot.retag(Element.self))!)
                 newStorage.initialize(to: consume element, at: slot.retag(Element.self))
                 newHeader.bitmap[slot] = true
             }

@@ -7,7 +7,9 @@ extension Buffer.Ring.Inline where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var peekFront: Element {
-        unsafe storage.pointer(at: header.head).pointee
+        let bounded = Index<Element>.Bounded<capacity>(header.head)!
+        let ptr: UnsafePointer<Element> = unsafe storage.pointer(at: bounded)
+        return unsafe ptr.pointee
     }
 
     /// Returns the back element without removing it.
@@ -15,11 +17,15 @@ extension Buffer.Ring.Inline where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var peekBack: Element {
-        return unsafe storage.pointer(at: Index.Modular.advanced(
-            header.head,
-            by: Index<Element>.Offset(fromZero: header.count.subtract.saturating(.one).map(Ordinal.init)),
-            capacity: header.capacity
-        )).pointee
+        let bounded = Index<Element>.Bounded<capacity>(
+            Index.Modular.advanced(
+                header.head,
+                by: Index<Element>.Offset(fromZero: header.count.subtract.saturating(.one).map(Ordinal.init)),
+                capacity: header.capacity
+            )
+        )!
+        let ptr: UnsafePointer<Element> = unsafe storage.pointer(at: bounded)
+        return unsafe ptr.pointee
     }
 }
 
@@ -82,7 +88,8 @@ extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
 
     @inlinable
     public borrowing func makeIterator() -> Iterator {
-        let base = unsafe storage.pointer(at: .zero)
+        let bounded = Index<Element>.Bounded<capacity>(.zero)!
+        let base: UnsafePointer<Element> = unsafe storage.pointer(at: bounded)
         return Iterator(base: base, header: header)
     }
 }

@@ -45,18 +45,18 @@ extension Buffer.Slab.Inline where Element: ~Copyable {
     ///
     /// - Precondition: The slot is not occupied.
     @inlinable
-    public mutating func insert(_ element: consuming Element, at slot: Bit.Index) {
+    public mutating func insert(_ element: consuming Element, at slot: Bit.Index.Bounded<wordCount>) {
         storage.initialize(to: consume element, at: slot.retag(Element.self))
-        header.bitmap[slot] = true
+        header.bitmap[Bit.Index(slot)] = true
     }
 
     /// Removes and returns the element at the given slot.
     ///
     /// - Precondition: The slot is occupied.
     @inlinable
-    public mutating func remove(at slot: Bit.Index) -> Element {
+    public mutating func remove(at slot: Bit.Index.Bounded<wordCount>) -> Element {
         let element = storage.move(at: slot.retag(Element.self))
-        header.bitmap[slot] = false
+        header.bitmap[Bit.Index(slot)] = false
         return element
     }
 
@@ -64,7 +64,7 @@ extension Buffer.Slab.Inline where Element: ~Copyable {
     ///
     /// - Precondition: The slot is occupied.
     @inlinable
-    public mutating func update(at slot: Bit.Index, with element: consuming Element) -> Element {
+    public mutating func update(at slot: Bit.Index.Bounded<wordCount>, with element: consuming Element) -> Element {
         let old = storage.move(at: slot.retag(Element.self))
         storage.initialize(to: consume element, at: slot.retag(Element.self))
         return old
@@ -72,8 +72,9 @@ extension Buffer.Slab.Inline where Element: ~Copyable {
 
     /// Returns the first vacant slot, or `nil` if all slots are full.
     @inlinable
-    public func firstVacant() -> Bit.Index? {
-        return header.firstVacant(max: Bit.Index.Count(UInt(wordCount)))
+    public func firstVacant() -> Bit.Index.Bounded<wordCount>? {
+        guard let slot = header.firstVacant(max: Bit.Index.Count(UInt(wordCount))) else { return nil }
+        return Bit.Index.Bounded<wordCount>(slot)!
     }
 
     /// Removes all elements from the buffer.
@@ -83,11 +84,36 @@ extension Buffer.Slab.Inline where Element: ~Copyable {
         let end = Bit.Index.Count(UInt(wordCount)).map(Ordinal.init)
         while slot < end {
             if header.bitmap[slot] {
-                storage.deinitialize(at: slot.retag(Element.self))
+                storage.deinitialize(at: Index<Element>.Bounded<wordCount>(slot.retag(Element.self))!)
                 header.bitmap[slot] = false
             }
             slot += .one
         }
+    }
+}
+
+// MARK: - Package Convenience (Unbounded Delegation)
+
+extension Buffer.Slab.Inline where Element: ~Copyable {
+
+    /// Inserts an element at the given slot.
+    ///
+    /// Package-scoped unbounded overload — narrows internally for Small delegation.
+    @inlinable
+    package mutating func insert(_ element: consuming Element, at slot: Bit.Index) {
+        insert(consume element, at: Bit.Index.Bounded<wordCount>(slot)!)
+    }
+
+    /// Removes and returns the element at the given slot.
+    @inlinable
+    package mutating func remove(at slot: Bit.Index) -> Element {
+        remove(at: Bit.Index.Bounded<wordCount>(slot)!)
+    }
+
+    /// Replaces the element at the given slot and returns the old element.
+    @inlinable
+    package mutating func update(at slot: Bit.Index, with element: consuming Element) -> Element {
+        update(at: Bit.Index.Bounded<wordCount>(slot)!, with: consume element)
     }
 }
 
@@ -100,7 +126,7 @@ extension Buffer.Slab.Inline: Sequence.Drain.`Protocol` {
         let end = Bit.Index.Count(UInt(wordCount)).map(Ordinal.init)
         while slot < end {
             if header.bitmap[slot] {
-                let element = storage.move(at: slot.retag(Element.self))
+                let element = storage.move(at: Index<Element>.Bounded<wordCount>(slot.retag(Element.self))!)
                 header.bitmap[slot] = false
                 body(consume element)
             }

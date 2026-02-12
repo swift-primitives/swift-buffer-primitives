@@ -10,14 +10,19 @@ extension Buffer.Ring.Inline where Element: ~Copyable {
     @inlinable
     public subscript(index: Index<Element>) -> Element {
         _read {
-            let physical = Index.Modular.physical(
-                forLogical: index, head: header.head, capacity: header.capacity)
-            yield unsafe storage.pointer(at: physical).pointee
+            let bounded = Index<Element>.Bounded<capacity>(
+                Index.Modular.physical(
+                    forLogical: index, head: header.head, capacity: header.capacity)
+            )!
+            let ptr: UnsafePointer<Element> = unsafe storage.pointer(at: bounded)
+            yield unsafe ptr.pointee
         }
         _modify {
-            let physical = Index.Modular.physical(
-                forLogical: index, head: header.head, capacity: header.capacity)
-            yield unsafe &UnsafeMutablePointer(mutating: storage.pointer(at: physical)).pointee
+            let bounded = Index<Element>.Bounded<capacity>(
+                Index.Modular.physical(
+                    forLogical: index, head: header.head, capacity: header.capacity)
+            )!
+            yield unsafe &storage.pointer(at: bounded).pointee
         }
     }
 }

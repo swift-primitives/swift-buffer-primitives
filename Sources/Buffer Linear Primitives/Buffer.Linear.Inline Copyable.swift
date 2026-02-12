@@ -7,7 +7,7 @@ extension Buffer.Linear.Inline where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var peekFront: Element {
-        unsafe storage.pointer(at: .zero).pointee
+        unsafe storage.pointer(at: Index<Element>.Bounded<capacity>(.zero)!).pointee
     }
 
     /// Returns the last element without removing it.
@@ -15,7 +15,7 @@ extension Buffer.Linear.Inline where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var peekBack: Element {
-        return unsafe storage.pointer(at: header.count.subtract.saturating(.one).map(Ordinal.init)).pointee
+        return unsafe storage.pointer(at: Index<Element>.Bounded<capacity>(header.count.subtract.saturating(.one).map(Ordinal.init))!).pointee
     }
 }
 
@@ -72,7 +72,8 @@ extension Buffer.Linear.Inline: Sequence.`Protocol` where Element: Copyable {
 
     @inlinable
     public borrowing func makeIterator() -> Iterator {
-        let base = unsafe storage.pointer(at: .zero)
+        let bounded = Index<Element>.Bounded<capacity>(.zero)!
+        let base: UnsafePointer<Element> = unsafe storage.pointer(at: bounded)
         return unsafe Iterator(base: base, end: header.count.map(Ordinal.init))
     }
 }

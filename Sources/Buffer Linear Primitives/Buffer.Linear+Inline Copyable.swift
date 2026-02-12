@@ -15,7 +15,7 @@ extension Buffer.Linear where Element: Copyable {
             var dstSlot: Index<Element> = .zero
             var srcSlot = range.lowerBound
             while srcSlot < range.upperBound {
-                let value: Element = unsafe source.pointer(at: srcSlot).pointee
+                let value: Element = unsafe source.pointer(at: Index<Element>.Bounded<capacity>(srcSlot)!).pointee
                 destination.initialize(to: value, at: dstSlot)
                 srcSlot = srcSlot.successor.saturating()
                 dstSlot = dstSlot.successor.saturating()

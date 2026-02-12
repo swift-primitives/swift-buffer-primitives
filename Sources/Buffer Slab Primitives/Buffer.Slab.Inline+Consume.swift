@@ -62,7 +62,7 @@ extension Buffer.Slab.Inline where Element: Copyable {
         let end = count.map(Ordinal.init)
         while slot < end {
             if header.bitmap[slot] {
-                let element = storage.move(at: slot.retag(Element.self))
+                let element = storage.move(at: Index<Element>.Bounded<wordCount>(slot.retag(Element.self))!)
                 heapStorage.initialize(to: element, at: slot.retag(Element.self))
                 header.bitmap[slot] = false
             }

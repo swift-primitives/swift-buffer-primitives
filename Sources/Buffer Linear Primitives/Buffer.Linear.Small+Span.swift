@@ -36,8 +36,9 @@ extension Buffer.Linear.Small where Element: ~Copyable {
                 )
                 return unsafe _overrideLifetime(span, mutating: &self)
             } else {
+                let inlineBounded = Index<Element>.Bounded<inlineCapacity>(.zero)!
                 let span = unsafe MutableSpan(
-                    _unsafeStart: unsafe UnsafeMutablePointer(mutating: _inlineBuffer.storage.pointer(at: .zero)),
+                    _unsafeStart: unsafe _inlineBuffer.storage.pointer(at: inlineBounded),
                     count: _inlineBuffer.header.count
                 )
                 return unsafe _overrideLifetime(span, mutating: &self)
@@ -53,8 +54,9 @@ extension Buffer.Linear.Small where Element: ~Copyable {
                 )
                 yield &span
             } else {
+                let inlineBounded = Index<Element>.Bounded<inlineCapacity>(.zero)!
                 var span = unsafe MutableSpan(
-                    _unsafeStart: unsafe UnsafeMutablePointer(mutating: _inlineBuffer.storage.pointer(at: .zero)),
+                    _unsafeStart: unsafe _inlineBuffer.storage.pointer(at: inlineBounded),
                     count: _inlineBuffer.header.count
                 )
                 yield &span
@@ -118,7 +120,8 @@ extension Buffer.Linear.Small: Sequence.`Protocol`, Sequence.Borrowing.`Protocol
             let base = unsafe UnsafePointer(heap.storage.pointer(at: .zero))
             return unsafe Iterator(base: base, count: heap.count)
         case .none:
-            let base = unsafe _inlineBuffer.storage.pointer(at: .zero)
+            let inlineBounded = Index<Element>.Bounded<inlineCapacity>(.zero)!
+            let base: UnsafePointer<Element> = unsafe _inlineBuffer.storage.pointer(at: inlineBounded)
             return unsafe Iterator(base: base, count: _inlineBuffer.count)
         }
     }

@@ -39,7 +39,9 @@ extension Buffer.Ring.Inline where Element: ~Copyable {
         header.initialization.forEach { range in
             var slot = range.lowerBound
             while slot < range.upperBound {
-                body(unsafe storage.pointer(at: slot).pointee)
+                let bounded = Index<Element>.Bounded<capacity>(slot)!
+                let ptr: UnsafePointer<Element> = unsafe storage.pointer(at: bounded)
+                body(unsafe ptr.pointee)
                 slot += .one
             }
         }
