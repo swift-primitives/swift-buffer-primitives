@@ -83,6 +83,16 @@ extension Buffer.Slots where Element: ~Copyable {
         try unsafe storage.withMutablePointer(storage.field.lane, body)
     }
 
+    /// Returns a pointer to the contiguous metadata array.
+    ///
+    /// The pointer is valid for `capacity` elements. The caller must
+    /// ensure the buffer is not deallocated while the pointer is in use.
+    @unsafe
+    @inlinable
+    public var metadataPointer: UnsafePointer<Metadata> {
+        unsafe UnsafePointer(storage.pointer(storage.field.lane, at: .zero))
+    }
+
     /// Returns a mutable pointer to the element at the given slot.
     @unsafe
     @inlinable
