@@ -5,7 +5,7 @@ public import Buffer_Primitives_Core
 extension Buffer.Arena: Sequence.Drain.`Protocol` where Element: Copyable {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
-        let meta = unsafe storage.metaBase
+        let meta = unsafe storage.meta
         Buffer<Element>.Arena.forEach(occupied: header, meta: meta) { slot in
             let element = storage.move(at: slot)
             Buffer<Element>.Arena._releaseSlot(
@@ -37,7 +37,7 @@ extension Buffer.Arena where Element: ~Copyable {
 extension Buffer.Arena.Bounded: Sequence.Drain.`Protocol` where Element: Copyable {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
-        let meta = unsafe storage.metaBase
+        let meta = unsafe storage.meta
         Buffer<Element>.Arena.forEach(occupied: header, meta: meta) { slot in
             let element = storage.move(at: slot)
             Buffer<Element>.Arena._releaseSlot(

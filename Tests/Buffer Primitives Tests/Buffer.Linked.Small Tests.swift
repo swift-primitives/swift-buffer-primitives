@@ -16,9 +16,9 @@ struct LinkedSmallTests {
     @Test
     func `insertBack within inline capacity stays inline`() {
         var buffer = Buffer<Int>.Linked<2>.Small<4>()
-        buffer.insertBack(10)
-        buffer.insertBack(20)
-        buffer.insertBack(30)
+        buffer.insert.back(10)
+        buffer.insert.back(20)
+        buffer.insert.back(30)
 
         #expect(buffer.count == 3)
         #expect(buffer.isSpilled == false)
@@ -27,9 +27,9 @@ struct LinkedSmallTests {
     @Test
     func `insertFront within inline capacity stays inline`() {
         var buffer = Buffer<Int>.Linked<2>.Small<4>()
-        buffer.insertFront(10)
-        buffer.insertFront(20)
-        buffer.insertFront(30)
+        buffer.insert.front(10)
+        buffer.insert.front(20)
+        buffer.insert.front(30)
 
         #expect(buffer.count == 3)
         #expect(buffer.isSpilled == false)
@@ -38,12 +38,12 @@ struct LinkedSmallTests {
     @Test
     func `spill to heap when inline is full`() {
         var buffer = Buffer<Int>.Linked<2>.Small<2>()
-        buffer.insertBack(10)
-        buffer.insertBack(20)
+        buffer.insert.back(10)
+        buffer.insert.back(20)
         #expect(buffer.isSpilled == false)
 
         // This should trigger spill
-        buffer.insertBack(30)
+        buffer.insert.back(30)
         #expect(buffer.isSpilled == true)
         #expect(buffer.count == 3)
     }
@@ -51,11 +51,11 @@ struct LinkedSmallTests {
     @Test
     func `elements survive spill`() {
         var buffer = Buffer<Int>.Linked<2>.Small<2>()
-        buffer.insertBack(10)
-        buffer.insertBack(20)
+        buffer.insert.back(10)
+        buffer.insert.back(20)
         #expect(buffer.isSpilled == false)
 
-        buffer.insertBack(30)
+        buffer.insert.back(30)
         #expect(buffer.isSpilled == true)
 
         // Verify all elements survived in order
@@ -67,68 +67,68 @@ struct LinkedSmallTests {
     @Test
     func `removeFront in inline mode`() {
         var buffer = Buffer<Int>.Linked<2>.Small<4>()
-        buffer.insertBack(10)
-        buffer.insertBack(20)
-        buffer.insertBack(30)
+        buffer.insert.back(10)
+        buffer.insert.back(20)
+        buffer.insert.back(30)
 
-        #expect(buffer.removeFront() == 10)
-        #expect(buffer.removeFront() == 20)
-        #expect(buffer.removeFront() == 30)
+        #expect(buffer.remove.front() == 10)
+        #expect(buffer.remove.front() == 20)
+        #expect(buffer.remove.front() == 30)
         #expect(buffer.isEmpty == true)
     }
 
     @Test
     func `removeFront in heap mode`() {
         var buffer = Buffer<Int>.Linked<2>.Small<2>()
-        buffer.insertBack(10)
-        buffer.insertBack(20)
-        buffer.insertBack(30)
+        buffer.insert.back(10)
+        buffer.insert.back(20)
+        buffer.insert.back(30)
         #expect(buffer.isSpilled == true)
 
-        #expect(buffer.removeFront() == 10)
-        #expect(buffer.removeFront() == 20)
-        #expect(buffer.removeFront() == 30)
+        #expect(buffer.remove.front() == 10)
+        #expect(buffer.remove.front() == 20)
+        #expect(buffer.remove.front() == 30)
         #expect(buffer.isEmpty == true)
     }
 
     @Test
     func `removeBack in inline mode`() {
         var buffer = Buffer<Int>.Linked<2>.Small<4>()
-        buffer.insertBack(10)
-        buffer.insertBack(20)
-        buffer.insertBack(30)
+        buffer.insert.back(10)
+        buffer.insert.back(20)
+        buffer.insert.back(30)
 
-        #expect(buffer.removeBack() == 30)
-        #expect(buffer.removeBack() == 20)
-        #expect(buffer.removeBack() == 10)
+        #expect(buffer.remove.back() == 30)
+        #expect(buffer.remove.back() == 20)
+        #expect(buffer.remove.back() == 10)
         #expect(buffer.isEmpty == true)
     }
 
     @Test
     func `removeBack in heap mode`() {
         var buffer = Buffer<Int>.Linked<2>.Small<2>()
-        buffer.insertBack(10)
-        buffer.insertBack(20)
-        buffer.insertBack(30)
+        buffer.insert.back(10)
+        buffer.insert.back(20)
+        buffer.insert.back(30)
         #expect(buffer.isSpilled == true)
 
-        #expect(buffer.removeBack() == 30)
-        #expect(buffer.removeBack() == 20)
-        #expect(buffer.removeBack() == 10)
+        #expect(buffer.remove.back() == 30)
+        #expect(buffer.remove.back() == 20)
+        #expect(buffer.remove.back() == 10)
         #expect(buffer.isEmpty == true)
     }
 
     @Test
     func `operations after spill`() {
         var buffer = Buffer<Int>.Linked<2>.Small<2>()
-        buffer.insertBack(10)
-        buffer.insertBack(20)
-        buffer.insertBack(30)
+        buffer.insert.back(10)
+        buffer.insert.back(20)
+        buffer.insert.back(30)
         #expect(buffer.isSpilled == true)
 
         // Continued inserts in heap mode
-        buffer.insertBack(40)
-        buffer.insertFront(5)
+        buffer.insert.back(40)
+        buffer.insert.front(5)
         #expect(buffer.count == 5)
 
         var collected: [Int] = []
@@ -142,9 +142,9 @@ struct LinkedSmallTests {
         #expect(buffer.first == nil)
         #expect(buffer.last == nil)
 
-        buffer.insertBack(10)
-        buffer.insertBack(20)
-        buffer.insertBack(30)
+        buffer.insert.back(10)
+        buffer.insert.back(20)
+        buffer.insert.back(30)
 
         #expect(buffer.first == 10)
         #expect(buffer.last == 30)
@@ -153,9 +153,9 @@ struct LinkedSmallTests {
     @Test
     func `first and last in heap mode`() {
         var buffer = Buffer<Int>.Linked<2>.Small<2>()
-        buffer.insertBack(10)
-        buffer.insertBack(20)
-        buffer.insertBack(30)
+        buffer.insert.back(10)
+        buffer.insert.back(20)
+        buffer.insert.back(30)
         #expect(buffer.isSpilled == true)
 
         #expect(buffer.first == 10)
@@ -165,9 +165,9 @@ struct LinkedSmallTests {
     @Test
     func `removeAll resets to inline mode`() {
         var buffer = Buffer<Int>.Linked<2>.Small<2>()
-        buffer.insertBack(10)
-        buffer.insertBack(20)
-        buffer.insertBack(30)
+        buffer.insert.back(10)
+        buffer.insert.back(20)
+        buffer.insert.back(30)
         #expect(buffer.isSpilled == true)
 
         buffer.removeAll()
@@ -178,9 +178,9 @@ struct LinkedSmallTests {
     @Test
     func `removeAll keepingCapacity true stays in heap mode`() {
         var buffer = Buffer<Int>.Linked<2>.Small<2>()
-        buffer.insertBack(10)
-        buffer.insertBack(20)
-        buffer.insertBack(30)
+        buffer.insert.back(10)
+        buffer.insert.back(20)
+        buffer.insert.back(30)
         #expect(buffer.isSpilled == true)
 
         buffer.removeAll(keepingCapacity: true)
@@ -191,9 +191,9 @@ struct LinkedSmallTests {
     @Test
     func `removeAll keepingCapacity false resets to inline`() {
         var buffer = Buffer<Int>.Linked<2>.Small<2>()
-        buffer.insertBack(10)
-        buffer.insertBack(20)
-        buffer.insertBack(30)
+        buffer.insert.back(10)
+        buffer.insert.back(20)
+        buffer.insert.back(30)
         #expect(buffer.isSpilled == true)
 
         buffer.removeAll(keepingCapacity: false)
@@ -204,9 +204,9 @@ struct LinkedSmallTests {
     @Test
     func `forEach in inline mode`() {
         var buffer = Buffer<Int>.Linked<2>.Small<4>()
-        buffer.insertBack(10)
-        buffer.insertBack(20)
-        buffer.insertBack(30)
+        buffer.insert.back(10)
+        buffer.insert.back(20)
+        buffer.insert.back(30)
 
         var collected: [Int] = []
         buffer.forEach { collected.append($0) }
@@ -216,9 +216,9 @@ struct LinkedSmallTests {
     @Test
     func `forEach in heap mode`() {
         var buffer = Buffer<Int>.Linked<2>.Small<2>()
-        buffer.insertBack(10)
-        buffer.insertBack(20)
-        buffer.insertBack(30)
+        buffer.insert.back(10)
+        buffer.insert.back(20)
+        buffer.insert.back(30)
         #expect(buffer.isSpilled == true)
 
         var collected: [Int] = []
@@ -229,9 +229,9 @@ struct LinkedSmallTests {
     @Test
     func `forEachReversed in inline mode`() {
         var buffer = Buffer<Int>.Linked<2>.Small<4>()
-        buffer.insertBack(10)
-        buffer.insertBack(20)
-        buffer.insertBack(30)
+        buffer.insert.back(10)
+        buffer.insert.back(20)
+        buffer.insert.back(30)
 
         var collected: [Int] = []
         buffer.forEachReversed { collected.append($0) }
@@ -241,9 +241,9 @@ struct LinkedSmallTests {
     @Test
     func `forEachReversed in heap mode`() {
         var buffer = Buffer<Int>.Linked<2>.Small<2>()
-        buffer.insertBack(10)
-        buffer.insertBack(20)
-        buffer.insertBack(30)
+        buffer.insert.back(10)
+        buffer.insert.back(20)
+        buffer.insert.back(30)
         #expect(buffer.isSpilled == true)
 
         var collected: [Int] = []
@@ -255,28 +255,28 @@ struct LinkedSmallTests {
     func `empty buffer operations`() {
         var buffer = Buffer<Int>.Linked<2>.Small<4>()
         #expect(buffer.isEmpty == true)
-        #expect(buffer.removeFront() == nil)
-        #expect(buffer.removeBack() == nil)
+        #expect(buffer.remove.front() == nil)
+        #expect(buffer.remove.back() == nil)
     }
 
     @Test
     func `single element inline`() {
         var buffer = Buffer<Int>.Linked<2>.Small<4>()
-        buffer.insertBack(42)
+        buffer.insert.back(42)
         #expect(buffer.count == 1)
         #expect(buffer.isSpilled == false)
         #expect(buffer.first == 42)
         #expect(buffer.last == 42)
-        #expect(buffer.removeFront() == 42)
+        #expect(buffer.remove.front() == 42)
         #expect(buffer.isEmpty == true)
     }
 
     @Test
     func `ensureUnique in heap mode`() {
         var buffer = Buffer<Int>.Linked<2>.Small<2>()
-        buffer.insertBack(10)
-        buffer.insertBack(20)
-        buffer.insertBack(30)
+        buffer.insert.back(10)
+        buffer.insert.back(20)
+        buffer.insert.back(30)
         #expect(buffer.isSpilled == true)
 
         // In heap mode, ensureUnique should work
@@ -288,7 +288,7 @@ struct LinkedSmallTests {
     @Test
     func `ensureUnique in inline mode returns false`() {
         var buffer = Buffer<Int>.Linked<2>.Small<4>()
-        buffer.insertBack(10)
+        buffer.insert.back(10)
         #expect(buffer.isSpilled == false)
 
         // In inline mode, ensureUnique is a no-op
@@ -300,9 +300,9 @@ struct LinkedSmallTests {
     func `isFull in inline mode`() {
         var buffer = Buffer<Int>.Linked<2>.Small<2>()
         #expect(buffer.isFull == false)
-        buffer.insertBack(1)
+        buffer.insert.back(1)
         #expect(buffer.isFull == false)
-        buffer.insertBack(2)
+        buffer.insert.back(2)
         #expect(buffer.isFull == true)
     }
 
@@ -311,11 +311,11 @@ struct LinkedSmallTests {
         var buffer = Buffer<Int>.Linked<2>.Small<4>()
         #expect(buffer.capacity == Index<Int>.Count(UInt(4)))
 
-        buffer.insertBack(1)
-        buffer.insertBack(2)
-        buffer.insertBack(3)
-        buffer.insertBack(4)
-        buffer.insertBack(5) // triggers spill
+        buffer.insert.back(1)
+        buffer.insert.back(2)
+        buffer.insert.back(3)
+        buffer.insert.back(4)
+        buffer.insert.back(5) // triggers spill
         #expect(buffer.isSpilled == true)
         #expect(buffer.capacity.rawValue.rawValue >= 8)
     }

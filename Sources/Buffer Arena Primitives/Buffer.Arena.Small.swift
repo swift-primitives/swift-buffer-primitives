@@ -194,7 +194,7 @@ extension Buffer.Arena.Small where Element: ~Copyable {
     mutating func _spillToHeap() {
         let growCapCount = Index<Element>.Count(Cardinal(UInt(inlineCapacity * 2)))
         var newArena = Buffer<Element>.Arena(minimumCapacity: growCapCount)
-        let newMeta = unsafe newArena.storage.metaBase
+        let newMeta = unsafe newArena.storage.meta
         let inlineMeta = unsafe _inlineBuffer._metaPointer()
         let hw = Int(bitPattern: _inlineBuffer.header.highWater)
 
@@ -206,7 +206,7 @@ extension Buffer.Arena.Small where Element: ~Copyable {
             if unsafe inlineMeta[i].isOccupied {
                 let slot = Index<Element>(Ordinal(UInt(i)))
                 let element = unsafe _inlineBuffer._elementPointer(at: slot).move()
-                unsafe newArena.storage.elementPointer(at: slot)
+                unsafe newArena.storage.pointer(at: slot)
                     .initialize(to: element)
             }
         }

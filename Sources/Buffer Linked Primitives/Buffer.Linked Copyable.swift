@@ -34,21 +34,28 @@ extension Buffer.Linked where Element: Copyable {
     }
 }
 
-// MARK: - CoW-Safe Mutations
+// MARK: - Insert Operations (Copyable)
 
-extension Buffer.Linked where Element: Copyable {
-
+extension Property.View.Typed where Element: Copyable {
     /// Inserts an element at the front of the list (CoW-safe).
     ///
     /// Ensures unique ownership, grows if full, then inserts.
     ///
     /// - Parameter element: The element to insert.
     /// - Complexity: O(1) amortized
+    @_lifetime(&self)
     @inlinable
-    public mutating func insertFront(_ element: consuming Element) {
-        ensureUnique()
-        if isFull { _grow() }
-        try! Buffer.Linked.insertFront(consume element, header: &header, storage: storage)
+    public mutating func front<let N: Int>(
+        _ element: consuming Element
+    ) where Tag == Buffer<Element>.Linked<N>.Insert,
+            Base == Buffer<Element>.Linked<N> {
+        unsafe base.pointee.ensureUnique()
+        if unsafe base.pointee.isFull { unsafe base.pointee._grow() }
+        try! unsafe Buffer<Element>.Linked<N>.insertFront(
+            consume element,
+            header: &base.pointee.header,
+            storage: base.pointee.storage
+        )
     }
 
     /// Inserts an element at the back of the list (CoW-safe).
@@ -57,32 +64,63 @@ extension Buffer.Linked where Element: Copyable {
     ///
     /// - Parameter element: The element to insert.
     /// - Complexity: O(1) amortized
+    @_lifetime(&self)
     @inlinable
-    public mutating func insertBack(_ element: consuming Element) {
-        ensureUnique()
-        if isFull { _grow() }
-        try! Buffer.Linked.insertBack(consume element, header: &header, storage: storage)
+    public mutating func back<let N: Int>(
+        _ element: consuming Element
+    ) where Tag == Buffer<Element>.Linked<N>.Insert,
+            Base == Buffer<Element>.Linked<N> {
+        unsafe base.pointee.ensureUnique()
+        if unsafe base.pointee.isFull { unsafe base.pointee._grow() }
+        try! unsafe Buffer<Element>.Linked<N>.insertBack(
+            consume element,
+            header: &base.pointee.header,
+            storage: base.pointee.storage
+        )
     }
+}
 
+// MARK: - Remove Operations (Copyable)
+
+extension Property.View.Typed where Element: Copyable {
     /// Removes and returns the element at the front (CoW-safe).
     ///
     /// - Returns: The removed element, or `nil` if the list is empty.
     /// - Complexity: O(1)
+    @_lifetime(&self)
     @inlinable
-    public mutating func removeFront() -> Element? {
-        ensureUnique()
-        return Buffer.Linked.removeFront(header: &header, storage: storage)
+    public mutating func front<let N: Int>(
+    ) -> Element?
+    where Tag == Buffer<Element>.Linked<N>.Remove,
+          Base == Buffer<Element>.Linked<N> {
+        unsafe base.pointee.ensureUnique()
+        return unsafe Buffer<Element>.Linked<N>.removeFront(
+            header: &base.pointee.header,
+            storage: base.pointee.storage
+        )
     }
 
     /// Removes and returns the element at the back (CoW-safe).
     ///
     /// - Returns: The removed element, or `nil` if the list is empty.
     /// - Complexity: O(1) for N >= 2 (doubly-linked), O(n) for N == 1 (singly-linked)
+    @_lifetime(&self)
     @inlinable
-    public mutating func removeBack() -> Element? {
-        ensureUnique()
-        return Buffer.Linked.removeBack(header: &header, storage: storage)
+    public mutating func back<let N: Int>(
+    ) -> Element?
+    where Tag == Buffer<Element>.Linked<N>.Remove,
+          Base == Buffer<Element>.Linked<N> {
+        unsafe base.pointee.ensureUnique()
+        return unsafe Buffer<Element>.Linked<N>.removeBack(
+            header: &base.pointee.header,
+            storage: base.pointee.storage
+        )
     }
+}
+
+// MARK: - CoW-Safe Mutations
+
+extension Buffer.Linked where Element: Copyable {
 
     /// Removes all elements from the buffer (CoW-safe).
     ///
@@ -198,7 +236,7 @@ extension Buffer.Linked: Swift.Sequence where Element: Copyable {
 extension Buffer.Linked: Sequence.Drain.`Protocol` where Element: Copyable {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
-        while let element = removeFront() {
+        while let element = remove.front() {
             body(element)
         }
     }

@@ -6,68 +6,68 @@ import Buffer_Primitives_Test_Support
 struct LinkedTests {
 
     @Test
-    func `insertFront and removeFront`() throws {
+    func `insert.front and remove.front`() throws {
         var buffer = try Buffer<Int>.Linked<2>.create(capacity: 8)
-        try buffer.insertFront(10)
-        try buffer.insertFront(20)
-        try buffer.insertFront(30)
+        try buffer.insert.front(10)
+        try buffer.insert.front(20)
+        try buffer.insert.front(30)
 
         #expect(buffer.count == 3)
 
-        #expect(buffer.removeFront() == 30)
-        #expect(buffer.removeFront() == 20)
-        #expect(buffer.removeFront() == 10)
+        #expect(buffer.remove.front() == 30)
+        #expect(buffer.remove.front() == 20)
+        #expect(buffer.remove.front() == 10)
         #expect(buffer.isEmpty)
     }
 
     @Test
-    func `insertBack and removeBack`() throws {
+    func `insert.back and remove.back`() throws {
         var buffer = try Buffer<Int>.Linked<2>.create(capacity: 8)
-        try buffer.insertBack(10)
-        try buffer.insertBack(20)
-        try buffer.insertBack(30)
+        try buffer.insert.back(10)
+        try buffer.insert.back(20)
+        try buffer.insert.back(30)
 
         #expect(buffer.count == 3)
 
-        #expect(buffer.removeBack() == 30)
-        #expect(buffer.removeBack() == 20)
-        #expect(buffer.removeBack() == 10)
+        #expect(buffer.remove.back() == 30)
+        #expect(buffer.remove.back() == 20)
+        #expect(buffer.remove.back() == 10)
         #expect(buffer.isEmpty)
     }
 
     @Test
-    func `insertFront and removeBack`() throws {
+    func `insert.front and remove.back`() throws {
         var buffer = try Buffer<Int>.Linked<2>.create(capacity: 8)
-        try buffer.insertFront(10)
-        try buffer.insertFront(20)
-        try buffer.insertFront(30)
+        try buffer.insert.front(10)
+        try buffer.insert.front(20)
+        try buffer.insert.front(30)
 
         // Front is 30, 20, 10 — removeBack yields 10, 20, 30
-        #expect(buffer.removeBack() == 10)
-        #expect(buffer.removeBack() == 20)
-        #expect(buffer.removeBack() == 30)
+        #expect(buffer.remove.back() == 10)
+        #expect(buffer.remove.back() == 20)
+        #expect(buffer.remove.back() == 30)
         #expect(buffer.isEmpty)
     }
 
     @Test
-    func `insertBack and removeFront`() throws {
+    func `insert.back and remove.front`() throws {
         var buffer = try Buffer<Int>.Linked<2>.create(capacity: 8)
-        try buffer.insertBack(10)
-        try buffer.insertBack(20)
-        try buffer.insertBack(30)
+        try buffer.insert.back(10)
+        try buffer.insert.back(20)
+        try buffer.insert.back(30)
 
-        #expect(buffer.removeFront() == 10)
-        #expect(buffer.removeFront() == 20)
-        #expect(buffer.removeFront() == 30)
+        #expect(buffer.remove.front() == 10)
+        #expect(buffer.remove.front() == 20)
+        #expect(buffer.remove.front() == 30)
         #expect(buffer.isEmpty)
     }
 
     @Test
     func `forEach traverses front to back`() throws {
         var buffer = try Buffer<Int>.Linked<2>.create(capacity: 8)
-        try buffer.insertBack(10)
-        try buffer.insertBack(20)
-        try buffer.insertBack(30)
+        try buffer.insert.back(10)
+        try buffer.insert.back(20)
+        try buffer.insert.back(30)
 
         var collected: [Int] = []
         buffer.forEach { collected.append($0) }
@@ -77,9 +77,9 @@ struct LinkedTests {
     @Test
     func `forEachReversed traverses back to front`() throws {
         var buffer = try Buffer<Int>.Linked<2>.create(capacity: 8)
-        try buffer.insertBack(10)
-        try buffer.insertBack(20)
-        try buffer.insertBack(30)
+        try buffer.insert.back(10)
+        try buffer.insert.back(20)
+        try buffer.insert.back(30)
 
         var collected: [Int] = []
         buffer.forEachReversed { collected.append($0) }
@@ -89,8 +89,8 @@ struct LinkedTests {
     @Test
     func `growth preserves elements`() throws {
         var buffer = try Buffer<Int>.Linked<2>.create(capacity: 2)
-        try buffer.insertBack(10)
-        try buffer.insertBack(20)
+        try buffer.insert.back(10)
+        try buffer.insert.back(20)
         #expect(buffer.isFull == true)
 
         // Grow — should preserve existing elements
@@ -103,16 +103,16 @@ struct LinkedTests {
         #expect(collected == [10, 20])
 
         // Can insert after growth
-        try buffer.insertBack(30)
+        try buffer.insert.back(30)
         #expect(buffer.count == 3)
     }
 
     @Test
     func `ensureUnique on copy`() throws {
         var original = try Buffer<Int>.Linked<2>.create(capacity: 8)
-        try original.insertBack(10)
-        try original.insertBack(20)
-        try original.insertBack(30)
+        try original.insert.back(10)
+        try original.insert.back(20)
+        try original.insert.back(30)
 
         var copy = original
 
@@ -128,12 +128,12 @@ struct LinkedTests {
     @Test
     func `copy independence after CoW`() throws {
         var original = try Buffer<Int>.Linked<2>.create(capacity: 8)
-        try original.insertBack(10)
-        try original.insertBack(20)
+        try original.insert.back(10)
+        try original.insert.back(20)
 
         var copy = original
         copy.ensureUnique()
-        try copy.insertBack(99)
+        try copy.insert.back(99)
 
         // Original unaffected
         #expect(original.count == 2)
@@ -145,8 +145,8 @@ struct LinkedTests {
         var buffer = try Buffer<Int>.Linked<2>.create(capacity: 4)
         #expect(buffer.isEmpty == true)
         #expect(buffer.count == .zero)
-        #expect(buffer.removeFront() == nil)
-        #expect(buffer.removeBack() == nil)
+        #expect(buffer.remove.front() == nil)
+        #expect(buffer.remove.back() == nil)
     }
 
     @Test
@@ -155,9 +155,9 @@ struct LinkedTests {
         #expect(buffer.first == nil)
         #expect(buffer.last == nil)
 
-        try buffer.insertBack(10)
-        try buffer.insertBack(20)
-        try buffer.insertBack(30)
+        try buffer.insert.back(10)
+        try buffer.insert.back(20)
+        try buffer.insert.back(30)
 
         #expect(buffer.first == 10)
         #expect(buffer.last == 30)
@@ -169,14 +169,14 @@ struct LinkedTests {
     @Test
     func `Equatable — equal lists`() throws {
         var a = try Buffer<Int>.Linked<2>.create(capacity: 8)
-        try a.insertBack(10)
-        try a.insertBack(20)
-        try a.insertBack(30)
+        try a.insert.back(10)
+        try a.insert.back(20)
+        try a.insert.back(30)
 
         var b = try Buffer<Int>.Linked<2>.create(capacity: 8)
-        try b.insertBack(10)
-        try b.insertBack(20)
-        try b.insertBack(30)
+        try b.insert.back(10)
+        try b.insert.back(20)
+        try b.insert.back(30)
 
         #expect(a == b)
     }
@@ -184,12 +184,12 @@ struct LinkedTests {
     @Test
     func `Equatable — unequal lists`() throws {
         var a = try Buffer<Int>.Linked<2>.create(capacity: 8)
-        try a.insertBack(10)
-        try a.insertBack(20)
+        try a.insert.back(10)
+        try a.insert.back(20)
 
         var b = try Buffer<Int>.Linked<2>.create(capacity: 8)
-        try b.insertBack(10)
-        try b.insertBack(99)
+        try b.insert.back(10)
+        try b.insert.back(99)
 
         #expect(a != b)
     }
@@ -197,11 +197,11 @@ struct LinkedTests {
     @Test
     func `Equatable — different counts`() throws {
         var a = try Buffer<Int>.Linked<2>.create(capacity: 8)
-        try a.insertBack(10)
+        try a.insert.back(10)
 
         var b = try Buffer<Int>.Linked<2>.create(capacity: 8)
-        try b.insertBack(10)
-        try b.insertBack(20)
+        try b.insert.back(10)
+        try b.insert.back(20)
 
         #expect(a != b)
     }
@@ -209,12 +209,12 @@ struct LinkedTests {
     @Test
     func `Hashable — equal lists produce same hash`() throws {
         var a = try Buffer<Int>.Linked<2>.create(capacity: 8)
-        try a.insertBack(10)
-        try a.insertBack(20)
+        try a.insert.back(10)
+        try a.insert.back(20)
 
         var b = try Buffer<Int>.Linked<2>.create(capacity: 8)
-        try b.insertBack(10)
-        try b.insertBack(20)
+        try b.insert.back(10)
+        try b.insert.back(20)
 
         #expect(a.hashValue == b.hashValue)
     }
@@ -222,9 +222,9 @@ struct LinkedTests {
     @Test
     func `drain removes all elements in order`() throws {
         var buffer = try Buffer<Int>.Linked<2>.create(capacity: 8)
-        try buffer.insertBack(10)
-        try buffer.insertBack(20)
-        try buffer.insertBack(30)
+        try buffer.insert.back(10)
+        try buffer.insert.back(20)
+        try buffer.insert.back(30)
 
         var drained: [Int] = []
         buffer.drain { drained.append($0) }
@@ -237,16 +237,16 @@ struct LinkedTests {
         var buffer = try Buffer<Int>.Linked<2>.create(capacity: 8)
         #expect(buffer.count == .zero)
 
-        try buffer.insertBack(10)
+        try buffer.insert.back(10)
         #expect(buffer.count == 1)
 
-        try buffer.insertFront(20)
+        try buffer.insert.front(20)
         #expect(buffer.count == 2)
 
-        _ = buffer.removeFront()
+        _ = buffer.remove.front()
         #expect(buffer.count == 1)
 
-        _ = buffer.removeBack()
+        _ = buffer.remove.back()
         #expect(buffer.count == .zero)
     }
 
@@ -262,9 +262,9 @@ struct LinkedTests {
     @Test
     func `removeAll clears list`() throws {
         var buffer = try Buffer<Int>.Linked<2>.create(capacity: 8)
-        try buffer.insertBack(10)
-        try buffer.insertBack(20)
-        try buffer.insertBack(30)
+        try buffer.insert.back(10)
+        try buffer.insert.back(20)
+        try buffer.insert.back(30)
 
         buffer.removeAll()
 
@@ -275,9 +275,9 @@ struct LinkedTests {
     @Test
     func `Sequence iteration`() throws {
         var buffer = try Buffer<Int>.Linked<2>.create(capacity: 8)
-        try buffer.insertBack(10)
-        try buffer.insertBack(20)
-        try buffer.insertBack(30)
+        try buffer.insert.back(10)
+        try buffer.insert.back(20)
+        try buffer.insert.back(30)
 
         var collected: [Int] = []
         var iter = buffer.makeIterator()
@@ -290,23 +290,23 @@ struct LinkedTests {
     @Test
     func `single element`() throws {
         var buffer = try Buffer<Int>.Linked<2>.create(capacity: 4)
-        try buffer.insertBack(42)
+        try buffer.insert.back(42)
         #expect(buffer.count == 1)
         #expect(buffer.first == 42)
         #expect(buffer.last == 42)
-        #expect(buffer.removeFront() == 42)
+        #expect(buffer.remove.front() == 42)
         #expect(buffer.isEmpty)
     }
 
     @Test
     func `auto grows when full (Copyable)`() throws {
         var buffer = try Buffer<Int>.Linked<2>.create(capacity: 2)
-        try buffer.insertBack(10)
-        try buffer.insertBack(20)
+        try buffer.insert.back(10)
+        try buffer.insert.back(20)
         #expect(buffer.isFull == true)
 
         // Copyable variant auto-grows via ensureUnique + _grow
-        buffer.insertBack(30)
+        buffer.insert.back(30)
         #expect(buffer.count == 3)
         #expect(buffer.last == 30)
     }
@@ -316,38 +316,38 @@ struct LinkedTests {
 struct LinkedSinglyTests {
 
     @Test
-    func `insertFront and removeFront`() throws {
+    func `insert.front and remove.front`() throws {
         var buffer = try Buffer<Int>.Linked<1>.create(capacity: 8)
-        try buffer.insertFront(10)
-        try buffer.insertFront(20)
-        try buffer.insertFront(30)
+        try buffer.insert.front(10)
+        try buffer.insert.front(20)
+        try buffer.insert.front(30)
 
-        #expect(buffer.removeFront() == 30)
-        #expect(buffer.removeFront() == 20)
-        #expect(buffer.removeFront() == 10)
+        #expect(buffer.remove.front() == 30)
+        #expect(buffer.remove.front() == 20)
+        #expect(buffer.remove.front() == 10)
         #expect(buffer.isEmpty)
     }
 
     @Test
-    func `insertBack and removeBack — O(n) traversal`() throws {
+    func `insert.back and remove.back — O(n) traversal`() throws {
         var buffer = try Buffer<Int>.Linked<1>.create(capacity: 8)
-        try buffer.insertBack(10)
-        try buffer.insertBack(20)
-        try buffer.insertBack(30)
+        try buffer.insert.back(10)
+        try buffer.insert.back(20)
+        try buffer.insert.back(30)
 
         // removeBack on singly-linked traverses to find predecessor
-        #expect(buffer.removeBack() == 30)
-        #expect(buffer.removeBack() == 20)
-        #expect(buffer.removeBack() == 10)
+        #expect(buffer.remove.back() == 30)
+        #expect(buffer.remove.back() == 20)
+        #expect(buffer.remove.back() == 10)
         #expect(buffer.isEmpty)
     }
 
     @Test
     func `forEach traverses front to back`() throws {
         var buffer = try Buffer<Int>.Linked<1>.create(capacity: 8)
-        try buffer.insertBack(10)
-        try buffer.insertBack(20)
-        try buffer.insertBack(30)
+        try buffer.insert.back(10)
+        try buffer.insert.back(20)
+        try buffer.insert.back(30)
 
         var collected: [Int] = []
         buffer.forEach { collected.append($0) }
@@ -357,8 +357,8 @@ struct LinkedSinglyTests {
     @Test
     func `first and last accessors`() throws {
         var buffer = try Buffer<Int>.Linked<1>.create(capacity: 8)
-        try buffer.insertBack(10)
-        try buffer.insertBack(20)
+        try buffer.insert.back(10)
+        try buffer.insert.back(20)
 
         #expect(buffer.first == 10)
         #expect(buffer.last == 20)
@@ -367,9 +367,9 @@ struct LinkedSinglyTests {
     @Test
     func `single element removeBack`() throws {
         var buffer = try Buffer<Int>.Linked<1>.create(capacity: 4)
-        try buffer.insertBack(42)
+        try buffer.insert.back(42)
 
-        #expect(buffer.removeBack() == 42)
+        #expect(buffer.remove.back() == 42)
         #expect(buffer.isEmpty)
     }
 }

@@ -33,7 +33,7 @@ extension Buffer.Arena where Element: ~Copyable {
     @inlinable
     public mutating func insert(_ element: consuming Element) -> Position {
         ensureCapacity()
-        let meta = unsafe storage.metaBase
+        let meta = unsafe storage.meta
         let position = Buffer<Element>.Arena.insert(
             consume element, header: &header, arenaStorage: storage, meta: meta
         )
@@ -48,7 +48,7 @@ extension Buffer.Arena where Element: ~Copyable {
     @inlinable
     public mutating func allocate() -> Position {
         ensureCapacity()
-        let meta = unsafe storage.metaBase
+        let meta = unsafe storage.meta
         let position = Buffer<Element>.Arena.allocate(header: &header, meta: meta)
         storage.highWater = header.highWater
         return position
@@ -61,7 +61,7 @@ extension Buffer.Arena where Element: ~Copyable {
     /// - Throws: `.invalidPosition` if the position is stale or invalid.
     @inlinable
     public mutating func remove(at position: Position) throws(Error) -> Element {
-        let meta = unsafe storage.metaBase
+        let meta = unsafe storage.meta
         return try Buffer<Element>.Arena.remove(
             at: position, header: &header, arenaStorage: storage, meta: meta
         )
@@ -72,7 +72,7 @@ extension Buffer.Arena where Element: ~Copyable {
     /// - Precondition: `slot` is occupied.
     @inlinable
     public mutating func remove(at slot: Index<Element>) -> Element {
-        let meta = unsafe storage.metaBase
+        let meta = unsafe storage.meta
         return Buffer<Element>.Arena.remove(
             at: slot, header: &header, arenaStorage: storage, meta: meta
         )
@@ -83,7 +83,7 @@ extension Buffer.Arena where Element: ~Copyable {
     /// - Precondition: `slot` is occupied.
     @inlinable
     public mutating func free(at slot: Index<Element>) {
-        let meta = unsafe storage.metaBase
+        let meta = unsafe storage.meta
         Buffer<Element>.Arena.free(
             at: slot, header: &header, arenaStorage: storage, meta: meta
         )
@@ -92,7 +92,7 @@ extension Buffer.Arena where Element: ~Copyable {
     /// Deinitializes all occupied elements and resets the arena to empty state.
     @inlinable
     public mutating func removeAll() {
-        let meta = unsafe storage.metaBase
+        let meta = unsafe storage.meta
         Buffer<Element>.Arena.deinitialize(
             header: &header, arenaStorage: storage, meta: meta
         )
@@ -103,14 +103,14 @@ extension Buffer.Arena where Element: ~Copyable {
     /// Returns whether the given position handle is still valid.
     @inlinable
     public func isValid(_ position: Position) -> Bool {
-        let meta = unsafe storage.metaBase
+        let meta = unsafe storage.meta
         return Buffer<Element>.Arena.isValid(position, header: header, meta: meta)
     }
 
     /// Returns whether the slot at the given index is occupied.
     @inlinable
     public func isOccupied(_ slot: Index<Element>) -> Bool {
-        let meta = unsafe storage.metaBase
+        let meta = unsafe storage.meta
         return Buffer<Element>.Arena.isOccupied(slot, meta: meta)
     }
 
@@ -119,7 +119,7 @@ extension Buffer.Arena where Element: ~Copyable {
     /// Returns the current generation token for the given slot.
     @inlinable
     public func token(at slot: Index<Element>) -> UInt32 {
-        let meta = unsafe storage.metaBase
+        let meta = unsafe storage.meta
         return Buffer<Element>.Arena.token(at: slot, meta: meta)
     }
 
@@ -128,7 +128,7 @@ extension Buffer.Arena where Element: ~Copyable {
     /// - Precondition: `slot` is occupied.
     @inlinable
     public func position(forOccupied slot: Index<Element>) -> Position {
-        let meta = unsafe storage.metaBase
+        let meta = unsafe storage.meta
         return Buffer<Element>.Arena.position(forOccupied: slot, meta: meta)
     }
 
@@ -144,7 +144,7 @@ extension Buffer.Arena where Element: ~Copyable {
     @unsafe
     @inlinable
     public func pointer(at slot: Index<Element>) -> UnsafeMutablePointer<Element> {
-        unsafe storage.elementPointer(at: slot)
+        unsafe storage.pointer(at: slot)
     }
 
     // MARK: - Iteration
@@ -176,8 +176,8 @@ extension Buffer.Arena where Element: ~Copyable {
         let newArenaStorage = Storage<Element>.Arena(minimumCapacity: newMinimumCapacity)
         let newCapacity = newArenaStorage.slotCapacity
         let oldArenaStorage = storage
-        let oldMeta = unsafe oldArenaStorage.metaBase
-        let newMeta = unsafe newArenaStorage.metaBase
+        let oldMeta = unsafe oldArenaStorage.meta
+        let newMeta = unsafe newArenaStorage.meta
         let oldCap = Int(bitPattern: header.capacity)
         // Copy meta prefix (new meta is already virgin-initialized beyond oldCap)
         unsafe newMeta.update(from: oldMeta, count: oldCap)

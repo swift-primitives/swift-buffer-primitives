@@ -78,17 +78,70 @@ extension Buffer.Linked where Element: ~Copyable {
     public var capacity: Index<Node>.Count { storage.capacity }
 }
 
-// MARK: - Insert Operations
+// MARK: - Tag Types
 
 extension Buffer.Linked where Element: ~Copyable {
+    /// Tag type for `.insert` property extensions.
+    public enum Insert {}
+
+    /// Tag type for `.remove` property extensions.
+    public enum Remove {}
+}
+
+// MARK: - Property.View.Typed (.insert, .remove)
+
+extension Buffer.Linked where Element: ~Copyable {
+    /// Namespaced insert operations.
+    ///
+    /// - `buffer.insert.front(element)` — inserts at the front.
+    /// - `buffer.insert.back(element)` — inserts at the back.
+    @inlinable
+    public var insert: Property<Insert, Self>.View.Typed<Element> {
+        mutating _read {
+            yield unsafe Property<Insert, Self>.View.Typed<Element>(&self)
+        }
+        mutating _modify {
+            var view = unsafe Property<Insert, Self>.View.Typed<Element>(&self)
+            yield &view
+        }
+    }
+
+    /// Namespaced remove operations.
+    ///
+    /// - `buffer.remove.front()` — removes from the front.
+    /// - `buffer.remove.back()` — removes from the back.
+    @inlinable
+    public var remove: Property<Remove, Self>.View.Typed<Element> {
+        mutating _read {
+            yield unsafe Property<Remove, Self>.View.Typed<Element>(&self)
+        }
+        mutating _modify {
+            var view = unsafe Property<Remove, Self>.View.Typed<Element>(&self)
+            yield &view
+        }
+    }
+}
+
+// MARK: - Insert Operations (~Copyable)
+
+extension Property.View.Typed where Element: ~Copyable {
     /// Inserts an element at the front of the list.
     ///
     /// - Parameter element: The element to insert.
     /// - Throws: `Error.capacityExceeded` if the pool is full.
     /// - Complexity: O(1)
+    @_lifetime(&self)
     @inlinable
-    public mutating func insertFront(_ element: consuming Element) throws(Error) {
-        try Buffer.Linked.insertFront(consume element, header: &header, storage: storage)
+    public mutating func front<let N: Int>(
+        _ element: consuming Element
+    ) throws(Buffer<Element>.Linked<N>.Error)
+    where Tag == Buffer<Element>.Linked<N>.Insert,
+          Base == Buffer<Element>.Linked<N> {
+        try unsafe Buffer<Element>.Linked<N>.insertFront(
+            consume element,
+            header: &base.pointee.header,
+            storage: base.pointee.storage
+        )
     }
 
     /// Inserts an element at the back of the list.
@@ -96,31 +149,54 @@ extension Buffer.Linked where Element: ~Copyable {
     /// - Parameter element: The element to insert.
     /// - Throws: `Error.capacityExceeded` if the pool is full.
     /// - Complexity: O(1)
+    @_lifetime(&self)
     @inlinable
-    public mutating func insertBack(_ element: consuming Element) throws(Error) {
-        try Buffer.Linked.insertBack(consume element, header: &header, storage: storage)
+    public mutating func back<let N: Int>(
+        _ element: consuming Element
+    ) throws(Buffer<Element>.Linked<N>.Error)
+    where Tag == Buffer<Element>.Linked<N>.Insert,
+          Base == Buffer<Element>.Linked<N> {
+        try unsafe Buffer<Element>.Linked<N>.insertBack(
+            consume element,
+            header: &base.pointee.header,
+            storage: base.pointee.storage
+        )
     }
 }
 
-// MARK: - Remove Operations
+// MARK: - Remove Operations (~Copyable)
 
-extension Buffer.Linked where Element: ~Copyable {
+extension Property.View.Typed where Element: ~Copyable {
     /// Removes and returns the element at the front of the list.
     ///
     /// - Returns: The removed element, or `nil` if the list is empty.
     /// - Complexity: O(1)
+    @_lifetime(&self)
     @inlinable
-    public mutating func removeFront() -> Element? {
-        Buffer.Linked.removeFront(header: &header, storage: storage)
+    public mutating func front<let N: Int>(
+    ) -> Element?
+    where Tag == Buffer<Element>.Linked<N>.Remove,
+          Base == Buffer<Element>.Linked<N> {
+        unsafe Buffer<Element>.Linked<N>.removeFront(
+            header: &base.pointee.header,
+            storage: base.pointee.storage
+        )
     }
 
     /// Removes and returns the element at the back of the list.
     ///
     /// - Returns: The removed element, or `nil` if the list is empty.
     /// - Complexity: O(1) for N >= 2 (doubly-linked), O(n) for N == 1 (singly-linked)
+    @_lifetime(&self)
     @inlinable
-    public mutating func removeBack() -> Element? {
-        Buffer.Linked.removeBack(header: &header, storage: storage)
+    public mutating func back<let N: Int>(
+    ) -> Element?
+    where Tag == Buffer<Element>.Linked<N>.Remove,
+          Base == Buffer<Element>.Linked<N> {
+        unsafe Buffer<Element>.Linked<N>.removeBack(
+            header: &base.pointee.header,
+            storage: base.pointee.storage
+        )
     }
 }
 

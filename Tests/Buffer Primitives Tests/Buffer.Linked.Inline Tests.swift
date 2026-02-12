@@ -13,55 +13,55 @@ struct LinkedInlineTests {
     }
 
     @Test
-    func `insertFront and removeFront`() {
+    func `insert.front and remove.front`() {
         var buffer = Buffer<Int>.Linked<2>.Inline<8>()
-        try! buffer.insertFront(10)
-        try! buffer.insertFront(20)
-        try! buffer.insertFront(30)
+        try! buffer.insert.front(10)
+        try! buffer.insert.front(20)
+        try! buffer.insert.front(30)
 
         #expect(buffer.count == 3)
 
-        #expect(buffer.removeFront() == 30)
-        #expect(buffer.removeFront() == 20)
-        #expect(buffer.removeFront() == 10)
+        #expect(buffer.remove.front() == 30)
+        #expect(buffer.remove.front() == 20)
+        #expect(buffer.remove.front() == 10)
         #expect(buffer.isEmpty == true)
     }
 
     @Test
-    func `insertBack and removeBack`() {
+    func `insert.back and remove.back`() {
         var buffer = Buffer<Int>.Linked<2>.Inline<8>()
-        try! buffer.insertBack(10)
-        try! buffer.insertBack(20)
-        try! buffer.insertBack(30)
+        try! buffer.insert.back(10)
+        try! buffer.insert.back(20)
+        try! buffer.insert.back(30)
 
-        #expect(buffer.removeBack() == 30)
-        #expect(buffer.removeBack() == 20)
-        #expect(buffer.removeBack() == 10)
+        #expect(buffer.remove.back() == 30)
+        #expect(buffer.remove.back() == 20)
+        #expect(buffer.remove.back() == 10)
         #expect(buffer.isEmpty == true)
     }
 
     @Test
-    func `insertBack and removeFront`() {
+    func `insert.back and remove.front`() {
         var buffer = Buffer<Int>.Linked<2>.Inline<8>()
-        try! buffer.insertBack(10)
-        try! buffer.insertBack(20)
-        try! buffer.insertBack(30)
+        try! buffer.insert.back(10)
+        try! buffer.insert.back(20)
+        try! buffer.insert.back(30)
 
-        #expect(buffer.removeFront() == 10)
-        #expect(buffer.removeFront() == 20)
-        #expect(buffer.removeFront() == 30)
+        #expect(buffer.remove.front() == 10)
+        #expect(buffer.remove.front() == 20)
+        #expect(buffer.remove.front() == 30)
         #expect(buffer.isEmpty == true)
     }
 
     @Test
     func `capacity overflow throws`() {
         var buffer = Buffer<Int>.Linked<2>.Inline<2>()
-        try! buffer.insertBack(10)
-        try! buffer.insertBack(20)
+        try! buffer.insert.back(10)
+        try! buffer.insert.back(20)
         #expect(buffer.isFull == true)
 
         do {
-            try buffer.insertBack(30)
+            try buffer.insert.back(30)
             Issue.record("Expected .capacityExceeded error")
         } catch {
             #expect(error == .capacityExceeded)
@@ -71,16 +71,16 @@ struct LinkedInlineTests {
     @Test
     func `free-list reuse — insert remove insert reuses slot`() {
         var buffer = Buffer<Int>.Linked<2>.Inline<4>()
-        try! buffer.insertBack(10)
-        try! buffer.insertBack(20)
+        try! buffer.insert.back(10)
+        try! buffer.insert.back(20)
 
         // Remove front to free a slot
-        let removed = buffer.removeFront()
+        let removed = buffer.remove.front()
         #expect(removed == 10)
         #expect(buffer.count == 1)
 
         // Insert should reuse the freed slot
-        try! buffer.insertBack(30)
+        try! buffer.insert.back(30)
         #expect(buffer.count == 2)
 
         var collected: [Int] = []
@@ -91,9 +91,9 @@ struct LinkedInlineTests {
     @Test
     func `forEach traverses front to back`() {
         var buffer = Buffer<Int>.Linked<2>.Inline<8>()
-        try! buffer.insertBack(10)
-        try! buffer.insertBack(20)
-        try! buffer.insertBack(30)
+        try! buffer.insert.back(10)
+        try! buffer.insert.back(20)
+        try! buffer.insert.back(30)
 
         var collected: [Int] = []
         buffer.forEach { collected.append($0) }
@@ -103,9 +103,9 @@ struct LinkedInlineTests {
     @Test
     func `forEachReversed traverses back to front`() {
         var buffer = Buffer<Int>.Linked<2>.Inline<8>()
-        try! buffer.insertBack(10)
-        try! buffer.insertBack(20)
-        try! buffer.insertBack(30)
+        try! buffer.insert.back(10)
+        try! buffer.insert.back(20)
+        try! buffer.insert.back(30)
 
         var collected: [Int] = []
         buffer.forEachReversed { collected.append($0) }
@@ -115,16 +115,16 @@ struct LinkedInlineTests {
     @Test
     func `removeAll clears buffer`() {
         var buffer = Buffer<Int>.Linked<2>.Inline<8>()
-        try! buffer.insertBack(10)
-        try! buffer.insertBack(20)
-        try! buffer.insertBack(30)
+        try! buffer.insert.back(10)
+        try! buffer.insert.back(20)
+        try! buffer.insert.back(30)
 
         buffer.removeAll()
         #expect(buffer.isEmpty == true)
         #expect(buffer.count == .zero)
 
         // Can reuse after removeAll
-        try! buffer.insertBack(40)
+        try! buffer.insert.back(40)
         #expect(buffer.count == 1)
     }
 
@@ -134,9 +134,9 @@ struct LinkedInlineTests {
         #expect(buffer.first == nil)
         #expect(buffer.last == nil)
 
-        try! buffer.insertBack(10)
-        try! buffer.insertBack(20)
-        try! buffer.insertBack(30)
+        try! buffer.insert.back(10)
+        try! buffer.insert.back(20)
+        try! buffer.insert.back(30)
 
         #expect(buffer.first == 10)
         #expect(buffer.last == 30)
@@ -149,34 +149,34 @@ struct LinkedInlineTests {
     func `empty buffer operations`() {
         var buffer = Buffer<Int>.Linked<2>.Inline<4>()
         #expect(buffer.isEmpty == true)
-        #expect(buffer.removeFront() == nil)
-        #expect(buffer.removeBack() == nil)
+        #expect(buffer.remove.front() == nil)
+        #expect(buffer.remove.back() == nil)
     }
 
     @Test
     func `single element`() {
         var buffer = Buffer<Int>.Linked<2>.Inline<4>()
-        try! buffer.insertBack(42)
+        try! buffer.insert.back(42)
         #expect(buffer.count == 1)
         #expect(buffer.first == 42)
         #expect(buffer.last == 42)
-        #expect(buffer.removeFront() == 42)
+        #expect(buffer.remove.front() == 42)
         #expect(buffer.isEmpty == true)
     }
 
     @Test
     func `fill to capacity then drain`() {
         var buffer = Buffer<Int>.Linked<2>.Inline<4>()
-        try! buffer.insertBack(10)
-        try! buffer.insertBack(20)
-        try! buffer.insertBack(30)
-        try! buffer.insertBack(40)
+        try! buffer.insert.back(10)
+        try! buffer.insert.back(20)
+        try! buffer.insert.back(30)
+        try! buffer.insert.back(40)
         #expect(buffer.isFull == true)
 
-        #expect(buffer.removeFront() == 10)
-        #expect(buffer.removeFront() == 20)
-        #expect(buffer.removeFront() == 30)
-        #expect(buffer.removeFront() == 40)
+        #expect(buffer.remove.front() == 10)
+        #expect(buffer.remove.front() == 20)
+        #expect(buffer.remove.front() == 30)
+        #expect(buffer.remove.front() == 40)
         #expect(buffer.isEmpty == true)
     }
 }

@@ -77,26 +77,86 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     }
 }
 
+// MARK: - Property.View (.insert, .remove)
+
+extension Buffer.Linked.Small where Element: ~Copyable {
+    /// Namespaced insert operations.
+    ///
+    /// - `buffer.insert.front(element)` — inserts at the front.
+    /// - `buffer.insert.back(element)` — inserts at the back.
+    @inlinable
+    public var insert: Property<Buffer<Element>.Linked<N>.Insert, Self>.View {
+        mutating _read {
+            yield unsafe Property<Buffer<Element>.Linked<N>.Insert, Self>.View(&self)
+        }
+        mutating _modify {
+            var view = unsafe Property<Buffer<Element>.Linked<N>.Insert, Self>.View(&self)
+            yield &view
+        }
+    }
+
+    /// Namespaced remove operations.
+    ///
+    /// - `buffer.remove.front()` — removes from the front.
+    /// - `buffer.remove.back()` — removes from the back.
+    @inlinable
+    public var remove: Property<Buffer<Element>.Linked<N>.Remove, Self>.View {
+        mutating _read {
+            yield unsafe Property<Buffer<Element>.Linked<N>.Remove, Self>.View(&self)
+        }
+        mutating _modify {
+            var view = unsafe Property<Buffer<Element>.Linked<N>.Remove, Self>.View(&self)
+            yield &view
+        }
+    }
+}
+
 // MARK: - Insert Operations
 
 extension Buffer.Linked.Small where Element: ~Copyable {
+    @usableFromInline
+    mutating func _insertFront(_ element: consuming Element) {
+        if _heapBuffer != nil {
+            try! heap.reserveAdditionalCapacity(.one)
+            try! heap.insert.front(element)
+        } else if !_inlineBuffer.isFull {
+            try! _inlineBuffer.insert.front(element)
+        } else {
+            _spillToHeapMoving()
+            try! heap.insert.front(element)
+        }
+    }
+
+    @usableFromInline
+    mutating func _insertBack(_ element: consuming Element) {
+        if _heapBuffer != nil {
+            try! heap.reserveAdditionalCapacity(.one)
+            try! heap.insert.back(element)
+        } else if !_inlineBuffer.isFull {
+            try! _inlineBuffer.insert.back(element)
+        } else {
+            _spillToHeapMoving()
+            try! heap.insert.back(element)
+        }
+    }
+}
+
+// MARK: - Insert Operations (Property.View — Small)
+
+extension Property.View {
     /// Inserts an element at the front of the list.
     ///
     /// If inline storage is full, spills to heap automatically.
     ///
     /// - Parameter element: The element to insert.
     /// - Complexity: O(1) amortized
+    @_lifetime(&self)
     @inlinable
-    public mutating func insertFront(_ element: consuming Element) {
-        if _heapBuffer != nil {
-            try! heap.reserveAdditionalCapacity(.one)
-            try! heap.insertFront(element)
-        } else if !_inlineBuffer.isFull {
-            try! _inlineBuffer.insertFront(element)
-        } else {
-            _spillToHeapMoving()
-            try! heap.insertFront(element)
-        }
+    public mutating func front<Element: ~Copyable, let N: Int, let inlineCapacity: Int>(
+        _ element: consuming Element
+    ) where Tag == Buffer<Element>.Linked<N>.Insert,
+            Base == Buffer<Element>.Linked<N>.Small<inlineCapacity> {
+        unsafe base.pointee._insertFront(element)
     }
 
     /// Inserts an element at the back of the list.
@@ -105,47 +165,65 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     ///
     /// - Parameter element: The element to insert.
     /// - Complexity: O(1) amortized
+    @_lifetime(&self)
     @inlinable
-    public mutating func insertBack(_ element: consuming Element) {
-        if _heapBuffer != nil {
-            try! heap.reserveAdditionalCapacity(.one)
-            try! heap.insertBack(element)
-        } else if !_inlineBuffer.isFull {
-            try! _inlineBuffer.insertBack(element)
-        } else {
-            _spillToHeapMoving()
-            try! heap.insertBack(element)
-        }
+    public mutating func back<Element: ~Copyable, let N: Int, let inlineCapacity: Int>(
+        _ element: consuming Element
+    ) where Tag == Buffer<Element>.Linked<N>.Insert,
+            Base == Buffer<Element>.Linked<N>.Small<inlineCapacity> {
+        unsafe base.pointee._insertBack(element)
     }
 }
 
 // MARK: - Remove Operations
 
 extension Buffer.Linked.Small where Element: ~Copyable {
+    @usableFromInline
+    mutating func _removeFront() -> Element? {
+        if _heapBuffer != nil {
+            return heap.remove.front()
+        } else {
+            return _inlineBuffer.remove.front()
+        }
+    }
+
+    @usableFromInline
+    mutating func _removeBack() -> Element? {
+        if _heapBuffer != nil {
+            return heap.remove.back()
+        } else {
+            return _inlineBuffer.remove.back()
+        }
+    }
+}
+
+// MARK: - Remove Operations (Property.View — Small)
+
+extension Property.View {
     /// Removes and returns the element at the front of the list.
     ///
     /// - Returns: The removed element, or `nil` if the list is empty.
     /// - Complexity: O(1)
+    @_lifetime(&self)
     @inlinable
-    public mutating func removeFront() -> Element? {
-        if _heapBuffer != nil {
-            return heap.removeFront()
-        } else {
-            return _inlineBuffer.removeFront()
-        }
+    public mutating func front<Element: ~Copyable, let N: Int, let inlineCapacity: Int>(
+    ) -> Element?
+    where Tag == Buffer<Element>.Linked<N>.Remove,
+          Base == Buffer<Element>.Linked<N>.Small<inlineCapacity> {
+        unsafe base.pointee._removeFront()
     }
 
     /// Removes and returns the element at the back of the list.
     ///
     /// - Returns: The removed element, or `nil` if the list is empty.
     /// - Complexity: O(1) for N >= 2 (doubly-linked), O(n) for N == 1 (singly-linked)
+    @_lifetime(&self)
     @inlinable
-    public mutating func removeBack() -> Element? {
-        if _heapBuffer != nil {
-            return heap.removeBack()
-        } else {
-            return _inlineBuffer.removeBack()
-        }
+    public mutating func back<Element: ~Copyable, let N: Int, let inlineCapacity: Int>(
+    ) -> Element?
+    where Tag == Buffer<Element>.Linked<N>.Remove,
+          Base == Buffer<Element>.Linked<N>.Small<inlineCapacity> {
+        unsafe base.pointee._removeBack()
     }
 }
 
@@ -204,7 +282,7 @@ extension Buffer.Linked.Small where Element: ~Copyable {
             let nextSlot: Index<Buffer<Element>.Linked<N>.Node> = unsafe _inlineBuffer.storage.pointer(at: current).pointee.links[0]
             let node = _inlineBuffer.storage.move(at: current)
             _inlineBuffer._deallocateSlot(current)
-            try! heap.insertBack(node.element)
+            try! heap.insert.back(node.element)
             current = nextSlot
         }
 
