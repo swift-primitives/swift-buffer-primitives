@@ -90,9 +90,9 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
         Buffer.Linear.swap(at: i, with: j, storage: &storage)
     }
 
-    /// Package convenience — accepts unbounded indices for Small delegation.
+    /// Convenience — accepts unbounded indices, narrows internally.
     @inlinable
-    package mutating func swap(at i: Index<Element>, with j: Index<Element>) {
+    public mutating func swap(at i: Index<Element>, with j: Index<Element>) {
         swap(at: Index<Element>.Bounded<capacity>(i)!, with: Index<Element>.Bounded<capacity>(j)!)
     }
 
@@ -100,6 +100,14 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
     @inlinable
     public mutating func removeAll() {
         Buffer.Linear.deinitializeAll(header: &header, storage: &storage)
+    }
+
+    /// Removes elements beyond the specified count.
+    ///
+    /// If `newCount >= count`, this method has no effect.
+    @inlinable
+    public mutating func truncate(to newCount: Index<Element>.Count) {
+        Buffer.Linear.truncate(to: newCount, header: &header, storage: &storage)
     }
 }
 
