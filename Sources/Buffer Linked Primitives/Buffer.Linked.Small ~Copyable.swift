@@ -77,6 +77,18 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     }
 }
 
+// MARK: - Tag View Typealiases
+
+extension Buffer.Linked.Small where Element: ~Copyable {
+    public enum Insert {
+        public typealias View = Property<Buffer<Element>.Linked<N>.Insert, Buffer<Element>.Linked<N>.Small<inlineCapacity>>.View.Typed<Element>.Valued<N>.Valued<inlineCapacity>
+    }
+
+    public enum Remove {
+        public typealias View = Property<Buffer<Element>.Linked<N>.Remove, Buffer<Element>.Linked<N>.Small<inlineCapacity>>.View.Typed<Element>.Valued<N>.Valued<inlineCapacity>
+    }
+}
+
 // MARK: - Property.View.Typed.Valued.Valued (.insert, .remove)
 
 extension Buffer.Linked.Small where Element: ~Copyable {
@@ -85,12 +97,12 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     /// - `buffer.insert.front(element)` — inserts at the front.
     /// - `buffer.insert.back(element)` — inserts at the back.
     @inlinable
-    public var insert: Property<Buffer<Element>.Linked<N>.Insert, Self>.View.Typed<Element>.Valued<N>.Valued<inlineCapacity> {
+    public var insert: Insert.View {
         mutating _read {
-            yield unsafe Property<Buffer<Element>.Linked<N>.Insert, Self>.View.Typed<Element>.Valued<N>.Valued<inlineCapacity>(&self)
+            yield unsafe .init(&self)
         }
         mutating _modify {
-            var view = unsafe Property<Buffer<Element>.Linked<N>.Insert, Self>.View.Typed<Element>.Valued<N>.Valued<inlineCapacity>(&self)
+            var view: Insert.View = unsafe .init(&self)
             yield &view
         }
     }
@@ -100,12 +112,12 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     /// - `buffer.remove.front()` — removes from the front.
     /// - `buffer.remove.back()` — removes from the back.
     @inlinable
-    public var remove: Property<Buffer<Element>.Linked<N>.Remove, Self>.View.Typed<Element>.Valued<N>.Valued<inlineCapacity> {
+    public var remove: Remove.View {
         mutating _read {
-            yield unsafe Property<Buffer<Element>.Linked<N>.Remove, Self>.View.Typed<Element>.Valued<N>.Valued<inlineCapacity>(&self)
+            yield unsafe .init(&self)
         }
         mutating _modify {
-            var view = unsafe Property<Buffer<Element>.Linked<N>.Remove, Self>.View.Typed<Element>.Valued<N>.Valued<inlineCapacity>(&self)
+            var view: Remove.View = unsafe .init(&self)
             yield &view
         }
     }
