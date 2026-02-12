@@ -81,38 +81,6 @@ extension Buffer.Linked where Element: ~Copyable {
 // MARK: - Insert Operations
 
 extension Buffer.Linked where Element: ~Copyable {
-    /// Core implementation of front insertion.
-    @inlinable
-    package mutating func _insertFront(_ element: consuming Element) throws(Error) {
-        let slot: Index<Node>
-        do {
-            slot = try storage.allocate()
-        } catch {
-            throw .capacityExceeded
-        }
-
-        let sentinel = header.sentinel
-        var links = InlineArray<N, Index<Node>>(repeating: sentinel)
-        links[0] = header.head  // next = old head
-        // links[1..] already = sentinel (prev = none)
-
-        let node = Node(element: element, links: links)
-        unsafe storage.pointer(at: slot).initialize(to: node)
-
-        // Link old head's prev to new node (doubly-linked only).
-        if header.head != sentinel {
-            if N >= 2 {
-                unsafe storage.pointer(at: header.head).pointee.links[1] = slot
-            }
-        } else {
-            // List was empty — new node is also tail.
-            header.tail = slot
-        }
-
-        header.head = slot
-        header.count += .one
-    }
-
     /// Inserts an element at the front of the list.
     ///
     /// - Parameter element: The element to insert.
@@ -120,39 +88,7 @@ extension Buffer.Linked where Element: ~Copyable {
     /// - Complexity: O(1)
     @inlinable
     public mutating func insertFront(_ element: consuming Element) throws(Error) {
-        try _insertFront(element)
-    }
-
-    /// Core implementation of back insertion.
-    @inlinable
-    package mutating func _insertBack(_ element: consuming Element) throws(Error) {
-        let slot: Index<Node>
-        do {
-            slot = try storage.allocate()
-        } catch {
-            throw .capacityExceeded
-        }
-
-        let sentinel = header.sentinel
-        var links = InlineArray<N, Index<Node>>(repeating: sentinel)
-        links[0] = sentinel  // next = none (new tail)
-        if N >= 2 {
-            links[1] = header.tail  // prev = old tail
-        }
-
-        let node = Node(element: element, links: links)
-        unsafe storage.pointer(at: slot).initialize(to: node)
-
-        // Link old tail's next to new node.
-        if header.tail != sentinel {
-            unsafe storage.pointer(at: header.tail).pointee.links[0] = slot
-        } else {
-            // List was empty — new node is also head.
-            header.head = slot
-        }
-
-        header.tail = slot
-        header.count += .one
+        try Buffer.Linked.insertFront(consume element, header: &header, storage: storage)
     }
 
     /// Inserts an element at the back of the list.
@@ -162,99 +98,20 @@ extension Buffer.Linked where Element: ~Copyable {
     /// - Complexity: O(1)
     @inlinable
     public mutating func insertBack(_ element: consuming Element) throws(Error) {
-        try _insertBack(element)
+        try Buffer.Linked.insertBack(consume element, header: &header, storage: storage)
     }
 }
 
 // MARK: - Remove Operations
 
 extension Buffer.Linked where Element: ~Copyable {
-    /// Core implementation of front removal.
-    @inlinable
-    package mutating func _removeFront() -> Element? {
-        let sentinel = header.sentinel
-        guard header.head != sentinel else { return nil }
-
-        let slot = header.head
-        let node = unsafe storage.pointer(at: slot).move()
-
-        // Unlink.
-        let nextSlot = node.links[0]
-        header.head = nextSlot
-        if nextSlot != sentinel {
-            if N >= 2 {
-                unsafe storage.pointer(at: nextSlot).pointee.links[1] = sentinel
-            }
-        } else {
-            // List is now empty.
-            header.tail = sentinel
-        }
-
-        try! storage.deallocate(at: slot)
-        header.count = header.count.subtract.saturating(.one)
-        return node.element
-    }
-
     /// Removes and returns the element at the front of the list.
     ///
     /// - Returns: The removed element, or `nil` if the list is empty.
     /// - Complexity: O(1)
     @inlinable
     public mutating func removeFront() -> Element? {
-        _removeFront()
-    }
-
-    /// Core implementation of back removal.
-    @inlinable
-    package mutating func _removeBack() -> Element? {
-        let sentinel = header.sentinel
-        guard header.tail != sentinel else { return nil }
-
-        let slot = header.tail
-
-        if N >= 2 {
-            // O(1) doubly-linked removal using prev link.
-            let prevSlot = unsafe storage.pointer(at: slot).pointee.links[1]
-            let node = unsafe storage.pointer(at: slot).move()
-
-            header.tail = prevSlot
-            if prevSlot != sentinel {
-                unsafe storage.pointer(at: prevSlot).pointee.links[0] = sentinel
-            } else {
-                header.head = sentinel
-            }
-
-            try! storage.deallocate(at: slot)
-            header.count = header.count.subtract.saturating(.one)
-            return node.element
-        } else {
-            // O(n) singly-linked: traverse from head to find predecessor.
-            var prevSlot = sentinel
-            if header.head != slot {
-                var current = header.head
-                while current != sentinel {
-                    let nextSlot = unsafe storage.pointer(at: current).pointee.links[0]
-                    if nextSlot == slot {
-                        prevSlot = current
-                        break
-                    }
-                    current = nextSlot
-                }
-            }
-
-            let node = unsafe storage.pointer(at: slot).move()
-
-            header.tail = prevSlot
-            if prevSlot != sentinel {
-                unsafe storage.pointer(at: prevSlot).pointee.links[0] = sentinel
-            } else {
-                header.head = sentinel
-            }
-
-            try! storage.deallocate(at: slot)
-            header.count = header.count.subtract.saturating(.one)
-            return node.element
-        }
+        Buffer.Linked.removeFront(header: &header, storage: storage)
     }
 
     /// Removes and returns the element at the back of the list.
@@ -263,16 +120,23 @@ extension Buffer.Linked where Element: ~Copyable {
     /// - Complexity: O(1) for N >= 2 (doubly-linked), O(n) for N == 1 (singly-linked)
     @inlinable
     public mutating func removeBack() -> Element? {
-        _removeBack()
+        Buffer.Linked.removeBack(header: &header, storage: storage)
     }
 }
 
 // MARK: - Growth
 
 extension Buffer.Linked where Element: ~Copyable {
-    /// Core implementation of capacity growth.
+    /// Grows the pool to at least `minimumCapacity`, moving all elements
+    /// to a new pool with sequential layout.
+    ///
+    /// The new capacity is `max(minimumCapacity, currentCapacity * 2, 4)`.
+    ///
+    /// - Parameter minimumCapacity: The minimum number of nodes to support.
+    /// - Throws: `Error.capacityExceeded` if pool creation fails.
+    /// - Complexity: O(n) where n is the number of elements.
     @inlinable
-    package mutating func _ensureCapacity(_ minimumCapacity: Index<Node>.Count) throws(Error) {
+    mutating func _growTo(_ minimumCapacity: Index<Node>.Count) throws(Error) {
         guard storage.capacity < minimumCapacity else { return }
 
         let rawMin = Int(bitPattern: minimumCapacity)
@@ -348,7 +212,7 @@ extension Buffer.Linked where Element: ~Copyable {
     /// - Complexity: O(n) where n is the number of elements.
     @inlinable
     public mutating func ensureCapacity(_ minimumCapacity: Index<Node>.Count) throws(Error) {
-        try _ensureCapacity(minimumCapacity)
+        try _growTo(minimumCapacity)
     }
 
     /// Ensures the buffer has capacity for at least the specified number of nodes.
@@ -359,14 +223,7 @@ extension Buffer.Linked where Element: ~Copyable {
     /// - Complexity: O(n) where n is the number of elements (if growth occurs).
     @inlinable
     public mutating func ensureCapacity(_ minimumCapacity: Int) throws(Error) {
-        try _ensureCapacity(Index<Node>.Count(UInt(minimumCapacity)))
-    }
-
-    /// Core implementation of reserve additional capacity.
-    @inlinable
-    package mutating func _reserveAdditionalCapacity(_ additional: Index<Node>.Count) throws(Error) {
-        let needed = header.count.retag(Node.self) + additional
-        try _ensureCapacity(needed)
+        try _growTo(Index<Node>.Count(UInt(minimumCapacity)))
     }
 
     /// Ensures there is room for at least `additional` more nodes.
@@ -379,14 +236,29 @@ extension Buffer.Linked where Element: ~Copyable {
     /// - Complexity: O(n) where n is the number of elements (if growth occurs).
     @inlinable
     public mutating func reserveAdditionalCapacity(_ additional: Index<Node>.Count) throws(Error) {
-        try _reserveAdditionalCapacity(additional)
+        try _growTo(header.count.retag(Node.self) + additional)
     }
 
     /// Doubles capacity (or sets to 4 if empty). Used by CoW-safe overloads.
     @inlinable
-    package mutating func _grow() {
+    mutating func _grow() {
         let rawNew = Swift.max(Int(bitPattern: capacity) * 2, 4)
-        try! _ensureCapacity(Index<Node>.Count(UInt(rawNew)))
+        try! _growTo(Index<Node>.Count(UInt(rawNew)))
+    }
+}
+
+// MARK: - Clear
+
+extension Buffer.Linked where Element: ~Copyable {
+    /// Removes all elements from the list.
+    ///
+    /// Traverses the list and moves out all elements, deallocates slots,
+    /// and resets the header. The pool storage is retained.
+    ///
+    /// - Complexity: O(n) where n is the number of elements.
+    @inlinable
+    public mutating func removeAll() {
+        Buffer.Linked.removeAll(header: &header, storage: storage)
     }
 }
 
@@ -453,38 +325,6 @@ extension Buffer.Linked where Element: ~Copyable {
         guard header.tail != sentinel else { return nil }
         let ptr: UnsafePointer<Node> = unsafe storage.pointer(at: header.tail)
         return try body(unsafe ptr.pointee.element)
-    }
-}
-
-// MARK: - Clear
-
-extension Buffer.Linked where Element: ~Copyable {
-    /// Core implementation of remove-all.
-    @inlinable
-    package mutating func _removeAll() {
-        let sentinel = header.sentinel
-        var current = header.head
-        while current != sentinel {
-            let nextSlot = unsafe storage.pointer(at: current).pointee.links[0]
-            _ = unsafe storage.pointer(at: current).move()
-            try! storage.deallocate(at: current)
-            current = nextSlot
-        }
-
-        header.head = sentinel
-        header.tail = sentinel
-        header.count = .zero
-    }
-
-    /// Removes all elements from the list.
-    ///
-    /// Traverses the list and moves out all elements, deallocates slots,
-    /// and resets the header. The pool storage is retained.
-    ///
-    /// - Complexity: O(n) where n is the number of elements.
-    @inlinable
-    public mutating func removeAll() {
-        _removeAll()
     }
 }
 

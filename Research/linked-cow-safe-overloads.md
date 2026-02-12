@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-02-12
-status: DECISION
+status: IMPLEMENTED
 ---
 -->
 
@@ -67,17 +67,21 @@ Extract core logic into package-private `_insertFront`, `_insertBack`, `_removeF
 
 ## Outcome
 
-**Status**: DECISION
+**Status**: IMPLEMENTED (v1.1.0)
 
 **Choice**: Option A — Add CoW-safe Copyable overloads to Buffer.Linked.
 
-**Implementation**:
+**Implementation** (updated v1.1.0 — static method pattern):
 
-1. In `Buffer.Linked ~Copyable.swift`: rename `insertFront`, `insertBack`, `removeFront`, `removeBack`, `removeAll`, `ensureCapacity`, `reserveAdditionalCapacity` to package-private `_`-prefixed variants. Add thin public wrappers that delegate to them.
+The initial implementation used `_`-prefixed package-private instance methods to break the Copyable/~Copyable overload recursion. This was replaced with the **static method pattern** used by Buffer.Ring and Buffer.Linear, validated by experiment `copyable-overload-resolution`.
 
-2. In `Buffer.Linked Copyable.swift`: add `_makeUnique()` (package-private). Add CoW-safe public overloads that call `_makeUnique()` then delegate to `_`-prefixed implementations.
+1. In `Buffer.Linked+Pool ~Copyable.swift` (new file): core logic lives in static methods taking `header: inout Header` and `storage: Storage<Node>.Pool`. Static methods: `insertFront`, `insertBack`, `removeFront`, `removeBack`, `removeAll`.
 
-3. In `List.Linked Copyable.swift`: remove duplicated mutating methods (`ensureUnique`, `prepend`, `append`, `popFirst`, `popLast`, `clear`). Keep only genuinely Copyable-specific API: `first`/`last` properties, `Sequence`, `Equatable`, `Hashable`.
+2. In `Buffer.Linked ~Copyable.swift`: public instance methods delegate to statics via `Buffer.Linked.insertFront(consume element, header: &header, storage: storage)`. Growth methods (`_growTo`, `_grow`) remain as instance methods — they replace `self.storage`, which requires `mutating` on `self`.
+
+3. In `Buffer.Linked Copyable.swift`: CoW-safe overloads call `ensureUnique()` then delegate to the same statics. Growth methods call `_growTo` directly.
+
+No `_`-prefixed methods remain. No name collisions. Consistent with Ring's `Buffer.Ring+Heap ~Copyable.swift` pattern.
 
 **Rationale**: Buffer owns storage, buffer owns CoW. This is the principle established by Ring and Linear, documented in buffer-ring-consumer-api-boundary, and identified as a gap in buffer-variant-parity-analysis. Aligning Linked eliminates a class of consumer-side bugs and reduces code duplication.
 

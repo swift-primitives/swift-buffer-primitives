@@ -48,7 +48,7 @@ extension Buffer.Linked where Element: Copyable {
     public mutating func insertFront(_ element: consuming Element) {
         ensureUnique()
         if isFull { _grow() }
-        try! _insertFront(element)
+        try! Buffer.Linked.insertFront(consume element, header: &header, storage: storage)
     }
 
     /// Inserts an element at the back of the list (CoW-safe).
@@ -61,7 +61,7 @@ extension Buffer.Linked where Element: Copyable {
     public mutating func insertBack(_ element: consuming Element) {
         ensureUnique()
         if isFull { _grow() }
-        try! _insertBack(element)
+        try! Buffer.Linked.insertBack(consume element, header: &header, storage: storage)
     }
 
     /// Removes and returns the element at the front (CoW-safe).
@@ -71,7 +71,7 @@ extension Buffer.Linked where Element: Copyable {
     @inlinable
     public mutating func removeFront() -> Element? {
         ensureUnique()
-        return _removeFront()
+        return Buffer.Linked.removeFront(header: &header, storage: storage)
     }
 
     /// Removes and returns the element at the back (CoW-safe).
@@ -81,7 +81,7 @@ extension Buffer.Linked where Element: Copyable {
     @inlinable
     public mutating func removeBack() -> Element? {
         ensureUnique()
-        return _removeBack()
+        return Buffer.Linked.removeBack(header: &header, storage: storage)
     }
 
     /// Removes all elements from the buffer (CoW-safe).
@@ -90,7 +90,7 @@ extension Buffer.Linked where Element: Copyable {
     @inlinable
     public mutating func removeAll() {
         ensureUnique()
-        _removeAll()
+        Buffer.Linked.removeAll(header: &header, storage: storage)
     }
 
     /// Ensures the buffer can hold at least `minimumCapacity` elements (CoW-safe).
@@ -99,7 +99,7 @@ extension Buffer.Linked where Element: Copyable {
     @inlinable
     public mutating func ensureCapacity(_ minimumCapacity: Index<Node>.Count) {
         ensureUnique()
-        try! _ensureCapacity(minimumCapacity)
+        try! _growTo(minimumCapacity)
     }
 
     /// Ensures the buffer can hold at least `minimumCapacity` elements (CoW-safe).
@@ -108,14 +108,14 @@ extension Buffer.Linked where Element: Copyable {
     @inlinable
     public mutating func ensureCapacity(_ minimumCapacity: Int) {
         ensureUnique()
-        try! _ensureCapacity(Index<Node>.Count(UInt(minimumCapacity)))
+        try! _growTo(Index<Node>.Count(UInt(minimumCapacity)))
     }
 
     /// Ensures there is room for at least `additional` more nodes (CoW-safe).
     @inlinable
     public mutating func reserveAdditionalCapacity(_ additional: Index<Node>.Count) {
         ensureUnique()
-        try! _reserveAdditionalCapacity(additional)
+        try! _growTo(header.count.retag(Node.self) + additional)
     }
 }
 
