@@ -14,12 +14,10 @@ public import Buffer_Primitives_Core
 // MARK: - CoW Support
 
 extension Buffer.Linked where Element: Copyable {
-    /// Ensures this buffer has unique storage (copy-on-write).
+    /// Returns an independent copy of this buffer with its own storage.
     @usableFromInline
-    package mutating func _makeUnique() {
-        if !isKnownUniquelyReferenced(&storage) {
-            storage = storage.copy()
-        }
+    package func copy() -> Self {
+        Self(header: header, storage: storage.copy())
     }
 
     /// Ensures the storage is uniquely referenced, copying if needed.
@@ -29,7 +27,7 @@ extension Buffer.Linked where Element: Copyable {
     @discardableResult
     public mutating func ensureUnique() -> Bool {
         if !isKnownUniquelyReferenced(&storage) {
-            storage = storage.copy()
+            self = copy()
             return true
         }
         return false
@@ -48,7 +46,7 @@ extension Buffer.Linked where Element: Copyable {
     /// - Complexity: O(1) amortized
     @inlinable
     public mutating func insertFront(_ element: consuming Element) {
-        _makeUnique()
+        ensureUnique()
         if isFull { _grow() }
         try! _insertFront(element)
     }
@@ -61,7 +59,7 @@ extension Buffer.Linked where Element: Copyable {
     /// - Complexity: O(1) amortized
     @inlinable
     public mutating func insertBack(_ element: consuming Element) {
-        _makeUnique()
+        ensureUnique()
         if isFull { _grow() }
         try! _insertBack(element)
     }
@@ -72,7 +70,7 @@ extension Buffer.Linked where Element: Copyable {
     /// - Complexity: O(1)
     @inlinable
     public mutating func removeFront() -> Element? {
-        _makeUnique()
+        ensureUnique()
         return _removeFront()
     }
 
@@ -82,7 +80,7 @@ extension Buffer.Linked where Element: Copyable {
     /// - Complexity: O(1) for N >= 2 (doubly-linked), O(n) for N == 1 (singly-linked)
     @inlinable
     public mutating func removeBack() -> Element? {
-        _makeUnique()
+        ensureUnique()
         return _removeBack()
     }
 
@@ -91,7 +89,7 @@ extension Buffer.Linked where Element: Copyable {
     /// - Complexity: O(n) where n is the number of elements.
     @inlinable
     public mutating func removeAll() {
-        _makeUnique()
+        ensureUnique()
         _removeAll()
     }
 
@@ -100,7 +98,7 @@ extension Buffer.Linked where Element: Copyable {
     /// - Complexity: O(n) where n is the number of elements (if growth occurs).
     @inlinable
     public mutating func ensureCapacity(_ minimumCapacity: Index<Node>.Count) {
-        _makeUnique()
+        ensureUnique()
         try! _ensureCapacity(minimumCapacity)
     }
 
@@ -109,14 +107,14 @@ extension Buffer.Linked where Element: Copyable {
     /// Boundary overload per [IMPL-010].
     @inlinable
     public mutating func ensureCapacity(_ minimumCapacity: Int) {
-        _makeUnique()
+        ensureUnique()
         try! _ensureCapacity(Index<Node>.Count(UInt(minimumCapacity)))
     }
 
     /// Ensures there is room for at least `additional` more nodes (CoW-safe).
     @inlinable
     public mutating func reserveAdditionalCapacity(_ additional: Index<Node>.Count) {
-        _makeUnique()
+        ensureUnique()
         try! _reserveAdditionalCapacity(additional)
     }
 }

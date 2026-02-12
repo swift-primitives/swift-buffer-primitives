@@ -57,14 +57,6 @@ extension Buffer.Linear.Bounded where Element: Copyable {
         return false
     }
 
-    /// Ensures unique ownership of storage for mutation.
-    @usableFromInline
-    mutating func _makeUnique() {
-        if !isKnownUniquelyReferenced(&storage) {
-            self = copy()
-        }
-    }
-
     /// Returns an independent copy of this buffer with its own storage.
     @usableFromInline
     func copy() -> Self {
@@ -85,7 +77,7 @@ extension Buffer.Linear.Bounded where Element: Copyable {
     /// - Precondition: The index must be in bounds.
     @inlinable
     public mutating func remove(at index: Index<Element>) -> Element {
-        _makeUnique()
+        ensureUnique()
         return Buffer.Linear.remove(at: index, header: &header, storage: storage)
     }
 
@@ -94,7 +86,7 @@ extension Buffer.Linear.Bounded where Element: Copyable {
     /// - Precondition: The index must be in bounds.
     @inlinable
     public mutating func replace(at index: Index<Element>, with newElement: consuming Element) -> Element {
-        _makeUnique()
+        ensureUnique()
         return Buffer.Linear.replace(at: index, with: consume newElement, storage: storage)
     }
 }
@@ -111,7 +103,7 @@ extension Buffer.Linear.Bounded where Element: Copyable {
             yield unsafe storage.pointer(at: index).pointee
         }
         _modify {
-            _makeUnique()
+            ensureUnique()
             yield unsafe &storage.pointer(at: index).pointee
         }
     }
@@ -127,7 +119,7 @@ extension Buffer.Linear.Bounded where Element: Copyable {
         @_lifetime(&self)
         @inlinable
         mutating get {
-            _makeUnique()
+            ensureUnique()
             let count = Int(bitPattern: header.count)
             let span = unsafe MutableSpan(_unsafeStart: unsafe storage.pointer(at: .zero), count: count)
             return unsafe _overrideLifetime(span, mutating: &self)
@@ -135,7 +127,7 @@ extension Buffer.Linear.Bounded where Element: Copyable {
         @_lifetime(&self)
         @inlinable
         _modify {
-            _makeUnique()
+            ensureUnique()
             let count = Int(bitPattern: header.count)
             var span = unsafe MutableSpan(_unsafeStart: unsafe storage.pointer(at: .zero), count: count)
             yield &span

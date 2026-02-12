@@ -22,14 +22,6 @@ extension Buffer.Ring.Bounded where Element: Copyable {
         )).pointee
     }
 
-    /// Ensures this buffer has unique storage (copy-on-write).
-    @usableFromInline
-    package mutating func _makeUnique() {
-        if !isKnownUniquelyReferenced(&storage) {
-            self = copy()
-        }
-    }
-
     /// Ensures this buffer has unique storage, returning whether a copy was made.
     @inlinable
     @discardableResult
@@ -81,7 +73,7 @@ extension Buffer.Ring.Bounded where Element: Copyable {
     /// Pushes an element to the back (CoW-safe). Returns the element if full.
     @inlinable
     public mutating func pushBack(_ element: consuming Element) -> Element? {
-        _makeUnique()
+        ensureUnique()
         if header.isFull { return element }
         Buffer.Ring.pushBack(consume element, header: &header, storage: storage)
         return nil
@@ -92,14 +84,14 @@ extension Buffer.Ring.Bounded where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func popFront() -> Element {
-        _makeUnique()
+        ensureUnique()
         return Buffer.Ring.popFront(header: &header, storage: storage)
     }
 
     /// Pushes an element to the front (CoW-safe). Returns the element if full.
     @inlinable
     public mutating func pushFront(_ element: consuming Element) -> Element? {
-        _makeUnique()
+        ensureUnique()
         if header.isFull { return element }
         Buffer.Ring.pushFront(consume element, header: &header, storage: storage)
         return nil
@@ -110,14 +102,14 @@ extension Buffer.Ring.Bounded where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func popBack() -> Element {
-        _makeUnique()
+        ensureUnique()
         return Buffer.Ring.popBack(header: &header, storage: storage)
     }
 
     /// Removes all elements from the buffer (CoW-safe).
     @inlinable
     public mutating func removeAll() {
-        _makeUnique()
+        ensureUnique()
         Buffer.Ring.deinitializeAll(header: &header, storage: storage)
     }
 }
@@ -136,7 +128,7 @@ extension Buffer.Ring.Bounded where Element: Copyable {
             yield unsafe storage.pointer(at: physical).pointee
         }
         _modify {
-            _makeUnique()
+            ensureUnique()
             let physical = Index.Modular.physical(
                 forLogical: index, head: header.head, capacity: header.capacity)
             yield unsafe &storage.pointer(at: physical).pointee

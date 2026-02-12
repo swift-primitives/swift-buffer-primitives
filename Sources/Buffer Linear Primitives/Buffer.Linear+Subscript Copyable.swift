@@ -10,7 +10,7 @@ extension Buffer.Linear where Element: Copyable {
             yield unsafe storage.pointer(at: index).pointee
         }
         _modify {
-            _makeUnique()
+            ensureUnique()
             yield unsafe &storage.pointer(at: index).pointee
         }
     }

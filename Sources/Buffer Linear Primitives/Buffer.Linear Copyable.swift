@@ -32,14 +32,6 @@ extension Buffer.Linear where Element: Copyable {
         return false
     }
 
-    /// Ensures this buffer has unique storage (copy-on-write).
-    @inlinable
-    mutating func _makeUnique() {
-        if !isKnownUniquelyReferenced(&storage) {
-            self = copy()
-        }
-    }
-
     /// Returns an independent copy of this buffer with its own storage.
     @inlinable
     func copy() -> Self {
@@ -61,7 +53,7 @@ extension Buffer.Linear where Element: Copyable {
     /// Ensures unique ownership, then grows if full.
     @inlinable
     public mutating func append(_ element: consuming Element) {
-        _makeUnique()
+        ensureUnique()
         if header.isFull {
             _grow()
         }
@@ -73,7 +65,7 @@ extension Buffer.Linear where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func removeFirst() -> Element {
-        _makeUnique()
+        ensureUnique()
         return Buffer.Linear.removeFirst(header: &header, storage: storage)
     }
 
@@ -82,7 +74,7 @@ extension Buffer.Linear where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func removeLast() -> Element {
-        _makeUnique()
+        ensureUnique()
         return Buffer.Linear.consumeBack(header: &header, storage: storage)
     }
 
@@ -91,7 +83,7 @@ extension Buffer.Linear where Element: Copyable {
     /// - Precondition: The index must be in bounds.
     @inlinable
     public mutating func remove(at index: Index<Element>) -> Element {
-        _makeUnique()
+        ensureUnique()
         return Buffer.Linear.remove(at: index, header: &header, storage: storage)
     }
 
@@ -100,21 +92,21 @@ extension Buffer.Linear where Element: Copyable {
     /// - Precondition: The index must be in bounds.
     @inlinable
     public mutating func replace(at index: Index<Element>, with newElement: consuming Element) -> Element {
-        _makeUnique()
+        ensureUnique()
         return Buffer.Linear.replace(at: index, with: consume newElement, storage: storage)
     }
 
     /// Removes all elements from the buffer (CoW-safe).
     @inlinable
     public mutating func removeAll() {
-        _makeUnique()
+        ensureUnique()
         Buffer.Linear.deinitializeAll(header: &header, storage: storage)
     }
 
     /// Ensures the buffer can hold at least `minimumCapacity` elements (CoW-safe).
     @inlinable
     public mutating func reserveCapacity(_ minimumCapacity: Index<Element>.Count) {
-        _makeUnique()
+        ensureUnique()
         if minimumCapacity > header.capacity {
             _growTo(minimumCapacity)
         }

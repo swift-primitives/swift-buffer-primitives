@@ -32,8 +32,7 @@ extension Buffer.Ring.Small where Element: Copyable {
     @discardableResult
     public mutating func ensureUnique() -> Bool {
         if _heapBuffer != nil {
-            heap._makeUnique()
-            return true
+            return heap.ensureUnique()
         }
         return false
     }
@@ -103,7 +102,7 @@ extension Buffer.Ring.Small where Element: Copyable {
     @inlinable
     public mutating func pushBack(_ element: consuming Element) {
         if _heapBuffer != nil {
-            heap._makeUnique()
+            heap.ensureUnique()
             heap.pushBack(consume element)
         } else if !_inlineBuffer.isFull {
             _ = _inlineBuffer.pushBack(consume element)
@@ -119,7 +118,7 @@ extension Buffer.Ring.Small where Element: Copyable {
     @inlinable
     public mutating func popFront() -> Element {
         if _heapBuffer != nil {
-            heap._makeUnique()
+            heap.ensureUnique()
             return heap.popFront()
         } else {
             return _inlineBuffer.popFront()
@@ -130,7 +129,7 @@ extension Buffer.Ring.Small where Element: Copyable {
     @inlinable
     public mutating func pushFront(_ element: consuming Element) {
         if _heapBuffer != nil {
-            heap._makeUnique()
+            heap.ensureUnique()
             heap.pushFront(consume element)
         } else if !_inlineBuffer.isFull {
             _ = _inlineBuffer.pushFront(consume element)
@@ -146,7 +145,7 @@ extension Buffer.Ring.Small where Element: Copyable {
     @inlinable
     public mutating func popBack() -> Element {
         if _heapBuffer != nil {
-            heap._makeUnique()
+            heap.ensureUnique()
             return heap.popBack()
         } else {
             return _inlineBuffer.popBack()
@@ -175,7 +174,7 @@ extension Buffer.Ring.Small where Element: Copyable {
     public mutating func removeAll(keepingCapacity: Bool) {
         if keepingCapacity {
             if _heapBuffer != nil {
-                heap._makeUnique()
+                heap.ensureUnique()
                 heap.removeAll()
             } else {
                 _inlineBuffer.removeAll()
@@ -204,7 +203,7 @@ extension Buffer.Ring.Small where Element: Copyable {
         }
         _modify {
             if _heapBuffer != nil {
-                heap._makeUnique()
+                heap.ensureUnique()
                 yield &heap[index]
             } else {
                 yield &_inlineBuffer[index]

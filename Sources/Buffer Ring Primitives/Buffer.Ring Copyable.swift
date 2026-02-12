@@ -22,14 +22,6 @@ extension Buffer.Ring where Element: Copyable {
         )).pointee
     }
 
-    /// Ensures this buffer has unique storage (copy-on-write).
-    @usableFromInline
-    package mutating func _makeUnique() {
-        if !isKnownUniquelyReferenced(&storage) {
-            self = copy()
-        }
-    }
-
     /// Ensures this buffer has unique storage, returning whether a copy was made.
     @inlinable
     @discardableResult
@@ -60,7 +52,7 @@ extension Buffer.Ring where Element: Copyable {
     /// Pushes an element to the back of the ring (CoW-safe).
     @inlinable
     public mutating func pushBack(_ element: consuming Element) {
-        _makeUnique()
+        ensureUnique()
         if header.isFull { _grow() }
         Buffer.Ring.pushBack(consume element, header: &header, storage: storage)
     }
@@ -70,14 +62,14 @@ extension Buffer.Ring where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func popFront() -> Element {
-        _makeUnique()
+        ensureUnique()
         return Buffer.Ring.popFront(header: &header, storage: storage)
     }
 
     /// Pushes an element to the front of the ring (CoW-safe).
     @inlinable
     public mutating func pushFront(_ element: consuming Element) {
-        _makeUnique()
+        ensureUnique()
         if header.isFull { _grow() }
         Buffer.Ring.pushFront(consume element, header: &header, storage: storage)
     }
@@ -87,28 +79,28 @@ extension Buffer.Ring where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func popBack() -> Element {
-        _makeUnique()
+        ensureUnique()
         return Buffer.Ring.popBack(header: &header, storage: storage)
     }
 
     /// Removes all elements from the buffer (CoW-safe).
     @inlinable
     public mutating func removeAll() {
-        _makeUnique()
+        ensureUnique()
         Buffer.Ring.deinitializeAll(header: &header, storage: storage)
     }
 
     /// Ensures the buffer can hold at least `minimumCapacity` elements (CoW-safe).
     @inlinable
     public mutating func reserveCapacity(_ minimumCapacity: Index<Element>.Count) {
-        _makeUnique()
+        ensureUnique()
         if minimumCapacity > header.capacity { _growTo(minimumCapacity) }
     }
 
     /// Reduces capacity to match the current count (CoW-safe).
     @inlinable
     public mutating func compact() {
-        _makeUnique()
+        ensureUnique()
         guard header.count < header.capacity else { return }
         if header.isEmpty {
             storage = Storage<Element>.Heap.create(minimumCapacity: .zero)
@@ -133,7 +125,7 @@ extension Buffer.Ring where Element: Copyable {
             yield unsafe storage.pointer(at: physical).pointee
         }
         _modify {
-            _makeUnique()
+            ensureUnique()
             let physical = Index.Modular.physical(
                 forLogical: index, head: header.head, capacity: header.capacity)
             yield unsafe &storage.pointer(at: physical).pointee
