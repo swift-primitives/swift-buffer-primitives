@@ -492,6 +492,52 @@ public enum Buffer<Element: ~Copyable> {
                 /// The number of elements exceeds the buffer's capacity.
                 case capacityExceeded
             }
+
+            deinit {
+                // Bitmap-driven cleanup: Storage.Inline's initialization stays .empty,
+                // so the bitmap is the sole source of truth for occupied slots.
+                // Uses pointer-based deinit — non-mutating read of storage,
+                // because deinit treats self as immutable.
+                var slot: Bit.Index = .zero
+                let end = Bit.Index.Count(UInt(wordCount)).map(Ordinal.init)
+                while slot < end {
+                    if header.bitmap[slot] {
+                        unsafe UnsafeMutablePointer(
+                            mutating: storage.pointer(at: slot.retag(Element.self))
+                        ).deinitialize(count: 1)
+                    }
+                    slot += .one
+                }
+            }
+        }
+
+        // MARK: - Small (Inline with Heap Spill)
+
+        /// A slab buffer that starts with inline bitmap and storage, spilling
+        /// to heap-allocated storage when the inline capacity is exceeded.
+        ///
+        /// Uses the two-field storage pattern per
+        /// Research/small-buffer-storage-representation.md.
+        public struct Small<let inlineCapacity: Int>: ~Copyable {
+            @usableFromInline
+            package var _inlineBuffer: Inline<inlineCapacity>
+
+            @usableFromInline
+            package var _heapBuffer: Buffer<Element>.Slab?
+
+            @inlinable
+            package init(
+                _inlineBuffer: consuming Inline<inlineCapacity>,
+                _heapBuffer: consuming Buffer<Element>.Slab?
+            ) {
+                self._inlineBuffer = _inlineBuffer
+                self._heapBuffer = _heapBuffer
+            }
+
+            // No deinit needed:
+            // - _heapBuffer: Optional<Slab>'s deinit → Slab's deinit handles heap cleanup
+            // - _inlineBuffer: Slab.Inline's deinit handles inline bitmap-driven cleanup
+            // After spill, inline bitmap is cleared → Inline's deinit is a no-op
         }
 
         // MARK: - Header
@@ -1167,6 +1213,10 @@ extension Buffer.Slab.Bounded.Indexed: @unchecked Sendable where Element: Sendab
 // extension Buffer.Slab.Inline: Copyable where Element: Copyable {}
 // extension Buffer.Slab.Inline: Swift.Sequence where Element: Copyable {}
 extension Buffer.Slab.Inline: Sendable where Element: Sendable {}
+
+// Copyable suppressed per INV-INLINE-004a (contains Inline).
+// extension Buffer.Slab.Small: Copyable where Element: Copyable {}
+extension Buffer.Slab.Small: Sendable where Element: Sendable {}
 
 // MARK: - Conditional Conformances (Slots)
 

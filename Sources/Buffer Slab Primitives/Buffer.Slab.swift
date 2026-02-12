@@ -2,7 +2,7 @@ public import Sequence_Primitives
 
 // MARK: - Extensions for Slab (declared in Core)
 
-extension Buffer.Slab {
+extension Buffer.Slab where Element: ~Copyable {
 
     /// Creates a growable slab buffer with at least the given capacity.
     ///
@@ -84,7 +84,7 @@ extension Buffer.Slab: Sequence.Drain.`Protocol` {
 
 // MARK: - Property.View (.drain)
 
-extension Buffer.Slab {
+extension Buffer.Slab where Element: ~Copyable {
     @inlinable
     public var drain: Property<Sequence.Drain, Self>.View {
         mutating _read {

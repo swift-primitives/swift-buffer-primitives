@@ -299,15 +299,16 @@ struct LinkedTests {
     }
 
     @Test
-    func `capacity exceeded throws`() throws {
+    func `auto grows when full (Copyable)`() throws {
         var buffer = try Buffer<Int>.Linked<2>.create(capacity: 2)
         try buffer.insertBack(10)
         try buffer.insertBack(20)
         #expect(buffer.isFull == true)
 
-        #expect(throws: Buffer<Int>.Linked<2>.Error.capacityExceeded) {
-            try buffer.insertBack(30)
-        }
+        // Copyable variant auto-grows via ensureUnique + _grow
+        buffer.insertBack(30)
+        #expect(buffer.count == 3)
+        #expect(buffer.last == 30)
     }
 }
 

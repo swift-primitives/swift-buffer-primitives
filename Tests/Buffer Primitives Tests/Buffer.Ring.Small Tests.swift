@@ -150,16 +150,16 @@ struct RingSmallTests {
     }
 
     @Test
-    func `ensureUnique in heap mode`() {
+    func `ensureUnique in heap mode uniquely owned`() {
         var buffer = Buffer<Int>.Ring.Small<2>()
         buffer.pushBack(10)
         buffer.pushBack(20)
         buffer.pushBack(30)
         #expect(buffer.isSpilled == true)
 
-        // Ring.Small.ensureUnique unconditionally copies in heap mode
+        // Uniquely owned heap storage — no copy needed
         let didCopy = buffer.ensureUnique()
-        #expect(didCopy == true)
+        #expect(didCopy == false)
     }
 
     @Test
