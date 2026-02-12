@@ -108,7 +108,7 @@ extension Buffer.Linear where Element: ~Copyable {
         if header.capacity == .zero {
             _growTo(.one)
         } else {
-            _growTo(header.capacity.map { Cardinal($0.rawValue &<< 1) })
+            _growTo(header.capacity * Affine.Discrete.Ratio<Element, Element>(2))
         }
     }
 

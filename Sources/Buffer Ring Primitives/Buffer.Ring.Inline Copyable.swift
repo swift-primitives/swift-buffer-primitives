@@ -76,7 +76,7 @@ extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
                 capacity: header.capacity
             )
             current += .one
-            return unsafe (base + Int(bitPattern: physicalIdx)).pointee
+            return unsafe base[physicalIdx]
         }
     }
 

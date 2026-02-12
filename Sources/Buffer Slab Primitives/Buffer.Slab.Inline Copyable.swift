@@ -68,7 +68,7 @@ extension Buffer.Slab.Inline: Sequence.`Protocol` where Element: Copyable {
                 let slot = current
                 current += .one
                 if bitmap[slot] {
-                    return unsafe (base + Int(bitPattern: slot)).pointee
+                    return unsafe base[slot]
                 }
             }
             return nil
