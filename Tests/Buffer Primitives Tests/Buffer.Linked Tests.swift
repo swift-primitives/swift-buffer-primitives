@@ -305,11 +305,8 @@ struct LinkedTests {
         try buffer.insertBack(20)
         #expect(buffer.isFull == true)
 
-        do {
+        #expect(throws: Buffer<Int>.Linked<2>.Error.capacityExceeded) {
             try buffer.insertBack(30)
-            Issue.record("Expected .capacityExceeded error")
-        } catch {
-            #expect(error == .capacityExceeded)
         }
     }
 }

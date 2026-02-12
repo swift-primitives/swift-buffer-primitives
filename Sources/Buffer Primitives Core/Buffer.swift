@@ -207,7 +207,7 @@ public enum Buffer<Element: ~Copyable> {
         /// Copyable and Sendable — this is just a few integers.
         ///
         /// Blueprint: `Experiments/ring-buffer-architecture-validation/Sources/main.swift:48-101`
-        public struct Header: Copyable, Sendable, Hashable {
+        public struct Header: Copyable, Sendable {
             /// Slot index of the first element.
             public var head: Index<Element>
 
@@ -646,7 +646,7 @@ public enum Buffer<Element: ~Copyable> {
 
             /// Creates a node with the given element and links.
             @inlinable
-            public init(element: consuming Element, links: InlineArray<N, Index<Node>>) {
+            package init(element: consuming Element, links: InlineArray<N, Index<Node>>) {
                 self.element = element
                 self.links = links
             }
@@ -796,7 +796,7 @@ public enum Buffer<Element: ~Copyable> {
         /// The header is trivial — just capacity. Unlike Linear (count),
         /// Ring (head + count), or Slab (bitmap), Slots has no mutable
         /// cursor state. All state lives in the metadata array.
-        public struct Header: Copyable, Sendable, Hashable {
+        public struct Header: Copyable, Sendable {
             /// Total slot capacity.
             public let capacity: Index<Element>.Count
 
@@ -1110,6 +1110,17 @@ public enum Buffer<Element: ~Copyable> {
     }
 }
 
+// MARK: - INV-INLINE-004a: Storage.Inline Copyable Restriction
+//
+// Storage.Inline uses @_rawLayout which is unconditionally ~Copyable.
+// @_rawLayout is required because InlineArray has no uninitialized API and
+// requires Copyable for init(repeating:), but Storage.Inline must support
+// ~Copyable elements. If Swift adds InlineArray.init(unsafeUninitializedCapacity:),
+// Storage.Inline could migrate and Inline/Small Copyable conformances can be restored.
+//
+// Affected: Ring.Inline, Ring.Small, Linear.Inline, Linear.Small, Slab.Inline,
+//           Linked.Inline, Linked.Small, Arena.Inline, Arena.Small.
+
 // MARK: - Conditional Conformances (Ring)
 
 extension Buffer.Ring: Copyable where Element: Copyable {}
@@ -1118,17 +1129,12 @@ extension Buffer.Ring: @unchecked Sendable where Element: Sendable {}
 extension Buffer.Ring.Bounded: Copyable where Element: Copyable {}
 extension Buffer.Ring.Bounded: @unchecked Sendable where Element: Sendable {}
 
-// Cannot conform to Copyable: Storage.Inline uses @_rawLayout which is
-// unconditionally ~Copyable (INV-INLINE-004a). @_rawLayout is required
-// because InlineArray has no uninitialized API and requires Copyable for
-// init(repeating:), but Storage.Inline must support ~Copyable elements.
-// If Swift adds InlineArray.init(unsafeUninitializedCapacity:), Storage.Inline
-// could migrate and this conformance can be restored.
+// Copyable suppressed per INV-INLINE-004a.
 // extension Buffer.Ring.Inline: Copyable where Element: Copyable {}
 // extension Buffer.Ring.Inline: Swift.Sequence where Element: Copyable {}
 extension Buffer.Ring.Inline: Sendable where Element: Sendable {}
 
-// Cannot conform to Copyable: contains Inline which uses @_rawLayout (INV-INLINE-004a).
+// Copyable suppressed per INV-INLINE-004a (contains Inline).
 // extension Buffer.Ring.Small: Copyable where Element: Copyable {}
 extension Buffer.Ring.Small: Sendable where Element: Sendable {}
 
@@ -1140,17 +1146,12 @@ extension Buffer.Linear: @unchecked Sendable where Element: Sendable {}
 extension Buffer.Linear.Bounded: Copyable where Element: Copyable {}
 extension Buffer.Linear.Bounded: @unchecked Sendable where Element: Sendable {}
 
-// Cannot conform to Copyable: Storage.Inline uses @_rawLayout which is
-// unconditionally ~Copyable (INV-INLINE-004a). @_rawLayout is required
-// because InlineArray has no uninitialized API and requires Copyable for
-// init(repeating:), but Storage.Inline must support ~Copyable elements.
-// If Swift adds InlineArray.init(unsafeUninitializedCapacity:), Storage.Inline
-// could migrate and this conformance can be restored.
+// Copyable suppressed per INV-INLINE-004a.
 // extension Buffer.Linear.Inline: Copyable where Element: Copyable {}
 // extension Buffer.Linear.Inline: Swift.Sequence where Element: Copyable {}
 extension Buffer.Linear.Inline: Sendable where Element: Sendable {}
 
-// Cannot conform to Copyable: contains Inline which uses @_rawLayout (INV-INLINE-004a).
+// Copyable suppressed per INV-INLINE-004a (contains Inline).
 // extension Buffer.Linear.Small: Copyable where Element: Copyable {}
 extension Buffer.Linear.Small: Sendable where Element: Sendable {}
 
@@ -1162,12 +1163,7 @@ extension Buffer.Slab.Bounded: @unchecked Sendable where Element: Sendable {}
 
 extension Buffer.Slab.Bounded.Indexed: @unchecked Sendable where Element: Sendable, Tag: ~Copyable {}
 
-// Cannot conform to Copyable: Storage.Inline uses @_rawLayout which is
-// unconditionally ~Copyable (INV-INLINE-004a). @_rawLayout is required
-// because InlineArray has no uninitialized API and requires Copyable for
-// init(repeating:), but Storage.Inline must support ~Copyable elements.
-// If Swift adds InlineArray.init(unsafeUninitializedCapacity:), Storage.Inline
-// could migrate and this conformance can be restored.
+// Copyable suppressed per INV-INLINE-004a.
 // extension Buffer.Slab.Inline: Copyable where Element: Copyable {}
 // extension Buffer.Slab.Inline: Swift.Sequence where Element: Copyable {}
 extension Buffer.Slab.Inline: Sendable where Element: Sendable {}
@@ -1185,12 +1181,11 @@ extension Buffer.Linked.Node: @unchecked Sendable where Element: Sendable {}
 extension Buffer.Linked: Copyable where Element: Copyable {}
 extension Buffer.Linked: @unchecked Sendable where Element: Sendable {}
 
-// Cannot conform to Copyable: Storage.Inline uses @_rawLayout which is
-// unconditionally ~Copyable (INV-INLINE-004a).
+// Copyable suppressed per INV-INLINE-004a.
 // extension Buffer.Linked.Inline: Copyable where Element: Copyable {}
 extension Buffer.Linked.Inline: Sendable where Element: Sendable {}
 
-// Cannot conform to Copyable: contains Inline which uses @_rawLayout (INV-INLINE-004a).
+// Copyable suppressed per INV-INLINE-004a (contains Inline).
 // extension Buffer.Linked.Small: Copyable where Element: Copyable {}
 extension Buffer.Linked.Small: Sendable where Element: Sendable {}
 
@@ -1202,10 +1197,10 @@ extension Buffer.Arena: @unchecked Sendable where Element: Sendable {}
 extension Buffer.Arena.Bounded: Copyable where Element: Copyable {}
 extension Buffer.Arena.Bounded: @unchecked Sendable where Element: Sendable {}
 
-// Cannot conform to Copyable: @_rawLayout is unconditionally ~Copyable (INV-INLINE-004a).
+// Copyable suppressed per INV-INLINE-004a.
 // extension Buffer.Arena.Inline: Copyable where Element: Copyable {}
 extension Buffer.Arena.Inline: Sendable where Element: Sendable {}
 
-// Cannot conform to Copyable: contains Inline which uses @_rawLayout (INV-INLINE-004a).
+// Copyable suppressed per INV-INLINE-004a (contains Inline).
 // extension Buffer.Arena.Small: Copyable where Element: Copyable {}
 extension Buffer.Arena.Small: Sendable where Element: Sendable {}

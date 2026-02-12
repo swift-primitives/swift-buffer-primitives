@@ -69,10 +69,11 @@ struct RingHeaderTests {
     }
 
     @Test
-    func `Copyable and Hashable`() {
+    func `Copyable`() {
         let a = Buffer<Int>.Ring.Header(capacity: 4)
         let b = a
-        #expect(a == b)
-        #expect(a.hashValue == b.hashValue)
+        #expect(b.head == a.head)
+        #expect(b.count == a.count)
+        #expect(b.capacity == a.capacity)
     }
 }
