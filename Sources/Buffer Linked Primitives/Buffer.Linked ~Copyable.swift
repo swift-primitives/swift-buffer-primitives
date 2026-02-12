@@ -242,7 +242,7 @@ extension Buffer.Linked where Element: ~Copyable {
     /// Doubles capacity (or sets to 4 if empty). Used by CoW-safe overloads.
     @inlinable
     mutating func _grow() {
-        let doubled = capacity * Affine.Discrete.Ratio<Node, Node>(2)
+        let doubled = capacity * 2
         let four = Index<Node>.Count(Cardinal(4))
         try! _growTo(Index<Node>.Count.max(doubled, four))
     }

@@ -8,10 +8,9 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
         @_lifetime(borrow self)
         @inlinable
         borrowing get {
-            let count = Int(bitPattern: header.count)
             let span = unsafe Span(
                 _unsafeStart: storage.pointer(at: .zero),
-                count: count
+                count: header.count
             )
             return unsafe _overrideLifetime(span, borrowing: self)
         }
@@ -22,20 +21,18 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
         @_lifetime(&self)
         @inlinable
         mutating get {
-            let count = Int(bitPattern: header.count)
             let span = unsafe MutableSpan(
                 _unsafeStart: unsafe UnsafeMutablePointer(mutating: storage.pointer(at: .zero)),
-                count: count
+                count: header.count
             )
             return unsafe _overrideLifetime(span, mutating: &self)
         }
         @_lifetime(&self)
         @inlinable
         _modify {
-            let count = Int(bitPattern: header.count)
             var span = unsafe MutableSpan(
                 _unsafeStart: unsafe UnsafeMutablePointer(mutating: storage.pointer(at: .zero)),
-                count: count
+                count: header.count
             )
             yield &span
         }

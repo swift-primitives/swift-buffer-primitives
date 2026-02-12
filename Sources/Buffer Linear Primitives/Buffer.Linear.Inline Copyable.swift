@@ -64,7 +64,7 @@ extension Buffer.Linear.Inline: Sequence.`Protocol` where Element: Copyable {
         @inlinable
         public mutating func next() -> Element? {
             guard current < end else { return nil }
-            let element = unsafe (base + Int(bitPattern: current)).pointee
+            let element = unsafe base[current]
             current += .one
             return element
         }

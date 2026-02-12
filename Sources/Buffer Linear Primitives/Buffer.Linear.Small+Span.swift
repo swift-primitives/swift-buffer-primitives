@@ -30,17 +30,15 @@ extension Buffer.Linear.Small where Element: ~Copyable {
         @inlinable
         mutating get {
             if _heapBuffer != nil {
-                let count = Int(bitPattern: heap.header.count)
                 let span = unsafe MutableSpan(
                     _unsafeStart: unsafe heap.storage.pointer(at: .zero),
-                    count: count
+                    count: heap.header.count
                 )
                 return unsafe _overrideLifetime(span, mutating: &self)
             } else {
-                let count = Int(bitPattern: _inlineBuffer.header.count)
                 let span = unsafe MutableSpan(
                     _unsafeStart: unsafe UnsafeMutablePointer(mutating: _inlineBuffer.storage.pointer(at: .zero)),
-                    count: count
+                    count: _inlineBuffer.header.count
                 )
                 return unsafe _overrideLifetime(span, mutating: &self)
             }
@@ -49,17 +47,15 @@ extension Buffer.Linear.Small where Element: ~Copyable {
         @inlinable
         _modify {
             if _heapBuffer != nil {
-                let count = Int(bitPattern: heap.header.count)
                 var span = unsafe MutableSpan(
                     _unsafeStart: unsafe heap.storage.pointer(at: .zero),
-                    count: count
+                    count: heap.header.count
                 )
                 yield &span
             } else {
-                let count = Int(bitPattern: _inlineBuffer.header.count)
                 var span = unsafe MutableSpan(
                     _unsafeStart: unsafe UnsafeMutablePointer(mutating: _inlineBuffer.storage.pointer(at: .zero)),
-                    count: count
+                    count: _inlineBuffer.header.count
                 )
                 yield &span
             }
@@ -106,7 +102,7 @@ extension Buffer.Linear.Small where Element: Copyable {
             guard take > .zero else {
                 return unsafe Swift.Span(_unsafeStart: base, count: 0)
             }
-            let span = unsafe Swift.Span(_unsafeStart: base, count: Int(bitPattern: take))
+            let span = unsafe Swift.Span(_unsafeStart: base, count: take)
             unsafe base = base + Int(bitPattern: take)
             remaining = remaining.subtract.saturating(take)
             return span

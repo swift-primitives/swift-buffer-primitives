@@ -10,10 +10,9 @@ extension Buffer.Linear.Bounded where Element: ~Copyable {
         @_lifetime(borrow self)
         @inlinable
         borrowing get {
-            let count = Int(bitPattern: header.count)
             let span = unsafe Span(
                 _unsafeStart: storage.pointer(at: .zero),
-                count: count
+                count: header.count
             )
             return unsafe _overrideLifetime(span, borrowing: self)
         }
@@ -24,20 +23,18 @@ extension Buffer.Linear.Bounded where Element: ~Copyable {
         @_lifetime(&self)
         @inlinable
         mutating get {
-            let count = Int(bitPattern: header.count)
             let span = unsafe MutableSpan(
                 _unsafeStart: unsafe storage.pointer(at: .zero),
-                count: count
+                count: header.count
             )
             return unsafe _overrideLifetime(span, mutating: &self)
         }
         @_lifetime(&self)
         @inlinable
         _modify {
-            let count = Int(bitPattern: header.count)
             var span = unsafe MutableSpan(
                 _unsafeStart: unsafe storage.pointer(at: .zero),
-                count: count
+                count: header.count
             )
             yield &span
         }
@@ -52,10 +49,9 @@ extension Buffer.Linear.Bounded: Memory.Contiguous.`Protocol` where Element: Cop
     public func withUnsafeBufferPointer<R, E: Swift.Error>(
         _ body: (UnsafeBufferPointer<Element>) throws(E) -> R
     ) throws(E) -> R {
-        let count = Int(bitPattern: header.count)
         return try unsafe body(UnsafeBufferPointer(
-            start: count > 0 ? storage.pointer(at: .zero) : nil,
-            count: count
+            start: !header.isEmpty ? storage.pointer(at: .zero) : nil,
+            count: header.count
         ))
     }
 }
@@ -66,10 +62,9 @@ extension Buffer.Linear.Bounded where Element: Copyable {
     public mutating func withUnsafeMutableBufferPointer<R, E: Swift.Error>(
         _ body: (UnsafeMutableBufferPointer<Element>) throws(E) -> R
     ) throws(E) -> R {
-        let count = Int(bitPattern: header.count)
         return try unsafe body(UnsafeMutableBufferPointer(
-            start: count > 0 ? storage.pointer(at: .zero) : nil,
-            count: count
+            start: !header.isEmpty ? storage.pointer(at: .zero) : nil,
+            count: header.count
         ))
     }
 }

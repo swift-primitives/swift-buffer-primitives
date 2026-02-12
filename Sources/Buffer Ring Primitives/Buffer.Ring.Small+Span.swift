@@ -82,7 +82,7 @@ extension Buffer.Ring.Small where Element: Copyable {
         public mutating func nextSpan(maximumCount: Cardinal) -> Span<Element> {
             if remaining > .zero {
                 let take = Index<Element>.Count.min(.init(maximumCount), remaining)
-                let span = unsafe Swift.Span(_unsafeStart: base, count: Int(bitPattern: take))
+                let span = unsafe Swift.Span(_unsafeStart: base, count: take)
                 unsafe base = base + Int(bitPattern: take)
                 remaining = remaining.subtract.saturating(take)
                 return span
@@ -95,7 +95,7 @@ extension Buffer.Ring.Small where Element: Copyable {
                 secondCount = .zero
 
                 let take = Index<Element>.Count.min(.init(maximumCount), remaining)
-                let span = unsafe Swift.Span(_unsafeStart: base, count: Int(bitPattern: take))
+                let span = unsafe Swift.Span(_unsafeStart: base, count: take)
                 unsafe base = base + Int(bitPattern: take)
                 remaining = remaining.subtract.saturating(take)
                 return span

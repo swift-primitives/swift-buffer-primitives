@@ -37,7 +37,7 @@ extension Buffer.Linear where Element: Copyable {
             guard take > .zero else {
                 return unsafe Swift.Span(_unsafeStart: base, count: 0)
             }
-            let span = unsafe Swift.Span(_unsafeStart: base, count: Int(bitPattern: take))
+            let span = unsafe Swift.Span(_unsafeStart: base, count: take)
             unsafe base = base + Int(bitPattern: take)
             remaining = remaining.subtract.saturating(take)
             return span
@@ -91,7 +91,7 @@ extension Buffer.Linear.Bounded where Element: Copyable {
             guard take > .zero else {
                 return unsafe Swift.Span(_unsafeStart: base, count: 0)
             }
-            let span = unsafe Swift.Span(_unsafeStart: base, count: Int(bitPattern: take))
+            let span = unsafe Swift.Span(_unsafeStart: base, count: take)
             unsafe base = base + Int(bitPattern: take)
             remaining = remaining.subtract.saturating(take)
             return span
