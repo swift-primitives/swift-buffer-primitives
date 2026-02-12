@@ -88,7 +88,7 @@ extension Buffer.Linked where Element: ~Copyable {
     public enum Remove {}
 }
 
-// MARK: - Property.View.Typed (.insert, .remove)
+// MARK: - Property.View.Typed.Valued (.insert, .remove)
 
 extension Buffer.Linked where Element: ~Copyable {
     /// Namespaced insert operations.
@@ -96,12 +96,12 @@ extension Buffer.Linked where Element: ~Copyable {
     /// - `buffer.insert.front(element)` — inserts at the front.
     /// - `buffer.insert.back(element)` — inserts at the back.
     @inlinable
-    public var insert: Property<Insert, Self>.View.Typed<Element> {
+    public var insert: Property<Insert, Self>.View.Typed<Element>.Valued<N> {
         mutating _read {
-            yield unsafe Property<Insert, Self>.View.Typed<Element>(&self)
+            yield unsafe Property<Insert, Self>.View.Typed<Element>.Valued<N>(&self)
         }
         mutating _modify {
-            var view = unsafe Property<Insert, Self>.View.Typed<Element>(&self)
+            var view = unsafe Property<Insert, Self>.View.Typed<Element>.Valued<N>(&self)
             yield &view
         }
     }
@@ -111,12 +111,12 @@ extension Buffer.Linked where Element: ~Copyable {
     /// - `buffer.remove.front()` — removes from the front.
     /// - `buffer.remove.back()` — removes from the back.
     @inlinable
-    public var remove: Property<Remove, Self>.View.Typed<Element> {
+    public var remove: Property<Remove, Self>.View.Typed<Element>.Valued<N> {
         mutating _read {
-            yield unsafe Property<Remove, Self>.View.Typed<Element>(&self)
+            yield unsafe Property<Remove, Self>.View.Typed<Element>.Valued<N>(&self)
         }
         mutating _modify {
-            var view = unsafe Property<Remove, Self>.View.Typed<Element>(&self)
+            var view = unsafe Property<Remove, Self>.View.Typed<Element>.Valued<N>(&self)
             yield &view
         }
     }
@@ -124,7 +124,11 @@ extension Buffer.Linked where Element: ~Copyable {
 
 // MARK: - Insert Operations (~Copyable)
 
-extension Property.View.Typed where Element: ~Copyable {
+extension Property.View.Typed.Valued
+where Tag == Buffer<Element>.Linked<n>.Insert,
+      Base == Buffer<Element>.Linked<n>,
+      Element: ~Copyable
+{
     /// Inserts an element at the front of the list.
     ///
     /// - Parameter element: The element to insert.
@@ -132,12 +136,10 @@ extension Property.View.Typed where Element: ~Copyable {
     /// - Complexity: O(1)
     @_lifetime(&self)
     @inlinable
-    public mutating func front<let N: Int>(
+    public mutating func front(
         _ element: consuming Element
-    ) throws(Buffer<Element>.Linked<N>.Error)
-    where Tag == Buffer<Element>.Linked<N>.Insert,
-          Base == Buffer<Element>.Linked<N> {
-        try unsafe Buffer<Element>.Linked<N>.insertFront(
+    ) throws(Buffer<Element>.Linked<n>.Error) {
+        try unsafe Buffer<Element>.Linked<n>.insertFront(
             consume element,
             header: &base.pointee.header,
             storage: base.pointee.storage
@@ -151,12 +153,10 @@ extension Property.View.Typed where Element: ~Copyable {
     /// - Complexity: O(1)
     @_lifetime(&self)
     @inlinable
-    public mutating func back<let N: Int>(
+    public mutating func back(
         _ element: consuming Element
-    ) throws(Buffer<Element>.Linked<N>.Error)
-    where Tag == Buffer<Element>.Linked<N>.Insert,
-          Base == Buffer<Element>.Linked<N> {
-        try unsafe Buffer<Element>.Linked<N>.insertBack(
+    ) throws(Buffer<Element>.Linked<n>.Error) {
+        try unsafe Buffer<Element>.Linked<n>.insertBack(
             consume element,
             header: &base.pointee.header,
             storage: base.pointee.storage
@@ -166,18 +166,19 @@ extension Property.View.Typed where Element: ~Copyable {
 
 // MARK: - Remove Operations (~Copyable)
 
-extension Property.View.Typed where Element: ~Copyable {
+extension Property.View.Typed.Valued
+where Tag == Buffer<Element>.Linked<n>.Remove,
+      Base == Buffer<Element>.Linked<n>,
+      Element: ~Copyable
+{
     /// Removes and returns the element at the front of the list.
     ///
     /// - Returns: The removed element, or `nil` if the list is empty.
     /// - Complexity: O(1)
     @_lifetime(&self)
     @inlinable
-    public mutating func front<let N: Int>(
-    ) -> Element?
-    where Tag == Buffer<Element>.Linked<N>.Remove,
-          Base == Buffer<Element>.Linked<N> {
-        unsafe Buffer<Element>.Linked<N>.removeFront(
+    public mutating func front() -> Element? {
+        unsafe Buffer<Element>.Linked<n>.removeFront(
             header: &base.pointee.header,
             storage: base.pointee.storage
         )
@@ -189,11 +190,8 @@ extension Property.View.Typed where Element: ~Copyable {
     /// - Complexity: O(1) for N >= 2 (doubly-linked), O(n) for N == 1 (singly-linked)
     @_lifetime(&self)
     @inlinable
-    public mutating func back<let N: Int>(
-    ) -> Element?
-    where Tag == Buffer<Element>.Linked<N>.Remove,
-          Base == Buffer<Element>.Linked<N> {
-        unsafe Buffer<Element>.Linked<N>.removeBack(
+    public mutating func back() -> Element? {
+        unsafe Buffer<Element>.Linked<n>.removeBack(
             header: &base.pointee.header,
             storage: base.pointee.storage
         )

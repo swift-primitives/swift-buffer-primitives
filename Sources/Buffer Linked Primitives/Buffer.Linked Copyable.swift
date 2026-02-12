@@ -36,7 +36,11 @@ extension Buffer.Linked where Element: Copyable {
 
 // MARK: - Insert Operations (Copyable)
 
-extension Property.View.Typed where Element: Copyable {
+extension Property.View.Typed.Valued
+where Tag == Buffer<Element>.Linked<n>.Insert,
+      Base == Buffer<Element>.Linked<n>,
+      Element: Copyable
+{
     /// Inserts an element at the front of the list (CoW-safe).
     ///
     /// Ensures unique ownership, grows if full, then inserts.
@@ -45,13 +49,12 @@ extension Property.View.Typed where Element: Copyable {
     /// - Complexity: O(1) amortized
     @_lifetime(&self)
     @inlinable
-    public mutating func front<let N: Int>(
+    public mutating func front(
         _ element: consuming Element
-    ) where Tag == Buffer<Element>.Linked<N>.Insert,
-            Base == Buffer<Element>.Linked<N> {
+    ) {
         unsafe base.pointee.ensureUnique()
         if unsafe base.pointee.isFull { unsafe base.pointee._grow() }
-        try! unsafe Buffer<Element>.Linked<N>.insertFront(
+        try! unsafe Buffer<Element>.Linked<n>.insertFront(
             consume element,
             header: &base.pointee.header,
             storage: base.pointee.storage
@@ -66,13 +69,12 @@ extension Property.View.Typed where Element: Copyable {
     /// - Complexity: O(1) amortized
     @_lifetime(&self)
     @inlinable
-    public mutating func back<let N: Int>(
+    public mutating func back(
         _ element: consuming Element
-    ) where Tag == Buffer<Element>.Linked<N>.Insert,
-            Base == Buffer<Element>.Linked<N> {
+    ) {
         unsafe base.pointee.ensureUnique()
         if unsafe base.pointee.isFull { unsafe base.pointee._grow() }
-        try! unsafe Buffer<Element>.Linked<N>.insertBack(
+        try! unsafe Buffer<Element>.Linked<n>.insertBack(
             consume element,
             header: &base.pointee.header,
             storage: base.pointee.storage
@@ -82,19 +84,20 @@ extension Property.View.Typed where Element: Copyable {
 
 // MARK: - Remove Operations (Copyable)
 
-extension Property.View.Typed where Element: Copyable {
+extension Property.View.Typed.Valued
+where Tag == Buffer<Element>.Linked<n>.Remove,
+      Base == Buffer<Element>.Linked<n>,
+      Element: Copyable
+{
     /// Removes and returns the element at the front (CoW-safe).
     ///
     /// - Returns: The removed element, or `nil` if the list is empty.
     /// - Complexity: O(1)
     @_lifetime(&self)
     @inlinable
-    public mutating func front<let N: Int>(
-    ) -> Element?
-    where Tag == Buffer<Element>.Linked<N>.Remove,
-          Base == Buffer<Element>.Linked<N> {
+    public mutating func front() -> Element? {
         unsafe base.pointee.ensureUnique()
-        return unsafe Buffer<Element>.Linked<N>.removeFront(
+        return unsafe Buffer<Element>.Linked<n>.removeFront(
             header: &base.pointee.header,
             storage: base.pointee.storage
         )
@@ -106,12 +109,9 @@ extension Property.View.Typed where Element: Copyable {
     /// - Complexity: O(1) for N >= 2 (doubly-linked), O(n) for N == 1 (singly-linked)
     @_lifetime(&self)
     @inlinable
-    public mutating func back<let N: Int>(
-    ) -> Element?
-    where Tag == Buffer<Element>.Linked<N>.Remove,
-          Base == Buffer<Element>.Linked<N> {
+    public mutating func back() -> Element? {
         unsafe base.pointee.ensureUnique()
-        return unsafe Buffer<Element>.Linked<N>.removeBack(
+        return unsafe Buffer<Element>.Linked<n>.removeBack(
             header: &base.pointee.header,
             storage: base.pointee.storage
         )
