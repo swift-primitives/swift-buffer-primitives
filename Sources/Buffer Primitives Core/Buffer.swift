@@ -955,39 +955,36 @@ public enum Buffer<Element: ~Copyable> {
             /// Whether the buffer has spilled to heap storage.
             @inlinable
             public var isSpilled: Bool {
-                mutating get { _heapBuffer != nil }
+                switch _heapBuffer {
+                case .some: return true
+                case .none: return false
+                }
             }
 
             /// The number of currently occupied slots.
             @inlinable
             public var occupied: Index<Element>.Count {
-                mutating get {
-                    if _heapBuffer != nil {
-                        return _heapBuffer!.header.occupied
-                    }
-                    return _inlineBuffer.header.occupied
+                switch _heapBuffer {
+                case .some(let heap): return heap.header.occupied
+                case .none: return _inlineBuffer.header.occupied
                 }
             }
 
             /// Whether no slots are occupied.
             @inlinable
             public var isEmpty: Bool {
-                mutating get {
-                    if _heapBuffer != nil {
-                        return _heapBuffer!.header.occupied == .zero
-                    }
-                    return _inlineBuffer.header.occupied == .zero
+                switch _heapBuffer {
+                case .some(let heap): return heap.header.occupied == .zero
+                case .none: return _inlineBuffer.header.occupied == .zero
                 }
             }
 
             /// Whether all inline slots are occupied (only meaningful pre-spill).
             @inlinable
             public var isFull: Bool {
-                mutating get {
-                    if _heapBuffer != nil {
-                        return false
-                    }
-                    return _inlineBuffer.header.isFull
+                switch _heapBuffer {
+                case .some: return false
+                case .none: return _inlineBuffer.header.isFull
                 }
             }
         }
