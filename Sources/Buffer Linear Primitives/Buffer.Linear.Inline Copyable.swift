@@ -89,18 +89,3 @@ extension Buffer.Linear.Inline: Sequence.`Protocol` where Element: Copyable {
 //     @inlinable
 //     public var underestimatedCount: Int { Int(bitPattern: header.count.rawValue.rawValue) }
 // }
-
-// MARK: - Property.View (.forEach)
-
-extension Buffer.Linear.Inline where Element: Copyable {
-    @inlinable
-    public var forEach: Property<Sequence.ForEach, Self>.View {
-        mutating _read {
-            yield unsafe Property<Sequence.ForEach, Self>.View(&self)
-        }
-        mutating _modify {
-            var view = unsafe Property<Sequence.ForEach, Self>.View(&self)
-            yield &view
-        }
-    }
-}
