@@ -6,8 +6,8 @@ extension Buffer.Slots where Element: ~Copyable {
     /// Reads or writes the metadata at the given slot.
     @inlinable
     public subscript(metadata slot: Index<Element>) -> Metadata {
-        get { storage[storage.laneField, at: slot] }
-        set { storage[storage.laneField, at: slot] = newValue }
+        get { storage[storage.field.lane, at: slot] }
+        set { storage[storage.field.lane, at: slot] = newValue }
     }
 }
 
@@ -45,7 +45,7 @@ extension Buffer.Slots where Element: ~Copyable {
     /// Fills all metadata slots with the given value.
     @inlinable
     public func fill(metadata value: Metadata) {
-        storage.fill(storage.laneField, with: value)
+        storage.fill(storage.field.lane, with: value)
     }
 
     /// Deinitializes element slots where metadata indicates occupancy.
@@ -72,7 +72,7 @@ extension Buffer.Slots where Element: ~Copyable {
     public func withMetadataPointer<R, E: Swift.Error>(
         _ body: (UnsafePointer<Metadata>) throws(E) -> R
     ) throws(E) -> R {
-        try unsafe storage.withPointer(storage.laneField, body)
+        try unsafe storage.withPointer(storage.field.lane, body)
     }
 
     /// Calls `body` with a mutable pointer to the contiguous metadata array.
@@ -80,13 +80,13 @@ extension Buffer.Slots where Element: ~Copyable {
     public func withMutableMetadataPointer<R, E: Swift.Error>(
         _ body: (UnsafeMutablePointer<Metadata>) throws(E) -> R
     ) throws(E) -> R {
-        try unsafe storage.withMutablePointer(storage.laneField, body)
+        try unsafe storage.withMutablePointer(storage.field.lane, body)
     }
 
     /// Returns a mutable pointer to the element at the given slot.
     @unsafe
     @inlinable
     public func pointer(at slot: Index<Element>) -> UnsafeMutablePointer<Element> {
-        unsafe storage.pointer(storage.elementField, at: slot)
+        unsafe storage.pointer(storage.field.element, at: slot)
     }
 }

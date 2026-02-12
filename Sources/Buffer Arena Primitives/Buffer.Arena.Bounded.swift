@@ -78,7 +78,7 @@ extension Buffer.Arena.Bounded where Element: ~Copyable {
             throw .invalidPosition
         }
         let element = storage.move(at: position.slot)
-        Buffer<Element>.Arena._releaseSlot(position.index, header: &header, meta: meta)
+        Buffer<Element>.Arena._releaseSlot(position.slot, header: &header, meta: meta)
         return element
     }
 

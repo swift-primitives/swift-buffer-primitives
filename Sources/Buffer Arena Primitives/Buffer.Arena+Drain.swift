@@ -8,9 +8,7 @@ extension Buffer.Arena: Sequence.Drain.`Protocol` where Element: Copyable {
         let meta = unsafe storage.meta
         Buffer<Element>.Arena.forEach(occupied: header, meta: meta) { slot in
             let element = storage.move(at: slot)
-            Buffer<Element>.Arena._releaseSlot(
-                UInt32(slot.rawValue.rawValue), header: &header, meta: meta
-            )
+            Buffer<Element>.Arena._releaseSlot(slot, header: &header, meta: meta)
             body(element)
         }
         storage.highWater = .zero
@@ -40,9 +38,7 @@ extension Buffer.Arena.Bounded: Sequence.Drain.`Protocol` where Element: Copyabl
         let meta = unsafe storage.meta
         Buffer<Element>.Arena.forEach(occupied: header, meta: meta) { slot in
             let element = storage.move(at: slot)
-            Buffer<Element>.Arena._releaseSlot(
-                UInt32(slot.rawValue.rawValue), header: &header, meta: meta
-            )
+            Buffer<Element>.Arena._releaseSlot(slot, header: &header, meta: meta)
             body(element)
         }
         storage.highWater = .zero

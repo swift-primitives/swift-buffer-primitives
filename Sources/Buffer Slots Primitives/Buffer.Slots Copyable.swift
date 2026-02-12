@@ -16,16 +16,16 @@ extension Buffer.Slots where Element: Copyable {
         let newStorage = Storage<Element>.Split<Metadata>.create(capacity: cap)
 
         // Bulk-copy metadata (BitwiseCopyable — always fully initialized).
-        unsafe newStorage.withMutablePointer(newStorage.laneField) { dst in
-            unsafe storage.withPointer(storage.laneField) { src in
+        unsafe newStorage.withMutablePointer(newStorage.field.lane) { dst in
+            unsafe storage.withPointer(storage.field.lane) { src in
                 unsafe dst.initialize(from: src, count: Int(bitPattern: cap))
             }
         }
 
         // Copy occupied elements individually.
-        let laneField = storage.laneField
-        let elementField = storage.elementField
-        let newElementField = newStorage.elementField
+        let laneField = storage.field.lane
+        let elementField = storage.field.element
+        let newElementField = newStorage.field.element
         var slot: Index<Element> = .zero
         let end = cap.map(Ordinal.init)
         while slot < end {
@@ -73,15 +73,15 @@ extension Buffer.Slots where Element: BitwiseCopyable {
         let capInt = Int(bitPattern: cap)
 
         // Bulk-copy metadata.
-        unsafe newStorage.withMutablePointer(newStorage.laneField) { dst in
-            unsafe storage.withPointer(storage.laneField) { src in
+        unsafe newStorage.withMutablePointer(newStorage.field.lane) { dst in
+            unsafe storage.withPointer(storage.field.lane) { src in
                 unsafe dst.initialize(from: src, count: capInt)
             }
         }
 
         // Bulk-copy elements (BitwiseCopyable: all bit patterns valid).
-        let srcPtr: UnsafePointer<Element> = unsafe storage.pointer(storage.elementField, at: .zero)
-        let dstPtr = unsafe newStorage.pointer(newStorage.elementField, at: .zero)
+        let srcPtr: UnsafePointer<Element> = unsafe storage.pointer(storage.field.element, at: .zero)
+        let dstPtr = unsafe newStorage.pointer(newStorage.field.element, at: .zero)
         unsafe dstPtr.initialize(from: srcPtr, count: capInt)
 
         return Self(header: header, storage: newStorage)
@@ -112,13 +112,13 @@ extension Buffer.Slots where Element: Copyable {
     /// - Precondition: The slot must contain an initialized element.
     @inlinable
     public subscript(payload slot: Index<Element>) -> Element {
-        get { storage[storage.elementField, at: slot] }
-        set { storage[storage.elementField, at: slot] = newValue }
+        get { storage[storage.field.element, at: slot] }
+        set { storage[storage.field.element, at: slot] = newValue }
     }
 
     /// Fills all element slots with the given value.
     @inlinable
     public func fill(payload value: Element) {
-        storage.fill(storage.elementField, with: value)
+        storage.fill(storage.field.element, with: value)
     }
 }

@@ -164,14 +164,8 @@ extension Buffer.Ring.Small where Element: ~Copyable {
         let newStorage = Storage<Element>.Heap.create(minimumCapacity: newCapacity)
 
         // Move elements in logical (FIFO) order from wrapped inline to linear heap
-        switch _inlineBuffer.header.initialization {
-        case .empty:
-            break
-        case .one(let range):
-            _inlineBuffer.storage.move(range: range, to: newStorage)
-        case .two(let first, let second):
-            _inlineBuffer.storage.move(range: first, to: newStorage)
-            _inlineBuffer.storage.move(range: second, to: newStorage, at: first.count.map(Ordinal.init))
+        _inlineBuffer.header.initialization.linearize { range, offset in
+            _inlineBuffer.storage.move(range: range, to: newStorage, at: offset)
         }
 
         // Reset inline state

@@ -14,16 +14,15 @@ extension Buffer.Arena where Element: ~Copyable {
     /// - Precondition: The slot's token is odd (occupied).
     @inlinable
     package static func _releaseSlot(
-        _ rawSlot: UInt32,
+        _ slot: Index<Element>,
         header: inout Header,
         meta: UnsafeMutablePointer<Meta>
     ) {
-        let i = Int(rawSlot)
-        let newToken = meta[i].token &+ 1
+        let newToken = meta[slot].token &+ 1
         precondition(newToken != 0, "Arena: token overflow")
-        meta[i].token = newToken
-        meta[i].link = header.freeHead
-        header.freeHead = rawSlot
+        meta[slot].token = newToken
+        meta[slot].link = header.freeHead
+        header.freeHead = UInt32(Int(bitPattern: slot))
         header.occupied = header.occupied.subtract.saturating(.one)
     }
 
@@ -71,10 +70,9 @@ extension Buffer.Arena where Element: ~Copyable {
         arenaStorage: Storage<Element>.Arena,
         meta: UnsafeMutablePointer<Meta>
     ) {
-        let rawSlot = UInt32(slot.rawValue.rawValue)
-        precondition(meta[Int(rawSlot)].isOccupied, "Arena: slot is not occupied")
+        precondition(isOccupied(slot, meta: meta), "Arena: slot is not occupied")
         arenaStorage.deinitialize(at: slot)
-        _releaseSlot(rawSlot, header: &header, meta: meta)
+        _releaseSlot(slot, header: &header, meta: meta)
     }
 
     // MARK: - Insert
@@ -106,10 +104,9 @@ extension Buffer.Arena where Element: ~Copyable {
         arenaStorage: Storage<Element>.Arena,
         meta: UnsafeMutablePointer<Meta>
     ) -> Element {
-        let rawSlot = UInt32(slot.rawValue.rawValue)
-        precondition(meta[Int(rawSlot)].isOccupied, "Arena: slot is not occupied")
+        precondition(isOccupied(slot, meta: meta), "Arena: slot is not occupied")
         let element = arenaStorage.move(at: slot)
-        _releaseSlot(rawSlot, header: &header, meta: meta)
+        _releaseSlot(slot, header: &header, meta: meta)
         return element
     }
 
@@ -129,7 +126,7 @@ extension Buffer.Arena where Element: ~Copyable {
             throw .invalidPosition
         }
         let element = arenaStorage.move(at: position.slot)
-        _releaseSlot(position.index, header: &header, meta: meta)
+        _releaseSlot(position.slot, header: &header, meta: meta)
         return element
     }
 
@@ -154,7 +151,7 @@ extension Buffer.Arena where Element: ~Copyable {
         _ slot: Index<Element>,
         meta: UnsafeMutablePointer<Meta>
     ) -> Bool {
-        meta[Int(UInt32(slot.rawValue.rawValue))].isOccupied
+        meta[slot].isOccupied
     }
 
     // MARK: - Token Access
@@ -165,7 +162,7 @@ extension Buffer.Arena where Element: ~Copyable {
         at slot: Index<Element>,
         meta: UnsafeMutablePointer<Meta>
     ) -> UInt32 {
-        meta[Int(UInt32(slot.rawValue.rawValue))].token
+        meta[slot].token
     }
 
     /// Constructs a Position handle from an occupied slot.
@@ -176,10 +173,9 @@ extension Buffer.Arena where Element: ~Copyable {
         forOccupied slot: Index<Element>,
         meta: UnsafeMutablePointer<Meta>
     ) -> Position {
-        let rawSlot = UInt32(slot.rawValue.rawValue)
-        let currentToken = meta[Int(rawSlot)].token
+        let currentToken = meta[slot].token
         precondition(currentToken & 1 == 1, "Arena: slot is not occupied")
-        return Position(index: rawSlot, token: currentToken)
+        return Position(index: UInt32(Int(bitPattern: slot)), token: currentToken)
     }
 
     // MARK: - Iteration

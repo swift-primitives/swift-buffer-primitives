@@ -26,7 +26,7 @@ extension Buffer.Slots where Element: ~Copyable {
         at slot: Index<Element>,
         storage: Storage<Element>.Split<Metadata>
     ) {
-        storage.initialize(storage.elementField, to: value, at: slot)
+        storage.initialize(storage.field.element, to: value, at: slot)
     }
 
     // MARK: Move
@@ -39,7 +39,7 @@ extension Buffer.Slots where Element: ~Copyable {
         at slot: Index<Element>,
         storage: Storage<Element>.Split<Metadata>
     ) -> Element {
-        storage.move(storage.elementField, at: slot)
+        storage.move(storage.field.element, at: slot)
     }
 
     // MARK: Deinitialize
@@ -52,7 +52,7 @@ extension Buffer.Slots where Element: ~Copyable {
         at slot: Index<Element>,
         storage: Storage<Element>.Split<Metadata>
     ) {
-        storage.deinitialize(storage.elementField, at: slot)
+        storage.deinitialize(storage.field.element, at: slot)
     }
 
     // MARK: Deinitialize All
@@ -67,8 +67,8 @@ extension Buffer.Slots where Element: ~Copyable {
         header: Header,
         storage: Storage<Element>.Split<Metadata>
     ) {
-        let laneField = storage.laneField
-        let elementField = storage.elementField
+        let laneField = storage.field.lane
+        let elementField = storage.field.element
         var slot: Index<Element> = .zero
         let end = header.capacity.map(Ordinal.init)
         while slot < end {

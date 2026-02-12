@@ -213,10 +213,9 @@ extension Buffer.Linked where Element: ~Copyable {
     mutating func _growTo(_ minimumCapacity: Index<Node>.Count) throws(Error) {
         guard storage.capacity < minimumCapacity else { return }
 
-        let rawMin = Int(bitPattern: minimumCapacity)
-        let rawCurrent = Int(bitPattern: storage.capacity)
-        let rawNew = Swift.max(rawMin, rawCurrent * 2, 4)
-        let newCapacity = Index<Node>.Count(UInt(rawNew))
+        let doubled = storage.capacity * 2
+        let four = Index<Node>.Count(Cardinal(4))
+        let newCapacity = Index<Node>.Count.max(minimumCapacity, Index<Node>.Count.max(doubled, four))
 
         let newPool: Storage<Node>.Pool
         do {

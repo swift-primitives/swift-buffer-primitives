@@ -180,13 +180,9 @@ extension Buffer.Linear.Small where Element: ~Copyable {
         let newCapacity = Index<Element>.Count(UInt(inlineCapacity * 2))
         let newStorage = Storage<Element>.Heap.create(minimumCapacity: newCapacity)
 
-        // Move elements one-by-one from inline to heap
-        var slot: Index<Element> = .zero
-        let end = currentCount.map(Ordinal.init)
-        while slot < end {
-            let moved = _inlineBuffer.storage.move(at: slot)
-            newStorage.initialize(to: consume moved, at: slot)
-            slot += .one
+        // Move elements from inline to heap
+        _inlineBuffer.header.initialization.forEach { range in
+            _inlineBuffer.storage.move(range: range, to: newStorage)
         }
 
         // Reset inline header

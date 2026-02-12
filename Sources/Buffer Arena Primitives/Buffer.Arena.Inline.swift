@@ -103,7 +103,7 @@ extension Buffer.Arena.Inline where Element: ~Copyable {
             throw .invalidPosition
         }
         let element = unsafe _elementPointer(at: position.slot).move()
-        unsafe Buffer<Element>.Arena._releaseSlot(position.index, header: &header, meta: meta)
+        unsafe Buffer<Element>.Arena._releaseSlot(position.slot, header: &header, meta: meta)
         return element
     }
 
@@ -112,11 +112,10 @@ extension Buffer.Arena.Inline where Element: ~Copyable {
     /// - Precondition: `slot` is occupied.
     @inlinable
     public mutating func remove(at slot: Index<Element>) -> Element {
-        let rawSlot = UInt32(slot.rawValue.rawValue)
         let meta = unsafe _metaPointer()
-        precondition(unsafe meta[Int(rawSlot)].isOccupied, "Arena.Inline: slot is not occupied")
+        precondition(unsafe Buffer<Element>.Arena.isOccupied(slot, meta: meta), "Arena.Inline: slot is not occupied")
         let element = unsafe _elementPointer(at: slot).move()
-        unsafe Buffer<Element>.Arena._releaseSlot(rawSlot, header: &header, meta: meta)
+        unsafe Buffer<Element>.Arena._releaseSlot(slot, header: &header, meta: meta)
         return element
     }
 
@@ -125,11 +124,10 @@ extension Buffer.Arena.Inline where Element: ~Copyable {
     /// - Precondition: `slot` is occupied.
     @inlinable
     public mutating func free(at slot: Index<Element>) {
-        let rawSlot = UInt32(slot.rawValue.rawValue)
         let meta = unsafe _metaPointer()
-        precondition(unsafe meta[Int(rawSlot)].isOccupied, "Arena.Inline: slot is not occupied")
+        precondition(unsafe Buffer<Element>.Arena.isOccupied(slot, meta: meta), "Arena.Inline: slot is not occupied")
         unsafe _elementPointer(at: slot).deinitialize(count: 1)
-        unsafe Buffer<Element>.Arena._releaseSlot(rawSlot, header: &header, meta: meta)
+        unsafe Buffer<Element>.Arena._releaseSlot(slot, header: &header, meta: meta)
     }
 
     /// Deinitializes all occupied elements and resets the arena to empty state.
@@ -163,7 +161,7 @@ extension Buffer.Arena.Inline where Element: ~Copyable {
     /// Returns whether the slot at the given index is occupied.
     @inlinable
     public func isOccupied(_ slot: Index<Element>) -> Bool {
-        _meta[Int(UInt32(slot.rawValue.rawValue))].isOccupied
+        _meta[Int(bitPattern: slot)].isOccupied
     }
 
     // MARK: - Token Access
@@ -171,7 +169,7 @@ extension Buffer.Arena.Inline where Element: ~Copyable {
     /// Returns the current generation token for the given slot.
     @inlinable
     public func token(at slot: Index<Element>) -> UInt32 {
-        _meta[Int(UInt32(slot.rawValue.rawValue))].token
+        _meta[Int(bitPattern: slot)].token
     }
 
     /// Constructs a Position handle from an occupied slot.

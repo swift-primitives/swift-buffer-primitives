@@ -84,7 +84,7 @@ extension Buffer.Arena.Small where Element: ~Copyable {
         }
         let element = unsafe _inlineBuffer._elementPointer(at: position.slot).move()
         unsafe Buffer<Element>.Arena._releaseSlot(
-            position.index, header: &_inlineBuffer.header, meta: inlineMeta
+            position.slot, header: &_inlineBuffer.header, meta: inlineMeta
         )
         return element
     }
