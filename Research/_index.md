@@ -14,3 +14,4 @@
 | [buffer-ring-consumer-api-boundary](buffer-ring-consumer-api-boundary.md) | Tier 1: Consumer API boundary design for Buffer.Ring | 2026-02-10 | IN_PROGRESS |
 | [buffer-variant-parity-analysis](buffer-variant-parity-analysis.md) | Tier 2: Consistency audit across six buffer disciplines | 2026-02-11 | IN_PROGRESS |
 | [linked-cow-safe-overloads](linked-cow-safe-overloads.md) | Tier 1: Add CoW-safe Copyable overloads to Buffer.Linked, consistent with Ring/Linear | 2026-02-12 | DECISION |
+| [checkpoint-ordering-design](checkpoint-ordering-design.md) | Tier 2: Checkpoint Comparable trichotomy fix — count-only equality matching count-only ordering | 2026-02-12 | RECOMMENDATION |
