@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
+version: 2.0.0
 last_updated: 2026-02-12
-status: RECOMMENDATION
+status: DECISION
 research_tier: 1
 applies_to: [swift-buffer-primitives, swift-hash-table-primitives]
 normative: false
@@ -19,7 +19,7 @@ Buffer.Ring, Buffer.Linear, Buffer.Linked, Buffer.Slab, and Buffer.Arena all fol
 2. **`ensureUnique()` semantics** — checks `isKnownUniquelyReferenced`, copies if shared, returns `true` if a copy was made.
 3. **`copy()` method** — produces an independent copy of the buffer with its own storage.
 
-Buffer.Slots deviates from all three conventions. This was identified while aligning Buffer.Linked with the static method pattern (see [linked-cow-safe-overloads](linked-cow-safe-overloads.md)).
+Buffer.Slots deviated from all three conventions. This was identified while aligning Buffer.Linked with the static method pattern (see [linked-cow-safe-overloads](linked-cow-safe-overloads.md)).
 
 **Trigger**: [RES-012] Discovery — proactive consistency audit after aligning Buffer.Linked.
 
@@ -31,7 +31,7 @@ Should Buffer.Slots be brought into alignment with the static method pattern and
 
 ## Analysis
 
-### Issue 1: `ensureUnique()` Semantics Are Inverted
+### Issue 1: `ensureUnique()` Semantics Were Inverted
 
 Every buffer variant follows this contract:
 
@@ -47,22 +47,20 @@ public mutating func ensureUnique() -> Bool {
 }
 ```
 
-Buffer.Slots does:
+Buffer.Slots had:
 
 ```swift
-// Slots — INVERTED
+// Slots — INVERTED (FIXED)
 @discardableResult
 public mutating func ensureUnique() -> Bool {
     isKnownUniquelyReferenced(&storage)
-    // returns true = already unique (no copy), false = shared (no copy made either)
+    // returned true = already unique (no copy), false = shared (no copy made either)
 }
 ```
 
 Two problems:
-- **Return value is inverted**: `true` means "already unique" instead of "copy was made."
-- **No copy is performed**: The doc comment says "the caller is responsible for copying when `ensureUnique()` returns `false`." Every other variant handles the copy internally.
-
-This is the only buffer where `ensureUnique()` does not actually ensure uniqueness.
+- **Return value was inverted**: `true` meant "already unique" instead of "copy was made."
+- **No copy was performed**: The doc comment said "the caller is responsible for copying when `ensureUnique()` returns `false`." Every other variant handles the copy internally.
 
 ### Issue 2: No `copy()` Method
 
@@ -73,17 +71,17 @@ Ring, Linear, Linked, Arena all provide:
 package func copy() -> Self
 ```
 
-Buffer.Slots has no `copy()`. This is required to implement the standard `ensureUnique()`.
+Buffer.Slots had no `copy()`. This was required to implement the standard `ensureUnique()`.
 
-### Issue 3: Hash.Table Consumer Is Broken
+### Issue 3: Hash.Table Consumer Was Broken
 
-`Hash.Table+ensureUnique.swift:28` calls:
+`Hash.Table+ensureUnique.swift:28` called:
 
 ```swift
 if !_buffer.isStorageUnique() {
 ```
 
-`isStorageUnique()` does not exist on `Buffer.Slots`. This is a compile error in the `where Element: Copyable` extension. Hash.Table works around Buffer.Slots' non-standard `ensureUnique()` by implementing its own uniqueness check and manual copy — but the method it calls doesn't exist.
+`isStorageUnique()` did not exist on `Buffer.Slots`. Hash.Table worked around Buffer.Slots' non-standard `ensureUnique()` by implementing its own uniqueness check and manual copy — but the method it called didn't exist.
 
 ### Issue 4: Static Method Pattern
 
@@ -96,13 +94,7 @@ All other buffer variants extract core logic into static methods:
 | Linked | `Buffer.Linked+Pool ~Copyable.swift` | insertFront, insertBack, removeFront, removeBack, removeAll |
 | Slab | `Buffer.Slab+Heap ~Copyable.swift` | insert, remove, update, forEachOccupied, deinitializeAll |
 | Arena | `Buffer.Arena+Heap ~Copyable.swift` | allocate, insert, remove, forEach, deinitialize |
-| **Slots** | **none** | — |
-
-Buffer.Slots' operations (`initialize`, `move`, `deinitialize`, metadata subscript, `fill`, `withMetadataPointer`) are thin delegations to `Storage.Split`. The question is whether extracting these into statics provides value.
-
-**Argument for**: The metadata-parametric-slots research already proposes Layer 2 static operations as the target design. Aligning now means the current code matches the planned architecture, and consumers like Hash.Table gain the option of calling statics directly (useful for growth/rehash where the consumer builds a new buffer from scratch).
-
-**Argument against**: Buffer.Slots' header is immutable (`let capacity`). Static methods in other buffers take `header: inout Header` because operations mutate cursor state (count, head, etc.). Slots has no mutable cursor state — the metadata array IS the state, and it lives in storage. Static methods would take `header: Header` (not `inout`), breaking the pattern slightly. The operations are also one-liners — the static methods would add a layer of indirection with no logic.
+| **Slots** | `Buffer.Slots+Split ~Copyable.swift` | initialize, move, deinitialize, deinitializeAll |
 
 ### Comparison
 
@@ -117,56 +109,63 @@ Buffer.Slots' operations (`initialize`, `move`, `deinitialize`, metadata subscri
 
 ## Outcome
 
-**Status**: RECOMMENDATION
+**Status**: DECISION — IMPLEMENTED (v2.0.0)
 
-### Fix `ensureUnique()` and `copy()` — MUST
+All four issues resolved. Buffer.Slots now matches the pattern of all other buffer variants.
 
-The inverted `ensureUnique()` semantics and missing `copy()` are bugs, not design choices. They contradict the universal buffer contract and break the Hash.Table consumer.
+### Static Methods — IMPLEMENTED
 
-**Implementation**:
+Created `Buffer.Slots+Split ~Copyable.swift` with static methods for core element lifecycle operations:
 
-1. Add `copy()` to `Buffer.Slots Copyable.swift`:
-   ```swift
-   @usableFromInline
-   package func copy() -> Self {
-       Self(header: header, storage: storage.copy())
-   }
-   ```
+```swift
+Buffer.Slots.initialize(to:at:storage:)
+Buffer.Slots.move(at:storage:)
+Buffer.Slots.deinitialize(at:storage:)
+Buffer.Slots.deinitializeAll(where:header:storage:)
+```
 
-2. Rewrite `ensureUnique()` to match the standard contract:
-   ```swift
-   @inlinable
-   @discardableResult
-   public mutating func ensureUnique() -> Bool {
-       if !isKnownUniquelyReferenced(&storage) {
-           self = copy()
-           return true
-       }
-       return false
-   }
-   ```
+Instance methods in `Buffer.Slots ~Copyable.swift` delegate to these statics. Slots' statics take `storage:` only (no `header: inout Header`) for the per-slot operations, since the header is immutable. The bulk `deinitializeAll` takes `header: Header` (not `inout`) for the capacity loop bound.
 
-3. Fix Hash.Table's `ensureUnique()` to use the buffer's method:
-   ```swift
-   // Before:
-   if !_buffer.isStorageUnique() { ... manual copy ... }
+### Copy and `ensureUnique()` — IMPLEMENTED
 
-   // After:
-   _buffer.ensureUnique()
-   ```
+Two tiers of copy support, reflecting Storage.Split's consumer-managed element lifecycle:
 
-   Hash.Table's manual bulk-copy logic (`withMutableMetadataPointer` + payload loop) can be replaced by `_buffer.ensureUnique()` which calls `storage.copy()` — Storage.Split.copy() should handle this correctly as a bulk memory copy.
+**`where Element: Copyable`** — predicate-based:
+```swift
+package func copy(where isOccupied: (Metadata) -> Bool) -> Self
+public mutating func ensureUnique(where isOccupied: (Metadata) -> Bool) -> Bool
+```
 
-### Static Methods — DEFER
+Metadata is bulk-copied (BitwiseCopyable). Elements are copied individually for occupied slots. The predicate matches the existing `deinitialize(where:)` pattern.
 
-Static methods for Buffer.Slots should be **deferred** until the metadata-parametric-slots redesign is implemented. Rationale:
+**`where Element: BitwiseCopyable`** — bulk copy:
+```swift
+package func copy() -> Self
+public mutating func ensureUnique() -> Bool
+```
 
-1. The current operations are one-liner delegations to Storage.Split. Static methods would add a redirection layer with no logic to extract.
-2. Header is immutable — static methods would take `header: Header` (not `inout`), which is an unusual pattern relative to the other buffers.
-3. The metadata-parametric-slots research proposes a redesigned type (`Buffer.Slots<Metadata, Payload>`) with a proper Layer 2 static operations tier. Implementing statics now on the current type would be throwaway work.
-4. The primary motivation for statics (breaking Copyable/~Copyable overload recursion) doesn't apply — Slots has no Copyable overloads of mutation methods.
+Both metadata and element arrays are bulk-copied via `initialize(from:count:)`. No predicate needed — all bit patterns are valid for BitwiseCopyable types.
 
-When the metadata-parametric-slots redesign lands, static methods should be part of the new type from the start.
+### Hash.Table — IMPLEMENTED
+
+Hash.Table's manual copy logic (create new buffer, bulk-copy metadata via pointer, loop-copy payload via subscript) replaced with a single delegation:
+
+```swift
+public mutating func ensureUnique() -> Bool {
+    _buffer.ensureUnique()
+}
+```
+
+Hash.Table uses `Buffer<Int>.Slots<Int>` — both `Int` types are `BitwiseCopyable`, so the no-predicate `ensureUnique()` applies. CoW is now a buffer concern, not a data-structure concern.
+
+### Files Changed
+
+| File | Change |
+|------|--------|
+| `Buffer.Slots+Split ~Copyable.swift` | **Created** — static methods |
+| `Buffer.Slots ~Copyable.swift` | **Rewritten** — instance methods delegate to statics |
+| `Buffer.Slots Copyable.swift` | **Rewritten** — copy(), copy(where:), ensureUnique(), ensureUnique(where:) |
+| `Hash.Table+ensureUnique.swift` | **Simplified** — delegates to `_buffer.ensureUnique()` |
 
 ## References
 

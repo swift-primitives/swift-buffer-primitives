@@ -19,7 +19,7 @@ extension Buffer.Slots where Element: ~Copyable {
     /// - Precondition: The slot must be uninitialized.
     @inlinable
     public func initialize(to value: consuming Element, at slot: Index<Element>) {
-        storage.initialize(storage.elementField, to: value, at: slot)
+        Buffer.Slots.initialize(to: consume value, at: slot, storage: storage)
     }
 
     /// Moves the element out of the given slot, leaving it uninitialized.
@@ -27,7 +27,7 @@ extension Buffer.Slots where Element: ~Copyable {
     /// - Precondition: The slot must contain an initialized element.
     @inlinable
     public func move(at slot: Index<Element>) -> Element {
-        storage.move(storage.elementField, at: slot)
+        Buffer.Slots.move(at: slot, storage: storage)
     }
 
     /// Deinitializes the element at the given slot.
@@ -35,7 +35,7 @@ extension Buffer.Slots where Element: ~Copyable {
     /// - Precondition: The slot must contain an initialized element.
     @inlinable
     public func deinitialize(at slot: Index<Element>) {
-        storage.deinitialize(storage.elementField, at: slot)
+        Buffer.Slots.deinitialize(at: slot, storage: storage)
     }
 }
 
@@ -57,16 +57,7 @@ extension Buffer.Slots where Element: ~Copyable {
     ///   indicate the corresponding element slot is initialized.
     @inlinable
     public func deinitialize(where isOccupied: (Metadata) -> Bool) {
-        let laneField = storage.laneField
-        let elementField = storage.elementField
-        var slot: Index<Element> = .zero
-        let end = header.capacity.map(Ordinal.init)
-        while slot < end {
-            if isOccupied(storage[laneField, at: slot]) {
-                storage.deinitialize(elementField, at: slot)
-            }
-            slot += .one
-        }
+        Buffer.Slots.deinitializeAll(where: isOccupied, header: header, storage: storage)
     }
 }
 

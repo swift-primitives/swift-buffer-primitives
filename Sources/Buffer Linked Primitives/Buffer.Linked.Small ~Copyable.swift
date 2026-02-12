@@ -33,9 +33,14 @@ extension Buffer.Linked.Small where Element: ~Copyable {
 
     /// Projected access to the heap buffer.
     ///
-    /// - Precondition: `isSpilled` — callers MUST guard before access.
+    /// - Precondition: `isSpilled` — callers MUST guard `_heapBuffer != nil` before access.
     @inlinable
     package var heap: Buffer<Element>.Linked<N> {
+        // Force-unwrap is necessary: Optional._modify has compiler support for
+        // yielding &_heapBuffer! that arbitrary enums lack (no _modify into enum
+        // payloads for ~Copyable types). Enum storage was evaluated and rejected —
+        // see Research/small-buffer-storage-representation.md.
+        // Safe: all callers guard `_heapBuffer != nil` before accessing `heap`.
         _read { yield _heapBuffer! }
         _modify { yield &_heapBuffer! }
     }

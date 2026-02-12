@@ -1,19 +1,106 @@
 public import Buffer_Primitives_Core
 
-// MARK: - Copy-on-Write Support
+// MARK: - Copy-on-Write Support (Copyable)
 
 extension Buffer.Slots where Element: Copyable {
-    /// Ensures the underlying storage is uniquely referenced.
+    /// Returns an independent copy of this buffer, copying only occupied elements.
     ///
-    /// Use this to implement copy-on-write for types that embed `Buffer.Slots`.
-    /// Returns `true` if the storage was already unique; `false` if not.
+    /// Metadata is bulk-copied. Elements are copied individually for slots
+    /// where `isOccupied` returns `true`.
     ///
-    /// - Note: Unlike other buffer variants, `Slots` does not copy automatically —
-    ///   the caller is responsible for copying when `ensureUnique()` returns `false`.
+    /// - Parameter isOccupied: Returns `true` for metadata values that
+    ///   indicate the corresponding element slot is initialized.
+    @usableFromInline
+    package func copy(where isOccupied: (Metadata) -> Bool) -> Self {
+        let cap = header.capacity
+        let newStorage = Storage<Element>.Split<Metadata>.create(capacity: cap)
+
+        // Bulk-copy metadata (BitwiseCopyable — always fully initialized).
+        unsafe newStorage.withMutablePointer(newStorage.laneField) { dst in
+            unsafe storage.withPointer(storage.laneField) { src in
+                unsafe dst.initialize(from: src, count: Int(bitPattern: cap))
+            }
+        }
+
+        // Copy occupied elements individually.
+        let laneField = storage.laneField
+        let elementField = storage.elementField
+        let newElementField = newStorage.elementField
+        var slot: Index<Element> = .zero
+        let end = cap.map(Ordinal.init)
+        while slot < end {
+            if isOccupied(storage[laneField, at: slot]) {
+                unsafe newStorage.pointer(newElementField, at: slot).initialize(
+                    to: storage[elementField, at: slot]
+                )
+            }
+            slot += .one
+        }
+
+        return Self(header: header, storage: newStorage)
+    }
+
+    /// Ensures the underlying storage is uniquely referenced, copying if shared.
+    ///
+    /// Uses `isOccupied` to determine which element slots need copying.
+    ///
+    /// - Parameter isOccupied: Returns `true` for metadata values that
+    ///   indicate the corresponding element slot is initialized.
+    /// - Returns: `true` if a copy was made; `false` if already unique.
+    @inlinable
+    @discardableResult
+    public mutating func ensureUnique(where isOccupied: (Metadata) -> Bool) -> Bool {
+        if !isKnownUniquelyReferenced(&storage) {
+            self = copy(where: isOccupied)
+            return true
+        }
+        return false
+    }
+}
+
+// MARK: - Copy-on-Write Support (BitwiseCopyable)
+
+extension Buffer.Slots where Element: BitwiseCopyable {
+    /// Returns an independent copy of this buffer using bulk memory copy.
+    ///
+    /// Both metadata and element arrays are copied in their entirety.
+    /// This is the fast path for `BitwiseCopyable` elements where
+    /// no per-slot initialization tracking is needed.
+    @usableFromInline
+    package func copy() -> Self {
+        let cap = header.capacity
+        let newStorage = Storage<Element>.Split<Metadata>.create(capacity: cap)
+        let capInt = Int(bitPattern: cap)
+
+        // Bulk-copy metadata.
+        unsafe newStorage.withMutablePointer(newStorage.laneField) { dst in
+            unsafe storage.withPointer(storage.laneField) { src in
+                unsafe dst.initialize(from: src, count: capInt)
+            }
+        }
+
+        // Bulk-copy elements (BitwiseCopyable: all bit patterns valid).
+        let srcPtr: UnsafePointer<Element> = unsafe storage.pointer(storage.elementField, at: .zero)
+        let dstPtr = unsafe newStorage.pointer(newStorage.elementField, at: .zero)
+        unsafe dstPtr.initialize(from: srcPtr, count: capInt)
+
+        return Self(header: header, storage: newStorage)
+    }
+
+    /// Ensures the underlying storage is uniquely referenced, copying if shared.
+    ///
+    /// Uses bulk memory copy — no occupancy predicate needed for
+    /// `BitwiseCopyable` elements.
+    ///
+    /// - Returns: `true` if a copy was made; `false` if already unique.
     @inlinable
     @discardableResult
     public mutating func ensureUnique() -> Bool {
-        isKnownUniquelyReferenced(&storage)
+        if !isKnownUniquelyReferenced(&storage) {
+            self = copy()
+            return true
+        }
+        return false
     }
 }
 
