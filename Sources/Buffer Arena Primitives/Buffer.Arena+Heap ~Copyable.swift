@@ -2,7 +2,7 @@ public import Buffer_Primitives_Core
 
 // MARK: - Static Operations for ~Copyable Elements on Storage.Arena
 
-extension Buffer.Arena {
+extension Buffer.Arena where Element: ~Copyable {
 
     // MARK: - Internal: Release Slot Metadata
 

@@ -23,7 +23,7 @@ extension Buffer.Linear where Element: ~Copyable {
         storage.initialization = header.initialization
     }
 
-    // MARK: Consume Front
+    // MARK: Remove First
 
     /// Removes and returns element at slot 0, shifting remaining elements left.
     ///
@@ -31,7 +31,7 @@ extension Buffer.Linear where Element: ~Copyable {
     ///
     /// - Precondition: `header.count > 0` (not empty).
     @inlinable
-    public static func consumeFront(
+    public static func removeFirst(
         header: inout Header,
         storage: Storage<Element>.Heap
     ) -> Element {

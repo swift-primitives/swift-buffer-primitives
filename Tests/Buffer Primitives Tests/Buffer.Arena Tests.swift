@@ -321,9 +321,9 @@ struct ArenaBoundedTests {
 
         do {
             _ = try arena.insert(i)
-            Issue.record("Expected .full error")
+            Issue.record("Expected .capacityExceeded error")
         } catch {
-            #expect(error == .full)
+            #expect(error == .capacityExceeded)
         }
     }
 

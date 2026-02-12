@@ -6,7 +6,7 @@ import Buffer_Primitives_Test_Support
 struct LinearBoundedInlineTests {
 
     @Test
-    func `append and consumeFront`() throws {
+    func `append and removeFirst`() throws {
         var buffer = Buffer<Int>.Linear.Inline<4>()
         _ = buffer.append(10)
         _ = buffer.append(20)
@@ -14,9 +14,9 @@ struct LinearBoundedInlineTests {
 
         #expect(buffer.count == 3)
 
-        #expect(buffer.consumeFront() == 10)
-        #expect(buffer.consumeFront() == 20)
-        #expect(buffer.consumeFront() == 30)
+        #expect(buffer.removeFirst() == 10)
+        #expect(buffer.removeFirst() == 20)
+        #expect(buffer.removeFirst() == 30)
         #expect(buffer.isEmpty == true)
     }
 
@@ -89,7 +89,7 @@ struct LinearBoundedInlineTests {
         _ = buffer.append(42)
         #expect(buffer.count == 1)
         #expect(buffer.isFull == true)
-        #expect(buffer.consumeFront() == 42)
+        #expect(buffer.removeFirst() == 42)
         #expect(buffer.isEmpty == true)
     }
 }

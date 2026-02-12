@@ -67,9 +67,9 @@ extension Buffer.Linear where Element: Copyable {
     ///
     /// - Precondition: The buffer is not empty.
     @inlinable
-    public mutating func consumeFront() -> Element {
+    public mutating func removeFirst() -> Element {
         _makeUnique()
-        return Buffer.Linear.consumeFront(header: &header, storage: storage)
+        return Buffer.Linear.removeFirst(header: &header, storage: storage)
     }
 
     /// Removes and returns the last element (CoW-safe).
@@ -116,35 +116,3 @@ extension Buffer.Linear where Element: Copyable {
     }
 }
 
-// MARK: - Subscript (Copyable with CoW)
-
-extension Buffer.Linear where Element: Copyable {
-    /// Accesses the element at the given index with copy-on-write semantics.
-    ///
-    /// - Parameter index: The index of the element to access.
-    @inlinable
-    public subscript(index: Index<Element>) -> Element {
-        _read {
-            yield unsafe storage.pointer(at: index).pointee
-        }
-        _modify {
-            _makeUnique()
-            yield unsafe &storage.pointer(at: index).pointee
-        }
-    }
-}
-
-// MARK: - Property.View (.forEach)
-
-extension Buffer.Linear where Element: Copyable {
-    @inlinable
-    public var forEach: Property<Sequence.ForEach, Self>.View {
-        mutating _read {
-            yield unsafe Property<Sequence.ForEach, Self>.View(&self)
-        }
-        mutating _modify {
-            var view = unsafe Property<Sequence.ForEach, Self>.View(&self)
-            yield &view
-        }
-    }
-}

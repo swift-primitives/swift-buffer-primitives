@@ -46,8 +46,8 @@ extension Buffer.Linear.Bounded where Element: ~Copyable {
     ///
     /// - Precondition: The buffer is not empty.
     @inlinable
-    public mutating func consumeFront() -> Element {
-        Buffer.Linear.consumeFront(header: &header, storage: storage)
+    public mutating func removeFirst() -> Element {
+        Buffer.Linear.removeFirst(header: &header, storage: storage)
     }
 
     /// Removes and returns the last element.
@@ -125,7 +125,7 @@ extension Buffer.Linear.Bounded: Sequence.Drain.`Protocol` where Element: Copyab
         _ body: (consuming Element) -> Void
     ) {
         while !isEmpty {
-            body(consumeFront())
+            body(removeFirst())
         }
     }
 }

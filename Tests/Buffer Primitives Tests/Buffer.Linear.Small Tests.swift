@@ -37,29 +37,29 @@ struct LinearSmallTests {
     }
 
     @Test
-    func `append and consumeFront in inline mode`() {
+    func `append and removeFirst in inline mode`() {
         var buffer = Buffer<Int>.Linear.Small<4>()
         buffer.append(10)
         buffer.append(20)
         buffer.append(30)
 
-        #expect(buffer.consumeFront() == 10)
-        #expect(buffer.consumeFront() == 20)
-        #expect(buffer.consumeFront() == 30)
+        #expect(buffer.removeFirst() == 10)
+        #expect(buffer.removeFirst() == 20)
+        #expect(buffer.removeFirst() == 30)
         #expect(buffer.isEmpty == true)
     }
 
     @Test
-    func `append and consumeFront in heap mode`() {
+    func `append and removeFirst in heap mode`() {
         var buffer = Buffer<Int>.Linear.Small<2>()
         buffer.append(10)
         buffer.append(20)
         buffer.append(30)
         #expect(buffer.isSpilled == true)
 
-        #expect(buffer.consumeFront() == 10)
-        #expect(buffer.consumeFront() == 20)
-        #expect(buffer.consumeFront() == 30)
+        #expect(buffer.removeFirst() == 10)
+        #expect(buffer.removeFirst() == 20)
+        #expect(buffer.removeFirst() == 30)
         #expect(buffer.isEmpty == true)
     }
 
@@ -397,7 +397,7 @@ struct LinearSmallTests {
 
         // Remove some from front
         for _ in 0..<3 {
-            let bufElement = buffer.consumeFront()
+            let bufElement = buffer.removeFirst()
             let modelElement = model.removeFirst()
             #expect(bufElement == modelElement)
         }

@@ -26,7 +26,7 @@ struct LinearStaticTests {
     }
 
     @Test
-    func `consumeFront removes first and shifts`() {
+    func `removeFirst removes first and shifts`() {
         let cap: Index<Int>.Count = 8
         var header = Buffer<Int>.Linear.Header(capacity: cap)
         let storage = Storage<Int>.Heap.create(minimumCapacity: cap)
@@ -35,14 +35,14 @@ struct LinearStaticTests {
         Buffer<Int>.Linear.append(20, header: &header, storage: storage)
         Buffer<Int>.Linear.append(30, header: &header, storage: storage)
 
-        let first = Buffer<Int>.Linear.consumeFront(header: &header, storage: storage)
+        let first = Buffer<Int>.Linear.removeFirst(header: &header, storage: storage)
         #expect(first == 10)
         #expect(header.count == 2)
 
-        let second = Buffer<Int>.Linear.consumeFront(header: &header, storage: storage)
+        let second = Buffer<Int>.Linear.removeFirst(header: &header, storage: storage)
         #expect(second == 20)
 
-        let third = Buffer<Int>.Linear.consumeFront(header: &header, storage: storage)
+        let third = Buffer<Int>.Linear.removeFirst(header: &header, storage: storage)
         #expect(third == 30)
 
         #expect(header.isEmpty)

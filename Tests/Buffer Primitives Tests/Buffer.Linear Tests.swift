@@ -6,15 +6,15 @@ import Buffer_Primitives_Test_Support
 struct LinearGrowableTests {
 
     @Test
-    func `append and consumeFront`() {
+    func `append and removeFirst`() {
         var buffer = Buffer<Int>.Linear(minimumCapacity: 4)
         buffer.append(10)
         buffer.append(20)
         buffer.append(30)
 
-        #expect(buffer.consumeFront() == 10)
-        #expect(buffer.consumeFront() == 20)
-        #expect(buffer.consumeFront() == 30)
+        #expect(buffer.removeFirst() == 10)
+        #expect(buffer.removeFirst() == 20)
+        #expect(buffer.removeFirst() == 30)
         #expect(buffer.isEmpty)
     }
 
@@ -48,7 +48,7 @@ struct LinearGrowableTests {
         // Verify elements survived growth
         i = 0
         while i < needed {
-            #expect(buffer.consumeFront() == i * 10)
+            #expect(buffer.removeFirst() == i * 10)
             i += 1
         }
     }
@@ -196,11 +196,11 @@ struct LinearCoWTests {
     }
 
     @Test
-    func `consumeFront on copy does not affect original`() {
+    func `removeFirst on copy does not affect original`() {
         var original: Buffer<Int>.Linear = [1, 2, 3]
         var copy = original
 
-        let consumed = copy.consumeFront()
+        let consumed = copy.removeFirst()
 
         #expect(consumed == 1)
         #expect(copy.count == 2)

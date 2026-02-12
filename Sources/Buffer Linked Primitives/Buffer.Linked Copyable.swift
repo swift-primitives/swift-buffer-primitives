@@ -17,12 +17,17 @@ extension Buffer.Linked where Element: Copyable {
     /// Ensures the storage is uniquely referenced, copying if needed.
     ///
     /// Call this before any mutation to preserve value semantics.
+    /// Returns `true` if a copy was made; `false` if already unique.
     @inlinable
-    public mutating func makeUnique() {
+    @discardableResult
+    public mutating func ensureUnique() -> Bool {
         if !isKnownUniquelyReferenced(&storage) {
             storage = storage.copy()
+            return true
         }
+        return false
     }
+
 }
 
 // MARK: - Convenience Accessors
@@ -51,9 +56,9 @@ extension Buffer.Linked where Element: Copyable {
     }
 }
 
-// MARK: - Sequence
+// MARK: - Sequence.Protocol
 
-extension Buffer.Linked: Swift.Sequence where Element: Copyable {
+extension Buffer.Linked: Sequence.`Protocol` where Element: Copyable {
     /// An iterator over the elements of a linked list buffer.
     public struct Iterator: IteratorProtocol {
         @usableFromInline
@@ -91,6 +96,28 @@ extension Buffer.Linked: Swift.Sequence where Element: Copyable {
         Iterator(storage: storage, head: header.head, sentinel: header.sentinel)
     }
 }
+
+// MARK: - Swift.Sequence
+
+extension Buffer.Linked: Swift.Sequence where Element: Copyable {
+    @inlinable
+    public var underestimatedCount: Int { Int(bitPattern: header.count) }
+}
+
+// MARK: - Sequence.Drain.Protocol
+
+extension Buffer.Linked: Sequence.Drain.`Protocol` where Element: Copyable {
+    @inlinable
+    public mutating func drain(_ body: (consuming Element) -> Void) {
+        while let element = removeFront() {
+            body(element)
+        }
+    }
+}
+
+// MARK: - Sequence.Clearable
+
+extension Buffer.Linked: Sequence.Clearable where Element: Copyable {}
 
 // MARK: - Equatable
 

@@ -2,7 +2,7 @@ public import Buffer_Primitives_Core
 
 // MARK: - Extensions for Arena.Small (declared in Core)
 
-extension Buffer.Arena.Small {
+extension Buffer.Arena.Small where Element: ~Copyable {
 
     // MARK: - Init
 
@@ -14,30 +14,6 @@ extension Buffer.Arena.Small {
             _heapBuffer: nil
         )
     }
-
-    // MARK: - Properties
-
-    /// The number of currently occupied slots.
-    @inlinable
-    public var occupied: Index<Element>.Count {
-        if _heapBuffer != nil {
-            return _heapBuffer!.occupied
-        }
-        return _inlineBuffer.occupied
-    }
-
-    /// Whether no slots are occupied.
-    @inlinable
-    public var isEmpty: Bool {
-        if _heapBuffer != nil {
-            return _heapBuffer!.isEmpty
-        }
-        return _inlineBuffer.isEmpty
-    }
-
-    /// Whether the buffer has spilled to heap storage.
-    @inlinable
-    public var isSpilled: Bool { _heapBuffer != nil }
 
     // MARK: - Insert
 
@@ -204,7 +180,7 @@ extension Buffer.Arena.Small {
     mutating func _spillToHeap() {
         let growCapCount = Index<Element>.Count(Cardinal(UInt(inlineCapacity * 2)))
         var newArena = Buffer<Element>.Arena(minimumCapacity: growCapCount)
-        let newMeta = unsafe newArena._arenaStorage.metaBase
+        let newMeta = unsafe newArena.storage.metaBase
         let inlineMeta = unsafe _inlineBuffer._metaPointer()
         let hw = Int(bitPattern: _inlineBuffer.header.highWater)
 
@@ -216,7 +192,7 @@ extension Buffer.Arena.Small {
             if unsafe inlineMeta[i].isOccupied {
                 let slot = Index<Element>(Ordinal(UInt(i)))
                 let element = unsafe _inlineBuffer._elementPointer(at: slot).move()
-                unsafe newArena._arenaStorage.elementPointer(at: slot)
+                unsafe newArena.storage.elementPointer(at: slot)
                     .initialize(to: element)
             }
         }
@@ -225,13 +201,13 @@ extension Buffer.Arena.Small {
         newArena.header.occupied = _inlineBuffer.header.occupied
         newArena.header.highWater = _inlineBuffer.header.highWater
         newArena.header.freeHead = _inlineBuffer.header.freeHead
-        newArena._arenaStorage.highWater = _inlineBuffer.header.highWater
+        newArena.storage.highWater = _inlineBuffer.header.highWater
 
         // Reset inline header so inline deinit is a no-op
         _inlineBuffer.header.highWater = .zero
         _inlineBuffer.header.occupied = .zero
         _inlineBuffer.header.freeHead = .max
 
-        _heapBuffer = newArena
+        _heapBuffer = .some(consume newArena)
     }
 }

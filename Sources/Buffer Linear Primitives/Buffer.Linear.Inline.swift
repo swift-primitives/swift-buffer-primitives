@@ -42,8 +42,8 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
     ///
     /// - Precondition: The buffer is not empty.
     @inlinable
-    public mutating func consumeFront() -> Element {
-        Buffer.Linear.consumeFront(header: &header, storage: &storage)
+    public mutating func removeFirst() -> Element {
+        Buffer.Linear.removeFirst(header: &header, storage: &storage)
     }
 
     /// Removes and returns the last element.
@@ -119,7 +119,7 @@ extension Buffer.Linear.Inline: Sequence.Drain.`Protocol` where Element: Copyabl
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         while !isEmpty {
-            body(consumeFront())
+            body(removeFirst())
         }
     }
 }

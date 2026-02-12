@@ -43,11 +43,12 @@ extension Buffer.Linked.Small where Element: Copyable {
     /// Ensures the heap storage is uniquely referenced, copying if needed.
     ///
     /// Only relevant in heap mode. In inline mode, the buffer is always unique
-    /// (value-type storage).
+    /// (value-type storage). Returns `true` if a copy was made; `false` if
+    /// already unique or still inline.
     @inlinable
-    public mutating func makeUnique() {
-        if _heapBuffer != nil {
-            _heapBuffer!.makeUnique()
-        }
+    @discardableResult
+    public mutating func ensureUnique() -> Bool {
+        guard _heapBuffer != nil else { return false }
+        return _heapBuffer!.ensureUnique()
     }
 }

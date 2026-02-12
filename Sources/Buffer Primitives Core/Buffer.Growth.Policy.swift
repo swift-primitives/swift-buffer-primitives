@@ -1,6 +1,6 @@
 public import Memory_Primitives
 
-extension Buffer.Growth {
+extension Buffer.Growth where Element: ~Copyable {
     /// Determines how a buffer's capacity grows when more space is needed.
     public struct Policy: Sendable {
         @usableFromInline
@@ -21,7 +21,7 @@ extension Buffer.Growth {
     }
 }
 
-extension Buffer.Growth.Policy {
+extension Buffer.Growth.Policy where Element: ~Copyable {
     /// Doubles the current capacity (minimum 1).
     @inlinable
     public static var doubling: Self {

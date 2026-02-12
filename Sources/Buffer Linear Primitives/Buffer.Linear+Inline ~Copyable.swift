@@ -19,13 +19,13 @@ extension Buffer.Linear where Element: ~Copyable {
         header.count = header.count.add.saturating(.one)
     }
 
-    // MARK: Consume Front (Inline)
+    // MARK: Remove First (Inline)
 
     /// Removes and returns element at slot 0, shifting remaining elements left.
     ///
     /// - Precondition: `header.count > 0` (not empty).
     @inlinable
-    public static func consumeFront<let capacity: Int>(
+    public static func removeFirst<let capacity: Int>(
         header: inout Header,
         storage: inout Storage<Element>.Inline<capacity>
     ) -> Element {

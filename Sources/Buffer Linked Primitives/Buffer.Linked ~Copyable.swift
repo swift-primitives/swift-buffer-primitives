@@ -11,6 +11,18 @@
 
 public import Buffer_Primitives_Core
 
+// MARK: - Initialization
+
+extension Buffer.Linked where Element: ~Copyable {
+    /// Creates an empty linked list with the specified minimum capacity.
+    ///
+    /// - Parameter minimumCapacity: Minimum number of nodes the pool can hold.
+    @inlinable
+    public init(minimumCapacity: Index<Node>.Count) {
+        self = try! Self.create(capacity: minimumCapacity)
+    }
+}
+
 // MARK: - Factory
 
 extension Buffer.Linked where Element: ~Copyable {
@@ -72,7 +84,7 @@ extension Buffer.Linked where Element: ~Copyable {
     /// Inserts an element at the front of the list.
     ///
     /// - Parameter element: The element to insert.
-    /// - Throws: `Error.capacityExhausted` if the pool is full.
+    /// - Throws: `Error.capacityExceeded` if the pool is full.
     /// - Complexity: O(1)
     @inlinable
     public mutating func insertFront(_ element: consuming Element) throws(Error) {
@@ -80,7 +92,7 @@ extension Buffer.Linked where Element: ~Copyable {
         do {
             slot = try storage.allocate()
         } catch {
-            throw .capacityExhausted
+            throw .capacityExceeded
         }
 
         let sentinel = header.sentinel
@@ -108,7 +120,7 @@ extension Buffer.Linked where Element: ~Copyable {
     /// Inserts an element at the back of the list.
     ///
     /// - Parameter element: The element to insert.
-    /// - Throws: `Error.capacityExhausted` if the pool is full.
+    /// - Throws: `Error.capacityExceeded` if the pool is full.
     /// - Complexity: O(1)
     @inlinable
     public mutating func insertBack(_ element: consuming Element) throws(Error) {
@@ -116,7 +128,7 @@ extension Buffer.Linked where Element: ~Copyable {
         do {
             slot = try storage.allocate()
         } catch {
-            throw .capacityExhausted
+            throw .capacityExceeded
         }
 
         let sentinel = header.sentinel
@@ -242,7 +254,7 @@ extension Buffer.Linked where Element: ~Copyable {
     /// and updates the header. The old pool deinits cleanly (all slots moved + deallocated).
     ///
     /// - Parameter minimumCapacity: The minimum number of nodes to support.
-    /// - Throws: `Error.capacityExhausted` if pool creation fails.
+    /// - Throws: `Error.capacityExceeded` if pool creation fails.
     /// - Complexity: O(n) where n is the number of elements.
     @inlinable
     public mutating func ensureCapacity(_ minimumCapacity: Index<Node>.Count) throws(Error) {
@@ -257,7 +269,7 @@ extension Buffer.Linked where Element: ~Copyable {
         do {
             newPool = try Storage<Node>.Pool(capacity: newCapacity)
         } catch {
-            throw .capacityExhausted
+            throw .capacityExceeded
         }
 
         let oldSentinel = header.sentinel
@@ -424,5 +436,20 @@ extension Buffer.Linked where Element: ~Copyable {
         header.head = sentinel
         header.tail = sentinel
         header.count = .zero
+    }
+}
+
+// MARK: - Property.View (.drain)
+
+extension Buffer.Linked where Element: ~Copyable {
+    @inlinable
+    public var drain: Property<Sequence.Drain, Self>.View {
+        mutating _read {
+            yield unsafe Property<Sequence.Drain, Self>.View(&self)
+        }
+        mutating _modify {
+            var view = unsafe Property<Sequence.Drain, Self>.View(&self)
+            yield &view
+        }
     }
 }

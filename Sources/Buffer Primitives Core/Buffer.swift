@@ -663,8 +663,8 @@ public enum Buffer<Element: ~Copyable> {
 
         /// Errors that can occur during linked list operations.
         public enum Error: Swift.Error, Sendable, Equatable {
-            /// The pool is exhausted — no free nodes remain.
-            case capacityExhausted
+            /// The number of elements exceeds the buffer's capacity.
+            case capacityExceeded
         }
 
         // MARK: - Inline (Fixed-Capacity, Stack-Allocated)
@@ -722,8 +722,8 @@ public enum Buffer<Element: ~Copyable> {
 
             /// Errors that can occur during inline linked buffer operations.
             public enum Error: Swift.Error, Sendable, Equatable {
-                /// The buffer is full — no free nodes remain.
-                case capacityExhausted
+                /// The number of elements exceeds the buffer's capacity.
+                case capacityExceeded
             }
         }
 
@@ -818,22 +818,22 @@ public enum Buffer<Element: ~Copyable> {
         package var header: Header
 
         @usableFromInline
-        package var _arenaStorage: Storage<Element>.Arena
+        package var storage: Storage<Element>.Arena
 
         @inlinable
         package init(
             header: Header,
-            _arenaStorage: Storage<Element>.Arena
+            storage: Storage<Element>.Arena
         ) {
             self.header = header
-            self._arenaStorage = _arenaStorage
+            self.storage = storage
         }
 
         // MARK: - Bounded (Fixed-Capacity, Heap-Allocated)
 
         /// A fixed-capacity arena buffer backed by heap storage.
         ///
-        /// Allocation throws `.full` when capacity is exhausted.
+        /// Allocation throws `.capacityExceeded` when capacity is exhausted.
         /// Otherwise identical to `Arena` — same token scheme, same
         /// dual-access pattern, same deinit.
         public struct Bounded: ~Copyable {
@@ -841,23 +841,23 @@ public enum Buffer<Element: ~Copyable> {
             package var header: Header
 
             @usableFromInline
-            package var _arenaStorage: Storage<Element>.Arena
+            package var storage: Storage<Element>.Arena
 
             @inlinable
             package init(
                 header: Header,
-                _arenaStorage: Storage<Element>.Arena
+                storage: Storage<Element>.Arena
             ) {
                 self.header = header
-                self._arenaStorage = _arenaStorage
+                self.storage = storage
             }
 
             /// Errors that can occur during bounded arena buffer operations.
             public enum Error: Swift.Error, Sendable, Equatable {
                 /// A `Position` handle refers to a freed or never-allocated slot.
                 case invalidPosition
-                /// The arena is full — no free slots remain and capacity is fixed.
-                case full
+                /// The number of elements exceeds the buffer's capacity.
+                case capacityExceeded
             }
         }
 
@@ -867,7 +867,7 @@ public enum Buffer<Element: ~Copyable> {
         ///
         /// Provides the same token-based occupancy tracking and LIFO free-list
         /// as heap-backed `Arena` and `Bounded`, but stored entirely inline.
-        /// Allocation throws `.full` when capacity is exhausted.
+        /// Allocation throws `.capacityExceeded` when capacity is exhausted.
         ///
         /// Uses `InlineArray` for per-slot `Meta` (generation tokens + free-list
         /// links) and `@_rawLayout` for element storage.
@@ -902,8 +902,8 @@ public enum Buffer<Element: ~Copyable> {
             public enum Error: Swift.Error, Sendable, Equatable {
                 /// A `Position` handle refers to a freed or never-allocated slot.
                 case invalidPosition
-                /// The arena is full — no free slots remain and capacity is fixed.
-                case full
+                /// The number of elements exceeds the buffer's capacity.
+                case capacityExceeded
             }
 
             deinit {
@@ -950,6 +950,45 @@ public enum Buffer<Element: ~Copyable> {
             ) {
                 self._inlineBuffer = _inlineBuffer
                 self._heapBuffer = _heapBuffer
+            }
+
+            /// Whether the buffer has spilled to heap storage.
+            @inlinable
+            public var isSpilled: Bool {
+                mutating get { _heapBuffer != nil }
+            }
+
+            /// The number of currently occupied slots.
+            @inlinable
+            public var occupied: Index<Element>.Count {
+                mutating get {
+                    if _heapBuffer != nil {
+                        return _heapBuffer!.header.occupied
+                    }
+                    return _inlineBuffer.header.occupied
+                }
+            }
+
+            /// Whether no slots are occupied.
+            @inlinable
+            public var isEmpty: Bool {
+                mutating get {
+                    if _heapBuffer != nil {
+                        return _heapBuffer!.header.occupied == .zero
+                    }
+                    return _inlineBuffer.header.occupied == .zero
+                }
+            }
+
+            /// Whether all inline slots are occupied (only meaningful pre-spill).
+            @inlinable
+            public var isFull: Bool {
+                mutating get {
+                    if _heapBuffer != nil {
+                        return false
+                    }
+                    return _inlineBuffer.header.isFull
+                }
             }
         }
 

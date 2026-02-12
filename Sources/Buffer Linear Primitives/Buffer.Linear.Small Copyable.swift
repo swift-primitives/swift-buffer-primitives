@@ -73,11 +73,11 @@ extension Buffer.Linear.Small where Element: Copyable {
     ///
     /// - Precondition: The buffer is not empty.
     @inlinable
-    public mutating func consumeFront() -> Element {
+    public mutating func removeFirst() -> Element {
         if _heapBuffer != nil {
-            return _heapBuffer!.consumeFront()
+            return _heapBuffer!.removeFirst()
         } else {
-            return _inlineBuffer.consumeFront()
+            return _inlineBuffer.removeFirst()
         }
     }
 

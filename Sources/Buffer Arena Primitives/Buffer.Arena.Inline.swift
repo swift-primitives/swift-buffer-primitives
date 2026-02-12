@@ -2,7 +2,7 @@ public import Buffer_Primitives_Core
 
 // MARK: - Extensions for Arena.Inline (declared in Core)
 
-extension Buffer.Arena.Inline {
+extension Buffer.Arena.Inline where Element: ~Copyable {
 
     /// Fully qualified Meta for cross-module use.
     @usableFromInline
@@ -65,12 +65,12 @@ extension Buffer.Arena.Inline {
 
     /// Allocates a slot, initializes the element, and returns a Position handle.
     ///
-    /// - Throws: `.full` if the arena has no available slots.
+    /// - Throws: `.capacityExceeded` if the arena has no available slots.
     @inlinable
     public mutating func insert(
         _ element: consuming Element
     ) throws(Error) -> Buffer<Element>.Arena.Position {
-        guard !header.isFull else { throw .full }
+        guard !header.isFull else { throw .capacityExceeded }
         let meta = unsafe _metaPointer()
         let position = unsafe Buffer<Element>.Arena.allocate(header: &header, meta: meta)
         unsafe _elementPointer(at: position.slot).initialize(to: consume element)
@@ -79,11 +79,11 @@ extension Buffer.Arena.Inline {
 
     /// Allocates a slot without initializing the element.
     ///
-    /// - Throws: `.full` if the arena has no available slots.
+    /// - Throws: `.capacityExceeded` if the arena has no available slots.
     /// Caller MUST initialize the element at `position.slot` before use.
     @inlinable
     public mutating func allocate() throws(Error) -> Buffer<Element>.Arena.Position {
-        guard !header.isFull else { throw .full }
+        guard !header.isFull else { throw .capacityExceeded }
         let meta = unsafe _metaPointer()
         let position = unsafe Buffer<Element>.Arena.allocate(header: &header, meta: meta)
         return position

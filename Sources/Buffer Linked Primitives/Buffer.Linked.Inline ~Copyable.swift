@@ -54,7 +54,7 @@ extension Buffer.Linked.Inline where Element: ~Copyable {
     /// Allocates a slot: prefer free-list, then virgin cursor.
     ///
     /// - Returns: Index of the allocated slot.
-    /// - Throws: `Error.capacityExhausted` if no free or virgin slots remain.
+    /// - Throws: `Error.capacityExceeded` if no free or virgin slots remain.
     /// - Complexity: O(1)
     @usableFromInline
     mutating func _allocateSlot() throws(Error) -> Index<Buffer<Element>.Linked<N>.Node> {
@@ -71,7 +71,7 @@ extension Buffer.Linked.Inline where Element: ~Copyable {
 
         // Try virgin cursor
         guard nextUnused < sentinel else {
-            throw .capacityExhausted
+            throw .capacityExceeded
         }
 
         let slot = nextUnused
@@ -103,7 +103,7 @@ extension Buffer.Linked.Inline where Element: ~Copyable {
     /// Inserts an element at the front of the list.
     ///
     /// - Parameter element: The element to insert.
-    /// - Throws: `Error.capacityExhausted` if the buffer is full.
+    /// - Throws: `Error.capacityExceeded` if the buffer is full.
     /// - Complexity: O(1)
     @inlinable
     public mutating func insertFront(_ element: consuming Element) throws(Error) {
@@ -136,7 +136,7 @@ extension Buffer.Linked.Inline where Element: ~Copyable {
     /// Inserts an element at the back of the list.
     ///
     /// - Parameter element: The element to insert.
-    /// - Throws: `Error.capacityExhausted` if the buffer is full.
+    /// - Throws: `Error.capacityExceeded` if the buffer is full.
     /// - Complexity: O(1)
     @inlinable
     public mutating func insertBack(_ element: consuming Element) throws(Error) {
