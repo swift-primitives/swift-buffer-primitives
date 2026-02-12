@@ -72,7 +72,7 @@ extension Buffer.Linear where Element: ~Copyable {
             unsafe storage.pointer(at: index)
                 .moveInitialize(
                     from: storage.pointer(at: nextSlot),
-                    count: Int(bitPattern: followingCount)
+                    count: followingCount
                 )
         }
         header.count = header.count.subtract.saturating(.one)

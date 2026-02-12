@@ -18,7 +18,7 @@ extension Buffer.Slots where Element: Copyable {
         // Bulk-copy metadata (BitwiseCopyable — always fully initialized).
         unsafe newStorage.withMutablePointer(newStorage.field.lane) { dst in
             unsafe storage.withPointer(storage.field.lane) { src in
-                unsafe dst.initialize(from: src, count: Int(bitPattern: cap))
+                unsafe dst.initialize(from: src, count: cap)
             }
         }
 
@@ -70,19 +70,17 @@ extension Buffer.Slots where Element: BitwiseCopyable {
     package func copy() -> Self {
         let cap = header.capacity
         let newStorage = Storage<Element>.Split<Metadata>.create(capacity: cap)
-        let capInt = Int(bitPattern: cap)
-
         // Bulk-copy metadata.
         unsafe newStorage.withMutablePointer(newStorage.field.lane) { dst in
             unsafe storage.withPointer(storage.field.lane) { src in
-                unsafe dst.initialize(from: src, count: capInt)
+                unsafe dst.initialize(from: src, count: cap)
             }
         }
 
         // Bulk-copy elements (BitwiseCopyable: all bit patterns valid).
         let srcPtr: UnsafePointer<Element> = unsafe storage.pointer(storage.field.element, at: .zero)
         let dstPtr = unsafe newStorage.pointer(newStorage.field.element, at: .zero)
-        unsafe dstPtr.initialize(from: srcPtr, count: capInt)
+        unsafe dstPtr.initialize(from: srcPtr, count: cap)
 
         return Self(header: header, storage: newStorage)
     }
