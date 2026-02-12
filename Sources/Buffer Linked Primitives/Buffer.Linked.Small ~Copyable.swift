@@ -31,6 +31,15 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     @inlinable
     public var isSpilled: Bool { _heapBuffer != nil }
 
+    /// Projected access to the heap buffer.
+    ///
+    /// - Precondition: `isSpilled` — callers MUST guard before access.
+    @inlinable
+    package var heap: Buffer<Element>.Linked<N> {
+        _read { yield _heapBuffer! }
+        _modify { yield &_heapBuffer! }
+    }
+
     /// The number of elements in the buffer.
     @inlinable
     public var count: Index<Element>.Count {
@@ -75,13 +84,13 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     @inlinable
     public mutating func insertFront(_ element: consuming Element) {
         if _heapBuffer != nil {
-            try! _heapBuffer!.reserveAdditionalCapacity(.one)
-            try! _heapBuffer!.insertFront(element)
+            try! heap.reserveAdditionalCapacity(.one)
+            try! heap.insertFront(element)
         } else if !_inlineBuffer.isFull {
             try! _inlineBuffer.insertFront(element)
         } else {
             _spillToHeapMoving()
-            try! _heapBuffer!.insertFront(element)
+            try! heap.insertFront(element)
         }
     }
 
@@ -94,13 +103,13 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     @inlinable
     public mutating func insertBack(_ element: consuming Element) {
         if _heapBuffer != nil {
-            try! _heapBuffer!.reserveAdditionalCapacity(.one)
-            try! _heapBuffer!.insertBack(element)
+            try! heap.reserveAdditionalCapacity(.one)
+            try! heap.insertBack(element)
         } else if !_inlineBuffer.isFull {
             try! _inlineBuffer.insertBack(element)
         } else {
             _spillToHeapMoving()
-            try! _heapBuffer!.insertBack(element)
+            try! heap.insertBack(element)
         }
     }
 }
@@ -115,7 +124,7 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     @inlinable
     public mutating func removeFront() -> Element? {
         if _heapBuffer != nil {
-            return _heapBuffer!.removeFront()
+            return heap.removeFront()
         } else {
             return _inlineBuffer.removeFront()
         }
@@ -128,7 +137,7 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     @inlinable
     public mutating func removeBack() -> Element? {
         if _heapBuffer != nil {
-            return _heapBuffer!.removeBack()
+            return heap.removeBack()
         } else {
             return _inlineBuffer.removeBack()
         }
@@ -144,7 +153,7 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     @inlinable
     public mutating func removeAll() {
         if _heapBuffer != nil {
-            _heapBuffer!.removeAll()
+            heap.removeAll()
             _heapBuffer = nil
             _inlineBuffer.removeAll()
         } else {
@@ -160,7 +169,7 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     public mutating func removeAll(keepingCapacity: Bool) {
         if keepingCapacity {
             if _heapBuffer != nil {
-                _heapBuffer!.removeAll()
+                heap.removeAll()
             } else {
                 _inlineBuffer.removeAll()
             }

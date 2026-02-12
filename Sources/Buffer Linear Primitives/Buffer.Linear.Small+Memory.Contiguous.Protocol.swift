@@ -26,7 +26,7 @@ extension Buffer.Linear.Small where Element: Copyable {
         _ body: (UnsafeMutableBufferPointer<Element>) throws(E) -> R
     ) throws(E) -> R {
         if _heapBuffer != nil {
-            return try unsafe _heapBuffer!.withUnsafeMutableBufferPointer(body)
+            return try unsafe heap.withUnsafeMutableBufferPointer(body)
         } else {
             return try unsafe _inlineBuffer.withUnsafeMutableBufferPointer(body)
         }

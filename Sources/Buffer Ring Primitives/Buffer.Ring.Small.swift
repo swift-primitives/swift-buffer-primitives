@@ -15,6 +15,15 @@ extension Buffer.Ring.Small where Element: ~Copyable {
     @inlinable
     public var isSpilled: Bool { _heapBuffer != nil }
 
+    /// Projected access to the heap buffer.
+    ///
+    /// - Precondition: `isSpilled` — callers MUST guard before access.
+    @inlinable
+    package var heap: Buffer<Element>.Ring {
+        _read { yield _heapBuffer! }
+        _modify { yield &_heapBuffer! }
+    }
+
     /// The number of elements in the buffer.
     @inlinable
     public var count: Index<Element>.Count {
@@ -54,12 +63,12 @@ extension Buffer.Ring.Small where Element: ~Copyable {
     @inlinable
     public mutating func pushBack(_ element: consuming Element) {
         if _heapBuffer != nil {
-            _heapBuffer!.pushBack(consume element)
+            heap.pushBack(consume element)
         } else if !_inlineBuffer.isFull {
             _ = _inlineBuffer.pushBack(consume element)
         } else {
             _spillToHeapMoving()
-            _heapBuffer!.pushBack(consume element)
+            heap.pushBack(consume element)
         }
     }
 
@@ -69,7 +78,7 @@ extension Buffer.Ring.Small where Element: ~Copyable {
     @inlinable
     public mutating func popFront() -> Element {
         if _heapBuffer != nil {
-            return _heapBuffer!.popFront()
+            return heap.popFront()
         } else {
             return _inlineBuffer.popFront()
         }
@@ -81,12 +90,12 @@ extension Buffer.Ring.Small where Element: ~Copyable {
     @inlinable
     public mutating func pushFront(_ element: consuming Element) {
         if _heapBuffer != nil {
-            _heapBuffer!.pushFront(consume element)
+            heap.pushFront(consume element)
         } else if !_inlineBuffer.isFull {
             _ = _inlineBuffer.pushFront(consume element)
         } else {
             _spillToHeapMoving()
-            _heapBuffer!.pushFront(consume element)
+            heap.pushFront(consume element)
         }
     }
 
@@ -96,7 +105,7 @@ extension Buffer.Ring.Small where Element: ~Copyable {
     @inlinable
     public mutating func popBack() -> Element {
         if _heapBuffer != nil {
-            return _heapBuffer!.popBack()
+            return heap.popBack()
         } else {
             return _inlineBuffer.popBack()
         }
@@ -108,7 +117,7 @@ extension Buffer.Ring.Small where Element: ~Copyable {
     @inlinable
     public mutating func removeAll() {
         if _heapBuffer != nil {
-            _heapBuffer!.removeAll()
+            heap.removeAll()
             _heapBuffer = nil
             _inlineBuffer.removeAll()
         } else {
@@ -124,7 +133,7 @@ extension Buffer.Ring.Small where Element: ~Copyable {
     public mutating func removeAll(keepingCapacity: Bool) {
         if keepingCapacity {
             if _heapBuffer != nil {
-                _heapBuffer!.removeAll()
+                heap.removeAll()
             } else {
                 _inlineBuffer.removeAll()
             }

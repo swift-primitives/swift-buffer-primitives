@@ -11,3 +11,6 @@
 | [inline-small-linked-buffer-design](inline-small-linked-buffer-design.md) | Tier 2: Inline and Small variants for Buffer.Linked using Storage.Inline | 2026-02-11 | DECISION |
 | [arena-buffer-design](arena-buffer-design.md) | Tier 2: Arena buffer discipline with generation-based stale-reference detection | 2026-02-11 | IN_PROGRESS |
 | [slab-first-principles](slab-first-principles.md) | Tier 2: First-principles analysis of "slab" in CS literature vs Buffer.Slab implementation | 2026-02-11 | DECISION |
+| [buffer-ring-consumer-api-boundary](buffer-ring-consumer-api-boundary.md) | Tier 1: Consumer API boundary design for Buffer.Ring | 2026-02-10 | IN_PROGRESS |
+| [buffer-variant-parity-analysis](buffer-variant-parity-analysis.md) | Tier 2: Consistency audit across six buffer disciplines | 2026-02-11 | IN_PROGRESS |
+| [linked-cow-safe-overloads](linked-cow-safe-overloads.md) | Tier 1: Add CoW-safe Copyable overloads to Buffer.Linked, consistent with Ring/Linear | 2026-02-12 | DECISION |

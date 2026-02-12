@@ -32,7 +32,7 @@ extension Buffer.Linear.Small where Element: Copyable {
     @discardableResult
     public mutating func ensureUnique() -> Bool {
         if _heapBuffer != nil {
-            return _heapBuffer!.ensureUnique()
+            return heap.ensureUnique()
         }
         return false
     }
@@ -43,7 +43,7 @@ extension Buffer.Linear.Small where Element: Copyable {
     @inlinable
     public mutating func reserveCapacity(_ minimumCapacity: Index<Element>.Count) {
         if _heapBuffer != nil {
-            _heapBuffer!.reserveCapacity(minimumCapacity)
+            heap.reserveCapacity(minimumCapacity)
         } else if minimumCapacity > Index<Element>.Count(UInt(inlineCapacity)) {
             _spillToHeap(minimumCapacity: minimumCapacity)
         }
@@ -60,12 +60,12 @@ extension Buffer.Linear.Small where Element: Copyable {
     @inlinable
     public mutating func append(_ element: consuming Element) {
         if _heapBuffer != nil {
-            _heapBuffer!.append(consume element)
+            heap.append(consume element)
         } else if !_inlineBuffer.isFull {
             _ = _inlineBuffer.append(consume element)
         } else {
             _spillToHeap()
-            _heapBuffer!.append(consume element)
+            heap.append(consume element)
         }
     }
 
@@ -75,7 +75,7 @@ extension Buffer.Linear.Small where Element: Copyable {
     @inlinable
     public mutating func removeFirst() -> Element {
         if _heapBuffer != nil {
-            return _heapBuffer!.removeFirst()
+            return heap.removeFirst()
         } else {
             return _inlineBuffer.removeFirst()
         }
@@ -87,7 +87,7 @@ extension Buffer.Linear.Small where Element: Copyable {
     @inlinable
     public mutating func removeLast() -> Element {
         if _heapBuffer != nil {
-            return _heapBuffer!.removeLast()
+            return heap.removeLast()
         } else {
             return _inlineBuffer.removeLast()
         }
@@ -99,7 +99,7 @@ extension Buffer.Linear.Small where Element: Copyable {
     @inlinable
     public mutating func remove(at index: Index<Element>) -> Element {
         if _heapBuffer != nil {
-            return _heapBuffer!.remove(at: index)
+            return heap.remove(at: index)
         } else {
             return _inlineBuffer.remove(at: index)
         }
@@ -111,7 +111,7 @@ extension Buffer.Linear.Small where Element: Copyable {
     @inlinable
     public mutating func replace(at index: Index<Element>, with newElement: consuming Element) -> Element {
         if _heapBuffer != nil {
-            return _heapBuffer!.replace(at: index, with: consume newElement)
+            return heap.replace(at: index, with: consume newElement)
         } else {
             return _inlineBuffer.replace(at: index, with: consume newElement)
         }
@@ -123,7 +123,7 @@ extension Buffer.Linear.Small where Element: Copyable {
     @inlinable
     public mutating func removeAll() {
         if _heapBuffer != nil {
-            _heapBuffer!.removeAll()
+            heap.removeAll()
             _heapBuffer = nil
             _inlineBuffer.removeAll()
         } else {
@@ -139,7 +139,7 @@ extension Buffer.Linear.Small where Element: Copyable {
     public mutating func removeAll(keepingCapacity: Bool) {
         if keepingCapacity {
             if _heapBuffer != nil {
-                _heapBuffer!.removeAll()
+                heap.removeAll()
             } else {
                 _inlineBuffer.removeAll()
             }
@@ -167,8 +167,8 @@ extension Buffer.Linear.Small where Element: Copyable {
         }
         _modify {
             if _heapBuffer != nil {
-                _heapBuffer!.ensureUnique()
-                yield &_heapBuffer![index]
+                heap.ensureUnique()
+                yield &heap[index]
             } else {
                 yield &_inlineBuffer[index]
             }

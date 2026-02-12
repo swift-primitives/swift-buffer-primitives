@@ -15,6 +15,15 @@ extension Buffer.Arena.Small where Element: ~Copyable {
         )
     }
 
+    /// Projected access to the heap buffer.
+    ///
+    /// - Precondition: `_heapBuffer != nil` — callers MUST guard before access.
+    @inlinable
+    package var heap: Buffer<Element>.Arena {
+        _read { yield _heapBuffer! }
+        _modify { yield &_heapBuffer! }
+    }
+
     // MARK: - Insert
 
     /// Allocates a slot, initializes the element, and returns a Position handle.
@@ -25,11 +34,11 @@ extension Buffer.Arena.Small where Element: ~Copyable {
         _ element: consuming Element
     ) -> Buffer<Element>.Arena.Position {
         if _heapBuffer != nil {
-            return _heapBuffer!.insert(consume element)
+            return heap.insert(consume element)
         }
         if _inlineBuffer.isFull {
             _spillToHeap()
-            return _heapBuffer!.insert(consume element)
+            return heap.insert(consume element)
         }
         return try! _inlineBuffer.insert(consume element)
     }
@@ -41,11 +50,11 @@ extension Buffer.Arena.Small where Element: ~Copyable {
     @inlinable
     public mutating func allocate() -> Buffer<Element>.Arena.Position {
         if _heapBuffer != nil {
-            return _heapBuffer!.allocate()
+            return heap.allocate()
         }
         if _inlineBuffer.isFull {
             _spillToHeap()
-            return _heapBuffer!.allocate()
+            return heap.allocate()
         }
         return try! _inlineBuffer.allocate()
     }
@@ -60,7 +69,7 @@ extension Buffer.Arena.Small where Element: ~Copyable {
         at position: Buffer<Element>.Arena.Position
     ) throws(Buffer<Element>.Arena.Error) -> Element {
         if _heapBuffer != nil {
-            return try _heapBuffer!.remove(at: position)
+            return try heap.remove(at: position)
         }
         let inlineMeta = unsafe _inlineBuffer._metaPointer()
         guard unsafe Buffer<Element>.Arena.isValid(
@@ -81,7 +90,7 @@ extension Buffer.Arena.Small where Element: ~Copyable {
     @inlinable
     public mutating func remove(at slot: Index<Element>) -> Element {
         if _heapBuffer != nil {
-            return _heapBuffer!.remove(at: slot)
+            return heap.remove(at: slot)
         }
         return _inlineBuffer.remove(at: slot)
     }
@@ -92,7 +101,7 @@ extension Buffer.Arena.Small where Element: ~Copyable {
     @inlinable
     public mutating func free(at slot: Index<Element>) {
         if _heapBuffer != nil {
-            _heapBuffer!.free(at: slot)
+            heap.free(at: slot)
             return
         }
         _inlineBuffer.free(at: slot)
@@ -102,7 +111,7 @@ extension Buffer.Arena.Small where Element: ~Copyable {
     @inlinable
     public mutating func removeAll() {
         if _heapBuffer != nil {
-            _heapBuffer!.removeAll()
+            heap.removeAll()
             return
         }
         _inlineBuffer.removeAll()
@@ -116,7 +125,7 @@ extension Buffer.Arena.Small where Element: ~Copyable {
         _ position: Buffer<Element>.Arena.Position
     ) -> Bool {
         if _heapBuffer != nil {
-            return _heapBuffer!.isValid(position)
+            return heap.isValid(position)
         }
         return _inlineBuffer.isValid(position)
     }
@@ -125,7 +134,7 @@ extension Buffer.Arena.Small where Element: ~Copyable {
     @inlinable
     public func isOccupied(_ slot: Index<Element>) -> Bool {
         if _heapBuffer != nil {
-            return _heapBuffer!.isOccupied(slot)
+            return heap.isOccupied(slot)
         }
         return _inlineBuffer.isOccupied(slot)
     }
@@ -136,7 +145,7 @@ extension Buffer.Arena.Small where Element: ~Copyable {
     @inlinable
     public func token(at slot: Index<Element>) -> UInt32 {
         if _heapBuffer != nil {
-            return _heapBuffer!.token(at: slot)
+            return heap.token(at: slot)
         }
         return _inlineBuffer.token(at: slot)
     }
@@ -149,7 +158,7 @@ extension Buffer.Arena.Small where Element: ~Copyable {
         forOccupied slot: Index<Element>
     ) -> Buffer<Element>.Arena.Position {
         if _heapBuffer != nil {
-            return _heapBuffer!.position(forOccupied: slot)
+            return heap.position(forOccupied: slot)
         }
         return _inlineBuffer.position(forOccupied: slot)
     }
@@ -165,7 +174,7 @@ extension Buffer.Arena.Small where Element: ~Copyable {
         at slot: Index<Element>
     ) -> UnsafeMutablePointer<Element> {
         if _heapBuffer != nil {
-            return unsafe _heapBuffer!.pointer(at: slot)
+            return unsafe heap.pointer(at: slot)
         }
         return unsafe _inlineBuffer.pointer(at: slot)
     }

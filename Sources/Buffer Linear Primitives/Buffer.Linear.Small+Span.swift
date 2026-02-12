@@ -23,16 +23,16 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     /// Mutable span of all buffer elements.
     ///
     /// Constructs the span from raw storage pointers to avoid overlapping
-    /// access violations (accessing `_heapBuffer!.mutableSpan` and `&self`
+    /// access violations (accessing `heap.mutableSpan` and `&self`
     /// simultaneously would overlap on `self`).
     public var mutableSpan: MutableSpan<Element> {
         @_lifetime(&self)
         @inlinable
         mutating get {
             if _heapBuffer != nil {
-                let count = Int(bitPattern: _heapBuffer!.header.count)
+                let count = Int(bitPattern: heap.header.count)
                 let span = unsafe MutableSpan(
-                    _unsafeStart: unsafe _heapBuffer!.storage.pointer(at: .zero),
+                    _unsafeStart: unsafe heap.storage.pointer(at: .zero),
                     count: count
                 )
                 return unsafe _overrideLifetime(span, mutating: &self)
@@ -49,9 +49,9 @@ extension Buffer.Linear.Small where Element: ~Copyable {
         @inlinable
         _modify {
             if _heapBuffer != nil {
-                let count = Int(bitPattern: _heapBuffer!.header.count)
+                let count = Int(bitPattern: heap.header.count)
                 var span = unsafe MutableSpan(
-                    _unsafeStart: unsafe _heapBuffer!.storage.pointer(at: .zero),
+                    _unsafeStart: unsafe heap.storage.pointer(at: .zero),
                     count: count
                 )
                 yield &span

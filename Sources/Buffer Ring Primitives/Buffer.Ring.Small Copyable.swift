@@ -32,7 +32,7 @@ extension Buffer.Ring.Small where Element: Copyable {
     @discardableResult
     public mutating func ensureUnique() -> Bool {
         if _heapBuffer != nil {
-            _heapBuffer!._makeUnique()
+            heap._makeUnique()
             return true
         }
         return false
@@ -44,7 +44,7 @@ extension Buffer.Ring.Small where Element: Copyable {
     @inlinable
     public mutating func reserveCapacity(_ minimumCapacity: Index<Element>.Count) {
         if _heapBuffer != nil {
-            _heapBuffer!.reserveCapacity(minimumCapacity)
+            heap.reserveCapacity(minimumCapacity)
         } else if minimumCapacity > Index<Element>.Count(UInt(inlineCapacity)) {
             _spillToHeap(minimumCapacity: minimumCapacity)
         }
@@ -103,13 +103,13 @@ extension Buffer.Ring.Small where Element: Copyable {
     @inlinable
     public mutating func pushBack(_ element: consuming Element) {
         if _heapBuffer != nil {
-            _heapBuffer!._makeUnique()
-            _heapBuffer!.pushBack(consume element)
+            heap._makeUnique()
+            heap.pushBack(consume element)
         } else if !_inlineBuffer.isFull {
             _ = _inlineBuffer.pushBack(consume element)
         } else {
             _spillToHeap()
-            _heapBuffer!.pushBack(consume element)
+            heap.pushBack(consume element)
         }
     }
 
@@ -119,8 +119,8 @@ extension Buffer.Ring.Small where Element: Copyable {
     @inlinable
     public mutating func popFront() -> Element {
         if _heapBuffer != nil {
-            _heapBuffer!._makeUnique()
-            return _heapBuffer!.popFront()
+            heap._makeUnique()
+            return heap.popFront()
         } else {
             return _inlineBuffer.popFront()
         }
@@ -130,13 +130,13 @@ extension Buffer.Ring.Small where Element: Copyable {
     @inlinable
     public mutating func pushFront(_ element: consuming Element) {
         if _heapBuffer != nil {
-            _heapBuffer!._makeUnique()
-            _heapBuffer!.pushFront(consume element)
+            heap._makeUnique()
+            heap.pushFront(consume element)
         } else if !_inlineBuffer.isFull {
             _ = _inlineBuffer.pushFront(consume element)
         } else {
             _spillToHeap()
-            _heapBuffer!.pushFront(consume element)
+            heap.pushFront(consume element)
         }
     }
 
@@ -146,8 +146,8 @@ extension Buffer.Ring.Small where Element: Copyable {
     @inlinable
     public mutating func popBack() -> Element {
         if _heapBuffer != nil {
-            _heapBuffer!._makeUnique()
-            return _heapBuffer!.popBack()
+            heap._makeUnique()
+            return heap.popBack()
         } else {
             return _inlineBuffer.popBack()
         }
@@ -159,7 +159,7 @@ extension Buffer.Ring.Small where Element: Copyable {
     @inlinable
     public mutating func removeAll() {
         if _heapBuffer != nil {
-            _heapBuffer!.removeAll()
+            heap.removeAll()
             _heapBuffer = nil
             _inlineBuffer.removeAll()
         } else {
@@ -175,8 +175,8 @@ extension Buffer.Ring.Small where Element: Copyable {
     public mutating func removeAll(keepingCapacity: Bool) {
         if keepingCapacity {
             if _heapBuffer != nil {
-                _heapBuffer!._makeUnique()
-                _heapBuffer!.removeAll()
+                heap._makeUnique()
+                heap.removeAll()
             } else {
                 _inlineBuffer.removeAll()
             }
@@ -204,8 +204,8 @@ extension Buffer.Ring.Small where Element: Copyable {
         }
         _modify {
             if _heapBuffer != nil {
-                _heapBuffer!._makeUnique()
-                yield &_heapBuffer![index]
+                heap._makeUnique()
+                yield &heap[index]
             } else {
                 yield &_inlineBuffer[index]
             }

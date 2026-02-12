@@ -13,6 +13,6 @@ extension Buffer.Arena.Small where Element: Copyable {
     @discardableResult
     public mutating func ensureUnique() -> Bool {
         guard _heapBuffer != nil else { return false }  // inline is always unique
-        return _heapBuffer!.ensureUnique()
+        return heap.ensureUnique()
     }
 }

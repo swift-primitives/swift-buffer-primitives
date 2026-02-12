@@ -81,9 +81,9 @@ extension Buffer.Ring.Small where Element: ~Copyable {
     @inlinable
     public mutating func restore(to checkpoint: Checkpoint) {
         if _heapBuffer != nil {
-            _heapBuffer!.header.head = checkpoint.head
-            _heapBuffer!.header.count = checkpoint.count
-            _heapBuffer!.storage.initialization = _heapBuffer!.header.initialization
+            heap.header.head = checkpoint.head
+            heap.header.count = checkpoint.count
+            heap.storage.initialization = heap.header.initialization
         } else {
             _inlineBuffer.header.head = checkpoint.head
             _inlineBuffer.header.count = checkpoint.count

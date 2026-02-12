@@ -14,20 +14,111 @@ public import Buffer_Primitives_Core
 // MARK: - CoW Support
 
 extension Buffer.Linked where Element: Copyable {
+    /// Ensures this buffer has unique storage (copy-on-write).
+    @usableFromInline
+    package mutating func _makeUnique() {
+        if !isKnownUniquelyReferenced(&storage) {
+            storage = storage.copy()
+        }
+    }
+
     /// Ensures the storage is uniquely referenced, copying if needed.
     ///
-    /// Call this before any mutation to preserve value semantics.
     /// Returns `true` if a copy was made; `false` if already unique.
     @inlinable
     @discardableResult
     public mutating func ensureUnique() -> Bool {
         if !isKnownUniquelyReferenced(&storage) {
-            storage = storage.copy()
+            _makeUnique()
             return true
         }
         return false
     }
+}
 
+// MARK: - CoW-Safe Mutations
+
+extension Buffer.Linked where Element: Copyable {
+
+    /// Inserts an element at the front of the list (CoW-safe).
+    ///
+    /// Ensures unique ownership, grows if full, then inserts.
+    ///
+    /// - Parameter element: The element to insert.
+    /// - Complexity: O(1) amortized
+    @inlinable
+    public mutating func insertFront(_ element: consuming Element) {
+        _makeUnique()
+        if isFull { _grow() }
+        try! _insertFront(element)
+    }
+
+    /// Inserts an element at the back of the list (CoW-safe).
+    ///
+    /// Ensures unique ownership, grows if full, then inserts.
+    ///
+    /// - Parameter element: The element to insert.
+    /// - Complexity: O(1) amortized
+    @inlinable
+    public mutating func insertBack(_ element: consuming Element) {
+        _makeUnique()
+        if isFull { _grow() }
+        try! _insertBack(element)
+    }
+
+    /// Removes and returns the element at the front (CoW-safe).
+    ///
+    /// - Returns: The removed element, or `nil` if the list is empty.
+    /// - Complexity: O(1)
+    @inlinable
+    public mutating func removeFront() -> Element? {
+        _makeUnique()
+        return _removeFront()
+    }
+
+    /// Removes and returns the element at the back (CoW-safe).
+    ///
+    /// - Returns: The removed element, or `nil` if the list is empty.
+    /// - Complexity: O(1) for N >= 2 (doubly-linked), O(n) for N == 1 (singly-linked)
+    @inlinable
+    public mutating func removeBack() -> Element? {
+        _makeUnique()
+        return _removeBack()
+    }
+
+    /// Removes all elements from the buffer (CoW-safe).
+    ///
+    /// - Complexity: O(n) where n is the number of elements.
+    @inlinable
+    public mutating func removeAll() {
+        _makeUnique()
+        _removeAll()
+    }
+
+    /// Ensures the buffer can hold at least `minimumCapacity` elements (CoW-safe).
+    ///
+    /// - Complexity: O(n) where n is the number of elements (if growth occurs).
+    @inlinable
+    public mutating func ensureCapacity(_ minimumCapacity: Index<Node>.Count) {
+        _makeUnique()
+        try! _ensureCapacity(minimumCapacity)
+    }
+
+    /// Ensures the buffer can hold at least `minimumCapacity` elements (CoW-safe).
+    ///
+    /// Boundary overload per [IMPL-010].
+    @inlinable
+    public mutating func ensureCapacity(_ minimumCapacity: Int) {
+        _makeUnique()
+        try! _ensureCapacity(Index<Node>.Count(UInt(minimumCapacity)))
+    }
+
+    /// Ensures there is room for at least `additional` more nodes (CoW-safe).
+    @inlinable
+    public mutating func reserveAdditionalCapacity(_ additional: Index<Node>.Count) {
+        _makeUnique()
+        try! _reserveAdditionalCapacity(additional)
+    }
 }
 
 // MARK: - Convenience Accessors

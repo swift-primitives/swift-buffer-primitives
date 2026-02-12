@@ -19,7 +19,7 @@ extension Buffer.Linear.Small where Element: ~Copyable {
         }
         _modify {
             if _heapBuffer != nil {
-                yield &_heapBuffer![index]
+                yield &heap[index]
             } else {
                 yield &_inlineBuffer[index]
             }

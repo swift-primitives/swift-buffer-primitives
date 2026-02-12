@@ -38,8 +38,8 @@ extension Buffer.Ring.Small where Element: Copyable {
     @inlinable
     public mutating func consume() -> Sequence.Consume.View<Element, ConsumeState> {
         if _heapBuffer != nil {
-            let header = _heapBuffer!.header
-            let storage = _heapBuffer!.storage
+            let header = heap.header
+            let storage = heap.storage
             _heapBuffer = nil
             return Sequence.Consume.View(
                 state: ConsumeState(header: header, storage: storage),

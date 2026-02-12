@@ -15,6 +15,15 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     @inlinable
     public var isSpilled: Bool { _heapBuffer != nil }
 
+    /// Projected access to the heap buffer.
+    ///
+    /// - Precondition: `isSpilled` — callers MUST guard before access.
+    @inlinable
+    package var heap: Buffer<Element>.Linear {
+        _read { yield _heapBuffer! }
+        _modify { yield &_heapBuffer! }
+    }
+
     /// The number of elements in the buffer.
     @inlinable
     public var count: Index<Element>.Count {
@@ -54,7 +63,7 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     @inlinable
     public mutating func removeFirst() -> Element {
         if _heapBuffer != nil {
-            return _heapBuffer!.removeFirst()
+            return heap.removeFirst()
         } else {
             return _inlineBuffer.removeFirst()
         }
@@ -66,7 +75,7 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     @inlinable
     public mutating func removeLast() -> Element {
         if _heapBuffer != nil {
-            return _heapBuffer!.removeLast()
+            return heap.removeLast()
         } else {
             return _inlineBuffer.removeLast()
         }
@@ -78,7 +87,7 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     @inlinable
     public mutating func remove(at index: Index<Element>) -> Element {
         if _heapBuffer != nil {
-            return _heapBuffer!.remove(at: index)
+            return heap.remove(at: index)
         } else {
             return _inlineBuffer.remove(at: index)
         }
@@ -90,7 +99,7 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     @inlinable
     public mutating func replace(at index: Index<Element>, with newElement: consuming Element) -> Element {
         if _heapBuffer != nil {
-            return _heapBuffer!.replace(at: index, with: consume newElement)
+            return heap.replace(at: index, with: consume newElement)
         } else {
             return _inlineBuffer.replace(at: index, with: consume newElement)
         }
@@ -102,7 +111,7 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     @inlinable
     public mutating func swap(at i: Index<Element>, with j: Index<Element>) {
         if _heapBuffer != nil {
-            _heapBuffer!.swap(at: i, with: j)
+            heap.swap(at: i, with: j)
         } else {
             _inlineBuffer.swap(at: i, with: j)
         }
@@ -114,7 +123,7 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     @inlinable
     public mutating func removeAll() {
         if _heapBuffer != nil {
-            _heapBuffer!.removeAll()
+            heap.removeAll()
             _heapBuffer = nil
             _inlineBuffer.removeAll()
         } else {
@@ -130,7 +139,7 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     public mutating func removeAll(keepingCapacity: Bool) {
         if keepingCapacity {
             if _heapBuffer != nil {
-                _heapBuffer!.removeAll()
+                heap.removeAll()
             } else {
                 _inlineBuffer.removeAll()
             }
@@ -150,12 +159,12 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     @inlinable
     public mutating func append(_ element: consuming Element) {
         if _heapBuffer != nil {
-            _heapBuffer!.append(consume element)
+            heap.append(consume element)
         } else if !_inlineBuffer.isFull {
             _ = _inlineBuffer.append(consume element)
         } else {
             _spillToHeapMoving()
-            _heapBuffer!.append(consume element)
+            heap.append(consume element)
         }
     }
 
