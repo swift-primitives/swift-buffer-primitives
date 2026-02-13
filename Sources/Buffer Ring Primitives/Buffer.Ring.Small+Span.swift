@@ -7,7 +7,7 @@ extension Buffer.Ring.Small where Element: Copyable {
     /// When the ring wraps, handles two contiguous regions: head-to-capacity
     /// and zero-to-tail. Works in both inline and heap modes.
     @safe
-    public struct Iterator: Sequence.Iterator.Borrowing.`Protocol`, IteratorProtocol, @unchecked Sendable {
+    public struct Iterator: Sequence.Iterator.`Protocol`, Sequence.Iterator.Borrowing.`Protocol`, IteratorProtocol, @unchecked Sendable {
         @usableFromInline
         var base: UnsafePointer<Element>
 

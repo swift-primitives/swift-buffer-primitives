@@ -187,7 +187,7 @@ extension Buffer.Linked where Element: Copyable {
 
 extension Buffer.Linked: Sequence.`Protocol` where Element: Copyable {
     /// An iterator over the elements of a linked list buffer.
-    public struct Iterator: IteratorProtocol {
+    public struct Iterator: Sequence.Iterator.`Protocol`, IteratorProtocol {
         @usableFromInline
         let _storage: Storage<Node>.Pool
 
