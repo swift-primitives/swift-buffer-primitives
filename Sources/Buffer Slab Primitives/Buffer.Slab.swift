@@ -73,9 +73,7 @@ extension Buffer.Slab: Sequence.Drain.`Protocol` {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         header.bitmap.ones.forEach { bitIndex in
-            let element = storage.move(at: bitIndex.retag(Element.self))
-            header.bitmap[bitIndex] = false
-            body(consume element)
+            body(Buffer<Element>.Slab.remove(at: bitIndex, header: &header, storage: storage))
         }
     }
 }

@@ -130,16 +130,24 @@ extension Buffer.Arena.Inline where Element: ~Copyable {
         unsafe Buffer<Element>.Arena._releaseSlot(slot, header: &header, meta: meta)
     }
 
+    /// Deinitializes the element at slot `i` and bumps its generation token.
+    @usableFromInline
+    static func deinitializeSlot(
+        _ buf: inout Buffer<Element>.Arena.Inline<inlineCapacity>,
+        at i: Int
+    ) {
+        let slot = Index<Element>(Ordinal(UInt(i)))
+        unsafe buf._elementPointer(at: slot).deinitialize(count: 1)
+        buf._meta[i].token &+= 1
+    }
+
     /// Deinitializes all occupied elements and resets the arena to empty state.
     @inlinable
     public mutating func removeAll() {
         let hw = Int(bitPattern: header.highWater)
         for i in 0..<hw {
             if _meta[i].isOccupied {
-                unsafe _elementPointer(
-                    at: Index<Element>(Ordinal(UInt(i)))
-                ).deinitialize(count: 1)
-                _meta[i].token &+= 1
+                Self.deinitializeSlot(&self, at: i)
             }
         }
         header.occupied = .zero
