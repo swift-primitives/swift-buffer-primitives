@@ -25,16 +25,32 @@ let package = Package(
             targets: ["Buffer Ring Primitives"]
         ),
         .library(
+            name: "Buffer Ring Inline Primitives",
+            targets: ["Buffer Ring Inline Primitives"]
+        ),
+        .library(
             name: "Buffer Linear Primitives",
             targets: ["Buffer Linear Primitives"]
+        ),
+        .library(
+            name: "Buffer Linear Inline Primitives",
+            targets: ["Buffer Linear Inline Primitives"]
         ),
         .library(
             name: "Buffer Slab Primitives",
             targets: ["Buffer Slab Primitives"]
         ),
         .library(
+            name: "Buffer Slab Inline Primitives",
+            targets: ["Buffer Slab Inline Primitives"]
+        ),
+        .library(
             name: "Buffer Linked Primitives",
             targets: ["Buffer Linked Primitives"]
+        ),
+        .library(
+            name: "Buffer Linked Inline Primitives",
+            targets: ["Buffer Linked Inline Primitives"]
         ),
         .library(
             name: "Buffer Slots Primitives",
@@ -43,6 +59,10 @@ let package = Package(
         .library(
             name: "Buffer Arena Primitives",
             targets: ["Buffer Arena Primitives"]
+        ),
+        .library(
+            name: "Buffer Arena Inline Primitives",
+            targets: ["Buffer Arena Inline Primitives"]
         ),
         .library(
             name: "Buffer Primitives Test Support",
@@ -69,7 +89,7 @@ let package = Package(
                 .product(name: "Bit Vector Primitives", package: "swift-bit-vector-primitives"),
             ]
         ),
-        // Ring: Circular buffer static ops and composed types
+        // Ring: Circular buffer heap and bounded variants
         .target(
             name: "Buffer Ring Primitives",
             dependencies: [
@@ -77,7 +97,16 @@ let package = Package(
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
-        // Linear: Contiguous buffer static ops and composed types
+        // Ring Inline: Inline and small circular buffer variants
+        .target(
+            name: "Buffer Ring Inline Primitives",
+            dependencies: [
+                "Buffer Primitives Core",
+                "Buffer Ring Primitives",
+                .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
+            ]
+        ),
+        // Linear: Contiguous buffer heap and bounded variants
         .target(
             name: "Buffer Linear Primitives",
             dependencies: [
@@ -87,7 +116,18 @@ let package = Package(
                 .product(name: "Collection Primitives", package: "swift-collection-primitives"),
             ]
         ),
-        // Slab: Index-addressable slot storage static ops and composed types
+        // Linear Inline: Inline and small contiguous buffer variants
+        .target(
+            name: "Buffer Linear Inline Primitives",
+            dependencies: [
+                "Buffer Primitives Core",
+                "Buffer Linear Primitives",
+                .product(name: "Finite Primitives", package: "swift-finite-primitives"),
+                .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
+                .product(name: "Collection Primitives", package: "swift-collection-primitives"),
+            ]
+        ),
+        // Slab: Index-addressable slot storage heap and bounded variants
         .target(
             name: "Buffer Slab Primitives",
             dependencies: [
@@ -95,7 +135,16 @@ let package = Package(
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
-        // Linked: Doubly-linked list backed by pool storage
+        // Slab Inline: Inline and small slab buffer variants
+        .target(
+            name: "Buffer Slab Inline Primitives",
+            dependencies: [
+                "Buffer Primitives Core",
+                "Buffer Slab Primitives",
+                .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
+            ]
+        ),
+        // Linked: Doubly-linked list heap variant
         .target(
             name: "Buffer Linked Primitives",
             dependencies: [
@@ -103,14 +152,23 @@ let package = Package(
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
-        // Slots: Metadata-parametric random-access slots static ops and composed types
+        // Linked Inline: Inline and small linked list variants
+        .target(
+            name: "Buffer Linked Inline Primitives",
+            dependencies: [
+                "Buffer Primitives Core",
+                "Buffer Linked Primitives",
+                .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
+            ]
+        ),
+        // Slots: Metadata-parametric random-access slots
         .target(
             name: "Buffer Slots Primitives",
             dependencies: [
                 "Buffer Primitives Core",
             ]
         ),
-        // Arena: Generation-token arena static ops and composed types
+        // Arena: Generation-token arena heap and bounded variants
         .target(
             name: "Buffer Arena Primitives",
             dependencies: [
@@ -118,17 +176,31 @@ let package = Package(
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
-        // Umbrella: Re-exports Core, Ring, Linear, Slab, Linked, Slots, Arena
+        // Arena Inline: Inline and small arena variants
+        .target(
+            name: "Buffer Arena Inline Primitives",
+            dependencies: [
+                "Buffer Primitives Core",
+                "Buffer Arena Primitives",
+                .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
+            ]
+        ),
+        // Umbrella: Re-exports all buffer primitive modules
         .target(
             name: "Buffer Primitives",
             dependencies: [
                 "Buffer Primitives Core",
                 "Buffer Ring Primitives",
+                "Buffer Ring Inline Primitives",
                 "Buffer Linear Primitives",
+                "Buffer Linear Inline Primitives",
                 "Buffer Slab Primitives",
+                "Buffer Slab Inline Primitives",
                 "Buffer Linked Primitives",
+                "Buffer Linked Inline Primitives",
                 "Buffer Slots Primitives",
                 "Buffer Arena Primitives",
+                "Buffer Arena Inline Primitives",
             ]
         ),
         .target(
@@ -141,6 +213,84 @@ let package = Package(
                 .product(name: "Memory Primitives Test Support", package: "swift-memory-primitives"),
             ],
             path: "Tests/Support"
+        ),
+        // Per-module test targets
+        .testTarget(
+            name: "Buffer Ring Primitives Tests",
+            dependencies: [
+                .target(name: "Buffer Ring Primitives"),
+                .target(name: "Buffer Primitives Test Support"),
+            ]
+        ),
+        .testTarget(
+            name: "Buffer Ring Inline Primitives Tests",
+            dependencies: [
+                .target(name: "Buffer Ring Inline Primitives"),
+                .target(name: "Buffer Primitives Test Support"),
+            ]
+        ),
+        .testTarget(
+            name: "Buffer Linear Primitives Tests",
+            dependencies: [
+                .target(name: "Buffer Linear Primitives"),
+                .target(name: "Buffer Primitives Test Support"),
+            ]
+        ),
+        .testTarget(
+            name: "Buffer Linear Inline Primitives Tests",
+            dependencies: [
+                .target(name: "Buffer Linear Inline Primitives"),
+                .target(name: "Buffer Primitives Test Support"),
+            ]
+        ),
+        .testTarget(
+            name: "Buffer Slab Primitives Tests",
+            dependencies: [
+                .target(name: "Buffer Slab Primitives"),
+                .target(name: "Buffer Primitives Test Support"),
+            ]
+        ),
+        .testTarget(
+            name: "Buffer Slab Inline Primitives Tests",
+            dependencies: [
+                .target(name: "Buffer Slab Inline Primitives"),
+                .target(name: "Buffer Primitives Test Support"),
+            ]
+        ),
+        .testTarget(
+            name: "Buffer Linked Primitives Tests",
+            dependencies: [
+                .target(name: "Buffer Linked Primitives"),
+                .target(name: "Buffer Primitives Test Support"),
+            ]
+        ),
+        .testTarget(
+            name: "Buffer Linked Inline Primitives Tests",
+            dependencies: [
+                .target(name: "Buffer Linked Inline Primitives"),
+                .target(name: "Buffer Primitives Test Support"),
+            ]
+        ),
+        .testTarget(
+            name: "Buffer Slots Primitives Tests",
+            dependencies: [
+                .target(name: "Buffer Slots Primitives"),
+                .target(name: "Buffer Primitives Test Support"),
+            ]
+        ),
+        .testTarget(
+            name: "Buffer Arena Primitives Tests",
+            dependencies: [
+                .target(name: "Buffer Arena Primitives"),
+                .target(name: "Buffer Primitives Test Support"),
+            ]
+        ),
+        .testTarget(
+            name: "Buffer Arena Inline Primitives Tests",
+            dependencies: [
+                .target(name: "Buffer Arena Inline Primitives"),
+                .target(name: "Buffer Primitives Test Support"),
+            ]
         ),
         .testTarget(
             name: "Buffer Primitives Tests",

@@ -59,6 +59,26 @@ public struct InlineStorage<Element: ~Copyable>: ~Copyable {
     }
 }
 
+/// ManagedBuffer-based heap storage (matches production pattern).
+public final class ManagedHeapStorage: ManagedBuffer<Int, Int> {
+    public static func make(capacity: Int) -> ManagedHeapStorage {
+        let buf = ManagedHeapStorage.create(minimumCapacity: capacity) { _ in 0 }
+        return unsafeDowncast(buf, to: ManagedHeapStorage.self)
+    }
+}
+
+/// Wrapper holding ManagedBuffer (matches Buffer<Element>.Ring pattern).
+public struct HeapWrapper<Element: ~Copyable>: ~Copyable {
+    public var header: Int
+    public var storage: ManagedHeapStorage
+
+    @inlinable
+    public init(capacity: Int) {
+        self.header = 0
+        self.storage = ManagedHeapStorage.make(capacity: capacity)
+    }
+}
+
 /// Heap-backed storage (class reference, no @_rawLayout).
 public final class HeapStorage<Element: ~Copyable>: @unchecked Sendable {
     @usableFromInline

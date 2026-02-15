@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.2.0
-last_updated: 2026-02-12
-status: DECISION
+version: 2.0.0
+last_updated: 2026-02-15
+status: SUPERSEDED
 ---
 -->
 
@@ -189,9 +189,15 @@ Eliminate the `heap` computed property. Use `switch` for reads (per [noncopyable
 
 ## Outcome
 
-**Status**: DECISION
+**Status**: SUPERSEDED by [small-buffer-enum-compiler-workarounds.md](small-buffer-enum-compiler-workarounds.md)
 
-**Keep two-field storage (Option B), with improved documentation.**
+**Original decision (v1.x)**: Keep two-field storage (Option B), with improved documentation.
+
+**Reversal (v2.0.0, 2026-02-15)**: Adopted enum storage (Option A) due to LLVM verifier crash. The two-field struct representation — where a `~Copyable` struct contains both `@_rawLayout` fields (`Storage.Inline`) and `ManagedBuffer` class references (`Storage.Heap`) — triggers "Instruction does not dominate all uses!" in release builds. This is a compiler-generated implicit destructor codegen bug, not a limitation of the Swift type system. The enum approach, while incurring two extra moves per mutation, produces correct code.
+
+The performance analysis in v1.x remains valid: enum storage IS slower for mutations. But correct-and-slower beats incorrect-and-fast. See [small-buffer-enum-compiler-workarounds.md](small-buffer-enum-compiler-workarounds.md) for the full bug catalog and workaround documentation.
+
+### Original Rationale (preserved for reference)
 
 ### Rationale
 

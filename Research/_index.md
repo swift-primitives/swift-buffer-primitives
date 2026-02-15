@@ -17,6 +17,7 @@
 | [checkpoint-ordering-design](checkpoint-ordering-design.md) | Tier 2: Checkpoint Comparable trichotomy fix — count-only equality matching count-only ordering | 2026-02-12 | RECOMMENDATION |
 | [slots-buffer-variant-parity](slots-buffer-variant-parity.md) | Tier 1: Buffer.Slots ensureUnique/copy alignment and static method assessment | 2026-02-12 | DECISION |
 | [buffer-core-pattern-unification](buffer-core-pattern-unification.md) | Tier 2: Pattern unification — correctness fixes and minimal API surface for Buffer Primitives Core | 2026-02-12 | RECOMMENDATION |
-| [small-buffer-storage-representation](small-buffer-storage-representation.md) | Tier 2: Enum vs two-field storage for Small variants — force-unwrap elimination vs ~Copyable _modify | 2026-02-12 | DECISION |
+| [small-buffer-storage-representation](small-buffer-storage-representation.md) | Tier 2: Enum vs two-field storage for Small variants — force-unwrap elimination vs ~Copyable _modify | 2026-02-15 | SUPERSEDED |
+| [small-buffer-enum-compiler-workarounds](small-buffer-enum-compiler-workarounds.md) | Tier 2: Compiler bugs and workarounds from Small enum refactoring — LLVM verifier, DiagnoseStaticExclusivity, CopyPropagation | 2026-02-15 | DECISION |
 | [implementation-skill-audit](implementation-skill-audit.md) | Tier 1: Implementation skill audit — import gaps vs infrastructure gaps for typed boundary overloads | 2026-02-12 | RECOMMENDATION |
 | [bounded-index-parameter-syntax](bounded-index-parameter-syntax.md) | Tier 1: Bounded parameter syntax — accept bounded at API boundary, let retag carry the bound | 2026-02-12 | RECOMMENDATION |

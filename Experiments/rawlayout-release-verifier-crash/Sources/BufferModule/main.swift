@@ -222,6 +222,210 @@ struct V12_ValueGenericDeinit<Element: ~Copyable, let capacity: Int>: ~Copyable 
 }
 
 // ============================================================================
+// MARK: - V14: THE CRITICAL COMBINATION — @_rawLayout field + class reference
+// Hypothesis: THIS is the trigger — ~Copyable struct with both @_rawLayout
+//             stored property AND class reference stored property causes the
+//             compiler-generated destructor to emit invalid LLVM IR.
+// ============================================================================
+
+struct V14_Combined_NoDeinit: ~Copyable {
+    var inline: InlineStorage<Int>
+    var heap: HeapStorage<Int>?
+
+    init() {
+        self.inline = InlineStorage()
+        self.heap = nil
+    }
+}
+
+struct V15_Combined_EmptyDeinit: ~Copyable {
+    var inline: InlineStorage<Int>
+    var heap: HeapStorage<Int>?
+
+    init() {
+        self.inline = InlineStorage()
+        self.heap = nil
+    }
+
+    deinit {}
+}
+
+struct V16_Combined_Deinit: ~Copyable {
+    var inline: InlineStorage<Int>
+    var heap: HeapStorage<Int>?
+
+    init() {
+        self.inline = InlineStorage()
+        self.heap = HeapStorage(capacity: 4)
+    }
+
+    deinit {
+        // Note: cannot modify self in deinit.
+        // Production crash is from IMPLICIT destructor — no explicit deinit.
+        inline.cleanup()
+    }
+}
+
+// ============================================================================
+// MARK: - V17: Generic combined (closest to production Small pattern)
+// ============================================================================
+
+struct V17_GenericCombined<Element: ~Copyable>: ~Copyable {
+    var inline: InlineStorage<Element>
+    var heap: HeapStorage<Element>?
+
+    init(inline: consuming InlineStorage<Element>) {
+        self.inline = inline
+        self.heap = nil
+    }
+}
+
+struct V18_GenericCombinedDeinit<Element: ~Copyable>: ~Copyable {
+    var inline: InlineStorage<Element>
+    var heap: HeapStorage<Element>?
+
+    init(inline: consuming InlineStorage<Element>) {
+        self.inline = inline
+        self.heap = nil
+    }
+
+    deinit {
+        inline.cleanup()
+    }
+}
+
+// ============================================================================
+// MARK: - V19: Nested in generic enum (exact production pattern)
+// ============================================================================
+
+extension Namespace {
+    struct Small: ~Copyable {
+        var inline: InlineStorage<Element>
+        var heap: HeapStorage<Element>?
+
+        init(inline: consuming InlineStorage<Element>) {
+            self.inline = inline
+            self.heap = nil
+        }
+    }
+
+    struct SmallWithDeinit: ~Copyable {
+        var inline: InlineStorage<Element>
+        var heap: HeapStorage<Element>?
+
+        init(inline: consuming InlineStorage<Element>) {
+            self.inline = inline
+            self.heap = nil
+        }
+
+        deinit {
+            inline.cleanup()
+        }
+    }
+}
+
+extension Namespace.Small: @unchecked Sendable where Element: Sendable {}
+extension Namespace.SmallWithDeinit: @unchecked Sendable where Element: Sendable {}
+
+// ============================================================================
+// MARK: - V20: Value generic + combined (most production-like)
+// ============================================================================
+
+struct V20_ValueGenericCombined<Element: ~Copyable, let capacity: Int>: ~Copyable {
+    var inline: InlineStorage<Element>
+    var heap: HeapStorage<Element>?
+
+    init(inline: consuming InlineStorage<Element>) {
+        self.inline = inline
+        self.heap = nil
+    }
+}
+
+struct V21_ValueGenericCombinedDeinit<Element: ~Copyable, let capacity: Int>: ~Copyable {
+    var inline: InlineStorage<Element>
+    var heap: HeapStorage<Element>?
+
+    init(inline: consuming InlineStorage<Element>) {
+        self.inline = inline
+        self.heap = nil
+    }
+
+    deinit {
+        inline.cleanup()
+    }
+}
+
+// ============================================================================
+// MARK: - V22-V25: ManagedBuffer variants (production uses ManagedBuffer, not regular class)
+// Hypothesis: ManagedBuffer's vtable-based destruction path differs from
+//             regular class ARC. The LLVM verifier crash may be specific to
+//             ManagedBuffer destruction sequences.
+// ============================================================================
+
+struct V22_ManagedBufCombined: ~Copyable {
+    var inline: InlineStorage<Int>
+    var heap: ManagedHeapStorage?
+
+    init() {
+        self.inline = InlineStorage()
+        self.heap = nil
+    }
+}
+
+struct V23_ManagedBufCombinedActive: ~Copyable {
+    var inline: InlineStorage<Int>
+    var heap: ManagedHeapStorage?
+
+    init() {
+        self.inline = InlineStorage()
+        self.heap = ManagedHeapStorage.make(capacity: 8)
+    }
+}
+
+// V24: HeapWrapper (struct wrapping ManagedBuffer) — matches production
+// where Buffer<Element>.Ring is a struct containing a ManagedBuffer subclass
+struct V24_WrappedManagedBuf: ~Copyable {
+    var inline: InlineStorage<Int>
+    var heap: HeapWrapper<Int>?
+
+    init() {
+        self.inline = InlineStorage()
+        self.heap = nil
+    }
+}
+
+struct V25_WrappedManagedBufActive: ~Copyable {
+    var inline: InlineStorage<Int>
+    var heap: HeapWrapper<Int>?
+
+    init() {
+        self.inline = InlineStorage()
+        self.heap = HeapWrapper(capacity: 8)
+    }
+}
+
+// V26: Generic wrapped ManagedBuffer (closest to production)
+struct V26_GenericWrapped<Element: ~Copyable>: ~Copyable {
+    var inline: InlineStorage<Element>
+    var heap: HeapWrapper<Element>?
+
+    init(inline: consuming InlineStorage<Element>) {
+        self.inline = inline
+        self.heap = nil
+    }
+}
+
+struct V27_GenericWrappedActive<Element: ~Copyable>: ~Copyable {
+    var inline: InlineStorage<Element>
+    var heap: HeapWrapper<Element>?
+
+    init(inline: consuming InlineStorage<Element>, heap: consuming HeapWrapper<Element>) {
+        self.inline = inline
+        self.heap = consume heap
+    }
+}
+
+// ============================================================================
 // MARK: - Instantiation (force specialization in this module)
 // ============================================================================
 
@@ -273,6 +477,68 @@ func instantiate() {
     do {
         let _ = V12_ValueGenericDeinit<Int, 8>(header: 42, storage: InlineStorage())
         print("V12 (value generic, deinit): OK")
+    }
+    // V14-V21: Critical combination variants
+    do {
+        let _ = V14_Combined_NoDeinit()
+        print("V14 (@_rawLayout + class, no deinit): OK")
+    }
+    do {
+        let _ = V15_Combined_EmptyDeinit()
+        print("V15 (@_rawLayout + class, empty deinit): OK")
+    }
+    do {
+        let _ = V16_Combined_Deinit()
+        print("V16 (@_rawLayout + class, deinit): OK")
+    }
+    do {
+        let _ = V17_GenericCombined<Int>(inline: InlineStorage())
+        print("V17 (generic @_rawLayout + class, no deinit): OK")
+    }
+    do {
+        let _ = V18_GenericCombinedDeinit<Int>(inline: InlineStorage())
+        print("V18 (generic @_rawLayout + class, deinit): OK")
+    }
+    do {
+        let _ = Namespace<Int>.Small(inline: InlineStorage())
+        print("V19a (nested @_rawLayout + class, no deinit): OK")
+    }
+    do {
+        let _ = Namespace<Int>.SmallWithDeinit(inline: InlineStorage())
+        print("V19b (nested @_rawLayout + class, deinit): OK")
+    }
+    do {
+        let _ = V20_ValueGenericCombined<Int, 8>(inline: InlineStorage())
+        print("V20 (value generic @_rawLayout + class, no deinit): OK")
+    }
+    do {
+        let _ = V21_ValueGenericCombinedDeinit<Int, 8>(inline: InlineStorage())
+        print("V21 (value generic @_rawLayout + class, deinit): OK")
+    }
+    // V22-V27: ManagedBuffer variants
+    do {
+        let _ = V22_ManagedBufCombined()
+        print("V22 (@_rawLayout + ManagedBuffer?, nil): OK")
+    }
+    do {
+        let _ = V23_ManagedBufCombinedActive()
+        print("V23 (@_rawLayout + ManagedBuffer?, active): OK")
+    }
+    do {
+        let _ = V24_WrappedManagedBuf()
+        print("V24 (@_rawLayout + HeapWrapper?, nil): OK")
+    }
+    do {
+        let _ = V25_WrappedManagedBufActive()
+        print("V25 (@_rawLayout + HeapWrapper?, active): OK")
+    }
+    do {
+        let _ = V26_GenericWrapped<Int>(inline: InlineStorage())
+        print("V26 (generic @_rawLayout + HeapWrapper?, nil): OK")
+    }
+    do {
+        let _ = V27_GenericWrappedActive<Int>(inline: InlineStorage(), heap: HeapWrapper(capacity: 4))
+        print("V27 (generic @_rawLayout + HeapWrapper?, active): OK")
     }
 }
 
