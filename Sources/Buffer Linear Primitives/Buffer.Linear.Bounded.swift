@@ -132,18 +132,25 @@ extension Buffer.Linear.Bounded: Sequence.Drain.`Protocol` where Element: Copyab
     public mutating func drain(
         _ body: (consuming Element) -> Void
     ) {
-        while !isEmpty {
-            body(removeFirst())
+        ensureUnique()
+        var position: Index<Element> = .zero
+        let end = header.count.map(Ordinal.init)
+        while position < end {
+            body(storage.move(at: position))
+            position += .one
         }
+        header.count = .zero
+        storage.initialization = header.initialization
     }
 }
 
 // MARK: - Sequence.Clearable
 
 extension Buffer.Linear.Bounded: Sequence.Clearable where Element: Copyable {
-    /// Removes all elements from the buffer.
+    /// Removes all elements from the buffer (CoW-safe).
     @inlinable
     public mutating func removeAll() {
+        ensureUnique()
         Buffer.Linear.deinitializeAll(header: &header, storage: storage)
     }
 }

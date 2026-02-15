@@ -141,9 +141,14 @@ extension Buffer.Linear where Element: ~Copyable {
 extension Buffer.Linear: Sequence.Drain.`Protocol` where Element: Copyable {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
-        while !isEmpty {
-            body(removeFirst())
+        var position: Index<Element> = .zero
+        let end = header.count.map(Ordinal.init)
+        while position < end {
+            body(storage.move(at: position))
+            position += .one
         }
+        header.count = .zero
+        storage.initialization = header.initialization
     }
 }
 

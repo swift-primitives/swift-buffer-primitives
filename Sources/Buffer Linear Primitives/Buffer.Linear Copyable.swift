@@ -33,7 +33,7 @@ extension Buffer.Linear where Element: Copyable {
     }
 
     /// Returns an independent copy of this buffer with its own storage.
-    @inlinable
+    @usableFromInline
     func copy() -> Self {
         let newStorage = Storage<Element>.Heap.create(minimumCapacity: header.capacity)
         Buffer.Linear.copy(header: header, source: storage, to: newStorage)

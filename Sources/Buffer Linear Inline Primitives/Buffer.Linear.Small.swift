@@ -214,7 +214,7 @@ extension Buffer.Linear.Small where Element: ~Copyable {
                     self = Self(_storage: .heap(consume heapBuf))
                 case .inline(var inlineBuf):
                     self = Self(_storage: .inline(consume inlineBuf))
-                    fatalError()
+                    fatalError("expected heap mode after spill")
                 }
             }
         }
@@ -314,8 +314,26 @@ extension Buffer.Linear.Small where Element: Copyable {
 extension Buffer.Linear.Small: Sequence.Drain.`Protocol` where Element: Copyable {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
-        while !isEmpty {
-            body(removeFirst())
+        switch _storage {
+        case .heap(var buf):
+            var position: Index<Element> = .zero
+            let end = buf.header.count.map(Ordinal.init)
+            while position < end {
+                body(buf.storage.move(at: position))
+                position += .one
+            }
+            buf.header.count = .zero
+            buf.storage.initialization = buf.header.initialization
+            self = Self(_storage: .heap(consume buf))
+        case .inline(var buf):
+            var position: Index<Element> = .zero
+            let end = buf.header.count.map(Ordinal.init)
+            while position < end {
+                body(buf.storage.move(at: Index<Element>.Bounded<inlineCapacity>(position)!))
+                position += .one
+            }
+            buf.header.count = .zero
+            self = Self(_storage: .inline(consume buf))
         }
     }
 }

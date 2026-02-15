@@ -171,7 +171,7 @@ extension Buffer.Linked.Small where Element: ~Copyable {
             } else {
                 self = Self(_storage: .inline(consume buf))
                 _spillToHeapMoving()
-                guard case .heap(var heap) = _storage else { fatalError() }
+                guard case .heap(var heap) = _storage else { fatalError("expected heap mode after spill") }
                 Self.insertFrontHeap(consume element, into: &heap)
                 self = Self(_storage: .heap(consume heap))
             }
@@ -191,7 +191,7 @@ extension Buffer.Linked.Small where Element: ~Copyable {
             } else {
                 self = Self(_storage: .inline(consume buf))
                 _spillToHeapMoving()
-                guard case .heap(var heap) = _storage else { fatalError() }
+                guard case .heap(var heap) = _storage else { fatalError("expected heap mode after spill") }
                 Self.insertBackHeap(consume element, into: &heap)
                 self = Self(_storage: .heap(consume heap))
             }

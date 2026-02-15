@@ -125,15 +125,15 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
     ///     and must initialize exactly `count` elements.
     @inlinable
     public init(
-        initializingCount count: Int,
+        initializingCount count: Index<Element>.Count,
         with body: (UnsafeMutablePointer<Element>) -> Void
     ) {
-        let cap = Index<Element>.Count(UInt(capacity))
+        let cap = try! Index<Element>.Count(capacity)
         var storage = Storage<Element>.Inline<capacity>()
         let ptr = unsafe UnsafeMutablePointer(mutating: storage.pointer(at: Index<Element>.Bounded<capacity>(.zero)!))
         unsafe body(ptr)
         var header = Buffer.Linear.Header(capacity: cap)
-        header.count = Index<Element>.Count(UInt(count))
+        header.count = count
         storage.initialization = header.initialization
         self.init(header: header, storage: storage)
     }
@@ -144,9 +144,13 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
 extension Buffer.Linear.Inline: Sequence.Drain.`Protocol` where Element: Copyable {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
-        while !isEmpty {
-            body(removeFirst())
+        var position: Index<Element> = .zero
+        let end = header.count.map(Ordinal.init)
+        while position < end {
+            body(storage.move(at: Index<Element>.Bounded<capacity>(position)!))
+            position += .one
         }
+        header.count = .zero
     }
 }
 

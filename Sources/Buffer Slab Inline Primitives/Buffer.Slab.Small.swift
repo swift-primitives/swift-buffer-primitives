@@ -86,7 +86,7 @@ extension Buffer.Slab.Small where Element: ~Copyable {
             } else {
                 self = Self(_storage: .inline(consume buf))
                 _spillToHeapMoving()
-                guard case .heap(var buf) = _storage else { fatalError() }
+                guard case .heap(var buf) = _storage else { fatalError("expected heap mode after spill") }
                 buf.insert(consume element, at: slot)
                 self = Self(_storage: .heap(consume buf))
             }

@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Buffer.Linear.Header.swift
 //  swift-buffer-primitives
 //
 //  Created by Coen ten Thije Boonkkamp on 04/02/2026.
@@ -19,10 +19,9 @@ extension Buffer.Linear.Header where Element: ~Copyable {
 }
 
 extension Buffer.Linear.Header where Element: ~Copyable {
-    /// Compute the `Storage.Initialization` state from ring header.
+    /// Compute the `Storage.Initialization` state from linear header.
     ///
-    /// Returns `.empty`, `.one`, or `.two` depending on whether elements
-    /// wrap around the capacity boundary.
+    /// Returns `.empty` or `.one` — linear storage is always contiguous.
     @inlinable
     public var initialization: Storage<Element>.Initialization { .init(self) }
 }

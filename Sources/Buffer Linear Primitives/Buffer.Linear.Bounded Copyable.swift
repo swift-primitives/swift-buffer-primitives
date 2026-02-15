@@ -72,6 +72,34 @@ extension Buffer.Linear.Bounded where Element: Copyable {
 // MARK: - CoW-Safe Mutations
 
 extension Buffer.Linear.Bounded where Element: Copyable {
+
+    /// Appends an element to the back (CoW-safe). Returns the element if the buffer is full.
+    @inlinable
+    public mutating func append(_ element: consuming Element) -> Element? {
+        ensureUnique()
+        if header.isFull { return element }
+        Buffer.Linear.append(consume element, header: &header, storage: storage)
+        return nil
+    }
+
+    /// Removes and returns the first element, shifting remaining elements left (CoW-safe).
+    ///
+    /// - Precondition: The buffer is not empty.
+    @inlinable
+    public mutating func removeFirst() -> Element {
+        ensureUnique()
+        return Buffer.Linear.removeFirst(header: &header, storage: storage)
+    }
+
+    /// Removes and returns the last element (CoW-safe).
+    ///
+    /// - Precondition: The buffer is not empty.
+    @inlinable
+    public mutating func removeLast() -> Element {
+        ensureUnique()
+        return Buffer.Linear.consumeBack(header: &header, storage: storage)
+    }
+
     /// Removes and returns the element at the given index (CoW-safe).
     ///
     /// - Precondition: The index must be in bounds.
@@ -88,6 +116,24 @@ extension Buffer.Linear.Bounded where Element: Copyable {
     public mutating func replace(at index: Index<Element>, with newElement: consuming Element) -> Element {
         ensureUnique()
         return Buffer.Linear.replace(at: index, with: consume newElement, storage: storage)
+    }
+
+    /// Swaps the elements at positions `i` and `j` in-place (CoW-safe).
+    ///
+    /// - Precondition: Both indices must be in bounds.
+    @inlinable
+    public mutating func swap(at i: Index<Element>, with j: Index<Element>) {
+        ensureUnique()
+        Buffer.Linear.swap(at: i, with: j, storage: storage)
+    }
+
+    /// Removes elements beyond the specified count (CoW-safe).
+    ///
+    /// If `newCount >= count`, this method has no effect.
+    @inlinable
+    public mutating func truncate(to newCount: Index<Element>.Count) {
+        ensureUnique()
+        Buffer.Linear.truncate(to: newCount, header: &header, storage: storage)
     }
 }
 

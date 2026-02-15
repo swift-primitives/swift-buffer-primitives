@@ -89,7 +89,7 @@ extension Buffer.Linear.Small where Element: Copyable {
                     self = Self(_storage: .heap(consume heapBuf))
                 case .inline(var inlineBuf):
                     self = Self(_storage: .inline(consume inlineBuf))
-                    fatalError()
+                    fatalError("expected heap mode after spill")
                 }
             }
         }
@@ -225,6 +225,34 @@ extension Buffer.Linear.Small where Element: Copyable {
                 let bounded = Index<Element>.Bounded<inlineCapacity>(index)!
                 yield unsafe &buf.storage.pointer(at: bounded).pointee
             }
+        }
+    }
+}
+
+// MARK: - Mutable Span (Copyable with CoW)
+
+extension Buffer.Linear.Small where Element: Copyable {
+    /// Mutable span with copy-on-write semantics.
+    ///
+    /// Ensures unique ownership before providing mutable access.
+    public var mutableSpan: MutableSpan<Element> {
+        @_lifetime(&self)
+        @inlinable
+        mutating get {
+            ensureUnique()
+            let start: UnsafeMutablePointer<Element>
+            let elementCount: Index<Element>.Count
+            switch _storage {
+            case .heap(let heap):
+                unsafe start = heap.storage.pointer(at: .zero)
+                elementCount = heap.header.count
+            case .inline(let buf):
+                let inlineBounded = Index<Element>.Bounded<inlineCapacity>(.zero)!
+                unsafe start = buf.storage.pointer(at: inlineBounded)
+                elementCount = buf.header.count
+            }
+            let span = unsafe MutableSpan(_unsafeStart: start, count: elementCount)
+            return unsafe _overrideLifetime(span, mutating: &self)
         }
     }
 }

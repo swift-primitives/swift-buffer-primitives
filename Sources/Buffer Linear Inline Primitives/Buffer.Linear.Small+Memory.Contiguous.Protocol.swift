@@ -20,11 +20,12 @@ extension Buffer.Linear.Small: Memory.Contiguous.`Protocol` where Element: Copya
 // MARK: - Mutable Access
 
 extension Buffer.Linear.Small where Element: Copyable {
-    /// Unsafe mutable access for C interop with unannotated APIs.
+    /// Unsafe mutable access for C interop with unannotated APIs (CoW-safe).
     @inlinable
     public mutating func withUnsafeMutableBufferPointer<R, E: Swift.Error>(
         _ body: (UnsafeMutableBufferPointer<Element>) throws(E) -> R
     ) throws(E) -> R {
+        ensureUnique()
         switch _storage {
         case .heap(var buf):
             do {

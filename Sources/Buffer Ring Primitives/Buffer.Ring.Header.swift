@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Buffer.Ring.Header.swift
 //  swift-buffer-primitives
 //
 //  Created by Coen ten Thije Boonkkamp on 04/02/2026.

@@ -39,7 +39,7 @@ extension Buffer.Arena.Small where Element: ~Copyable {
                     return pos
                 case .inline(var inl):
                     self = Self(_storage: .inline(consume inl))
-                    fatalError()
+                    fatalError("expected heap mode after spill")
                 }
             }
             let pos = try! buf.insert(consume element)
@@ -70,7 +70,7 @@ extension Buffer.Arena.Small where Element: ~Copyable {
                     return pos
                 case .inline(var inl):
                     self = Self(_storage: .inline(consume inl))
-                    fatalError()
+                    fatalError("expected heap mode after spill")
                 }
             }
             let pos = try! buf.allocate()
@@ -228,6 +228,7 @@ extension Buffer.Arena.Small where Element: ~Copyable {
     /// Pointer to the element at the given slot index.
     ///
     /// - Precondition: `slot` is within `[.zero, highWater)`.
+    /// - Note: The returned pointer is valid while `self` is alive and unmutated.
     @unsafe
     @inlinable
     public mutating func pointer(
@@ -235,13 +236,21 @@ extension Buffer.Arena.Small where Element: ~Copyable {
     ) -> UnsafeMutablePointer<Element> {
         switch _storage {
         case .heap(var buf):
+            // Heap pointer is into ref-counted storage — stable after extraction.
             let ptr = unsafe buf.pointer(at: slot)
             self = Self(_storage: .heap(consume buf))
             return unsafe ptr
         case .inline(var buf):
-            let ptr = unsafe buf.pointer(at: slot)
+            // Inline pointer must NOT be computed from the extracted local `buf`,
+            // because `buf` lives on the stack and the pointer would dangle after
+            // `consume buf` moves it back into self. Instead, project through
+            // self's storage directly using the @frozen ABI layout guarantee.
             self = Self(_storage: .inline(consume buf))
-            return unsafe ptr
+            return unsafe withUnsafeMutablePointer(to: &_storage) { reprPtr in
+                let inlinePtr = unsafe UnsafeMutableRawPointer(reprPtr)
+                    .assumingMemoryBound(to: Buffer<Element>.Arena.Inline<inlineCapacity>.self)
+                return unsafe inlinePtr.pointee._elementPointer(at: slot)
+            }
         }
     }
 

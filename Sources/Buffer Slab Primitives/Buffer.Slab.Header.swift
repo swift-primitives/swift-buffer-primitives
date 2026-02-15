@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Buffer.Slab.Header.swift
 //  swift-buffer-primitives
 //
 //  Created by Coen ten Thije Boonkkamp on 04/02/2026.
@@ -37,12 +37,14 @@ extension Buffer.Slab.Header where Element: ~Copyable {
     /// Returns `nil` if all slots are full.
     @inlinable
     public func firstVacant(max: Bit.Index.Count) -> Bit.Index? {
-        var result: Bit.Index? = nil
-        (.zero..<max).forEach { index in
-            if result == nil && !bitmap[index] {
-                result = index
+        var idx: Bit.Index = .zero
+        let end = max.map(Ordinal.init)
+        while idx < end {
+            if !bitmap[idx] {
+                return idx
             }
+            idx += .one
         }
-        return result
+        return nil
     }
 }

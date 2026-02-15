@@ -28,6 +28,12 @@ extension Buffer.Slab where Element: ~Copyable {
     @inlinable
     public var isFull: Bool { header.isFull }
 
+    /// Whether a specific slot is occupied.
+    @inlinable
+    public func isOccupied(at slot: Bit.Index) -> Bool {
+        header.isOccupied(at: slot)
+    }
+
     // MARK: - Mutations
 
     /// Inserts an element at the given slot.
