@@ -18,8 +18,7 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     @inlinable
     public init() {
         self.init(
-            _inlineBuffer: Buffer<Element>.Linked<N>.Inline<inlineCapacity>(),
-            _heapBuffer: nil
+            _storage: .inline(Buffer<Element>.Linked<N>.Inline<inlineCapacity>())
         )
     }
 }
@@ -29,28 +28,19 @@ extension Buffer.Linked.Small where Element: ~Copyable {
 extension Buffer.Linked.Small where Element: ~Copyable {
     /// Whether the buffer has spilled to heap storage.
     @inlinable
-    public var isSpilled: Bool { _heapBuffer != nil }
-
-    /// Projected access to the heap buffer.
-    ///
-    /// - Precondition: `isSpilled` — callers MUST guard `_heapBuffer != nil` before access.
-    @inlinable
-    package var heap: Buffer<Element>.Linked<N> {
-        // Force-unwrap is necessary: Optional._modify has compiler support for
-        // yielding &_heapBuffer! that arbitrary enums lack (no _modify into enum
-        // payloads for ~Copyable types). Enum storage was evaluated and rejected —
-        // see Research/small-buffer-storage-representation.md.
-        // Safe: all callers guard `_heapBuffer != nil` before accessing `heap`.
-        _read { yield _heapBuffer! }
-        _modify { yield &_heapBuffer! }
+    public var isSpilled: Bool {
+        switch _storage {
+        case .heap: return true
+        case .inline: return false
+        }
     }
 
     /// The number of elements in the buffer.
     @inlinable
     public var count: Index<Element>.Count {
-        switch _heapBuffer {
-        case .some(let heap): return heap.count
-        case .none: return _inlineBuffer.count
+        switch _storage {
+        case .heap(let heap): return heap.count
+        case .inline(let buf): return buf.count
         }
     }
 
@@ -61,18 +51,18 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     /// The current capacity of the buffer (in element count).
     @inlinable
     public var capacity: Index<Element>.Count {
-        switch _heapBuffer {
-        case .some(let heap): return heap.capacity.retag(Element.self)
-        case .none: return Index<Element>.Count(UInt(inlineCapacity))
+        switch _storage {
+        case .heap(let heap): return heap.capacity.retag(Element.self)
+        case .inline: return Index<Element>.Count(UInt(inlineCapacity))
         }
     }
 
     /// Whether the buffer is full (only meaningful in inline mode).
     @inlinable
     public var isFull: Bool {
-        switch _heapBuffer {
-        case .some(let heap): return heap.isFull
-        case .none: return _inlineBuffer.isFull
+        switch _storage {
+        case .heap(let heap): return heap.isFull
+        case .inline(let buf): return buf.isFull
         }
     }
 }
@@ -128,27 +118,73 @@ extension Buffer.Linked.Small where Element: ~Copyable {
 extension Buffer.Linked.Small where Element: ~Copyable {
     @usableFromInline
     mutating func _insertFront(_ element: consuming Element) {
-        if _heapBuffer != nil {
-            try! heap.reserveAdditionalCapacity(.one)
-            try! heap.insert.front(element)
-        } else if !_inlineBuffer.isFull {
-            try! _inlineBuffer.insert.front(element)
-        } else {
-            _spillToHeapMoving()
-            try! heap.insert.front(element)
+        switch _storage {
+        case .heap(var buf):
+            try! buf.reserveAdditionalCapacity(.one)
+            try! buf.insert.front(element)
+            self = Self(_storage: .heap(consume buf))
+        case .inline(var buf):
+            if !buf.isFull {
+                try! buf.insert.front(element)
+                self = Self(_storage: .inline(consume buf))
+            } else {
+                self = Self(_storage: .inline(consume buf))
+                _spillToHeapMoving()
+                _insertFrontAfterSpill(consume element)
+            }
         }
     }
 
     @usableFromInline
     mutating func _insertBack(_ element: consuming Element) {
-        if _heapBuffer != nil {
-            try! heap.reserveAdditionalCapacity(.one)
+        switch _storage {
+        case .heap(var buf):
+            try! buf.reserveAdditionalCapacity(.one)
+            try! buf.insert.back(element)
+            self = Self(_storage: .heap(consume buf))
+        case .inline(var buf):
+            if !buf.isFull {
+                try! buf.insert.back(element)
+                self = Self(_storage: .inline(consume buf))
+            } else {
+                self = Self(_storage: .inline(consume buf))
+                _spillToHeapMoving()
+                _insertBackAfterSpill(consume element)
+            }
+        }
+    }
+
+    // WORKAROUND: @_optimize(none) prevents CopyPropagation crash in release builds
+    // WHY: Consuming a ~Copyable Element inside `switch _storage { case .heap(var heap) }`
+    //       crashes the CopyPropagation SIL pass — two consuming operations in one branch
+    // WHEN TO REMOVE: When Swift compiler fixes CopyPropagation for @frozen ~Copyable enums
+    // TRACKING: Needs Swift bug report
+
+    /// Inserts at the front of heap storage after a spill.
+    @_optimize(none)
+    @usableFromInline
+    mutating func _insertFrontAfterSpill(_ element: consuming Element) {
+        switch _storage {
+        case .inline(var buf):
+            self = Self(_storage: .inline(consume buf))
+            fatalError("_spillToHeapMoving must transition to heap")
+        case .heap(var heap):
+            try! heap.insert.front(element)
+            self = Self(_storage: .heap(consume heap))
+        }
+    }
+
+    /// Inserts at the back of heap storage after a spill.
+    @_optimize(none)
+    @usableFromInline
+    mutating func _insertBackAfterSpill(_ element: consuming Element) {
+        switch _storage {
+        case .inline(var buf):
+            self = Self(_storage: .inline(consume buf))
+            fatalError("_spillToHeapMoving must transition to heap")
+        case .heap(var heap):
             try! heap.insert.back(element)
-        } else if !_inlineBuffer.isFull {
-            try! _inlineBuffer.insert.back(element)
-        } else {
-            _spillToHeapMoving()
-            try! heap.insert.back(element)
+            self = Self(_storage: .heap(consume heap))
         }
     }
 }
@@ -194,19 +230,29 @@ where Tag == Buffer<Element>.Linked<n>.Insert,
 extension Buffer.Linked.Small where Element: ~Copyable {
     @usableFromInline
     mutating func _removeFront() -> Element? {
-        if _heapBuffer != nil {
-            return heap.remove.front()
-        } else {
-            return _inlineBuffer.remove.front()
+        switch _storage {
+        case .heap(var buf):
+            let result = buf.remove.front()
+            self = Self(_storage: .heap(consume buf))
+            return result
+        case .inline(var buf):
+            let result = buf.remove.front()
+            self = Self(_storage: .inline(consume buf))
+            return result
         }
     }
 
     @usableFromInline
     mutating func _removeBack() -> Element? {
-        if _heapBuffer != nil {
-            return heap.remove.back()
-        } else {
-            return _inlineBuffer.remove.back()
+        switch _storage {
+        case .heap(var buf):
+            let result = buf.remove.back()
+            self = Self(_storage: .heap(consume buf))
+            return result
+        case .inline(var buf):
+            let result = buf.remove.back()
+            self = Self(_storage: .inline(consume buf))
+            return result
         }
     }
 }
@@ -247,12 +293,14 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     /// Resets to inline mode.
     @inlinable
     public mutating func removeAll() {
-        if _heapBuffer != nil {
-            heap.removeAll()
-            _heapBuffer = nil
-            _inlineBuffer.removeAll()
-        } else {
-            _inlineBuffer.removeAll()
+        switch _storage {
+        case .heap(var buf):
+            buf.removeAll()
+            self = Self(_storage: .inline(Buffer<Element>.Linked<N>.Inline<inlineCapacity>()))
+            _ = consume buf
+        case .inline(var buf):
+            buf.removeAll()
+            self = Self(_storage: .inline(consume buf))
         }
     }
 
@@ -263,10 +311,13 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     @inlinable
     public mutating func removeAll(keepingCapacity: Bool) {
         if keepingCapacity {
-            if _heapBuffer != nil {
-                heap.removeAll()
-            } else {
-                _inlineBuffer.removeAll()
+            switch _storage {
+            case .heap(var buf):
+                buf.removeAll()
+                self = Self(_storage: .heap(consume buf))
+            case .inline(var buf):
+                buf.removeAll()
+                self = Self(_storage: .inline(consume buf))
             }
         } else {
             removeAll()
@@ -284,28 +335,35 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     /// the inline buffer.
     @usableFromInline
     mutating func _spillToHeapMoving() {
-        let newCapacity = Swift.max(inlineCapacity * 2, 8)
-        var heap = try! Buffer<Element>.Linked<N>.create(capacity: newCapacity)
+        switch _storage {
+        case .heap(var buf):
+            self = Self(_storage: .heap(consume buf))
+            return
+        case .inline(var inlineBuf):
+            let newCapacity = Swift.max(inlineCapacity * 2, 8)
+            var heap = try! Buffer<Element>.Linked<N>.create(capacity: newCapacity)
 
-        // Traverse inline linked structure and move elements to heap
-        let sentinel = _inlineBuffer.header.sentinel
-        var current = _inlineBuffer.header.head
-        while current != sentinel {
-            let boundedCurrent = Index<Buffer<Element>.Linked<N>.Node>.Bounded<inlineCapacity>(current)!
-            let nextSlot: Index<Buffer<Element>.Linked<N>.Node> = unsafe _inlineBuffer.storage.pointer(at: boundedCurrent).pointee.links[0]
-            let node = _inlineBuffer.storage.move(at: boundedCurrent)
-            _inlineBuffer._deallocateSlot(boundedCurrent)
-            try! heap.insert.back(node.element)
-            current = nextSlot
+            // Traverse inline linked structure and move elements to heap
+            let sentinel = inlineBuf.header.sentinel
+            var current = inlineBuf.header.head
+            while current != sentinel {
+                let boundedCurrent = Index<Buffer<Element>.Linked<N>.Node>.Bounded<inlineCapacity>(current)!
+                let nextSlot: Index<Buffer<Element>.Linked<N>.Node> = unsafe inlineBuf.storage.pointer(at: boundedCurrent).pointee.links[0]
+                let node = inlineBuf.storage.move(at: boundedCurrent)
+                inlineBuf._deallocateSlot(boundedCurrent)
+                try! heap.insert.back(node.element)
+                current = nextSlot
+            }
+
+            // Reset inline state
+            let inlineSentinel = inlineBuf.header.sentinel
+            inlineBuf.header = Buffer<Element>.Linked<N>.Header(sentinel: inlineSentinel)
+            inlineBuf.freeHead = inlineSentinel
+            inlineBuf.nextUnused = .zero
+
+            self = Self(_storage: .heap(consume heap))
+            // inlineBuf goes out of scope — deinit runs on empty state
         }
-
-        // Reset inline state
-        let inlineSentinel = _inlineBuffer.header.sentinel
-        _inlineBuffer.header = Buffer<Element>.Linked<N>.Header(sentinel: inlineSentinel)
-        _inlineBuffer.freeHead = inlineSentinel
-        _inlineBuffer.nextUnused = .zero
-
-        _heapBuffer = consume heap
     }
 }
 
@@ -318,9 +376,9 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     /// - Complexity: O(n) where n is the number of elements.
     @inlinable
     public func forEach<E: Swift.Error>(_ body: (borrowing Element) throws(E) -> Void) throws(E) {
-        switch _heapBuffer {
-        case .some(let heap): try heap.forEach(body)
-        case .none: try _inlineBuffer.forEach(body)
+        switch _storage {
+        case .heap(let heap): try heap.forEach(body)
+        case .inline(let buf): try buf.forEach(body)
         }
     }
 
@@ -331,9 +389,9 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     /// - Complexity: O(n) where n is the number of elements.
     @inlinable
     public func forEachReversed<E: Swift.Error>(_ body: (borrowing Element) throws(E) -> Void) throws(E) {
-        switch _heapBuffer {
-        case .some(let heap): try heap.forEachReversed(body)
-        case .none: try _inlineBuffer.forEachReversed(body)
+        switch _storage {
+        case .heap(let heap): try heap.forEachReversed(body)
+        case .inline(let buf): try buf.forEachReversed(body)
         }
     }
 }
@@ -348,9 +406,9 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     /// - Complexity: O(1)
     @inlinable
     public func peekFront<R, E: Swift.Error>(_ body: (borrowing Element) throws(E) -> R) throws(E) -> R? {
-        switch _heapBuffer {
-        case .some(let heap): return try heap.peekFront(body)
-        case .none: return try _inlineBuffer.peekFront(body)
+        switch _storage {
+        case .heap(let heap): return try heap.peekFront(body)
+        case .inline(let buf): return try buf.peekFront(body)
         }
     }
 
@@ -361,9 +419,9 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     /// - Complexity: O(1)
     @inlinable
     public func peekBack<R, E: Swift.Error>(_ body: (borrowing Element) throws(E) -> R) throws(E) -> R? {
-        switch _heapBuffer {
-        case .some(let heap): return try heap.peekBack(body)
-        case .none: return try _inlineBuffer.peekBack(body)
+        switch _storage {
+        case .heap(let heap): return try heap.peekBack(body)
+        case .inline(let buf): return try buf.peekBack(body)
         }
     }
 }

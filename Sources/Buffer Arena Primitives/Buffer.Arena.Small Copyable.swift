@@ -12,7 +12,14 @@ extension Buffer.Arena.Small where Element: Copyable {
     @inlinable
     @discardableResult
     public mutating func ensureUnique() -> Bool {
-        guard _heapBuffer != nil else { return false }  // inline is always unique
-        return heap.ensureUnique()
+        switch _storage {
+        case .heap(var buf):
+            let copied = buf.ensureUnique()
+            self = Self(_storage: .heap(consume buf))
+            return copied
+        case .inline(var buf):
+            self = Self(_storage: .inline(consume buf))
+            return false  // inline is always unique
+        }
     }
 }

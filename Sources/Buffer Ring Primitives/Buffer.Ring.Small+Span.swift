@@ -109,14 +109,14 @@ extension Buffer.Ring.Small where Element: Copyable {
 extension Buffer.Ring.Small: Sequence.`Protocol`, Sequence.Borrowing.`Protocol` where Element: Copyable {
     @inlinable
     public borrowing func makeIterator() -> Iterator {
-        switch _heapBuffer {
-        case .some(let heap):
+        switch _storage {
+        case .heap(let heap):
             let base = unsafe UnsafePointer(heap.storage.pointer(at: .zero))
             return unsafe Iterator(storageBase: base, header: heap.header)
-        case .none:
+        case .inline(let buf):
             let bounded = Index<Element>.Bounded<inlineCapacity>(.zero)!
-            let base: UnsafePointer<Element> = unsafe _inlineBuffer.storage.pointer(at: bounded)
-            return unsafe Iterator(storageBase: base, header: _inlineBuffer.header)
+            let base: UnsafePointer<Element> = unsafe buf.storage.pointer(at: bounded)
+            return unsafe Iterator(storageBase: base, header: buf.header)
         }
     }
 }

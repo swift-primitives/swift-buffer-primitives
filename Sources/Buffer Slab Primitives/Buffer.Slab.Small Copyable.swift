@@ -10,11 +10,11 @@ extension Buffer.Slab.Small where Element: Copyable {
     /// - Precondition: The slot is occupied.
     @inlinable
     public func peek(at slot: Bit.Index) -> Element {
-        switch _heapBuffer {
-        case .some(let heap):
-            return unsafe heap.storage.pointer(at: slot.retag(Element.self)).pointee
-        case .none:
-            return _inlineBuffer.peek(at: slot)
+        switch _storage {
+        case .heap(let buf):
+            return unsafe buf.storage.pointer(at: slot.retag(Element.self)).pointee
+        case .inline(let buf):
+            return buf.peek(at: slot)
         }
     }
 }

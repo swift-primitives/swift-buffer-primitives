@@ -50,9 +50,9 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     /// Calls `body` with a borrow of each element in order.
     @inlinable
     public func forEach<E: Swift.Error>(_ body: (borrowing Element) throws(E) -> Void) throws(E) {
-        switch _heapBuffer {
-        case .some(let heap): try heap.forEach(body)
-        case .none: try _inlineBuffer.forEach(body)
+        switch _storage {
+        case .heap(let heap): try heap.forEach(body)
+        case .inline(let buf): try buf.forEach(body)
         }
     }
 }

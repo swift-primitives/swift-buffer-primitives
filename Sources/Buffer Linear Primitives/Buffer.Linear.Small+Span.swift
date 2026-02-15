@@ -3,18 +3,25 @@
 extension Buffer.Linear.Small where Element: ~Copyable {
     /// Read-only span of all buffer elements.
     ///
-    /// Uses `switch` for borrowing access to `_heapBuffer` (SE-0432).
-    /// Dispatches to the active buffer's span.
+    /// Constructs the span from raw storage pointers to avoid
+    /// DiagnoseStaticExclusivity crash when delegating through enum payloads.
     public var span: Span<Element> {
         @_lifetime(borrow self)
         @inlinable
         borrowing get {
-            switch _heapBuffer {
-            case .some(let heap):
-                let span = heap.span
+            switch _storage {
+            case .heap(let heap):
+                let span = unsafe Span(
+                    _unsafeStart: UnsafePointer(heap.storage.pointer(at: .zero)),
+                    count: heap.header.count
+                )
                 return unsafe _overrideLifetime(span, borrowing: self)
-            case .none:
-                let span = _inlineBuffer.span
+            case .inline(let buf):
+                let inlineBounded = Index<Element>.Bounded<inlineCapacity>(.zero)!
+                let span = unsafe Span(
+                    _unsafeStart: UnsafePointer(buf.storage.pointer(at: inlineBounded)),
+                    count: buf.header.count
+                )
                 return unsafe _overrideLifetime(span, borrowing: self)
             }
         }
@@ -22,45 +29,25 @@ extension Buffer.Linear.Small where Element: ~Copyable {
 
     /// Mutable span of all buffer elements.
     ///
-    /// Constructs the span from raw storage pointers to avoid overlapping
-    /// access violations (accessing `heap.mutableSpan` and `&self`
-    /// simultaneously would overlap on `self`).
+    /// Extracts pointer and count from the enum, then constructs the span
+    /// outside the switch to avoid overlapping access on `self`.
     public var mutableSpan: MutableSpan<Element> {
         @_lifetime(&self)
         @inlinable
         mutating get {
-            if _heapBuffer != nil {
-                let span = unsafe MutableSpan(
-                    _unsafeStart: unsafe heap.storage.pointer(at: .zero),
-                    count: heap.header.count
-                )
-                return unsafe _overrideLifetime(span, mutating: &self)
-            } else {
+            let start: UnsafeMutablePointer<Element>
+            let elementCount: Index<Element>.Count
+            switch _storage {
+            case .heap(let heap):
+                unsafe start = heap.storage.pointer(at: .zero)
+                elementCount = heap.header.count
+            case .inline(let buf):
                 let inlineBounded = Index<Element>.Bounded<inlineCapacity>(.zero)!
-                let span = unsafe MutableSpan(
-                    _unsafeStart: unsafe _inlineBuffer.storage.pointer(at: inlineBounded),
-                    count: _inlineBuffer.header.count
-                )
-                return unsafe _overrideLifetime(span, mutating: &self)
+                unsafe start = buf.storage.pointer(at: inlineBounded)
+                elementCount = buf.header.count
             }
-        }
-        @_lifetime(&self)
-        @inlinable
-        _modify {
-            if _heapBuffer != nil {
-                var span = unsafe MutableSpan(
-                    _unsafeStart: unsafe heap.storage.pointer(at: .zero),
-                    count: heap.header.count
-                )
-                yield &span
-            } else {
-                let inlineBounded = Index<Element>.Bounded<inlineCapacity>(.zero)!
-                var span = unsafe MutableSpan(
-                    _unsafeStart: unsafe _inlineBuffer.storage.pointer(at: inlineBounded),
-                    count: _inlineBuffer.header.count
-                )
-                yield &span
-            }
+            let span = unsafe MutableSpan(_unsafeStart: start, count: elementCount)
+            return unsafe _overrideLifetime(span, mutating: &self)
         }
     }
 }
@@ -115,14 +102,14 @@ extension Buffer.Linear.Small where Element: Copyable {
 extension Buffer.Linear.Small: Sequence.`Protocol`, Sequence.Borrowing.`Protocol` where Element: Copyable {
     @inlinable
     public borrowing func makeIterator() -> Iterator {
-        switch _heapBuffer {
-        case .some(let heap):
+        switch _storage {
+        case .heap(let heap):
             let base = unsafe UnsafePointer(heap.storage.pointer(at: .zero))
             return unsafe Iterator(base: base, count: heap.count)
-        case .none:
+        case .inline(let buf):
             let inlineBounded = Index<Element>.Bounded<inlineCapacity>(.zero)!
-            let base: UnsafePointer<Element> = unsafe _inlineBuffer.storage.pointer(at: inlineBounded)
-            return unsafe Iterator(base: base, count: _inlineBuffer.count)
+            let base: UnsafePointer<Element> = unsafe buf.storage.pointer(at: inlineBounded)
+            return unsafe Iterator(base: base, count: buf.count)
         }
     }
 }

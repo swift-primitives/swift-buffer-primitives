@@ -19,9 +19,9 @@ extension Buffer.Linked.Small where Element: Copyable {
     /// - Complexity: O(1)
     @inlinable
     public var first: Element? {
-        switch _heapBuffer {
-        case .some(let heap): return heap.first
-        case .none: return _inlineBuffer.first
+        switch _storage {
+        case .heap(let heap): return heap.first
+        case .inline(let buf): return buf.first
         }
     }
 
@@ -30,9 +30,9 @@ extension Buffer.Linked.Small where Element: Copyable {
     /// - Complexity: O(1)
     @inlinable
     public var last: Element? {
-        switch _heapBuffer {
-        case .some(let heap): return heap.last
-        case .none: return _inlineBuffer.last
+        switch _storage {
+        case .heap(let heap): return heap.last
+        case .inline(let buf): return buf.last
         }
     }
 }
@@ -48,7 +48,14 @@ extension Buffer.Linked.Small where Element: Copyable {
     @inlinable
     @discardableResult
     public mutating func ensureUnique() -> Bool {
-        guard _heapBuffer != nil else { return false }
-        return heap.ensureUnique()
+        switch _storage {
+        case .inline(var buf):
+            self = Self(_storage: .inline(consume buf))
+            return false
+        case .heap(var buf):
+            let copied = buf.ensureUnique()
+            self = Self(_storage: .heap(consume buf))
+            return copied
+        }
     }
 }

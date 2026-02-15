@@ -6,35 +6,25 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     @inlinable
     public init() {
         self.init(
-            _inlineBuffer: Buffer<Element>.Linear.Inline<inlineCapacity>(),
-            _heapBuffer: nil
+            _storage: .inline(Buffer<Element>.Linear.Inline<inlineCapacity>())
         )
     }
 
     /// Whether the buffer has spilled to heap storage.
     @inlinable
-    public var isSpilled: Bool { _heapBuffer != nil }
-
-    /// Projected access to the heap buffer.
-    ///
-    /// - Precondition: `isSpilled` — callers MUST guard `_heapBuffer != nil` before access.
-    @inlinable
-    package var heap: Buffer<Element>.Linear {
-        // Force-unwrap is necessary: Optional._modify has compiler support for
-        // yielding &_heapBuffer! that arbitrary enums lack (no _modify into enum
-        // payloads for ~Copyable types). Enum storage was evaluated and rejected —
-        // see Research/small-buffer-storage-representation.md.
-        // Safe: all callers guard `_heapBuffer != nil` before accessing `heap`.
-        _read { yield _heapBuffer! }
-        _modify { yield &_heapBuffer! }
+    public var isSpilled: Bool {
+        switch _storage {
+        case .heap: return true
+        case .inline: return false
+        }
     }
 
     /// The number of elements in the buffer.
     @inlinable
     public var count: Index<Element>.Count {
-        switch _heapBuffer {
-        case .some(let heap): return heap.count
-        case .none: return _inlineBuffer.count
+        switch _storage {
+        case .heap(let heap): return heap.count
+        case .inline(let buf): return buf.count
         }
     }
 
@@ -45,18 +35,18 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     /// The current capacity of the buffer.
     @inlinable
     public var capacity: Index<Element>.Count {
-        switch _heapBuffer {
-        case .some(let heap): return heap.capacity
-        case .none: return Index<Element>.Count(UInt(inlineCapacity))
+        switch _storage {
+        case .heap(let heap): return heap.capacity
+        case .inline(_): return Index<Element>.Count(UInt(inlineCapacity))
         }
     }
 
     /// Whether the inline buffer is full (only meaningful in inline mode).
     @inlinable
     public var isFull: Bool {
-        switch _heapBuffer {
-        case .some(_): return false
-        case .none: return _inlineBuffer.isFull
+        switch _storage {
+        case .heap(_): return false
+        case .inline(let buf): return buf.isFull
         }
     }
 
@@ -67,10 +57,15 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func removeFirst() -> Element {
-        if _heapBuffer != nil {
-            return heap.removeFirst()
-        } else {
-            return _inlineBuffer.removeFirst()
+        switch _storage {
+        case .heap(var buf):
+            let element = buf.removeFirst()
+            self = Self(_storage: .heap(consume buf))
+            return element
+        case .inline(var buf):
+            let element = buf.removeFirst()
+            self = Self(_storage: .inline(consume buf))
+            return element
         }
     }
 
@@ -79,10 +74,15 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func removeLast() -> Element {
-        if _heapBuffer != nil {
-            return heap.removeLast()
-        } else {
-            return _inlineBuffer.removeLast()
+        switch _storage {
+        case .heap(var buf):
+            let element = buf.removeLast()
+            self = Self(_storage: .heap(consume buf))
+            return element
+        case .inline(var buf):
+            let element = buf.removeLast()
+            self = Self(_storage: .inline(consume buf))
+            return element
         }
     }
 
@@ -91,10 +91,15 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     /// - Precondition: The index must be in bounds.
     @inlinable
     public mutating func remove(at index: Index<Element>) -> Element {
-        if _heapBuffer != nil {
-            return heap.remove(at: index)
-        } else {
-            return _inlineBuffer.remove(at: index)
+        switch _storage {
+        case .heap(var buf):
+            let element = buf.remove(at: index)
+            self = Self(_storage: .heap(consume buf))
+            return element
+        case .inline(var buf):
+            let element = buf.remove(at: index)
+            self = Self(_storage: .inline(consume buf))
+            return element
         }
     }
 
@@ -103,10 +108,15 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     /// - Precondition: The index must be in bounds.
     @inlinable
     public mutating func replace(at index: Index<Element>, with newElement: consuming Element) -> Element {
-        if _heapBuffer != nil {
-            return heap.replace(at: index, with: consume newElement)
-        } else {
-            return _inlineBuffer.replace(at: index, with: consume newElement)
+        switch _storage {
+        case .heap(var buf):
+            let element = buf.replace(at: index, with: consume newElement)
+            self = Self(_storage: .heap(consume buf))
+            return element
+        case .inline(var buf):
+            let element = buf.replace(at: index, with: consume newElement)
+            self = Self(_storage: .inline(consume buf))
+            return element
         }
     }
 
@@ -115,10 +125,13 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     /// - Precondition: Both indices must be in bounds.
     @inlinable
     public mutating func swap(at i: Index<Element>, with j: Index<Element>) {
-        if _heapBuffer != nil {
-            heap.swap(at: i, with: j)
-        } else {
-            _inlineBuffer.swap(at: i, with: j)
+        switch _storage {
+        case .heap(var buf):
+            buf.swap(at: i, with: j)
+            self = Self(_storage: .heap(consume buf))
+        case .inline(var buf):
+            buf.swap(at: i, with: j)
+            self = Self(_storage: .inline(consume buf))
         }
     }
 
@@ -127,12 +140,14 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     /// Resets to inline mode.
     @inlinable
     public mutating func removeAll() {
-        if _heapBuffer != nil {
-            heap.removeAll()
-            _heapBuffer = nil
-            _inlineBuffer.removeAll()
-        } else {
-            _inlineBuffer.removeAll()
+        switch _storage {
+        case .heap(var buf):
+            buf.removeAll()
+            self = Self(_storage: .inline(Buffer<Element>.Linear.Inline<inlineCapacity>()))
+            _ = consume buf
+        case .inline(var buf):
+            buf.removeAll()
+            self = Self(_storage: .inline(consume buf))
         }
     }
 
@@ -141,10 +156,13 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     /// If `newCount >= count`, this method has no effect.
     @inlinable
     public mutating func truncate(to newCount: Index<Element>.Count) {
-        if _heapBuffer != nil {
-            heap.truncate(to: newCount)
-        } else {
-            _inlineBuffer.truncate(to: newCount)
+        switch _storage {
+        case .heap(var buf):
+            buf.truncate(to: newCount)
+            self = Self(_storage: .heap(consume buf))
+        case .inline(var buf):
+            buf.truncate(to: newCount)
+            self = Self(_storage: .inline(consume buf))
         }
     }
 
@@ -155,10 +173,13 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     @inlinable
     public mutating func removeAll(keepingCapacity: Bool) {
         if keepingCapacity {
-            if _heapBuffer != nil {
-                heap.removeAll()
-            } else {
-                _inlineBuffer.removeAll()
+            switch _storage {
+            case .heap(var buf):
+                buf.removeAll()
+                self = Self(_storage: .heap(consume buf))
+            case .inline(var buf):
+                buf.removeAll()
+                self = Self(_storage: .inline(consume buf))
             }
         } else {
             removeAll()
@@ -175,37 +196,58 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     /// If inline storage is full, spills to heap automatically using moves.
     @inlinable
     public mutating func append(_ element: consuming Element) {
-        if _heapBuffer != nil {
-            heap.append(consume element)
-        } else if !_inlineBuffer.isFull {
-            _ = _inlineBuffer.append(consume element)
-        } else {
-            _spillToHeapMoving()
-            heap.append(consume element)
+        switch _storage {
+        case .heap(var buf):
+            buf.append(consume element)
+            self = Self(_storage: .heap(consume buf))
+        case .inline(var buf):
+            if !buf.isFull {
+                _ = buf.append(consume element)
+                self = Self(_storage: .inline(consume buf))
+            } else {
+                self = Self(_storage: .inline(consume buf))
+                _spillToHeapMoving()
+                // After spill, _storage is .heap — append into it
+                switch _storage {
+                case .heap(var heapBuf):
+                    heapBuf.append(consume element)
+                    self = Self(_storage: .heap(consume heapBuf))
+                case .inline(var inlineBuf):
+                    self = Self(_storage: .inline(consume inlineBuf))
+                    fatalError()
+                }
+            }
         }
     }
 
     /// Moves inline elements to heap storage and activates heap mode.
     @usableFromInline
     mutating func _spillToHeapMoving() {
-        let currentCount = _inlineBuffer.count
-        let newCapacity = Index<Element>.Count(UInt(inlineCapacity * 2))
-        let newStorage = Storage<Element>.Heap.create(minimumCapacity: newCapacity)
+        switch _storage {
+        case .heap(var buf):
+            self = Self(_storage: .heap(consume buf))
+            return
+        case .inline(var buf):
+            let currentCount = buf.count
+            let newCapacity = Index<Element>.Count(UInt(inlineCapacity * 2))
+            let newStorage = Storage<Element>.Heap.create(minimumCapacity: newCapacity)
 
-        // Move elements from inline to heap
-        _inlineBuffer.header.initialization.forEach { range in
-            _inlineBuffer.storage.move(range: range, to: newStorage)
+            // Move elements from inline to heap
+            buf.header.initialization.forEach { range in
+                buf.storage.move(range: range, to: newStorage)
+            }
+
+            // Reset inline header so buf's deinit is a no-op
+            buf.header.count = .zero
+            buf.storage.initialization = .empty
+
+            var newHeader = Buffer.Linear.Header(capacity: newStorage.slotCapacity)
+            newHeader.count = currentCount
+            newStorage.initialization = newHeader.initialization
+
+            self = Self(_storage: .heap(Buffer<Element>.Linear(header: newHeader, storage: newStorage)))
+            // buf goes out of scope — deinit runs on empty state (no-op)
         }
-
-        // Reset inline header
-        _inlineBuffer.header.count = .zero
-        _inlineBuffer.storage.initialization = .empty
-
-        var newHeader = Buffer.Linear.Header(capacity: newStorage.slotCapacity)
-        newHeader.count = currentCount
-        newStorage.initialization = newHeader.initialization
-
-        _heapBuffer = Buffer<Element>.Linear(header: newHeader, storage: newStorage)
     }
 }
 
@@ -216,40 +258,54 @@ extension Buffer.Linear.Small where Element: Copyable {
     /// Copies inline elements to heap storage and activates heap mode.
     @usableFromInline
     mutating func _spillToHeap() {
-        let currentCount = _inlineBuffer.count
-        let newCapacity = Index<Element>.Count(UInt(inlineCapacity * 2))
-        let newStorage = Storage<Element>.Heap.create(minimumCapacity: newCapacity)
+        switch _storage {
+        case .heap(var buf):
+            self = Self(_storage: .heap(consume buf))
+            return
+        case .inline(var buf):
+            let currentCount = buf.count
+            let newCapacity = Index<Element>.Count(UInt(inlineCapacity * 2))
+            let newStorage = Storage<Element>.Heap.create(minimumCapacity: newCapacity)
 
-        Buffer.Linear.copy(
-            header: _inlineBuffer.header,
-            source: _inlineBuffer.storage,
-            to: newStorage
-        )
+            Buffer.Linear.copy(
+                header: buf.header,
+                source: buf.storage,
+                to: newStorage
+            )
 
-        var newHeader = Buffer.Linear.Header(capacity: newStorage.slotCapacity)
-        newHeader.count = currentCount
-        newStorage.initialization = newHeader.initialization
+            var newHeader = Buffer.Linear.Header(capacity: newStorage.slotCapacity)
+            newHeader.count = currentCount
+            newStorage.initialization = newHeader.initialization
 
-        _heapBuffer = Buffer<Element>.Linear(header: newHeader, storage: newStorage)
+            self = Self(_storage: .heap(Buffer<Element>.Linear(header: newHeader, storage: newStorage)))
+            _ = consume buf
+        }
     }
 
     /// Copies inline elements to heap storage with at least the given capacity.
     @usableFromInline
     mutating func _spillToHeap(minimumCapacity: Index<Element>.Count) {
-        let currentCount = _inlineBuffer.count
-        let newStorage = Storage<Element>.Heap.create(minimumCapacity: minimumCapacity)
+        switch _storage {
+        case .heap(var buf):
+            self = Self(_storage: .heap(consume buf))
+            return
+        case .inline(var buf):
+            let currentCount = buf.count
+            let newStorage = Storage<Element>.Heap.create(minimumCapacity: minimumCapacity)
 
-        Buffer.Linear.copy(
-            header: _inlineBuffer.header,
-            source: _inlineBuffer.storage,
-            to: newStorage
-        )
+            Buffer.Linear.copy(
+                header: buf.header,
+                source: buf.storage,
+                to: newStorage
+            )
 
-        var newHeader = Buffer.Linear.Header(capacity: newStorage.slotCapacity)
-        newHeader.count = currentCount
-        newStorage.initialization = newHeader.initialization
+            var newHeader = Buffer.Linear.Header(capacity: newStorage.slotCapacity)
+            newHeader.count = currentCount
+            newStorage.initialization = newHeader.initialization
 
-        _heapBuffer = Buffer<Element>.Linear(header: newHeader, storage: newStorage)
+            self = Self(_storage: .heap(Buffer<Element>.Linear(header: newHeader, storage: newStorage)))
+            _ = consume buf
+        }
     }
 }
 

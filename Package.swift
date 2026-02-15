@@ -56,6 +56,7 @@ let package = Package(
         .package(path: "../swift-bit-vector-primitives"),
         .package(path: "../swift-finite-primitives"),
         .package(path: "../swift-sequence-primitives"),
+        .package(path: "../swift-collection-primitives"),
     ],
     targets: [
         // Core: Namespace enums, header types, growth policy
@@ -83,6 +84,7 @@ let package = Package(
                 "Buffer Primitives Core",
                 .product(name: "Finite Primitives", package: "swift-finite-primitives"),
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
+                .product(name: "Collection Primitives", package: "swift-collection-primitives"),
             ]
         ),
         // Slab: Index-addressable slot storage static ops and composed types

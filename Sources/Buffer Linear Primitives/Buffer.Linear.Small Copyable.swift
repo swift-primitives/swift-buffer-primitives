@@ -7,9 +7,9 @@ extension Buffer.Linear.Small where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var peekFront: Element {
-        switch _heapBuffer {
-        case .some(let heap): return heap.peekFront
-        case .none: return _inlineBuffer.peekFront
+        switch _storage {
+        case .heap(let heap): return heap.peekFront
+        case .inline(let buf): return buf.peekFront
         }
     }
 
@@ -18,9 +18,9 @@ extension Buffer.Linear.Small where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var peekBack: Element {
-        switch _heapBuffer {
-        case .some(let heap): return heap.peekBack
-        case .none: return _inlineBuffer.peekBack
+        switch _storage {
+        case .heap(let heap): return heap.peekBack
+        case .inline(let buf): return buf.peekBack
         }
     }
 
@@ -31,10 +31,15 @@ extension Buffer.Linear.Small where Element: Copyable {
     @inlinable
     @discardableResult
     public mutating func ensureUnique() -> Bool {
-        if _heapBuffer != nil {
-            return heap.ensureUnique()
+        switch _storage {
+        case .heap(var buf):
+            let copied = buf.ensureUnique()
+            self = Self(_storage: .heap(consume buf))
+            return copied
+        case .inline(var buf):
+            self = Self(_storage: .inline(consume buf))
+            return false
         }
-        return false
     }
 
     /// Ensures the buffer can hold at least `minimumCapacity` elements.
@@ -42,10 +47,17 @@ extension Buffer.Linear.Small where Element: Copyable {
     /// May trigger spill to heap if the requested capacity exceeds inline capacity.
     @inlinable
     public mutating func reserveCapacity(_ minimumCapacity: Index<Element>.Count) {
-        if _heapBuffer != nil {
-            heap.reserveCapacity(minimumCapacity)
-        } else if minimumCapacity > Index<Element>.Count(UInt(inlineCapacity)) {
-            _spillToHeap(minimumCapacity: minimumCapacity)
+        switch _storage {
+        case .heap(var buf):
+            buf.reserveCapacity(minimumCapacity)
+            self = Self(_storage: .heap(consume buf))
+        case .inline(var buf):
+            if minimumCapacity > Index<Element>.Count(UInt(inlineCapacity)) {
+                self = Self(_storage: .inline(consume buf))
+                _spillToHeap(minimumCapacity: minimumCapacity)
+            } else {
+                self = Self(_storage: .inline(consume buf))
+            }
         }
     }
 }
@@ -59,13 +71,27 @@ extension Buffer.Linear.Small where Element: Copyable {
     /// If inline storage is full, spills to heap automatically.
     @inlinable
     public mutating func append(_ element: consuming Element) {
-        if _heapBuffer != nil {
-            heap.append(consume element)
-        } else if !_inlineBuffer.isFull {
-            _ = _inlineBuffer.append(consume element)
-        } else {
-            _spillToHeap()
-            heap.append(consume element)
+        switch _storage {
+        case .heap(var buf):
+            buf.append(consume element)
+            self = Self(_storage: .heap(consume buf))
+        case .inline(var buf):
+            if !buf.isFull {
+                _ = buf.append(consume element)
+                self = Self(_storage: .inline(consume buf))
+            } else {
+                self = Self(_storage: .inline(consume buf))
+                _spillToHeap()
+                // After spill, _storage is .heap — append into it
+                switch _storage {
+                case .heap(var heapBuf):
+                    heapBuf.append(consume element)
+                    self = Self(_storage: .heap(consume heapBuf))
+                case .inline(var inlineBuf):
+                    self = Self(_storage: .inline(consume inlineBuf))
+                    fatalError()
+                }
+            }
         }
     }
 
@@ -74,10 +100,15 @@ extension Buffer.Linear.Small where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func removeFirst() -> Element {
-        if _heapBuffer != nil {
-            return heap.removeFirst()
-        } else {
-            return _inlineBuffer.removeFirst()
+        switch _storage {
+        case .heap(var buf):
+            let element = buf.removeFirst()
+            self = Self(_storage: .heap(consume buf))
+            return element
+        case .inline(var buf):
+            let element = buf.removeFirst()
+            self = Self(_storage: .inline(consume buf))
+            return element
         }
     }
 
@@ -86,10 +117,15 @@ extension Buffer.Linear.Small where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func removeLast() -> Element {
-        if _heapBuffer != nil {
-            return heap.removeLast()
-        } else {
-            return _inlineBuffer.removeLast()
+        switch _storage {
+        case .heap(var buf):
+            let element = buf.removeLast()
+            self = Self(_storage: .heap(consume buf))
+            return element
+        case .inline(var buf):
+            let element = buf.removeLast()
+            self = Self(_storage: .inline(consume buf))
+            return element
         }
     }
 
@@ -98,10 +134,15 @@ extension Buffer.Linear.Small where Element: Copyable {
     /// - Precondition: The index must be in bounds.
     @inlinable
     public mutating func remove(at index: Index<Element>) -> Element {
-        if _heapBuffer != nil {
-            return heap.remove(at: index)
-        } else {
-            return _inlineBuffer.remove(at: index)
+        switch _storage {
+        case .heap(var buf):
+            let element = buf.remove(at: index)
+            self = Self(_storage: .heap(consume buf))
+            return element
+        case .inline(var buf):
+            let element = buf.remove(at: index)
+            self = Self(_storage: .inline(consume buf))
+            return element
         }
     }
 
@@ -110,10 +151,15 @@ extension Buffer.Linear.Small where Element: Copyable {
     /// - Precondition: The index must be in bounds.
     @inlinable
     public mutating func replace(at index: Index<Element>, with newElement: consuming Element) -> Element {
-        if _heapBuffer != nil {
-            return heap.replace(at: index, with: consume newElement)
-        } else {
-            return _inlineBuffer.replace(at: index, with: consume newElement)
+        switch _storage {
+        case .heap(var buf):
+            let element = buf.replace(at: index, with: consume newElement)
+            self = Self(_storage: .heap(consume buf))
+            return element
+        case .inline(var buf):
+            let element = buf.replace(at: index, with: consume newElement)
+            self = Self(_storage: .inline(consume buf))
+            return element
         }
     }
 
@@ -122,12 +168,14 @@ extension Buffer.Linear.Small where Element: Copyable {
     /// Resets to inline mode.
     @inlinable
     public mutating func removeAll() {
-        if _heapBuffer != nil {
-            heap.removeAll()
-            _heapBuffer = nil
-            _inlineBuffer.removeAll()
-        } else {
-            _inlineBuffer.removeAll()
+        switch _storage {
+        case .heap(var buf):
+            buf.removeAll()
+            self = Self(_storage: .inline(Buffer<Element>.Linear.Inline<inlineCapacity>()))
+            _ = consume buf
+        case .inline(var buf):
+            buf.removeAll()
+            self = Self(_storage: .inline(consume buf))
         }
     }
 
@@ -138,10 +186,13 @@ extension Buffer.Linear.Small where Element: Copyable {
     @inlinable
     public mutating func removeAll(keepingCapacity: Bool) {
         if keepingCapacity {
-            if _heapBuffer != nil {
-                heap.removeAll()
-            } else {
-                _inlineBuffer.removeAll()
+            switch _storage {
+            case .heap(var buf):
+                buf.removeAll()
+                self = Self(_storage: .heap(consume buf))
+            case .inline(var buf):
+                buf.removeAll()
+                self = Self(_storage: .inline(consume buf))
             }
         } else {
             removeAll()
@@ -158,19 +209,21 @@ extension Buffer.Linear.Small where Element: Copyable {
     @inlinable
     public subscript(index: Index<Element>) -> Element {
         _read {
-            switch _heapBuffer {
-            case .some(let heap):
+            switch _storage {
+            case .heap(let heap):
                 yield heap[index]
-            case .none:
-                yield _inlineBuffer[index]
+            case .inline(let buf):
+                yield buf[index]
             }
         }
         _modify {
-            if _heapBuffer != nil {
-                heap.ensureUnique()
-                yield &heap[index]
-            } else {
-                yield &_inlineBuffer[index]
+            ensureUnique()
+            switch _storage {
+            case .heap(let heap):
+                yield unsafe &heap.storage.pointer(at: index).pointee
+            case .inline(let buf):
+                let bounded = Index<Element>.Bounded<inlineCapacity>(index)!
+                yield unsafe &buf.storage.pointer(at: bounded).pointee
             }
         }
     }

@@ -7,9 +7,9 @@ extension Buffer.Ring.Small where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var peekFront: Element {
-        switch _heapBuffer {
-        case .some(let heap): return heap.peekFront
-        case .none: return _inlineBuffer.peekFront
+        switch _storage {
+        case .heap(let heap): return heap.peekFront
+        case .inline(let buf): return buf.peekFront
         }
     }
 
@@ -18,9 +18,9 @@ extension Buffer.Ring.Small where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var peekBack: Element {
-        switch _heapBuffer {
-        case .some(let heap): return heap.peekBack
-        case .none: return _inlineBuffer.peekBack
+        switch _storage {
+        case .heap(let heap): return heap.peekBack
+        case .inline(let buf): return buf.peekBack
         }
     }
 
@@ -31,10 +31,15 @@ extension Buffer.Ring.Small where Element: Copyable {
     @inlinable
     @discardableResult
     public mutating func ensureUnique() -> Bool {
-        if _heapBuffer != nil {
-            return heap.ensureUnique()
+        switch _storage {
+        case .heap(var buf):
+            let copied = buf.ensureUnique()
+            self = Self(_storage: .heap(consume buf))
+            return copied
+        case .inline(var buf):
+            self = Self(_storage: .inline(consume buf))
+            return false
         }
-        return false
     }
 
     /// Ensures the buffer can hold at least `minimumCapacity` elements.
@@ -42,10 +47,15 @@ extension Buffer.Ring.Small where Element: Copyable {
     /// May trigger spill to heap if the requested capacity exceeds inline capacity.
     @inlinable
     public mutating func reserveCapacity(_ minimumCapacity: Index<Element>.Count) {
-        if _heapBuffer != nil {
-            heap.reserveCapacity(minimumCapacity)
-        } else if minimumCapacity > Index<Element>.Count(UInt(inlineCapacity)) {
-            _spillToHeap(minimumCapacity: minimumCapacity)
+        switch _storage {
+        case .heap(var buf):
+            buf.reserveCapacity(minimumCapacity)
+            self = Self(_storage: .heap(consume buf))
+        case .inline(var buf):
+            self = Self(_storage: .inline(consume buf))
+            if minimumCapacity > Index<Element>.Count(UInt(inlineCapacity)) {
+                _spillToHeap(minimumCapacity: minimumCapacity)
+            }
         }
     }
 }
@@ -57,40 +67,54 @@ extension Buffer.Ring.Small where Element: Copyable {
     /// Copies inline ring elements to heap storage and activates heap mode.
     @usableFromInline
     mutating func _spillToHeap() {
-        let currentCount = _inlineBuffer.count
-        let newCapacity = Index<Element>.Count(UInt(inlineCapacity * 2))
-        let newStorage = Storage<Element>.Heap.create(minimumCapacity: newCapacity)
+        switch _storage {
+        case .heap(var buf):
+            self = Self(_storage: .heap(consume buf))
+            return
+        case .inline(var buf):
+            let currentCount = buf.count
+            let newCapacity = Index<Element>.Count(UInt(inlineCapacity * 2))
+            let newStorage = Storage<Element>.Heap.create(minimumCapacity: newCapacity)
 
-        Buffer.Ring.linearize(
-            header: _inlineBuffer.header,
-            source: _inlineBuffer.storage,
-            to: newStorage
-        )
+            Buffer.Ring.linearize(
+                header: buf.header,
+                source: buf.storage,
+                to: newStorage
+            )
 
-        var newHeader = Buffer.Ring.Header(capacity: newStorage.slotCapacity)
-        newHeader.count = currentCount
-        newStorage.initialization = newHeader.initialization
+            var newHeader = Buffer.Ring.Header(capacity: newStorage.slotCapacity)
+            newHeader.count = currentCount
+            newStorage.initialization = newHeader.initialization
 
-        _heapBuffer = Buffer<Element>.Ring(header: newHeader, storage: newStorage)
+            self = Self(_storage: .heap(Buffer<Element>.Ring(header: newHeader, storage: newStorage)))
+            _ = consume buf
+        }
     }
 
     /// Copies inline ring elements to heap storage with at least the given capacity.
     @usableFromInline
     mutating func _spillToHeap(minimumCapacity: Index<Element>.Count) {
-        let currentCount = _inlineBuffer.count
-        let newStorage = Storage<Element>.Heap.create(minimumCapacity: minimumCapacity)
+        switch _storage {
+        case .heap(var buf):
+            self = Self(_storage: .heap(consume buf))
+            return
+        case .inline(var buf):
+            let currentCount = buf.count
+            let newStorage = Storage<Element>.Heap.create(minimumCapacity: minimumCapacity)
 
-        Buffer.Ring.linearize(
-            header: _inlineBuffer.header,
-            source: _inlineBuffer.storage,
-            to: newStorage
-        )
+            Buffer.Ring.linearize(
+                header: buf.header,
+                source: buf.storage,
+                to: newStorage
+            )
 
-        var newHeader = Buffer.Ring.Header(capacity: newStorage.slotCapacity)
-        newHeader.count = currentCount
-        newStorage.initialization = newHeader.initialization
+            var newHeader = Buffer.Ring.Header(capacity: newStorage.slotCapacity)
+            newHeader.count = currentCount
+            newStorage.initialization = newHeader.initialization
 
-        _heapBuffer = Buffer<Element>.Ring(header: newHeader, storage: newStorage)
+            self = Self(_storage: .heap(Buffer<Element>.Ring(header: newHeader, storage: newStorage)))
+            _ = consume buf
+        }
     }
 }
 
@@ -101,14 +125,27 @@ extension Buffer.Ring.Small where Element: Copyable {
     /// Pushes an element to the back (CoW-safe).
     @inlinable
     public mutating func pushBack(_ element: consuming Element) {
-        if _heapBuffer != nil {
-            heap.ensureUnique()
-            heap.pushBack(consume element)
-        } else if !_inlineBuffer.isFull {
-            _ = _inlineBuffer.pushBack(consume element)
-        } else {
-            _spillToHeap()
-            heap.pushBack(consume element)
+        switch _storage {
+        case .heap(var buf):
+            buf.ensureUnique()
+            buf.pushBack(consume element)
+            self = Self(_storage: .heap(consume buf))
+        case .inline(var buf):
+            if !buf.isFull {
+                _ = buf.pushBack(consume element)
+                self = Self(_storage: .inline(consume buf))
+            } else {
+                self = Self(_storage: .inline(consume buf))
+                _spillToHeap()
+                switch _storage {
+                case .heap(var buf):
+                    buf.pushBack(consume element)
+                    self = Self(_storage: .heap(consume buf))
+                case .inline(var buf):
+                    self = Self(_storage: .inline(consume buf))
+                    fatalError("_spillToHeap must transition to heap")
+                }
+            }
         }
     }
 
@@ -117,25 +154,43 @@ extension Buffer.Ring.Small where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func popFront() -> Element {
-        if _heapBuffer != nil {
-            heap.ensureUnique()
-            return heap.popFront()
-        } else {
-            return _inlineBuffer.popFront()
+        switch _storage {
+        case .heap(var buf):
+            buf.ensureUnique()
+            let element = buf.popFront()
+            self = Self(_storage: .heap(consume buf))
+            return element
+        case .inline(var buf):
+            let element = buf.popFront()
+            self = Self(_storage: .inline(consume buf))
+            return element
         }
     }
 
     /// Pushes an element to the front (CoW-safe).
     @inlinable
     public mutating func pushFront(_ element: consuming Element) {
-        if _heapBuffer != nil {
-            heap.ensureUnique()
-            heap.pushFront(consume element)
-        } else if !_inlineBuffer.isFull {
-            _ = _inlineBuffer.pushFront(consume element)
-        } else {
-            _spillToHeap()
-            heap.pushFront(consume element)
+        switch _storage {
+        case .heap(var buf):
+            buf.ensureUnique()
+            buf.pushFront(consume element)
+            self = Self(_storage: .heap(consume buf))
+        case .inline(var buf):
+            if !buf.isFull {
+                _ = buf.pushFront(consume element)
+                self = Self(_storage: .inline(consume buf))
+            } else {
+                self = Self(_storage: .inline(consume buf))
+                _spillToHeap()
+                switch _storage {
+                case .heap(var buf):
+                    buf.pushFront(consume element)
+                    self = Self(_storage: .heap(consume buf))
+                case .inline(var buf):
+                    self = Self(_storage: .inline(consume buf))
+                    fatalError("_spillToHeap must transition to heap")
+                }
+            }
         }
     }
 
@@ -144,11 +199,16 @@ extension Buffer.Ring.Small where Element: Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func popBack() -> Element {
-        if _heapBuffer != nil {
-            heap.ensureUnique()
-            return heap.popBack()
-        } else {
-            return _inlineBuffer.popBack()
+        switch _storage {
+        case .heap(var buf):
+            buf.ensureUnique()
+            let element = buf.popBack()
+            self = Self(_storage: .heap(consume buf))
+            return element
+        case .inline(var buf):
+            let element = buf.popBack()
+            self = Self(_storage: .inline(consume buf))
+            return element
         }
     }
 
@@ -157,12 +217,14 @@ extension Buffer.Ring.Small where Element: Copyable {
     /// Resets to inline mode.
     @inlinable
     public mutating func removeAll() {
-        if _heapBuffer != nil {
-            heap.removeAll()
-            _heapBuffer = nil
-            _inlineBuffer.removeAll()
-        } else {
-            _inlineBuffer.removeAll()
+        switch _storage {
+        case .heap(var buf):
+            buf.removeAll()
+            self = Self(_storage: .inline(Buffer<Element>.Ring.Inline<inlineCapacity>()))
+            _ = consume buf
+        case .inline(var buf):
+            buf.removeAll()
+            self = Self(_storage: .inline(consume buf))
         }
     }
 
@@ -173,11 +235,14 @@ extension Buffer.Ring.Small where Element: Copyable {
     @inlinable
     public mutating func removeAll(keepingCapacity: Bool) {
         if keepingCapacity {
-            if _heapBuffer != nil {
-                heap.ensureUnique()
-                heap.removeAll()
-            } else {
-                _inlineBuffer.removeAll()
+            switch _storage {
+            case .heap(var buf):
+                buf.ensureUnique()
+                buf.removeAll()
+                self = Self(_storage: .heap(consume buf))
+            case .inline(var buf):
+                buf.removeAll()
+                self = Self(_storage: .inline(consume buf))
             }
         } else {
             removeAll()
@@ -194,19 +259,26 @@ extension Buffer.Ring.Small where Element: Copyable {
     @inlinable
     public subscript(index: Index<Element>) -> Element {
         _read {
-            switch _heapBuffer {
-            case .some(let heap):
+            switch _storage {
+            case .heap(let heap):
                 yield heap[index]
-            case .none:
-                yield _inlineBuffer[index]
+            case .inline(let buf):
+                yield buf[index]
             }
         }
         _modify {
-            if _heapBuffer != nil {
-                heap.ensureUnique()
-                yield &heap[index]
-            } else {
-                yield &_inlineBuffer[index]
+            ensureUnique()
+            switch _storage {
+            case .heap(let heap):
+                let physical = Index.Modular.physical(
+                    forLogical: index, head: heap.header.head, capacity: heap.header.capacity)
+                yield unsafe &heap.storage.pointer(at: physical).pointee
+            case .inline(let buf):
+                let bounded = Index<Element>.Bounded<inlineCapacity>(
+                    Index.Modular.physical(
+                        forLogical: index, head: buf.header.head, capacity: buf.header.capacity)
+                )!
+                yield unsafe &buf.storage.pointer(at: bounded).pointee
             }
         }
     }

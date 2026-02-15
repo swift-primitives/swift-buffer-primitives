@@ -111,20 +111,28 @@ public enum Buffer<Element: ~Copyable> {
         /// In inline mode, uses `Storage<Element>.Inline<inlineCapacity>` with
         /// ring-buffer wrap-around. After spill, elements are linearized into
         /// a growable `Buffer<Element>.Ring`.
+        @frozen
         public struct Small<let inlineCapacity: Int>: ~Copyable {
-            @usableFromInline
-            package var _inlineBuffer: Inline<inlineCapacity>
+            // WORKAROUND: Enum storage instead of two-field struct
+            // WHY: ~Copyable structs with both @_rawLayout fields (Storage.Inline)
+            //      and ManagedBuffer class references (Storage.Heap) trigger LLVM
+            //      verifier crash in release builds ("Instruction does not dominate
+            //      all uses!"). Enum ensures only one variant is destroyed at a time.
+            // WHEN TO REMOVE: When swiftlang/swift fixes the implicit destructor
+            //      codegen for mixed @_rawLayout + class stored properties
+            // TRACKING: swiftlang/swift LLVM verifier crash
+            @frozen @usableFromInline
+            package enum _Representation: ~Copyable {
+                case inline(Inline<inlineCapacity>)
+                case heap(Buffer<Element>.Ring)
+            }
 
             @usableFromInline
-            package var _heapBuffer: Buffer<Element>.Ring?
+            package var _storage: _Representation
 
             @inlinable
-            package init(
-                _inlineBuffer: consuming Inline<inlineCapacity>,
-                _heapBuffer: consuming Buffer<Element>.Ring?
-            ) {
-                self._inlineBuffer = _inlineBuffer
-                self._heapBuffer = _heapBuffer
+            package init(_storage: consuming _Representation) {
+                self._storage = _storage
             }
 
             /// A snapshot of small ring buffer cursor state for save/restore.
@@ -331,20 +339,21 @@ public enum Buffer<Element: ~Copyable> {
         /// Elements are stored contiguously at slots `0 ..< count`.
         /// In inline mode, uses `Storage<Element>.Inline<inlineCapacity>`.
         /// After spill, uses `Storage<Element>.Heap` (growable).
+        @frozen
         public struct Small<let inlineCapacity: Int>: ~Copyable {
-            @usableFromInline
-            package var _inlineBuffer: Inline<inlineCapacity>
+            // WORKAROUND: Enum storage (see Buffer.Ring.Small for full rationale)
+            @frozen @usableFromInline
+            package enum _Representation: ~Copyable {
+                case inline(Inline<inlineCapacity>)
+                case heap(Buffer<Element>.Linear)
+            }
 
             @usableFromInline
-            package var _heapBuffer: Buffer<Element>.Linear?
+            package var _storage: _Representation
 
             @inlinable
-            package init(
-                _inlineBuffer: consuming Inline<inlineCapacity>,
-                _heapBuffer: consuming Buffer<Element>.Linear?
-            ) {
-                self._inlineBuffer = _inlineBuffer
-                self._heapBuffer = _heapBuffer
+            package init(_storage: consuming _Representation) {
+                self._storage = _storage
             }
         }
 
@@ -517,26 +526,27 @@ public enum Buffer<Element: ~Copyable> {
         ///
         /// Uses the two-field storage pattern per
         /// Research/small-buffer-storage-representation.md.
+        @frozen
         public struct Small<let inlineCapacity: Int>: ~Copyable {
-            @usableFromInline
-            package var _inlineBuffer: Inline<inlineCapacity>
-
-            @usableFromInline
-            package var _heapBuffer: Buffer<Element>.Slab?
-
-            @inlinable
-            package init(
-                _inlineBuffer: consuming Inline<inlineCapacity>,
-                _heapBuffer: consuming Buffer<Element>.Slab?
-            ) {
-                self._inlineBuffer = _inlineBuffer
-                self._heapBuffer = _heapBuffer
+            // WORKAROUND: Enum storage (see Buffer.Ring.Small for full rationale)
+            @frozen @usableFromInline
+            package enum _Representation: ~Copyable {
+                case inline(Inline<inlineCapacity>)
+                case heap(Buffer<Element>.Slab)
             }
 
-            // No deinit needed:
-            // - _heapBuffer: Optional<Slab>'s deinit → Slab's deinit handles heap cleanup
-            // - _inlineBuffer: Slab.Inline's deinit handles inline bitmap-driven cleanup
-            // After spill, inline bitmap is cleared → Inline's deinit is a no-op
+            @usableFromInline
+            package var _storage: _Representation
+
+            @inlinable
+            package init(_storage: consuming _Representation) {
+                self._storage = _storage
+            }
+
+            // No explicit deinit needed:
+            // Enum destroys only the active case:
+            // - .inline: Slab.Inline's deinit handles bitmap-driven cleanup
+            // - .heap: Slab's deinit handles heap element cleanup
         }
 
         // MARK: - Header
@@ -803,20 +813,21 @@ public enum Buffer<Element: ~Copyable> {
         /// and subsequent operations route to the heap buffer permanently.
         ///
         /// Follows the same pattern as `Buffer.Ring.Small`.
+        @frozen
         public struct Small<let inlineCapacity: Int>: ~Copyable {
-            @usableFromInline
-            package var _inlineBuffer: Inline<inlineCapacity>
+            // WORKAROUND: Enum storage (see Buffer.Ring.Small for full rationale)
+            @frozen @usableFromInline
+            package enum _Representation: ~Copyable {
+                case inline(Inline<inlineCapacity>)
+                case heap(Buffer<Element>.Linked<N>)
+            }
 
             @usableFromInline
-            package var _heapBuffer: Buffer<Element>.Linked<N>?
+            package var _storage: _Representation
 
             @inlinable
-            package init(
-                _inlineBuffer: consuming Inline<inlineCapacity>,
-                _heapBuffer: consuming Buffer<Element>.Linked<N>?
-            ) {
-                self._inlineBuffer = _inlineBuffer
-                self._heapBuffer = _heapBuffer
+            package init(_storage: consuming _Representation) {
+                self._storage = _storage
             }
         }
     }
@@ -1001,55 +1012,56 @@ public enum Buffer<Element: ~Copyable> {
         /// discipline (tokens, free-list). After spill, elements are moved
         /// to a growable `Buffer<Element>.Arena`. Once spilled, the buffer
         /// never returns to inline mode.
+        @frozen
         public struct Small<let inlineCapacity: Int>: ~Copyable {
-            @usableFromInline
-            package var _inlineBuffer: Inline<inlineCapacity>
+            // WORKAROUND: Enum storage (see Buffer.Ring.Small for full rationale)
+            @frozen @usableFromInline
+            package enum _Representation: ~Copyable {
+                case inline(Inline<inlineCapacity>)
+                case heap(Buffer<Element>.Arena)
+            }
 
             @usableFromInline
-            package var _heapBuffer: Buffer<Element>.Arena?
+            package var _storage: _Representation
 
             @inlinable
-            package init(
-                _inlineBuffer: consuming Inline<inlineCapacity>,
-                _heapBuffer: consuming Buffer<Element>.Arena?
-            ) {
-                self._inlineBuffer = _inlineBuffer
-                self._heapBuffer = _heapBuffer
+            package init(_storage: consuming _Representation) {
+                self._storage = _storage
             }
 
             /// Whether the buffer has spilled to heap storage.
             @inlinable
             public var isSpilled: Bool {
-                switch _heapBuffer {
-                case .some: return true
-                case .none: return false
+                switch _storage {
+                case .heap: return true
+                case .inline: return false
                 }
             }
 
             /// The number of currently occupied slots.
             @inlinable
             public var occupied: Index<Element>.Count {
-                switch _heapBuffer {
-                case .some(let heap): return heap.header.occupied
-                case .none: return _inlineBuffer.header.occupied
+                switch _storage {
+                case .heap(let heap): return heap.header.occupied
+                case .inline(let buf): return buf.header.occupied
                 }
             }
 
             /// Whether no slots are occupied.
             @inlinable
             public var isEmpty: Bool {
-                switch _heapBuffer {
-                case .some(let heap): return heap.header.occupied == .zero
-                case .none: return _inlineBuffer.header.occupied == .zero
+                switch _storage {
+                case .heap(let heap): return heap.header.occupied == .zero
+                case .inline(let buf): return buf.header.occupied == .zero
                 }
             }
 
             /// Whether all inline slots are occupied (only meaningful pre-spill).
             @inlinable
             public var isFull: Bool {
-                switch _heapBuffer {
-                case .some: return false
-                case .none: return _inlineBuffer.header.isFull
+                switch _storage {
+                case .heap: return false
+                case .inline(let buf): return buf.header.isFull
                 }
             }
         }
@@ -1181,6 +1193,7 @@ extension Buffer.Ring.Inline: Sendable where Element: Sendable {}
 
 // Copyable suppressed per INV-INLINE-004a (contains Inline).
 // extension Buffer.Ring.Small: Copyable where Element: Copyable {}
+extension Buffer.Ring.Small._Representation: @unchecked Sendable where Element: Sendable {}
 extension Buffer.Ring.Small: Sendable where Element: Sendable {}
 
 // MARK: - Conditional Conformances (Linear)
@@ -1198,6 +1211,7 @@ extension Buffer.Linear.Inline: Sendable where Element: Sendable {}
 
 // Copyable suppressed per INV-INLINE-004a (contains Inline).
 // extension Buffer.Linear.Small: Copyable where Element: Copyable {}
+extension Buffer.Linear.Small._Representation: @unchecked Sendable where Element: Sendable {}
 extension Buffer.Linear.Small: Sendable where Element: Sendable {}
 
 // MARK: - Conditional Conformances (Slab)
@@ -1215,6 +1229,7 @@ extension Buffer.Slab.Inline: Sendable where Element: Sendable {}
 
 // Copyable suppressed per INV-INLINE-004a (contains Inline).
 // extension Buffer.Slab.Small: Copyable where Element: Copyable {}
+extension Buffer.Slab.Small._Representation: @unchecked Sendable where Element: Sendable {}
 extension Buffer.Slab.Small: Sendable where Element: Sendable {}
 
 // MARK: - Conditional Conformances (Slots)
@@ -1236,6 +1251,7 @@ extension Buffer.Linked.Inline: Sendable where Element: Sendable {}
 
 // Copyable suppressed per INV-INLINE-004a (contains Inline).
 // extension Buffer.Linked.Small: Copyable where Element: Copyable {}
+extension Buffer.Linked.Small._Representation: @unchecked Sendable where Element: Sendable {}
 extension Buffer.Linked.Small: Sendable where Element: Sendable {}
 
 // MARK: - Conditional Conformances (Arena)
@@ -1252,4 +1268,5 @@ extension Buffer.Arena.Inline: Sendable where Element: Sendable {}
 
 // Copyable suppressed per INV-INLINE-004a (contains Inline).
 // extension Buffer.Arena.Small: Copyable where Element: Copyable {}
+extension Buffer.Arena.Small._Representation: @unchecked Sendable where Element: Sendable {}
 extension Buffer.Arena.Small: Sendable where Element: Sendable {}

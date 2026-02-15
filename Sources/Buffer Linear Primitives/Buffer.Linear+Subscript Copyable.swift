@@ -5,7 +5,7 @@ extension Buffer.Linear where Element: Copyable {
     ///
     /// - Parameter index: The index of the element to access.
     @inlinable
-    public subscript(index: Index<Element>) -> Element {
+    public subscript(_ index: Index<Element>) -> Element {
         _read {
             yield unsafe storage.pointer(at: index).pointee
         }

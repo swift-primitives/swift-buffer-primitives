@@ -88,9 +88,9 @@ extension Buffer.Ring.Small where Element: ~Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public func withFront<R: ~Copyable>(_ body: (borrowing Element) -> R) -> R {
-        switch _heapBuffer {
-        case .some(let heap): return heap.withFront(body)
-        case .none: return _inlineBuffer.withFront(body)
+        switch _storage {
+        case .heap(let heap): return heap.withFront(body)
+        case .inline(let buf): return buf.withFront(body)
         }
     }
 
@@ -99,9 +99,9 @@ extension Buffer.Ring.Small where Element: ~Copyable {
     /// - Precondition: The buffer is not empty.
     @inlinable
     public func withBack<R: ~Copyable>(_ body: (borrowing Element) -> R) -> R {
-        switch _heapBuffer {
-        case .some(let heap): return heap.withBack(body)
-        case .none: return _inlineBuffer.withBack(body)
+        switch _storage {
+        case .heap(let heap): return heap.withBack(body)
+        case .inline(let buf): return buf.withBack(body)
         }
     }
 }

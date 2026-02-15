@@ -44,10 +44,15 @@ extension Buffer.Linear.Small where Element: Copyable {
     /// - Returns: A consuming view for element-by-element iteration.
     @inlinable
     public mutating func consume() -> Sequence.Consume.View<Element, ConsumeState> {
-        if _heapBuffer != nil {
+        switch _storage {
+        case .heap(var heap):
             let header = heap.header
             let storage = heap.storage
-            _heapBuffer = nil
+            // Clear heap header so deinit is no-op, then reinitialize as inline
+            heap.header.count = .zero
+            heap.storage.initialization = .empty
+            self = Self(_storage: .inline(Buffer<Element>.Linear.Inline<inlineCapacity>()))
+            _ = consume heap
             return Sequence.Consume.View(
                 state: ConsumeState(storage: storage, count: header.count),
                 next: { state in
@@ -57,18 +62,19 @@ extension Buffer.Linear.Small where Element: Copyable {
                     return element
                 }
             )
-        } else {
-            let currentCount = _inlineBuffer.count
+        case .inline(var buf):
+            let currentCount = buf.count
             let heapStorage = Storage<Element>.Heap.create(minimumCapacity: currentCount)
 
             if currentCount > .zero {
                 let end = currentCount.map(Ordinal.init)
-                _inlineBuffer.storage.move(range: .zero ..< end, to: heapStorage)
+                buf.storage.move(range: .zero ..< end, to: heapStorage)
                 heapStorage.initialization = .one(.zero ..< end)
             }
 
-            _inlineBuffer.header.count = .zero
-            _inlineBuffer.storage.initialization = .empty
+            buf.header.count = .zero
+            buf.storage.initialization = .empty
+            self = Self(_storage: .inline(consume buf))
 
             return Sequence.Consume.View(
                 state: ConsumeState(storage: heapStorage, count: currentCount),

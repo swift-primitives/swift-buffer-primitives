@@ -3,16 +3,16 @@
 extension Buffer.Linear.Small: Memory.Contiguous.`Protocol` where Element: Copyable {
     /// Unsafe read access for C interop with unannotated APIs.
     ///
-    /// Uses `switch` for borrowing access to `_heapBuffer` (SE-0432).
+    /// Uses `switch` for borrowing access to `_storage` (SE-0432).
     @inlinable
     public func withUnsafeBufferPointer<R, E: Swift.Error>(
         _ body: (UnsafeBufferPointer<Element>) throws(E) -> R
     ) throws(E) -> R {
-        switch _heapBuffer {
-        case .some(let heap):
+        switch _storage {
+        case .heap(let heap):
             return try unsafe heap.withUnsafeBufferPointer(body)
-        case .none:
-            return try unsafe _inlineBuffer.withUnsafeBufferPointer(body)
+        case .inline(let buf):
+            return try unsafe buf.withUnsafeBufferPointer(body)
         }
     }
 }
@@ -25,10 +25,25 @@ extension Buffer.Linear.Small where Element: Copyable {
     public mutating func withUnsafeMutableBufferPointer<R, E: Swift.Error>(
         _ body: (UnsafeMutableBufferPointer<Element>) throws(E) -> R
     ) throws(E) -> R {
-        if _heapBuffer != nil {
-            return try unsafe heap.withUnsafeMutableBufferPointer(body)
-        } else {
-            return try unsafe _inlineBuffer.withUnsafeMutableBufferPointer(body)
+        switch _storage {
+        case .heap(var buf):
+            do {
+                let result = try unsafe buf.withUnsafeMutableBufferPointer(body)
+                self = Self(_storage: .heap(consume buf))
+                return result
+            } catch {
+                self = Self(_storage: .heap(consume buf))
+                throw error
+            }
+        case .inline(var buf):
+            do {
+                let result = try unsafe buf.withUnsafeMutableBufferPointer(body)
+                self = Self(_storage: .inline(consume buf))
+                return result
+            } catch {
+                self = Self(_storage: .inline(consume buf))
+                throw error
+            }
         }
     }
 }

@@ -37,10 +37,12 @@ extension Buffer.Ring.Small where Element: Copyable {
     /// - Returns: A consuming view for element-by-element iteration.
     @inlinable
     public mutating func consume() -> Sequence.Consume.View<Element, ConsumeState> {
-        if _heapBuffer != nil {
+        switch _storage {
+        case .heap(var heap):
             let header = heap.header
             let storage = heap.storage
-            _heapBuffer = nil
+            self = Self(_storage: .inline(Buffer<Element>.Ring.Inline<inlineCapacity>()))
+            _ = consume heap
             return Sequence.Consume.View(
                 state: ConsumeState(header: header, storage: storage),
                 next: { state in
@@ -48,24 +50,25 @@ extension Buffer.Ring.Small where Element: Copyable {
                     return Buffer.Ring.popFront(header: &state.header, storage: state.storage)
                 }
             )
-        } else {
-            let currentCount = _inlineBuffer.count
+        case .inline(var buf):
+            let currentCount = buf.count
             let heapStorage = Storage<Element>.Heap.create(minimumCapacity: currentCount)
 
             if currentCount > .zero {
                 // Linearize inline ring elements to heap in FIFO order
                 Buffer.Ring.linearize(
-                    header: _inlineBuffer.header,
-                    source: _inlineBuffer.storage,
+                    header: buf.header,
+                    source: buf.storage,
                     to: heapStorage
                 )
             }
 
             // Reset inline state
-            _inlineBuffer.header = Buffer.Ring.Header(
+            buf.header = Buffer.Ring.Header(
                 capacity: Index<Element>.Count(UInt(inlineCapacity))
             )
-            _inlineBuffer.storage.initialization = .empty
+            buf.storage.initialization = .empty
+            self = Self(_storage: .inline(consume buf))
 
             var newHeader = Buffer.Ring.Header(capacity: heapStorage.slotCapacity)
             newHeader.count = currentCount

@@ -54,9 +54,9 @@ extension Buffer.Ring.Small where Element: ~Copyable {
     /// Calls `body` with a borrow of each element in FIFO order.
     @inlinable
     public func forEach(_ body: (borrowing Element) -> Void) {
-        switch _heapBuffer {
-        case .some(let heap): heap.forEach(body)
-        case .none: _inlineBuffer.forEach(body)
+        switch _storage {
+        case .heap(let heap): heap.forEach(body)
+        case .inline(let buf): buf.forEach(body)
         }
     }
 }

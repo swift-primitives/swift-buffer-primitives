@@ -67,11 +67,11 @@ extension Buffer.Ring.Small where Element: ~Copyable {
     /// Captures the current cursor state as a checkpoint.
     @inlinable
     public var checkpoint: Checkpoint {
-        switch _heapBuffer {
-        case .some(let heap):
+        switch _storage {
+        case .heap(let heap):
             return Checkpoint(head: heap.header.head, count: heap.header.count, wasOnHeap: true)
-        case .none:
-            return Checkpoint(head: _inlineBuffer.header.head, count: _inlineBuffer.header.count, wasOnHeap: false)
+        case .inline(let buf):
+            return Checkpoint(head: buf.header.head, count: buf.header.count, wasOnHeap: false)
         }
     }
 
@@ -80,13 +80,16 @@ extension Buffer.Ring.Small where Element: ~Copyable {
     /// Routes to the appropriate storage based on the current mode.
     @inlinable
     public mutating func restore(to checkpoint: Checkpoint) {
-        if _heapBuffer != nil {
-            heap.header.head = checkpoint.head
-            heap.header.count = checkpoint.count
-            heap.storage.initialization = heap.header.initialization
-        } else {
-            _inlineBuffer.header.head = checkpoint.head
-            _inlineBuffer.header.count = checkpoint.count
+        switch _storage {
+        case .heap(var buf):
+            buf.header.head = checkpoint.head
+            buf.header.count = checkpoint.count
+            buf.storage.initialization = buf.header.initialization
+            self = Self(_storage: .heap(consume buf))
+        case .inline(var buf):
+            buf.header.head = checkpoint.head
+            buf.header.count = checkpoint.count
+            self = Self(_storage: .inline(consume buf))
         }
     }
 }

@@ -10,23 +10,8 @@ extension Buffer.Arena.Small where Element: ~Copyable {
     @inlinable
     public init() {
         self.init(
-            _inlineBuffer: Buffer<Element>.Arena.Inline<inlineCapacity>(),
-            _heapBuffer: nil
+            _storage: .inline(Buffer<Element>.Arena.Inline<inlineCapacity>())
         )
-    }
-
-    /// Projected access to the heap buffer.
-    ///
-    /// - Precondition: `isSpilled` — callers MUST guard `_heapBuffer != nil` before access.
-    @inlinable
-    package var heap: Buffer<Element>.Arena {
-        // Force-unwrap is necessary: Optional._modify has compiler support for
-        // yielding &_heapBuffer! that arbitrary enums lack (no _modify into enum
-        // payloads for ~Copyable types). Enum storage was evaluated and rejected —
-        // see Research/small-buffer-storage-representation.md.
-        // Safe: all callers guard `_heapBuffer != nil` before accessing `heap`.
-        _read { yield _heapBuffer! }
-        _modify { yield &_heapBuffer! }
     }
 
     // MARK: - Insert
@@ -38,14 +23,29 @@ extension Buffer.Arena.Small where Element: ~Copyable {
     public mutating func insert(
         _ element: consuming Element
     ) -> Buffer<Element>.Arena.Position {
-        if _heapBuffer != nil {
-            return heap.insert(consume element)
+        switch _storage {
+        case .heap(var buf):
+            let pos = buf.insert(consume element)
+            self = Self(_storage: .heap(consume buf))
+            return pos
+        case .inline(var buf):
+            if buf.isFull {
+                self = Self(_storage: .inline(consume buf))
+                _spillToHeap()
+                switch _storage {
+                case .heap(var heap):
+                    let pos = heap.insert(consume element)
+                    self = Self(_storage: .heap(consume heap))
+                    return pos
+                case .inline(var inl):
+                    self = Self(_storage: .inline(consume inl))
+                    fatalError()
+                }
+            }
+            let pos = try! buf.insert(consume element)
+            self = Self(_storage: .inline(consume buf))
+            return pos
         }
-        if _inlineBuffer.isFull {
-            _spillToHeap()
-            return heap.insert(consume element)
-        }
-        return try! _inlineBuffer.insert(consume element)
     }
 
     /// Allocates a slot without initializing the element.
@@ -54,14 +54,29 @@ extension Buffer.Arena.Small where Element: ~Copyable {
     /// Caller MUST initialize the element at `position.slot` before use.
     @inlinable
     public mutating func allocate() -> Buffer<Element>.Arena.Position {
-        if _heapBuffer != nil {
-            return heap.allocate()
+        switch _storage {
+        case .heap(var buf):
+            let pos = buf.allocate()
+            self = Self(_storage: .heap(consume buf))
+            return pos
+        case .inline(var buf):
+            if buf.isFull {
+                self = Self(_storage: .inline(consume buf))
+                _spillToHeap()
+                switch _storage {
+                case .heap(var heap):
+                    let pos = heap.allocate()
+                    self = Self(_storage: .heap(consume heap))
+                    return pos
+                case .inline(var inl):
+                    self = Self(_storage: .inline(consume inl))
+                    fatalError()
+                }
+            }
+            let pos = try! buf.allocate()
+            self = Self(_storage: .inline(consume buf))
+            return pos
         }
-        if _inlineBuffer.isFull {
-            _spillToHeap()
-            return heap.allocate()
-        }
-        return try! _inlineBuffer.allocate()
     }
 
     // MARK: - Remove
@@ -73,20 +88,31 @@ extension Buffer.Arena.Small where Element: ~Copyable {
     public mutating func remove(
         at position: Buffer<Element>.Arena.Position
     ) throws(Buffer<Element>.Arena.Error) -> Element {
-        if _heapBuffer != nil {
-            return try heap.remove(at: position)
+        switch _storage {
+        case .heap(var buf):
+            do {
+                let element = try buf.remove(at: position)
+                self = Self(_storage: .heap(consume buf))
+                return element
+            } catch {
+                self = Self(_storage: .heap(consume buf))
+                throw error
+            }
+        case .inline(var buf):
+            let inlineMeta = unsafe buf._metaPointer()
+            guard unsafe Buffer<Element>.Arena.isValid(
+                position, header: buf.header, meta: inlineMeta
+            ) else {
+                self = Self(_storage: .inline(consume buf))
+                throw .invalidPosition
+            }
+            let element = unsafe buf._elementPointer(at: position.slot).move()
+            unsafe Buffer<Element>.Arena._releaseSlot(
+                position.slot, header: &buf.header, meta: inlineMeta
+            )
+            self = Self(_storage: .inline(consume buf))
+            return element
         }
-        let inlineMeta = unsafe _inlineBuffer._metaPointer()
-        guard unsafe Buffer<Element>.Arena.isValid(
-            position, header: _inlineBuffer.header, meta: inlineMeta
-        ) else {
-            throw .invalidPosition
-        }
-        let element = unsafe _inlineBuffer._elementPointer(at: position.slot).move()
-        unsafe Buffer<Element>.Arena._releaseSlot(
-            position.slot, header: &_inlineBuffer.header, meta: inlineMeta
-        )
-        return element
     }
 
     /// Moves the element out of the given slot and releases the slot.
@@ -94,10 +120,16 @@ extension Buffer.Arena.Small where Element: ~Copyable {
     /// - Precondition: `slot` is occupied.
     @inlinable
     public mutating func remove(at slot: Index<Element>) -> Element {
-        if _heapBuffer != nil {
-            return heap.remove(at: slot)
+        switch _storage {
+        case .heap(var buf):
+            let element = buf.remove(at: slot)
+            self = Self(_storage: .heap(consume buf))
+            return element
+        case .inline(var buf):
+            let element = buf.remove(at: slot)
+            self = Self(_storage: .inline(consume buf))
+            return element
         }
-        return _inlineBuffer.remove(at: slot)
     }
 
     /// Deinitializes the element at the given slot and releases the slot.
@@ -105,21 +137,28 @@ extension Buffer.Arena.Small where Element: ~Copyable {
     /// - Precondition: `slot` is occupied.
     @inlinable
     public mutating func free(at slot: Index<Element>) {
-        if _heapBuffer != nil {
-            heap.free(at: slot)
-            return
+        switch _storage {
+        case .heap(var buf):
+            buf.free(at: slot)
+            self = Self(_storage: .heap(consume buf))
+        case .inline(var buf):
+            buf.free(at: slot)
+            self = Self(_storage: .inline(consume buf))
         }
-        _inlineBuffer.free(at: slot)
     }
 
     /// Deinitializes all occupied elements and resets the arena to empty state.
     @inlinable
     public mutating func removeAll() {
-        if _heapBuffer != nil {
-            heap.removeAll()
-            return
+        switch _storage {
+        case .heap(var buf):
+            buf.removeAll()
+            self = Self(_storage: .inline(Buffer<Element>.Arena.Inline<inlineCapacity>()))
+            // buf goes out of scope — heap cleanup runs
+        case .inline(var buf):
+            buf.removeAll()
+            self = Self(_storage: .inline(consume buf))
         }
-        _inlineBuffer.removeAll()
     }
 
     // MARK: - Validation
@@ -129,19 +168,27 @@ extension Buffer.Arena.Small where Element: ~Copyable {
     public mutating func isValid(
         _ position: Buffer<Element>.Arena.Position
     ) -> Bool {
-        if _heapBuffer != nil {
-            return heap.isValid(position)
+        switch _storage {
+        case .heap(var buf):
+            let result = buf.isValid(position)
+            self = Self(_storage: .heap(consume buf))
+            return result
+        case .inline(var buf):
+            let result = buf.isValid(position)
+            self = Self(_storage: .inline(consume buf))
+            return result
         }
-        return _inlineBuffer.isValid(position)
     }
 
     /// Returns whether the slot at the given index is occupied.
     @inlinable
     public func isOccupied(_ slot: Index<Element>) -> Bool {
-        if _heapBuffer != nil {
-            return heap.isOccupied(slot)
+        switch _storage {
+        case .heap(let buf):
+            return buf.isOccupied(slot)
+        case .inline(let buf):
+            return buf.isOccupied(slot)
         }
-        return _inlineBuffer.isOccupied(slot)
     }
 
     // MARK: - Token Access
@@ -149,10 +196,12 @@ extension Buffer.Arena.Small where Element: ~Copyable {
     /// Returns the current generation token for the given slot.
     @inlinable
     public func token(at slot: Index<Element>) -> UInt32 {
-        if _heapBuffer != nil {
-            return heap.token(at: slot)
+        switch _storage {
+        case .heap(let buf):
+            return buf.token(at: slot)
+        case .inline(let buf):
+            return buf.token(at: slot)
         }
-        return _inlineBuffer.token(at: slot)
     }
 
     /// Constructs a Position handle from an occupied slot.
@@ -162,10 +211,16 @@ extension Buffer.Arena.Small where Element: ~Copyable {
     public mutating func position(
         forOccupied slot: Index<Element>
     ) -> Buffer<Element>.Arena.Position {
-        if _heapBuffer != nil {
-            return heap.position(forOccupied: slot)
+        switch _storage {
+        case .heap(var buf):
+            let pos = buf.position(forOccupied: slot)
+            self = Self(_storage: .heap(consume buf))
+            return pos
+        case .inline(var buf):
+            let pos = buf.position(forOccupied: slot)
+            self = Self(_storage: .inline(consume buf))
+            return pos
         }
-        return _inlineBuffer.position(forOccupied: slot)
     }
 
     // MARK: - Element Access
@@ -178,10 +233,16 @@ extension Buffer.Arena.Small where Element: ~Copyable {
     public mutating func pointer(
         at slot: Index<Element>
     ) -> UnsafeMutablePointer<Element> {
-        if _heapBuffer != nil {
-            return unsafe heap.pointer(at: slot)
+        switch _storage {
+        case .heap(var buf):
+            let ptr = unsafe buf.pointer(at: slot)
+            self = Self(_storage: .heap(consume buf))
+            return unsafe ptr
+        case .inline(var buf):
+            let ptr = unsafe buf.pointer(at: slot)
+            self = Self(_storage: .inline(consume buf))
+            return unsafe ptr
         }
-        return unsafe _inlineBuffer.pointer(at: slot)
     }
 
     // MARK: - Spill
@@ -192,36 +253,43 @@ extension Buffer.Arena.Small where Element: ~Copyable {
     /// before spill remains valid after spill.
     @inlinable
     mutating func _spillToHeap() {
-        let growCapCount = Index<Element>.Count(Cardinal(UInt(inlineCapacity * 2)))
-        var newArena = Buffer<Element>.Arena(minimumCapacity: growCapCount)
-        let newMeta = unsafe newArena.storage.meta
-        let inlineMeta = unsafe _inlineBuffer._metaPointer()
-        let hw = Int(bitPattern: _inlineBuffer.header.highWater)
+        switch _storage {
+        case .heap(var buf):
+            self = Self(_storage: .heap(consume buf))
+            return
+        case .inline(var inlineBuf):
+            let growCapCount = Index<Element>.Count(Cardinal(UInt(inlineCapacity * 2)))
+            var newArena = Buffer<Element>.Arena(minimumCapacity: growCapCount)
+            let newMeta = unsafe newArena.storage.meta
+            let inlineMeta = unsafe inlineBuf._metaPointer()
+            let hw = Int(bitPattern: inlineBuf.header.highWater)
 
-        // Copy meta prefix — preserves tokens, free-list links
-        unsafe newMeta.update(from: inlineMeta, count: hw)
+            // Copy meta prefix — preserves tokens, free-list links
+            unsafe newMeta.update(from: inlineMeta, count: hw)
 
-        // Move occupied elements from inline → heap, preserving slot indices
-        for i in 0..<hw {
-            if unsafe inlineMeta[i].isOccupied {
-                let slot = Index<Element>(Ordinal(UInt(i)))
-                let element = unsafe _inlineBuffer._elementPointer(at: slot).move()
-                unsafe newArena.storage.pointer(at: slot)
-                    .initialize(to: element)
+            // Move occupied elements from inline -> heap, preserving slot indices
+            for i in 0..<hw {
+                if unsafe inlineMeta[i].isOccupied {
+                    let slot = Index<Element>(Ordinal(UInt(i)))
+                    let element = unsafe inlineBuf._elementPointer(at: slot).move()
+                    unsafe newArena.storage.pointer(at: slot)
+                        .initialize(to: element)
+                }
             }
+
+            // Sync heap header from inline header
+            newArena.header.occupied = inlineBuf.header.occupied
+            newArena.header.highWater = inlineBuf.header.highWater
+            newArena.header.freeHead = inlineBuf.header.freeHead
+            newArena.storage.highWater = inlineBuf.header.highWater
+
+            // Reset inline header so inline deinit is a no-op
+            inlineBuf.header.highWater = .zero
+            inlineBuf.header.occupied = .zero
+            inlineBuf.header.freeHead = .max
+
+            self = Self(_storage: .heap(consume newArena))
+            // inlineBuf goes out of scope — deinit runs on empty state
         }
-
-        // Sync heap header from inline header
-        newArena.header.occupied = _inlineBuffer.header.occupied
-        newArena.header.highWater = _inlineBuffer.header.highWater
-        newArena.header.freeHead = _inlineBuffer.header.freeHead
-        newArena.storage.highWater = _inlineBuffer.header.highWater
-
-        // Reset inline header so inline deinit is a no-op
-        _inlineBuffer.header.highWater = .zero
-        _inlineBuffer.header.occupied = .zero
-        _inlineBuffer.header.freeHead = .max
-
-        _heapBuffer = .some(consume newArena)
     }
 }
