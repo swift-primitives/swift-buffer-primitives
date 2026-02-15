@@ -146,6 +146,8 @@ extension Buffer.Slab.Small where Element: ~Copyable {
     // MARK: - Spill
 
     /// Moves inline elements to heap storage and activates heap mode.
+    // WORKAROUND: @_optimize(none) — CopyPropagation crash on ~Copyable element move loop
+    @_optimize(none)
     @usableFromInline
     mutating func _spillToHeapMoving() {
         switch _storage {

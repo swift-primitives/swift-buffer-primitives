@@ -78,6 +78,8 @@ extension Buffer.Slab.Inline where Element: ~Copyable {
     }
 
     /// Removes all elements from the buffer.
+    // WORKAROUND: @_optimize(none) — CopyPropagation crash (pre-existing)
+    @_optimize(none)
     @inlinable
     public mutating func removeAll() {
         var slot: Bit.Index = .zero
@@ -120,6 +122,8 @@ extension Buffer.Slab.Inline where Element: ~Copyable {
 // MARK: - Sequence.Drain.Protocol
 
 extension Buffer.Slab.Inline: Sequence.Drain.`Protocol` {
+    // WORKAROUND: @_optimize(none) — CopyPropagation crash (pre-existing)
+    @_optimize(none)
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         var slot: Bit.Index = .zero

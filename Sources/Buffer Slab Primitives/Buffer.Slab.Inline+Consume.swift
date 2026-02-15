@@ -51,6 +51,12 @@ extension Buffer.Slab.Inline where Element: Copyable {
     ///
     /// - Returns: A consuming view for element-by-element iteration.
     /// - Complexity: O(n) to create the view (element transfer). O(1) per element during iteration.
+    // WORKAROUND: @_optimize(none) prevents CopyPropagation crash in release builds
+    // WHY: Moving ~Copyable elements in a loop with bitmap mutation crashes
+    //       CopyPropagation SIL pass (signal 6)
+    // WHEN TO REMOVE: When Swift compiler fixes CopyPropagation for ~Copyable element moves
+    // TRACKING: Needs Swift bug report
+    @_optimize(none)
     @inlinable
     public mutating func consume() -> Sequence.Consume.View<Element, ConsumeState> {
         let bitmapCopy = header.bitmap
