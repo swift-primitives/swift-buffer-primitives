@@ -43,6 +43,22 @@ extension Buffer.Slab.Inline where Element: ~Copyable {
     }
 }
 
+extension Buffer.Slab.Inline where Element: ~Copyable {
+    /// Moves a single occupied slot from inline storage to heap storage.
+    ///
+    /// Isolated from the bitmap loop so CopyPropagation processes the
+    /// storage move+initialize chain independently.
+    @usableFromInline
+    static func moveSlotToHeap(
+        storage: inout Storage<Element>.Inline<wordCount>,
+        heapStorage: Storage<Element>.Heap,
+        at slot: Bit.Index
+    ) {
+        let element = storage.move(at: Index<Element>.Bounded<wordCount>(slot.retag(Element.self))!)
+        heapStorage.initialize(to: element, at: slot.retag(Element.self))
+    }
+}
+
 extension Buffer.Slab.Inline where Element: Copyable {
     /// Consumes the buffer's elements into a consuming view.
     ///
@@ -51,12 +67,6 @@ extension Buffer.Slab.Inline where Element: Copyable {
     ///
     /// - Returns: A consuming view for element-by-element iteration.
     /// - Complexity: O(n) to create the view (element transfer). O(1) per element during iteration.
-    // WORKAROUND: @_optimize(none) prevents CopyPropagation crash in release builds
-    // WHY: Moving ~Copyable elements in a loop with bitmap mutation crashes
-    //       CopyPropagation SIL pass (signal 6)
-    // WHEN TO REMOVE: When Swift compiler fixes CopyPropagation for ~Copyable element moves
-    // TRACKING: Needs Swift bug report
-    @_optimize(none)
     @inlinable
     public mutating func consume() -> Sequence.Consume.View<Element, ConsumeState> {
         let bitmapCopy = header.bitmap
@@ -68,8 +78,7 @@ extension Buffer.Slab.Inline where Element: Copyable {
         let end = count.map(Ordinal.init)
         while slot < end {
             if header.bitmap[slot] {
-                let element = storage.move(at: Index<Element>.Bounded<wordCount>(slot.retag(Element.self))!)
-                heapStorage.initialize(to: element, at: slot.retag(Element.self))
+                Self.moveSlotToHeap(storage: &storage, heapStorage: heapStorage, at: slot)
                 header.bitmap[slot] = false
             }
             slot += .one

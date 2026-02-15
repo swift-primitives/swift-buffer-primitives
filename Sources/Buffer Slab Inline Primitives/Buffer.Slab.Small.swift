@@ -146,8 +146,6 @@ extension Buffer.Slab.Small where Element: ~Copyable {
     // MARK: - Spill
 
     /// Moves inline elements to heap storage and activates heap mode.
-    // WORKAROUND: @_optimize(none) — CopyPropagation crash on ~Copyable element move loop
-    @_optimize(none)
     @usableFromInline
     mutating func _spillToHeapMoving() {
         switch _storage {
@@ -166,8 +164,11 @@ extension Buffer.Slab.Small where Element: ~Copyable {
             let end = Bit.Index.Count(UInt(inlineCapacity)).map(Ordinal.init)
             while slot < end {
                 if buf.header.bitmap[slot] {
-                    let element = buf.storage.move(at: Index<Element>.Bounded<inlineCapacity>(slot.retag(Element.self))!)
-                    newStorage.initialize(to: consume element, at: slot.retag(Element.self))
+                    Buffer<Element>.Slab.Inline<inlineCapacity>.moveSlotToHeap(
+                        storage: &buf.storage,
+                        heapStorage: newStorage,
+                        at: slot
+                    )
                     newHeader.bitmap[slot] = true
                 }
                 slot += .one

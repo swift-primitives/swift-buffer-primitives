@@ -77,16 +77,34 @@ extension Buffer.Slab.Inline where Element: ~Copyable {
         return Bit.Index.Bounded<wordCount>(slot)!
     }
 
+    // MARK: - Static Element Operations
+
+    /// Deinitializes a single occupied slot in inline storage.
+    @usableFromInline
+    static func deinitializeSlot(
+        storage: inout Storage<Element>.Inline<wordCount>,
+        at slot: Bit.Index
+    ) {
+        storage.deinitialize(at: Index<Element>.Bounded<wordCount>(slot.retag(Element.self))!)
+    }
+
+    /// Moves a single element out of inline storage.
+    @usableFromInline
+    static func moveSlot(
+        storage: inout Storage<Element>.Inline<wordCount>,
+        at slot: Bit.Index
+    ) -> Element {
+        storage.move(at: Index<Element>.Bounded<wordCount>(slot.retag(Element.self))!)
+    }
+
     /// Removes all elements from the buffer.
-    // WORKAROUND: @_optimize(none) — CopyPropagation crash (pre-existing)
-    @_optimize(none)
     @inlinable
     public mutating func removeAll() {
         var slot: Bit.Index = .zero
         let end = Bit.Index.Count(UInt(wordCount)).map(Ordinal.init)
         while slot < end {
             if header.bitmap[slot] {
-                storage.deinitialize(at: Index<Element>.Bounded<wordCount>(slot.retag(Element.self))!)
+                Self.deinitializeSlot(storage: &storage, at: slot)
                 header.bitmap[slot] = false
             }
             slot += .one
@@ -122,15 +140,13 @@ extension Buffer.Slab.Inline where Element: ~Copyable {
 // MARK: - Sequence.Drain.Protocol
 
 extension Buffer.Slab.Inline: Sequence.Drain.`Protocol` {
-    // WORKAROUND: @_optimize(none) — CopyPropagation crash (pre-existing)
-    @_optimize(none)
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         var slot: Bit.Index = .zero
         let end = Bit.Index.Count(UInt(wordCount)).map(Ordinal.init)
         while slot < end {
             if header.bitmap[slot] {
-                let element = storage.move(at: Index<Element>.Bounded<wordCount>(slot.retag(Element.self))!)
+                let element = Self.moveSlot(storage: &storage, at: slot)
                 header.bitmap[slot] = false
                 body(consume element)
             }

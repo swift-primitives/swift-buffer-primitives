@@ -116,21 +116,64 @@ extension Buffer.Linked.Small where Element: ~Copyable {
 // MARK: - Insert Operations
 
 extension Buffer.Linked.Small where Element: ~Copyable {
+    // MARK: - Static Element Operations
+
+    /// Inserts at the front of heap storage.
+    @usableFromInline
+    static func insertFrontHeap(
+        _ element: consuming Element,
+        into heap: inout Buffer<Element>.Linked<N>
+    ) {
+        try! heap.reserveAdditionalCapacity(.one)
+        try! heap.insert.front(element)
+    }
+
+    /// Inserts at the back of heap storage.
+    @usableFromInline
+    static func insertBackHeap(
+        _ element: consuming Element,
+        into heap: inout Buffer<Element>.Linked<N>
+    ) {
+        try! heap.reserveAdditionalCapacity(.one)
+        try! heap.insert.back(element)
+    }
+
+    /// Inserts at the front of inline storage.
+    @usableFromInline
+    static func insertFrontInline(
+        _ element: consuming Element,
+        into buf: inout Buffer<Element>.Linked<N>.Inline<inlineCapacity>
+    ) {
+        try! buf.insert.front(element)
+    }
+
+    /// Inserts at the back of inline storage.
+    @usableFromInline
+    static func insertBackInline(
+        _ element: consuming Element,
+        into buf: inout Buffer<Element>.Linked<N>.Inline<inlineCapacity>
+    ) {
+        try! buf.insert.back(element)
+    }
+
+    // MARK: - Instance Dispatch
+
     @usableFromInline
     mutating func _insertFront(_ element: consuming Element) {
         switch _storage {
         case .heap(var buf):
-            try! buf.reserveAdditionalCapacity(.one)
-            try! buf.insert.front(element)
+            Self.insertFrontHeap(consume element, into: &buf)
             self = Self(_storage: .heap(consume buf))
         case .inline(var buf):
             if !buf.isFull {
-                try! buf.insert.front(element)
+                Self.insertFrontInline(consume element, into: &buf)
                 self = Self(_storage: .inline(consume buf))
             } else {
                 self = Self(_storage: .inline(consume buf))
                 _spillToHeapMoving()
-                _insertFrontAfterSpill(consume element)
+                guard case .heap(var heap) = _storage else { fatalError() }
+                Self.insertFrontHeap(consume element, into: &heap)
+                self = Self(_storage: .heap(consume heap))
             }
         }
     }
@@ -139,52 +182,19 @@ extension Buffer.Linked.Small where Element: ~Copyable {
     mutating func _insertBack(_ element: consuming Element) {
         switch _storage {
         case .heap(var buf):
-            try! buf.reserveAdditionalCapacity(.one)
-            try! buf.insert.back(element)
+            Self.insertBackHeap(consume element, into: &buf)
             self = Self(_storage: .heap(consume buf))
         case .inline(var buf):
             if !buf.isFull {
-                try! buf.insert.back(element)
+                Self.insertBackInline(consume element, into: &buf)
                 self = Self(_storage: .inline(consume buf))
             } else {
                 self = Self(_storage: .inline(consume buf))
                 _spillToHeapMoving()
-                _insertBackAfterSpill(consume element)
+                guard case .heap(var heap) = _storage else { fatalError() }
+                Self.insertBackHeap(consume element, into: &heap)
+                self = Self(_storage: .heap(consume heap))
             }
-        }
-    }
-
-    // WORKAROUND: @_optimize(none) prevents CopyPropagation crash in release builds
-    // WHY: Consuming a ~Copyable Element inside `switch _storage { case .heap(var heap) }`
-    //       crashes the CopyPropagation SIL pass — two consuming operations in one branch
-    // WHEN TO REMOVE: When Swift compiler fixes CopyPropagation for @frozen ~Copyable enums
-    // TRACKING: Needs Swift bug report
-
-    /// Inserts at the front of heap storage after a spill.
-    @_optimize(none)
-    @usableFromInline
-    mutating func _insertFrontAfterSpill(_ element: consuming Element) {
-        switch _storage {
-        case .inline(var buf):
-            self = Self(_storage: .inline(consume buf))
-            fatalError("_spillToHeapMoving must transition to heap")
-        case .heap(var heap):
-            try! heap.insert.front(element)
-            self = Self(_storage: .heap(consume heap))
-        }
-    }
-
-    /// Inserts at the back of heap storage after a spill.
-    @_optimize(none)
-    @usableFromInline
-    mutating func _insertBackAfterSpill(_ element: consuming Element) {
-        switch _storage {
-        case .inline(var buf):
-            self = Self(_storage: .inline(consume buf))
-            fatalError("_spillToHeapMoving must transition to heap")
-        case .heap(var heap):
-            try! heap.insert.back(element)
-            self = Self(_storage: .heap(consume heap))
         }
     }
 }
