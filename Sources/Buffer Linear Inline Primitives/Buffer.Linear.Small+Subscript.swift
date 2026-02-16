@@ -17,19 +17,17 @@ extension Buffer.Linear.Small where Element: ~Copyable {
                 yield buf[index]
             }
         }
-        // WORKAROUND: _modify temporarily removed — compiler crash in DiagnoseStaticExclusivity
-        // WHY: yield through pointer into @frozen ~Copyable enum payload triggers signal 11
-        // WHEN TO REMOVE: When Swift compiler fix lands
-        // TRACKING: Same root cause as span crash
-        //
-        // _modify {
-        //     switch _storage {
-        //     case .heap(let heap):
-        //         yield unsafe &heap.storage.pointer(at: index).pointee
-        //     case .inline(let buf):
-        //         let bounded = Index<Element>.Bounded<inlineCapacity>(index)!
-        //         yield unsafe &buf.storage.pointer(at: bounded).pointee
-        //     }
-        // }
+        _modify {
+            // Inline case cannot yield through pointer into enum payload (borrow temporary).
+            // Spill to heap first — mirrors Copyable variant's ensureUnique() pattern.
+            // See: Experiments/small-enum-modify-recovery (2026-02-16)
+            _spillToHeapMoving()
+            switch _storage {
+            case .heap(let heap):
+                yield unsafe &heap.storage.pointer(at: index).pointee
+            case .inline:
+                fatalError("unreachable: _spillToHeapMoving guarantees heap mode")
+            }
+        }
     }
 }
