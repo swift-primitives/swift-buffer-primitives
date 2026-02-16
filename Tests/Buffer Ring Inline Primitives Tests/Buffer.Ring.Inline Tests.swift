@@ -4,6 +4,14 @@ import Buffer_Primitives_Test_Support
 
 @Suite("Buffer.Ring.Inline")
 struct RingBoundedInlineTests {
+    @Suite struct Unit {}
+    @Suite struct EdgeCase {}
+    @Suite struct Integration {}
+}
+
+// MARK: - Unit
+
+extension RingBoundedInlineTests.Unit {
 
     @Test
     func `FIFO ordering`() throws {
@@ -43,33 +51,6 @@ struct RingBoundedInlineTests {
         #expect(buffer.popFront() == 100)
         #expect(buffer.popFront() == 200)
         #expect(buffer.isEmpty == true)
-    }
-
-    @Test
-    func `full rejection — pushBack returns element when full`() throws {
-        var buffer = Buffer<Int>.Ring.Inline<4>()
-
-        _ = buffer.pushBack(0)
-        _ = buffer.pushBack(1)
-        _ = buffer.pushBack(2)
-        _ = buffer.pushBack(3)
-        #expect(buffer.isFull == true)
-
-        let rejected = buffer.pushBack(999)
-        #expect(rejected == 999)
-    }
-
-    @Test
-    func `full rejection — pushFront returns element when full`() throws {
-        var buffer = Buffer<Int>.Ring.Inline<4>()
-
-        _ = buffer.pushBack(0)
-        _ = buffer.pushBack(1)
-        _ = buffer.pushBack(2)
-        _ = buffer.pushBack(3)
-
-        let rejected = buffer.pushFront(999)
-        #expect(rejected == 999)
     }
 
     @Test
@@ -117,6 +98,58 @@ struct RingBoundedInlineTests {
         }
         #expect(collected == [10, 20, 30])
     }
+
+    @Test
+    func `checkpoint and restore`() throws {
+        var buffer = Buffer<Int>.Ring.Inline<8>()
+        _ = buffer.pushBack(10)
+        _ = buffer.pushBack(20)
+        let cp = buffer.checkpoint
+        _ = buffer.pushBack(30)
+        _ = buffer.pushBack(40)
+
+        buffer.restore(to: cp)
+        #expect(buffer.count == 2)
+        #expect(buffer.popFront() == 10)
+        #expect(buffer.popFront() == 20)
+    }
+}
+
+// MARK: - Edge Cases
+
+extension RingBoundedInlineTests.EdgeCase {
+
+    @Test
+    func `full rejection — pushBack returns element when full`() throws {
+        var buffer = Buffer<Int>.Ring.Inline<4>()
+
+        _ = buffer.pushBack(0)
+        _ = buffer.pushBack(1)
+        _ = buffer.pushBack(2)
+        _ = buffer.pushBack(3)
+        #expect(buffer.isFull == true)
+
+        let rejected = buffer.pushBack(999)
+        #expect(rejected == 999)
+    }
+
+    @Test
+    func `full rejection — pushFront returns element when full`() throws {
+        var buffer = Buffer<Int>.Ring.Inline<4>()
+
+        _ = buffer.pushBack(0)
+        _ = buffer.pushBack(1)
+        _ = buffer.pushBack(2)
+        _ = buffer.pushBack(3)
+
+        let rejected = buffer.pushFront(999)
+        #expect(rejected == 999)
+    }
+}
+
+// MARK: - Integration
+
+extension RingBoundedInlineTests.Integration {
 
     @Test
     func `interleaved push/pop cycles`() throws {

@@ -4,6 +4,14 @@ import Buffer_Primitives_Test_Support
 
 @Suite("Buffer.Linear.Bounded")
 struct LinearBoundedTests {
+    @Suite struct Unit {}
+    @Suite struct EdgeCase {}
+    @Suite struct Integration {}
+}
+
+// MARK: - Unit
+
+extension LinearBoundedTests.Unit {
 
     @Test
     func `init creates empty bounded buffer`() {
@@ -122,6 +130,34 @@ struct LinearBoundedTests {
     }
 
     @Test
+    func `drain removes all in front-to-back order`() {
+        var buffer = Buffer<Int>.Linear.Bounded(minimumCapacity: 8)
+        _ = buffer.append(10)
+        _ = buffer.append(20)
+        _ = buffer.append(30)
+
+        var drained: [Int] = []
+        buffer.drain { drained.append($0) }
+        #expect(drained == [10, 20, 30])
+        #expect(buffer.isEmpty == true)
+    }
+
+    @Test
+    func `single element`() {
+        var buffer = Buffer<Int>.Linear.Bounded(minimumCapacity: 1)
+        let rejected = buffer.append(42)
+        #expect(rejected == nil)
+        #expect(buffer.count == 1)
+        #expect(buffer.removeLast() == 42)
+        #expect(buffer.isEmpty == true)
+    }
+}
+
+// MARK: - Edge Cases
+
+extension LinearBoundedTests.EdgeCase {
+
+    @Test
     func `CoW — append to copy does not affect original`() {
         var original = Buffer<Int>.Linear.Bounded(minimumCapacity: 4)
         _ = original.append(1)
@@ -151,27 +187,33 @@ struct LinearBoundedTests {
         #expect(original.count == 3)
         #expect(original.peekBack == 3)
     }
+}
+
+// MARK: - Integration
+
+extension LinearBoundedTests.Integration {
 
     @Test
-    func `drain removes all in front-to-back order`() {
-        var buffer = Buffer<Int>.Linear.Bounded(minimumCapacity: 8)
-        _ = buffer.append(10)
-        _ = buffer.append(20)
-        _ = buffer.append(30)
+    func `fill drain fill cycle`() {
+        var buffer = Buffer<Int>.Linear.Bounded(minimumCapacity: 4)
+        let cap = Int(buffer.capacity.rawValue.rawValue)
 
-        var drained: [Int] = []
-        buffer.drain { drained.append($0) }
-        #expect(drained == [10, 20, 30])
-        #expect(buffer.isEmpty == true)
-    }
+        var i = 0
+        while i < cap {
+            _ = buffer.append(i * 10)
+            i += 1
+        }
+        #expect(buffer.isFull == true)
 
-    @Test
-    func `single element`() {
-        var buffer = Buffer<Int>.Linear.Bounded(minimumCapacity: 1)
-        let rejected = buffer.append(42)
-        #expect(rejected == nil)
-        #expect(buffer.count == 1)
-        #expect(buffer.removeLast() == 42)
+        buffer.removeAll()
         #expect(buffer.isEmpty == true)
+
+        i = 0
+        while i < cap {
+            _ = buffer.append(i * 100)
+            i += 1
+        }
+        #expect(buffer.isFull == true)
+        #expect(buffer.peekFront == 0)
     }
 }

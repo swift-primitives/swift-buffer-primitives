@@ -2,8 +2,20 @@ import Testing
 import Buffer_Ring_Primitives
 import Buffer_Primitives_Test_Support
 
+// Buffer.Ring is generic, so per [TEST-004] we use the parallel namespace
+// pattern — @Suite in extensions of generic type specializations is silently
+// not discovered by Swift Testing.
+
 @Suite("Buffer.Ring")
 struct RingGrowableTests {
+    @Suite struct Unit {}
+    @Suite struct EdgeCase {}
+    @Suite struct Integration {}
+}
+
+// MARK: - Unit
+
+extension RingGrowableTests.Unit {
 
     @Test
     func `FIFO ordering`() {
@@ -119,18 +131,6 @@ struct RingGrowableTests {
     }
 
     @Test
-    func `interleaved push/pop maintains order`() {
-        var buffer = Buffer<Int>.Ring(minimumCapacity: 4)
-        buffer.pushBack(1)
-        buffer.pushBack(2)
-        #expect(buffer.popFront() == 1)
-        buffer.pushBack(3)
-        #expect(buffer.popFront() == 2)
-        #expect(buffer.popFront() == 3)
-        #expect(buffer.isEmpty)
-    }
-
-    @Test
     func `Sequence.Protocol iteration (Copyable)`() {
         let buffer: Buffer<Int>.Ring = [10, 20, 30]
         var collected: [Int] = []
@@ -152,10 +152,153 @@ struct RingGrowableTests {
     }
 
     @Test
+    func `withFront borrows first element`() {
+        let buffer: Buffer<Int>.Ring = [10, 20, 30]
+        let value = buffer.withFront { $0 }
+        #expect(value == 10)
+        #expect(buffer.count == 3)
+    }
+
+    @Test
+    func `withBack borrows last element`() {
+        let buffer: Buffer<Int>.Ring = [10, 20, 30]
+        let value = buffer.withBack { $0 }
+        #expect(value == 30)
+        #expect(buffer.count == 3)
+    }
+
+    @Test
+    func `forEach visits all elements in FIFO order`() {
+        let buffer: Buffer<Int>.Ring = [10, 20, 30]
+        var visited: [Int] = []
+        buffer.forEach { visited.append($0) }
+        #expect(visited == [10, 20, 30])
+    }
+
+    @Test
+    func `checkpoint saves current position`() {
+        var buffer: Buffer<Int>.Ring = [10, 20, 30]
+        let cp = buffer.checkpoint
+        #expect(cp.count == 3)
+    }
+
+    @Test
+    func `compact reclaims unused capacity`() {
+        var buffer = Buffer<Int>.Ring(minimumCapacity: 100)
+        buffer.pushBack(1)
+        buffer.pushBack(2)
+        buffer.compact()
+        #expect(buffer.capacity.rawValue.rawValue <= 4)
+        #expect(buffer.popFront() == 1)
+        #expect(buffer.popFront() == 2)
+    }
+
+    @Test
+    func `underestimatedCount matches count`() {
+        let buffer: Buffer<Int>.Ring = [10, 20, 30]
+        #expect(buffer.underestimatedCount == 3)
+    }
+}
+
+// MARK: - Edge Cases
+
+extension RingGrowableTests.EdgeCase {
+
+    @Test
     func `empty buffer operations`() {
         let buffer = Buffer<Int>.Ring(minimumCapacity: 4)
         #expect(buffer.isEmpty)
         #expect(buffer.count == 0)
         #expect(!buffer.isFull)
+    }
+
+    @Test
+    func `pushBack on empty then popFront`() {
+        var buffer = Buffer<Int>.Ring(minimumCapacity: 4)
+        buffer.pushBack(42)
+        #expect(buffer.popFront() == 42)
+        #expect(buffer.isEmpty)
+    }
+
+    @Test
+    func `checkpoint on empty buffer`() {
+        let buffer = Buffer<Int>.Ring(minimumCapacity: 4)
+        let cp = buffer.checkpoint
+        #expect(cp.count == 0)
+    }
+
+    @Test
+    func `reserveCapacity with zero is no-op`() {
+        var buffer = Buffer<Int>.Ring(minimumCapacity: 4)
+        let originalCap = buffer.capacity
+        buffer.reserveCapacity(.zero)
+        #expect(buffer.capacity == originalCap)
+    }
+
+    @Test
+    func `compact on already-compact buffer`() {
+        var buffer: Buffer<Int>.Ring = [1, 2, 3, 4]
+        buffer.compact()
+        // Should not crash; capacity should be >= count
+        #expect(buffer.count == 4)
+        #expect(buffer.popFront() == 1)
+    }
+}
+
+// MARK: - Integration
+
+extension RingGrowableTests.Integration {
+
+    @Test
+    func `interleaved push/pop maintains order`() {
+        var buffer = Buffer<Int>.Ring(minimumCapacity: 4)
+        buffer.pushBack(1)
+        buffer.pushBack(2)
+        #expect(buffer.popFront() == 1)
+        buffer.pushBack(3)
+        #expect(buffer.popFront() == 2)
+        #expect(buffer.popFront() == 3)
+        #expect(buffer.isEmpty)
+    }
+
+    @Test
+    func `checkpoint restore skips intermediate elements`() {
+        var buffer = Buffer<Int>.Ring(minimumCapacity: 8)
+        buffer.pushBack(10)
+        buffer.pushBack(20)
+        let cp = buffer.checkpoint
+        buffer.pushBack(30)
+        buffer.pushBack(40)
+
+        buffer.restore(to: cp)
+        #expect(buffer.count == 2)
+        #expect(buffer.popFront() == 10)
+        #expect(buffer.popFront() == 20)
+        #expect(buffer.isEmpty)
+    }
+
+    @Test
+    func `drain then reuse buffer`() {
+        var buffer: Buffer<Int>.Ring = [10, 20, 30]
+        buffer.drain { _ in }
+        #expect(buffer.isEmpty)
+
+        buffer.pushBack(40)
+        buffer.pushBack(50)
+        #expect(buffer.popFront() == 40)
+        #expect(buffer.popFront() == 50)
+    }
+
+    @Test
+    func `iterator exhaustion then re-iterate`() {
+        let buffer: Buffer<Int>.Ring = [1, 2, 3]
+        var iter1 = buffer.makeIterator()
+        while let _ = iter1.next() {}
+
+        // Second iteration on same buffer
+        var iter2 = buffer.makeIterator()
+        var collected: [Int] = []
+        while let v = iter2.next() { collected.append(v) }
+        #expect(collected == [1, 2, 3])
     }
 }

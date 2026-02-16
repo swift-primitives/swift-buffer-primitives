@@ -4,6 +4,14 @@ import Buffer_Primitives_Test_Support
 
 @Suite("Buffer.Linear")
 struct LinearGrowableTests {
+    @Suite struct Unit {}
+    @Suite struct EdgeCase {}
+    @Suite struct Integration {}
+}
+
+// MARK: - Unit
+
+extension LinearGrowableTests.Unit {
 
     @Test
     func `append and removeFirst`() {
@@ -102,12 +110,90 @@ struct LinearGrowableTests {
         buffer.reserveCapacity(100)
         #expect(buffer.capacity.rawValue.rawValue >= 100)
     }
+
+    @Test
+    func `forEach visits all elements`() {
+        let buffer: Buffer<Int>.Linear = [10, 20, 30]
+        var visited: [Int] = []
+        buffer.forEach { visited.append($0) }
+        #expect(visited == [10, 20, 30])
+    }
+
+    @Test
+    func `subscript read and write`() {
+        var buffer: Buffer<Int>.Linear = [10, 20, 30]
+        #expect(buffer[0] == 10)
+        #expect(buffer[1] == 20)
+        #expect(buffer[2] == 30)
+        buffer[1] = 999
+        #expect(buffer[1] == 999)
+    }
+
+    @Test
+    func `swap exchanges two elements`() {
+        var buffer: Buffer<Int>.Linear = [10, 20, 30]
+        buffer.swap(at: 0, with: 2)
+        #expect(buffer[0] == 30)
+        #expect(buffer[2] == 10)
+    }
+
+    @Test
+    func `truncate removes trailing elements`() {
+        var buffer: Buffer<Int>.Linear = [10, 20, 30, 40, 50]
+        buffer.truncate(to: 3)
+        #expect(buffer.count == 3)
+        #expect(buffer.peekBack == 30)
+    }
+}
+
+// MARK: - Edge Cases
+
+extension LinearGrowableTests.EdgeCase {
+
+    @Test
+    func `truncate to zero empties buffer`() {
+        var buffer: Buffer<Int>.Linear = [10, 20, 30]
+        buffer.truncate(to: .zero)
+        #expect(buffer.isEmpty)
+    }
+
+    @Test
+    func `swap same index is no-op`() {
+        var buffer: Buffer<Int>.Linear = [10, 20, 30]
+        buffer.swap(at: 1, with: 1)
+        #expect(buffer[1] == 20)
+    }
+
+    @Test
+    func `empty buffer properties`() {
+        let buffer = Buffer<Int>.Linear(minimumCapacity: 4)
+        #expect(buffer.isEmpty)
+        #expect(buffer.count == 0)
+    }
+}
+
+// MARK: - Integration
+
+extension LinearGrowableTests.Integration {
+
+    @Test
+    func `drain then reuse`() {
+        var buffer: Buffer<Int>.Linear = [10, 20, 30]
+        buffer.drain { _ in }
+        #expect(buffer.isEmpty)
+        buffer.append(40)
+        #expect(buffer.peekFront == 40)
+    }
 }
 
 // MARK: - Copy-on-Write
 
 @Suite("Buffer.Linear CoW")
 struct LinearCoWTests {
+    @Suite struct Unit {}
+}
+
+extension LinearCoWTests.Unit {
 
     @Test
     func `copy shares elements initially`() {

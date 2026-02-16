@@ -4,6 +4,14 @@ import Buffer_Primitives_Test_Support
 
 @Suite("Buffer.Ring.Small")
 struct RingSmallTests {
+    @Suite struct Unit {}
+    @Suite struct EdgeCase {}
+    @Suite struct Integration {}
+}
+
+// MARK: - Unit
+
+extension RingSmallTests.Unit {
 
     @Test
     func `starts in inline mode`() {
@@ -197,16 +205,33 @@ struct RingSmallTests {
     }
 
     @Test
-    func `interleaved push/pop in inline mode`() {
-        var buffer = Buffer<Int>.Ring.Small<4>()
+    func `isSpilled false initially`() {
+        let buffer = Buffer<Int>.Ring.Small<8>()
+        #expect(buffer.isSpilled == false)
+    }
+
+    @Test
+    func `isSpilled true after growth`() {
+        var buffer = Buffer<Int>.Ring.Small<2>()
         buffer.pushBack(1)
         buffer.pushBack(2)
-        #expect(buffer.popFront() == 1)
         buffer.pushBack(3)
-        #expect(buffer.popFront() == 2)
-        #expect(buffer.popFront() == 3)
-        #expect(buffer.isEmpty == true)
+        #expect(buffer.isSpilled == true)
     }
+
+    @Test
+    func `checkpoint saves position`() {
+        var buffer = Buffer<Int>.Ring.Small<4>()
+        buffer.pushBack(10)
+        buffer.pushBack(20)
+        let cp = buffer.checkpoint
+        #expect(cp.count == 2)
+    }
+}
+
+// MARK: - Edge Cases
+
+extension RingSmallTests.EdgeCase {
 
     @Test
     func `wrap-around in inline mode`() {
@@ -227,5 +252,62 @@ struct RingSmallTests {
         #expect(buffer.popFront() == 100)
         #expect(buffer.popFront() == 200)
         #expect(buffer.isEmpty == true)
+    }
+
+    @Test
+    func `removeAll keepingCapacity false resets to inline`() {
+        var buffer = Buffer<Int>.Ring.Small<2>()
+        buffer.pushBack(10)
+        buffer.pushBack(20)
+        buffer.pushBack(30)
+        #expect(buffer.isSpilled == true)
+
+        buffer.removeAll(keepingCapacity: false)
+        #expect(buffer.isEmpty == true)
+        #expect(buffer.isSpilled == false)
+    }
+
+    @Test
+    func `restore to checkpoint in inline mode`() {
+        var buffer = Buffer<Int>.Ring.Small<8>()
+        buffer.pushBack(10)
+        buffer.pushBack(20)
+        let cp = buffer.checkpoint
+        buffer.pushBack(30)
+        buffer.pushBack(40)
+
+        buffer.restore(to: cp)
+        #expect(buffer.count == 2)
+        #expect(buffer.popFront() == 10)
+        #expect(buffer.popFront() == 20)
+    }
+}
+
+// MARK: - Integration
+
+extension RingSmallTests.Integration {
+
+    @Test
+    func `interleaved push/pop in inline mode`() {
+        var buffer = Buffer<Int>.Ring.Small<4>()
+        buffer.pushBack(1)
+        buffer.pushBack(2)
+        #expect(buffer.popFront() == 1)
+        buffer.pushBack(3)
+        #expect(buffer.popFront() == 2)
+        #expect(buffer.popFront() == 3)
+        #expect(buffer.isEmpty == true)
+    }
+
+    @Test
+    func `drain then reuse in inline mode`() {
+        var buffer = Buffer<Int>.Ring.Small<4>()
+        buffer.pushBack(10)
+        buffer.pushBack(20)
+        buffer.drain { _ in }
+        #expect(buffer.isEmpty == true)
+
+        buffer.pushBack(30)
+        #expect(buffer.popFront() == 30)
     }
 }

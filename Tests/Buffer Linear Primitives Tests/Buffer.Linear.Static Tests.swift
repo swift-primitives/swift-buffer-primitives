@@ -4,6 +4,13 @@ import Buffer_Primitives_Test_Support
 
 @Suite("Buffer.Linear Static Operations")
 struct LinearStaticTests {
+    @Suite struct Unit {}
+    @Suite struct EdgeCase {}
+}
+
+// MARK: - Unit
+
+extension LinearStaticTests.Unit {
 
     @Test
     func `append increments count and stores element`() {
@@ -102,5 +109,24 @@ struct LinearStaticTests {
         }
 
         Buffer<Int>.Linear.deinitializeAll(header: &header, storage: storage)
+    }
+}
+
+// MARK: - Edge Cases
+
+extension LinearStaticTests.EdgeCase {
+
+    @Test
+    func `append then consumeBack round-trips single element`() {
+        let cap: Index<Int>.Count = 4
+        var header = Buffer<Int>.Linear.Header(capacity: cap)
+        let storage = Storage<Int>.Heap.create(minimumCapacity: cap)
+
+        Buffer<Int>.Linear.append(42, header: &header, storage: storage)
+        let v = Buffer<Int>.Linear.consumeBack(header: &header, storage: storage)
+        #expect(v == 42)
+        #expect(header.isEmpty)
+
+        storage.initialization = .empty
     }
 }

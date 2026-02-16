@@ -4,6 +4,13 @@ import Buffer_Primitives_Test_Support
 
 @Suite("Buffer.Ring.Header")
 struct RingHeaderTests {
+    @Suite struct Unit {}
+    @Suite struct EdgeCase {}
+}
+
+// MARK: - Unit
+
+extension RingHeaderTests.Unit {
 
     @Test
     func `init sets head to zero, count to zero`() {
@@ -75,5 +82,51 @@ struct RingHeaderTests {
         #expect(b.head == a.head)
         #expect(b.count == a.count)
         #expect(b.capacity == a.capacity)
+    }
+}
+
+// MARK: - Edge Cases
+
+extension RingHeaderTests.EdgeCase {
+
+    @Test
+    func `cyclic head wraps at capacity`() {
+        var header = Buffer<Int>.Ring.Header(capacity: 4)
+        header.head = 3
+        header.count = 1
+        // head=3 is within capacity — should be valid
+        switch header.initialization {
+        case .one(let range):
+            #expect(range.lowerBound == 3)
+            #expect(range.upperBound == 4)
+        default:
+            Issue.record("Expected .one")
+        }
+    }
+
+    @Test
+    func `full capacity produces .one or .two depending on head`() {
+        var header = Buffer<Int>.Ring.Header(capacity: 4)
+        header.count = 4
+        // head=0, full → .one(0..<4)
+        switch header.initialization {
+        case .one(let range):
+            #expect(range.lowerBound == 0)
+            #expect(range.upperBound == 4)
+        default:
+            Issue.record("Expected .one for head=0 full")
+        }
+
+        header.head = 2
+        // head=2, full → .two([2,4), [0,2))
+        switch header.initialization {
+        case .two(let first, let second):
+            #expect(first.lowerBound == 2)
+            #expect(first.upperBound == 4)
+            #expect(second.lowerBound == 0)
+            #expect(second.upperBound == 2)
+        default:
+            Issue.record("Expected .two for head=2 full")
+        }
     }
 }

@@ -4,6 +4,14 @@ import Buffer_Primitives_Test_Support
 
 @Suite("Buffer.Linear.Small")
 struct LinearSmallTests {
+    @Suite struct Unit {}
+    @Suite struct EdgeCase {}
+    @Suite struct Integration {}
+}
+
+// MARK: - Unit
+
+extension LinearSmallTests.Unit {
 
     @Test
     func `init creates inline storage`() {
@@ -141,19 +149,6 @@ struct LinearSmallTests {
         buffer.removeAll(keepingCapacity: true)
         #expect(buffer.isEmpty == true)
         #expect(buffer.isSpilled == true)
-    }
-
-    @Test
-    func `removeAll keepingCapacity false resets to inline`() {
-        var buffer = Buffer<Int>.Linear.Small<2>()
-        buffer.append(10)
-        buffer.append(20)
-        buffer.append(30)
-        #expect(buffer.isSpilled == true)
-
-        buffer.removeAll(keepingCapacity: false)
-        #expect(buffer.isEmpty == true)
-        #expect(buffer.isSpilled == false)
     }
 
     @Test
@@ -296,11 +291,18 @@ struct LinearSmallTests {
     }
 
     @Test
-    func `reserveCapacity within inline does not spill`() {
-        var buffer = Buffer<Int>.Linear.Small<8>()
-        buffer.append(1)
-        buffer.reserveCapacity(4)
+    func `isSpilled false initially`() {
+        let buffer = Buffer<Int>.Linear.Small<8>()
         #expect(buffer.isSpilled == false)
+    }
+
+    @Test
+    func `isSpilled true after growth`() {
+        var buffer = Buffer<Int>.Linear.Small<2>()
+        buffer.append(1)
+        buffer.append(2)
+        buffer.append(3)
+        #expect(buffer.isSpilled == true)
     }
 
     @Test
@@ -365,6 +367,37 @@ struct LinearSmallTests {
         #expect(buffer.isSpilled == true)
         #expect(buffer.capacity >= 8)
     }
+}
+
+// MARK: - Edge Cases
+
+extension LinearSmallTests.EdgeCase {
+
+    @Test
+    func `removeAll keepingCapacity false resets to inline`() {
+        var buffer = Buffer<Int>.Linear.Small<2>()
+        buffer.append(10)
+        buffer.append(20)
+        buffer.append(30)
+        #expect(buffer.isSpilled == true)
+
+        buffer.removeAll(keepingCapacity: false)
+        #expect(buffer.isEmpty == true)
+        #expect(buffer.isSpilled == false)
+    }
+
+    @Test
+    func `reserveCapacity within inline does not spill`() {
+        var buffer = Buffer<Int>.Linear.Small<8>()
+        buffer.append(1)
+        buffer.reserveCapacity(4)
+        #expect(buffer.isSpilled == false)
+    }
+}
+
+// MARK: - Integration
+
+extension LinearSmallTests.Integration {
 
     @Test
     func `model test — random ops match Array model`() {
