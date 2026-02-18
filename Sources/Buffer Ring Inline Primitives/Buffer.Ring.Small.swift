@@ -50,27 +50,48 @@ extension Buffer.Ring.Small where Element: ~Copyable {
         }
     }
 
-    // MARK: - Mutations
+}
 
-    /// Pushes an element to the back of the ring.
-    ///
-    /// If inline storage is full, spills to heap automatically using moves.
-    @inlinable
-    public mutating func pushBack(_ element: consuming Element) {
+// MARK: - Tag View Typealiases
+
+extension Buffer.Ring.Small where Element: ~Copyable {
+    public enum Push {
+        public typealias View = Property<Buffer<Element>.Ring.Push, Buffer<Element>.Ring.Small<inlineCapacity>>.View.Typed<Element>.Valued<inlineCapacity>
+    }
+
+    public enum Pop {
+        public typealias View = Property<Buffer<Element>.Ring.Pop, Buffer<Element>.Ring.Small<inlineCapacity>>.View.Typed<Element>.Valued<inlineCapacity>
+    }
+
+    public enum Peek {
+        public typealias View = Property<Buffer<Element>.Ring.Peek, Buffer<Element>.Ring.Small<inlineCapacity>>.View.Read.Typed<Element>.Valued<inlineCapacity>
+    }
+
+    public enum Remove {
+        public typealias View = Property<Buffer<Element>.Ring.Remove, Buffer<Element>.Ring.Small<inlineCapacity>>.View.Typed<Element>.Valued<inlineCapacity>
+    }
+}
+
+// MARK: - Internal Mutations
+
+extension Buffer.Ring.Small where Element: ~Copyable {
+
+    @usableFromInline
+    mutating func _pushBack(_ element: consuming Element) {
         switch _storage {
         case .heap(var buf):
-            buf.pushBack(consume element)
+            buf._pushBack(consume element)
             self = Self(_storage: .heap(consume buf))
         case .inline(var buf):
             if !buf.isFull {
-                _ = buf.pushBack(consume element)
+                _ = buf._pushBack(consume element)
                 self = Self(_storage: .inline(consume buf))
             } else {
                 self = Self(_storage: .inline(consume buf))
                 _spillToHeapMoving()
                 switch _storage {
                 case .heap(var buf):
-                    buf.pushBack(consume element)
+                    buf._pushBack(consume element)
                     self = Self(_storage: .heap(consume buf))
                 case .inline(var buf):
                     self = Self(_storage: .inline(consume buf))
@@ -80,102 +101,209 @@ extension Buffer.Ring.Small where Element: ~Copyable {
         }
     }
 
-    /// Removes and returns the element at the front of the ring.
-    ///
-    /// - Precondition: The buffer is not empty.
-    @inlinable
-    public mutating func popFront() -> Element {
+    @usableFromInline
+    mutating func _popFront() -> Element {
         switch _storage {
         case .heap(var buf):
-            let element = buf.popFront()
+            let element = buf._popFront()
             self = Self(_storage: .heap(consume buf))
             return element
         case .inline(var buf):
-            let element = buf.popFront()
+            let element = buf._popFront()
             self = Self(_storage: .inline(consume buf))
             return element
         }
+    }
+
+    @usableFromInline
+    mutating func _pushFront(_ element: consuming Element) {
+        switch _storage {
+        case .heap(var buf):
+            buf._pushFront(consume element)
+            self = Self(_storage: .heap(consume buf))
+        case .inline(var buf):
+            if !buf.isFull {
+                _ = buf._pushFront(consume element)
+                self = Self(_storage: .inline(consume buf))
+            } else {
+                self = Self(_storage: .inline(consume buf))
+                _spillToHeapMoving()
+                switch _storage {
+                case .heap(var buf):
+                    buf._pushFront(consume element)
+                    self = Self(_storage: .heap(consume buf))
+                case .inline(var buf):
+                    self = Self(_storage: .inline(consume buf))
+                    fatalError("_spillToHeapMoving must transition to heap")
+                }
+            }
+        }
+    }
+
+    @usableFromInline
+    mutating func _popBack() -> Element {
+        switch _storage {
+        case .heap(var buf):
+            let element = buf._popBack()
+            self = Self(_storage: .heap(consume buf))
+            return element
+        case .inline(var buf):
+            let element = buf._popBack()
+            self = Self(_storage: .inline(consume buf))
+            return element
+        }
+    }
+
+    @usableFromInline
+    mutating func _removeAll() {
+        switch _storage {
+        case .heap(var buf):
+            buf._removeAll()
+            self = Self(_storage: .inline(Buffer<Element>.Ring.Inline<inlineCapacity>()))
+            _ = consume buf
+        case .inline(var buf):
+            buf._removeAll()
+            self = Self(_storage: .inline(consume buf))
+        }
+    }
+
+    @usableFromInline
+    mutating func _removeAll(keepingCapacity: Bool) {
+        if keepingCapacity {
+            switch _storage {
+            case .heap(var buf):
+                buf._removeAll()
+                self = Self(_storage: .heap(consume buf))
+            case .inline(var buf):
+                buf._removeAll()
+                self = Self(_storage: .inline(consume buf))
+            }
+        } else {
+            _removeAll()
+        }
+    }
+}
+
+// MARK: - Property.View.Typed.Valued (.push, .pop, .peek, .remove)
+
+extension Buffer.Ring.Small where Element: ~Copyable {
+    @inlinable
+    public var push: Push.View {
+        mutating _read {
+            yield unsafe .init(&self)
+        }
+        mutating _modify {
+            var view: Push.View = unsafe .init(&self)
+            yield &view
+        }
+    }
+
+    @inlinable
+    public var pop: Pop.View {
+        mutating _read {
+            yield unsafe .init(&self)
+        }
+        mutating _modify {
+            var view: Pop.View = unsafe .init(&self)
+            yield &view
+        }
+    }
+
+    @inlinable
+    public var peek: Peek.View {
+        mutating _read {
+            yield unsafe .init(&self)
+        }
+    }
+
+    @inlinable
+    public var remove: Remove.View {
+        mutating _read {
+            yield unsafe .init(&self)
+        }
+        mutating _modify {
+            var view: Remove.View = unsafe .init(&self)
+            yield &view
+        }
+    }
+}
+
+// MARK: - Push Operations (~Copyable)
+
+extension Property.View.Typed.Valued
+where Tag == Buffer<Element>.Ring.Push,
+      Base == Buffer<Element>.Ring.Small<n>,
+      Element: ~Copyable
+{
+    /// Pushes an element to the back of the ring.
+    ///
+    /// If inline storage is full, spills to heap automatically using moves.
+    @_lifetime(&self)
+    @inlinable
+    public mutating func back(_ element: consuming Element) {
+        unsafe base.pointee._pushBack(consume element)
     }
 
     /// Pushes an element to the front of the ring.
     ///
     /// If inline storage is full, spills to heap automatically using moves.
+    @_lifetime(&self)
     @inlinable
-    public mutating func pushFront(_ element: consuming Element) {
-        switch _storage {
-        case .heap(var buf):
-            buf.pushFront(consume element)
-            self = Self(_storage: .heap(consume buf))
-        case .inline(var buf):
-            if !buf.isFull {
-                _ = buf.pushFront(consume element)
-                self = Self(_storage: .inline(consume buf))
-            } else {
-                self = Self(_storage: .inline(consume buf))
-                _spillToHeapMoving()
-                switch _storage {
-                case .heap(var buf):
-                    buf.pushFront(consume element)
-                    self = Self(_storage: .heap(consume buf))
-                case .inline(var buf):
-                    self = Self(_storage: .inline(consume buf))
-                    fatalError("_spillToHeapMoving must transition to heap")
-                }
-            }
-        }
+    public mutating func front(_ element: consuming Element) {
+        unsafe base.pointee._pushFront(consume element)
     }
+}
 
-    /// Removes and returns the element at the back of the ring.
+// MARK: - Pop Operations (~Copyable)
+
+extension Property.View.Typed.Valued
+where Tag == Buffer<Element>.Ring.Pop,
+      Base == Buffer<Element>.Ring.Small<n>,
+      Element: ~Copyable
+{
+    /// Removes and returns the element at the front.
     ///
     /// - Precondition: The buffer is not empty.
+    @_lifetime(&self)
     @inlinable
-    public mutating func popBack() -> Element {
-        switch _storage {
-        case .heap(var buf):
-            let element = buf.popBack()
-            self = Self(_storage: .heap(consume buf))
-            return element
-        case .inline(var buf):
-            let element = buf.popBack()
-            self = Self(_storage: .inline(consume buf))
-            return element
-        }
+    public mutating func front() -> Element {
+        unsafe base.pointee._popFront()
     }
 
+    /// Removes and returns the element at the back.
+    ///
+    /// - Precondition: The buffer is not empty.
+    @_lifetime(&self)
+    @inlinable
+    public mutating func back() -> Element {
+        unsafe base.pointee._popBack()
+    }
+}
+
+// MARK: - Remove Operations (~Copyable)
+
+extension Property.View.Typed.Valued
+where Tag == Buffer<Element>.Ring.Remove,
+      Base == Buffer<Element>.Ring.Small<n>,
+      Element: ~Copyable
+{
     /// Removes all elements from the buffer.
     ///
     /// Resets to inline mode.
+    @_lifetime(&self)
     @inlinable
-    public mutating func removeAll() {
-        switch _storage {
-        case .heap(var buf):
-            buf.removeAll()
-            self = Self(_storage: .inline(Buffer<Element>.Ring.Inline<inlineCapacity>()))
-            _ = consume buf
-        case .inline(var buf):
-            buf.removeAll()
-            self = Self(_storage: .inline(consume buf))
-        }
+    public mutating func all() {
+        unsafe base.pointee._removeAll()
     }
 
     /// Removes all elements from the buffer.
     ///
     /// - Parameter keepingCapacity: If `true` and the buffer has spilled,
     ///   stays in heap mode. If `false`, resets to inline mode.
+    @_lifetime(&self)
     @inlinable
-    public mutating func removeAll(keepingCapacity: Bool) {
-        if keepingCapacity {
-            switch _storage {
-            case .heap(var buf):
-                buf.removeAll()
-                self = Self(_storage: .heap(consume buf))
-            case .inline(var buf):
-                buf.removeAll()
-                self = Self(_storage: .inline(consume buf))
-            }
-        } else {
-            removeAll()
-        }
+    public mutating func all(keepingCapacity: Bool) {
+        unsafe base.pointee._removeAll(keepingCapacity: keepingCapacity)
     }
 }
 
@@ -226,7 +354,7 @@ extension Buffer.Ring.Small: Sequence.Drain.`Protocol` where Element: Copyable {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         while !isEmpty {
-            body(popFront())
+            body(_popFront())
         }
     }
 }
@@ -234,7 +362,10 @@ extension Buffer.Ring.Small: Sequence.Drain.`Protocol` where Element: Copyable {
 // MARK: - Sequence.Clearable
 
 extension Buffer.Ring.Small: Sequence.Clearable where Element: Copyable {
-    // removeAll() already provided above
+    @inlinable
+    public mutating func removeAll() {
+        _removeAll()
+    }
 }
 
 // MARK: - Property.View (.drain)

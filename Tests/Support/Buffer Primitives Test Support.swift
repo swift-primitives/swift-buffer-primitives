@@ -6,7 +6,7 @@ extension Buffer.Ring {
         let cap: Index<Element>.Count = .init(Cardinal(Swift.max(UInt(elements.count), minimumCapacity)))
         var buffer = Self(minimumCapacity: cap)
         for element in elements {
-            buffer.pushBack(element)
+            buffer.push.back(element)
         }
         self = buffer
     }
@@ -17,7 +17,7 @@ extension Buffer.Ring.Small {
     public init(_ elements: [Element]) {
         var buffer = Self()
         for element in elements {
-            buffer.pushBack(element)
+            buffer.push.back(element)
         }
         self = buffer
     }

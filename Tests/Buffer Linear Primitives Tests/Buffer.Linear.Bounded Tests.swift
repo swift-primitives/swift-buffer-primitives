@@ -28,9 +28,9 @@ extension LinearBoundedTests.Unit {
         _ = buffer.append(20)
         _ = buffer.append(30)
 
-        #expect(buffer.removeLast() == 30)
-        #expect(buffer.removeLast() == 20)
-        #expect(buffer.removeLast() == 10)
+        #expect(buffer.remove.last() == 30)
+        #expect(buffer.remove.last() == 20)
+        #expect(buffer.remove.last() == 10)
         #expect(buffer.isEmpty == true)
     }
 
@@ -41,9 +41,9 @@ extension LinearBoundedTests.Unit {
         _ = buffer.append(20)
         _ = buffer.append(30)
 
-        #expect(buffer.removeFirst() == 10)
-        #expect(buffer.removeFirst() == 20)
-        #expect(buffer.removeFirst() == 30)
+        #expect(buffer.remove.first() == 10)
+        #expect(buffer.remove.first() == 20)
+        #expect(buffer.remove.first() == 30)
         #expect(buffer.isEmpty == true)
     }
 
@@ -53,7 +53,7 @@ extension LinearBoundedTests.Unit {
         _ = buffer.append(1)
         _ = buffer.append(2)
         _ = buffer.append(3)
-        buffer.removeAll()
+        buffer.remove.all()
         #expect(buffer.isEmpty == true)
         #expect(buffer.count == .zero)
     }
@@ -110,8 +110,8 @@ extension LinearBoundedTests.Unit {
         _ = buffer.append(20)
         _ = buffer.append(30)
 
-        #expect(buffer.peekFront == 10)
-        #expect(buffer.peekBack == 30)
+        #expect(buffer.peek.front == 10)
+        #expect(buffer.peek.back == 30)
         #expect(buffer.count == 3)
     }
 
@@ -148,7 +148,7 @@ extension LinearBoundedTests.Unit {
         let rejected = buffer.append(42)
         #expect(rejected == nil)
         #expect(buffer.count == 1)
-        #expect(buffer.removeLast() == 42)
+        #expect(buffer.remove.last() == 42)
         #expect(buffer.isEmpty == true)
     }
 }
@@ -168,8 +168,8 @@ extension LinearBoundedTests.EdgeCase {
 
         #expect(original.count == 2)
         #expect(copy.count == 3)
-        #expect(original.peekBack == 2)
-        #expect(copy.peekBack == 99)
+        #expect(original.peek.back == 2)
+        #expect(copy.peek.back == 99)
     }
 
     @Test
@@ -180,12 +180,12 @@ extension LinearBoundedTests.EdgeCase {
         _ = original.append(3)
 
         var copy = original
-        let removed = copy.removeLast()
+        let removed = copy.remove.last()
 
         #expect(removed == 3)
         #expect(copy.count == 2)
         #expect(original.count == 3)
-        #expect(original.peekBack == 3)
+        #expect(original.peek.back == 3)
     }
 }
 
@@ -205,7 +205,7 @@ extension LinearBoundedTests.Integration {
         }
         #expect(buffer.isFull == true)
 
-        buffer.removeAll()
+        buffer.remove.all()
         #expect(buffer.isEmpty == true)
 
         i = 0
@@ -214,6 +214,6 @@ extension LinearBoundedTests.Integration {
             i += 1
         }
         #expect(buffer.isFull == true)
-        #expect(buffer.peekFront == 0)
+        #expect(buffer.peek.front == 0)
     }
 }

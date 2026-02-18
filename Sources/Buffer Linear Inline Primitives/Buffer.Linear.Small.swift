@@ -50,41 +50,7 @@ extension Buffer.Linear.Small where Element: ~Copyable {
         }
     }
 
-    // MARK: - Mutations
-
-    /// Removes and returns the first element, shifting remaining elements left.
-    ///
-    /// - Precondition: The buffer is not empty.
-    @inlinable
-    public mutating func removeFirst() -> Element {
-        switch _storage {
-        case .heap(var buf):
-            let element = buf.removeFirst()
-            self = Self(_storage: .heap(consume buf))
-            return element
-        case .inline(var buf):
-            let element = buf.removeFirst()
-            self = Self(_storage: .inline(consume buf))
-            return element
-        }
-    }
-
-    /// Removes and returns the last element.
-    ///
-    /// - Precondition: The buffer is not empty.
-    @inlinable
-    public mutating func removeLast() -> Element {
-        switch _storage {
-        case .heap(var buf):
-            let element = buf.removeLast()
-            self = Self(_storage: .heap(consume buf))
-            return element
-        case .inline(var buf):
-            let element = buf.removeLast()
-            self = Self(_storage: .inline(consume buf))
-            return element
-        }
-    }
+    // MARK: - Mutations (unchanged)
 
     /// Removes and returns the element at the given index, shifting subsequent elements left.
     ///
@@ -135,22 +101,6 @@ extension Buffer.Linear.Small where Element: ~Copyable {
         }
     }
 
-    /// Removes all elements from the buffer.
-    ///
-    /// Resets to inline mode.
-    @inlinable
-    public mutating func removeAll() {
-        switch _storage {
-        case .heap(var buf):
-            buf.removeAll()
-            self = Self(_storage: .inline(Buffer<Element>.Linear.Inline<inlineCapacity>()))
-            _ = consume buf
-        case .inline(var buf):
-            buf.removeAll()
-            self = Self(_storage: .inline(consume buf))
-        }
-    }
-
     /// Removes elements beyond the specified count.
     ///
     /// If `newCount >= count`, this method has no effect.
@@ -165,25 +115,146 @@ extension Buffer.Linear.Small where Element: ~Copyable {
             self = Self(_storage: .inline(consume buf))
         }
     }
+}
+
+// MARK: - Tag View Typealiases
+
+extension Buffer.Linear.Small where Element: ~Copyable {
+    public enum Peek {
+        public typealias View = Property<Buffer<Element>.Linear.Peek, Buffer<Element>.Linear.Small<inlineCapacity>>.View.Read.Typed<Element>.Valued<inlineCapacity>
+    }
+
+    public enum Remove {
+        public typealias View = Property<Buffer<Element>.Linear.Remove, Buffer<Element>.Linear.Small<inlineCapacity>>.View.Typed<Element>.Valued<inlineCapacity>
+    }
+}
+
+// MARK: - Internal Mutations
+
+extension Buffer.Linear.Small where Element: ~Copyable {
+
+    @usableFromInline
+    mutating func _removeFirst() -> Element {
+        switch _storage {
+        case .heap(var buf):
+            let element = buf._removeFirst()
+            self = Self(_storage: .heap(consume buf))
+            return element
+        case .inline(var buf):
+            let element = buf._removeFirst()
+            self = Self(_storage: .inline(consume buf))
+            return element
+        }
+    }
+
+    @usableFromInline
+    mutating func _removeLast() -> Element {
+        switch _storage {
+        case .heap(var buf):
+            let element = buf._removeLast()
+            self = Self(_storage: .heap(consume buf))
+            return element
+        case .inline(var buf):
+            let element = buf._removeLast()
+            self = Self(_storage: .inline(consume buf))
+            return element
+        }
+    }
+
+    @usableFromInline
+    mutating func _removeAll() {
+        switch _storage {
+        case .heap(var buf):
+            buf._removeAll()
+            self = Self(_storage: .inline(Buffer<Element>.Linear.Inline<inlineCapacity>()))
+            _ = consume buf
+        case .inline(var buf):
+            buf._removeAll()
+            self = Self(_storage: .inline(consume buf))
+        }
+    }
+
+    @usableFromInline
+    mutating func _removeAll(keepingCapacity: Bool) {
+        if keepingCapacity {
+            switch _storage {
+            case .heap(var buf):
+                buf._removeAll()
+                self = Self(_storage: .heap(consume buf))
+            case .inline(var buf):
+                buf._removeAll()
+                self = Self(_storage: .inline(consume buf))
+            }
+        } else {
+            _removeAll()
+        }
+    }
+}
+
+// MARK: - Property.View (.peek, .remove)
+
+extension Buffer.Linear.Small where Element: ~Copyable {
+    @inlinable
+    public var peek: Peek.View {
+        mutating _read {
+            yield unsafe .init(&self)
+        }
+    }
+
+    @inlinable
+    public var remove: Remove.View {
+        mutating _read {
+            yield unsafe .init(&self)
+        }
+        mutating _modify {
+            var view: Remove.View = unsafe .init(&self)
+            yield &view
+        }
+    }
+}
+
+// MARK: - Remove Operations (~Copyable)
+
+extension Property.View.Typed.Valued
+where Tag == Buffer<Element>.Linear.Remove,
+      Base == Buffer<Element>.Linear.Small<n>,
+      Element: ~Copyable
+{
+    /// Removes and returns the first element, shifting remaining elements left.
+    ///
+    /// - Precondition: The buffer is not empty.
+    @_lifetime(&self)
+    @inlinable
+    public mutating func first() -> Element {
+        unsafe base.pointee._removeFirst()
+    }
+
+    /// Removes and returns the last element.
+    ///
+    /// - Precondition: The buffer is not empty.
+    @_lifetime(&self)
+    @inlinable
+    public mutating func last() -> Element {
+        unsafe base.pointee._removeLast()
+    }
+
+    /// Removes all elements from the buffer.
+    ///
+    /// Resets to inline mode.
+    @_lifetime(&self)
+    @inlinable
+    public mutating func all() {
+        unsafe base.pointee._removeAll()
+    }
 
     /// Removes all elements from the buffer.
     ///
     /// - Parameter keepingCapacity: If `true` and the buffer has spilled,
     ///   stays in heap mode. If `false`, resets to inline mode.
+    @_lifetime(&self)
     @inlinable
-    public mutating func removeAll(keepingCapacity: Bool) {
-        if keepingCapacity {
-            switch _storage {
-            case .heap(var buf):
-                buf.removeAll()
-                self = Self(_storage: .heap(consume buf))
-            case .inline(var buf):
-                buf.removeAll()
-                self = Self(_storage: .inline(consume buf))
-            }
-        } else {
-            removeAll()
-        }
+    public mutating func all(keepingCapacity: Bool) {
+        unsafe base.pointee._removeAll(keepingCapacity: keepingCapacity)
     }
 }
 
@@ -341,7 +412,10 @@ extension Buffer.Linear.Small: Sequence.Drain.`Protocol` where Element: Copyable
 // MARK: - Sequence.Clearable
 
 extension Buffer.Linear.Small: Sequence.Clearable where Element: Copyable {
-    // removeAll() already provided above
+    @inlinable
+    public mutating func removeAll() {
+        _removeAll()
+    }
 }
 
 // MARK: - Property.View (.drain)

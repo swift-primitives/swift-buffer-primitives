@@ -21,14 +21,14 @@ extension RingBoundedTests.Unit {
         // Fill to capacity
         var i: UInt = 0
         while i < cap {
-            let rejected = buffer.pushBack(Int(i))
+            let rejected = buffer.push.back(Int(i))
             #expect(rejected == nil)
             i += 1
         }
         #expect(buffer.isFull)
 
         // Next push is rejected
-        let rejected = buffer.pushBack(999)
+        let rejected = buffer.push.back(999)
         #expect(rejected == 999)
     }
 
@@ -39,26 +39,26 @@ extension RingBoundedTests.Unit {
 
         var i: UInt = 0
         while i < cap {
-            _ = buffer.pushBack(Int(i))
+            _ = buffer.push.back(Int(i))
             i += 1
         }
 
-        let rejected = buffer.pushFront(999)
+        let rejected = buffer.push.front(999)
         #expect(rejected == 999)
     }
 
     @Test
     func `peekFront and peekBack (Copyable)`() throws {
         var buffer = try Buffer<Int>.Ring.Bounded([10, 20, 30], capacity: 4)
-        #expect(buffer.peekFront == 10)
-        #expect(buffer.peekBack == 30)
+        #expect(buffer.peek.front == 10)
+        #expect(buffer.peek.back == 30)
         #expect(buffer.count == 3)
     }
 
     @Test
     func `removeAll clears buffer`() throws {
         var buffer = try Buffer<Int>.Ring.Bounded([1, 2, 3], capacity: 4)
-        buffer.removeAll()
+        buffer.remove.all()
         #expect(buffer.isEmpty)
     }
 
@@ -77,13 +77,13 @@ extension RingBoundedTests.Unit {
     func `checkpoint and restore`() throws {
         var buffer = try Buffer<Int>.Ring.Bounded([10, 20], capacity: 8)
         let cp = buffer.checkpoint
-        _ = buffer.pushBack(30)
-        _ = buffer.pushBack(40)
+        _ = buffer.push.back(30)
+        _ = buffer.push.back(40)
 
         buffer.restore(to: cp)
         #expect(buffer.count == 2)
-        #expect(buffer.popFront() == 10)
-        #expect(buffer.popFront() == 20)
+        #expect(buffer.pop.front() == 10)
+        #expect(buffer.pop.front() == 20)
     }
 }
 
@@ -94,11 +94,11 @@ extension RingBoundedTests.EdgeCase {
     @Test
     func `capacity-of-1 ring`() {
         var buffer = Buffer<Int>.Ring.Bounded(minimumCapacity: 1)
-        let rejected = buffer.pushBack(42)
+        let rejected = buffer.push.back(42)
         #expect(rejected == nil)
         #expect(buffer.isFull)
 
-        let value = buffer.popFront()
+        let value = buffer.pop.front()
         #expect(value == 42)
         #expect(buffer.isEmpty)
     }
@@ -109,31 +109,31 @@ extension RingBoundedTests.EdgeCase {
         let cap = buffer.capacity.rawValue.rawValue
         var i: UInt = 0
         while i < cap {
-            _ = buffer.pushBack(Int(i))
+            _ = buffer.push.back(Int(i))
             i += 1
         }
 
-        let rejected = buffer.pushFront(999)
+        let rejected = buffer.push.front(999)
         #expect(rejected == 999)
         // Original elements untouched
-        #expect(buffer.peekFront == 0)
+        #expect(buffer.peek.front == 0)
     }
 
     @Test
     func `restore after wrapping`() {
         var buffer = Buffer<Int>.Ring.Bounded(minimumCapacity: 4)
-        _ = buffer.pushBack(1)
-        _ = buffer.pushBack(2)
-        _ = buffer.pushBack(3)
-        _ = buffer.popFront()
-        _ = buffer.popFront()
+        _ = buffer.push.back(1)
+        _ = buffer.push.back(2)
+        _ = buffer.push.back(3)
+        _ = buffer.pop.front()
+        _ = buffer.pop.front()
         let cp = buffer.checkpoint
-        _ = buffer.pushBack(4)
-        _ = buffer.pushBack(5)
+        _ = buffer.push.back(4)
+        _ = buffer.push.back(5)
 
         buffer.restore(to: cp)
         #expect(buffer.count == 1)
-        #expect(buffer.popFront() == 3)
+        #expect(buffer.pop.front() == 3)
     }
 }
 
@@ -144,14 +144,14 @@ extension RingBoundedTests.Integration {
     @Test
     func `interleaved push/pop cycles`() {
         var buffer = Buffer<Int>.Ring.Bounded(minimumCapacity: 3)
-        _ = buffer.pushBack(1)
-        _ = buffer.pushBack(2)
-        #expect(buffer.popFront() == 1)
-        _ = buffer.pushBack(3)
-        #expect(buffer.popFront() == 2)
-        _ = buffer.pushBack(4)
-        #expect(buffer.popFront() == 3)
-        #expect(buffer.popFront() == 4)
+        _ = buffer.push.back(1)
+        _ = buffer.push.back(2)
+        #expect(buffer.pop.front() == 1)
+        _ = buffer.push.back(3)
+        #expect(buffer.pop.front() == 2)
+        _ = buffer.push.back(4)
+        #expect(buffer.pop.front() == 3)
+        #expect(buffer.pop.front() == 4)
         #expect(buffer.isEmpty)
     }
 
@@ -163,7 +163,7 @@ extension RingBoundedTests.Integration {
         // Fill
         var i = 0
         while i < cap {
-            _ = buffer.pushBack(i)
+            _ = buffer.push.back(i)
             i += 1
         }
         #expect(buffer.isFull)

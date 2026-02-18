@@ -1,21 +1,24 @@
-// MARK: - Copyable Conformances for Linear.Inline
+// MARK: - Peek Operations (Copyable)
 
-extension Buffer.Linear.Inline where Element: Copyable {
-
+extension Property.View.Read.Typed.Valued
+where Tag == Buffer<Element>.Linear.Peek,
+      Base == Buffer<Element>.Linear.Inline<n>,
+      Element: Copyable
+{
     /// Returns the first element without removing it.
     ///
     /// - Precondition: The buffer is not empty.
     @inlinable
-    public var peekFront: Element {
-        unsafe storage.pointer(at: Index<Element>.Bounded<capacity>(.zero)!).pointee
+    public var front: Element {
+        unsafe base.pointee.storage.pointer(at: Index<Element>.Bounded<n>(.zero)!).pointee
     }
 
     /// Returns the last element without removing it.
     ///
     /// - Precondition: The buffer is not empty.
     @inlinable
-    public var peekBack: Element {
-        return unsafe storage.pointer(at: Index<Element>.Bounded<capacity>(header.count.subtract.saturating(.one).map(Ordinal.init))!).pointee
+    public var back: Element {
+        return unsafe base.pointee.storage.pointer(at: Index<Element>.Bounded<n>(base.pointee.header.count.subtract.saturating(.one).map(Ordinal.init))!).pointee
     }
 }
 

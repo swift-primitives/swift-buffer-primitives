@@ -2,26 +2,6 @@
 
 extension Buffer.Ring.Bounded where Element: Copyable {
 
-    /// Returns the front element without removing it.
-    ///
-    /// - Precondition: The buffer is not empty.
-    @inlinable
-    public var peekFront: Element {
-        unsafe storage.pointer(at: header.head).pointee
-    }
-
-    /// Returns the back element without removing it.
-    ///
-    /// - Precondition: The buffer is not empty.
-    @inlinable
-    public var peekBack: Element {
-        return unsafe storage.pointer(at: Index.Modular.advanced(
-            header.head,
-            by: Index<Element>.Offset(fromZero: header.count.subtract.saturating(.one).map(Ordinal.init)),
-            capacity: header.capacity
-        )).pointee
-    }
-
     /// Ensures this buffer has unique storage, returning whether a copy was made.
     @inlinable
     @discardableResult
@@ -60,57 +40,141 @@ extension Buffer.Ring.Bounded where Element: Copyable {
         guard elements.count <= Int(capacity) else { throw .capacityExceeded }
         var buffer = Self(minimumCapacity: .init(Cardinal(capacity)))
         for element in elements {
-            _ = buffer.pushBack(element)
+            _ = buffer._pushBack(element)
         }
         self = buffer
     }
 }
 
-// MARK: - CoW-Safe Mutations
+// MARK: - CoW-Safe Internal Mutations
 
 extension Buffer.Ring.Bounded where Element: Copyable {
 
-    /// Pushes an element to the back (CoW-safe). Returns the element if full.
-    @inlinable
-    public mutating func pushBack(_ element: consuming Element) -> Element? {
+    @usableFromInline
+    package mutating func _pushBack(_ element: consuming Element) -> Element? {
         ensureUnique()
         if header.isFull { return element }
         Buffer.Ring.pushBack(consume element, header: &header, storage: storage)
         return nil
     }
 
-    /// Removes and returns the element at the front (CoW-safe).
-    ///
-    /// - Precondition: The buffer is not empty.
-    @inlinable
-    public mutating func popFront() -> Element {
+    @usableFromInline
+    package mutating func _popFront() -> Element {
         ensureUnique()
         return Buffer.Ring.popFront(header: &header, storage: storage)
     }
 
-    /// Pushes an element to the front (CoW-safe). Returns the element if full.
-    @inlinable
-    public mutating func pushFront(_ element: consuming Element) -> Element? {
+    @usableFromInline
+    package mutating func _pushFront(_ element: consuming Element) -> Element? {
         ensureUnique()
         if header.isFull { return element }
         Buffer.Ring.pushFront(consume element, header: &header, storage: storage)
         return nil
     }
 
-    /// Removes and returns the element at the back (CoW-safe).
-    ///
-    /// - Precondition: The buffer is not empty.
-    @inlinable
-    public mutating func popBack() -> Element {
+    @usableFromInline
+    package mutating func _popBack() -> Element {
         ensureUnique()
         return Buffer.Ring.popBack(header: &header, storage: storage)
     }
 
-    /// Removes all elements from the buffer (CoW-safe).
-    @inlinable
-    public mutating func removeAll() {
+    @usableFromInline
+    package mutating func _removeAll() {
         ensureUnique()
         Buffer.Ring.deinitializeAll(header: &header, storage: storage)
+    }
+}
+
+// MARK: - Peek Operations (Copyable)
+
+extension Property.View.Read.Typed
+where Tag == Buffer<Element>.Ring.Peek,
+      Base == Buffer<Element>.Ring.Bounded,
+      Element: Copyable
+{
+    /// Returns the front element without removing it.
+    ///
+    /// - Precondition: The buffer is not empty.
+    @inlinable
+    public var front: Element {
+        unsafe base.pointee.storage.pointer(at: base.pointee.header.head).pointee
+    }
+
+    /// Returns the back element without removing it.
+    ///
+    /// - Precondition: The buffer is not empty.
+    @inlinable
+    public var back: Element {
+        return unsafe base.pointee.storage.pointer(at: Index.Modular.advanced(
+            base.pointee.header.head,
+            by: Index<Element>.Offset(fromZero: base.pointee.header.count.subtract.saturating(.one).map(Ordinal.init)),
+            capacity: base.pointee.header.capacity
+        )).pointee
+    }
+}
+
+// MARK: - Push Operations (Copyable)
+
+extension Property.View.Typed
+where Tag == Buffer<Element>.Ring.Push,
+      Base == Buffer<Element>.Ring.Bounded,
+      Element: Copyable
+{
+    /// Pushes an element to the back (CoW-safe). Returns the element if full.
+    @_lifetime(&self)
+    @inlinable
+    @discardableResult
+    public mutating func back(_ element: consuming Element) -> Element? {
+        unsafe base.pointee._pushBack(consume element)
+    }
+
+    /// Pushes an element to the front (CoW-safe). Returns the element if full.
+    @_lifetime(&self)
+    @inlinable
+    @discardableResult
+    public mutating func front(_ element: consuming Element) -> Element? {
+        unsafe base.pointee._pushFront(consume element)
+    }
+}
+
+// MARK: - Pop Operations (Copyable)
+
+extension Property.View.Typed
+where Tag == Buffer<Element>.Ring.Pop,
+      Base == Buffer<Element>.Ring.Bounded,
+      Element: Copyable
+{
+    /// Removes and returns the element at the front (CoW-safe).
+    ///
+    /// - Precondition: The buffer is not empty.
+    @_lifetime(&self)
+    @inlinable
+    public mutating func front() -> Element {
+        unsafe base.pointee._popFront()
+    }
+
+    /// Removes and returns the element at the back (CoW-safe).
+    ///
+    /// - Precondition: The buffer is not empty.
+    @_lifetime(&self)
+    @inlinable
+    public mutating func back() -> Element {
+        unsafe base.pointee._popBack()
+    }
+}
+
+// MARK: - Remove Operations (Copyable)
+
+extension Property.View.Typed
+where Tag == Buffer<Element>.Ring.Remove,
+      Base == Buffer<Element>.Ring.Bounded,
+      Element: Copyable
+{
+    /// Removes all elements from the buffer (CoW-safe).
+    @_lifetime(&self)
+    @inlinable
+    public mutating func all() {
+        unsafe base.pointee._removeAll()
     }
 }
 

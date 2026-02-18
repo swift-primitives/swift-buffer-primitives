@@ -20,9 +20,9 @@ extension LinearGrowableTests.Unit {
         buffer.append(20)
         buffer.append(30)
 
-        #expect(buffer.removeFirst() == 10)
-        #expect(buffer.removeFirst() == 20)
-        #expect(buffer.removeFirst() == 30)
+        #expect(buffer.remove.first() == 10)
+        #expect(buffer.remove.first() == 20)
+        #expect(buffer.remove.first() == 30)
         #expect(buffer.isEmpty)
     }
 
@@ -33,9 +33,9 @@ extension LinearGrowableTests.Unit {
         buffer.append(20)
         buffer.append(30)
 
-        #expect(buffer.removeLast() == 30)
-        #expect(buffer.removeLast() == 20)
-        #expect(buffer.removeLast() == 10)
+        #expect(buffer.remove.last() == 30)
+        #expect(buffer.remove.last() == 20)
+        #expect(buffer.remove.last() == 10)
         #expect(buffer.isEmpty)
     }
 
@@ -56,7 +56,7 @@ extension LinearGrowableTests.Unit {
         // Verify elements survived growth
         i = 0
         while i < needed {
-            #expect(buffer.removeFirst() == i * 10)
+            #expect(buffer.remove.first() == i * 10)
             i += 1
         }
     }
@@ -73,15 +73,15 @@ extension LinearGrowableTests.Unit {
     @Test
     func `removeAll clears buffer`() {
         var buffer: Buffer<Int>.Linear = [1, 2, 3]
-        buffer.removeAll()
+        buffer.remove.all()
         #expect(buffer.isEmpty)
     }
 
     @Test
     func `peekFront and peekBack (Copyable)`() {
-        let buffer: Buffer<Int>.Linear = [10, 20, 30]
-        #expect(buffer.peekFront == 10)
-        #expect(buffer.peekBack == 30)
+        var buffer: Buffer<Int>.Linear = [10, 20, 30]
+        #expect(buffer.peek.front == 10)
+        #expect(buffer.peek.back == 30)
     }
 
     @Test
@@ -100,7 +100,7 @@ extension LinearGrowableTests.Unit {
         var buffer = Buffer<Int>.Linear(minimumCapacity: 1)
         buffer.append(42)
         #expect(buffer.count == 1)
-        #expect(buffer.removeLast() == 42)
+        #expect(buffer.remove.last() == 42)
         #expect(buffer.isEmpty)
     }
 
@@ -142,7 +142,7 @@ extension LinearGrowableTests.Unit {
         var buffer: Buffer<Int>.Linear = [10, 20, 30, 40, 50]
         buffer.truncate(to: 3)
         #expect(buffer.count == 3)
-        #expect(buffer.peekBack == 30)
+        #expect(buffer.peek.back == 30)
     }
 }
 
@@ -182,7 +182,7 @@ extension LinearGrowableTests.Integration {
         buffer.drain { _ in }
         #expect(buffer.isEmpty)
         buffer.append(40)
-        #expect(buffer.peekFront == 40)
+        #expect(buffer.peek.front == 40)
     }
 }
 
@@ -219,8 +219,8 @@ extension LinearCoWTests.Unit {
         #expect(original.count == 3)
         #expect(copy.count == 4)
 
-        #expect(original.peekBack == 3)
-        #expect(copy.peekBack == 99)
+        #expect(original.peek.back == 3)
+        #expect(copy.peek.back == 99)
     }
 
     @Test
@@ -233,8 +233,8 @@ extension LinearCoWTests.Unit {
         #expect(original.count == 4)
         #expect(copy.count == 3)
 
-        #expect(original.peekBack == 99)
-        #expect(copy.peekBack == 3)
+        #expect(original.peek.back == 99)
+        #expect(copy.peek.back == 3)
     }
 
     @Test
@@ -259,9 +259,9 @@ extension LinearCoWTests.Unit {
         copy2.append(200)
         original.append(300)
 
-        #expect(original.peekBack == 300)
-        #expect(copy1.peekBack == 100)
-        #expect(copy2.peekBack == 200)
+        #expect(original.peek.back == 300)
+        #expect(copy1.peek.back == 100)
+        #expect(copy2.peek.back == 200)
 
         #expect(original.count == 3)
         #expect(copy1.count == 3)
@@ -273,12 +273,12 @@ extension LinearCoWTests.Unit {
         var original: Buffer<Int>.Linear = [1, 2, 3]
         var copy = original
 
-        let removed = copy.removeLast()
+        let removed = copy.remove.last()
 
         #expect(removed == 3)
         #expect(copy.count == 2)
         #expect(original.count == 3)
-        #expect(original.peekBack == 3)
+        #expect(original.peek.back == 3)
     }
 
     @Test
@@ -286,12 +286,12 @@ extension LinearCoWTests.Unit {
         var original: Buffer<Int>.Linear = [1, 2, 3]
         var copy = original
 
-        let consumed = copy.removeFirst()
+        let consumed = copy.remove.first()
 
         #expect(consumed == 1)
         #expect(copy.count == 2)
         #expect(original.count == 3)
-        #expect(original.peekFront == 1)
+        #expect(original.peek.front == 1)
     }
 
     @Test
@@ -299,12 +299,12 @@ extension LinearCoWTests.Unit {
         var original: Buffer<Int>.Linear = [1, 2, 3]
         var copy = original
 
-        copy.removeAll()
+        copy.remove.all()
 
         #expect(copy.isEmpty)
         #expect(original.count == 3)
-        #expect(original.peekFront == 1)
-        #expect(original.peekBack == 3)
+        #expect(original.peek.front == 1)
+        #expect(original.peek.back == 3)
     }
 
     @Test

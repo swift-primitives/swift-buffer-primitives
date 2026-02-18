@@ -47,22 +47,6 @@ extension Buffer.Linear where Element: ~Copyable {
         Buffer.Linear.append(consume element, header: &header, storage: storage)
     }
 
-    /// Removes and returns the first element, shifting remaining elements left.
-    ///
-    /// - Precondition: The buffer is not empty.
-    @inlinable
-    public mutating func removeFirst() -> Element {
-        Buffer.Linear.removeFirst(header: &header, storage: storage)
-    }
-
-    /// Removes and returns the last element.
-    ///
-    /// - Precondition: The buffer is not empty.
-    @inlinable
-    public mutating func removeLast() -> Element {
-        Buffer.Linear.consumeBack(header: &header, storage: storage)
-    }
-
     /// Removes and returns the element at the given index, shifting subsequent elements left.
     ///
     /// - Precondition: The index must be in bounds.
@@ -85,12 +69,6 @@ extension Buffer.Linear where Element: ~Copyable {
     @inlinable
     public mutating func swap(at i: Index<Element>, with j: Index<Element>) {
         Buffer.Linear.swap(at: i, with: j, storage: storage)
-    }
-
-    /// Removes all elements from the buffer.
-    @inlinable
-    public mutating func removeAll() {
-        Buffer.Linear.deinitializeAll(header: &header, storage: storage)
     }
 
     /// Removes elements beyond the specified count.
@@ -136,6 +114,108 @@ extension Buffer.Linear where Element: ~Copyable {
     }
 }
 
+// MARK: - Tag Types
+
+extension Buffer.Linear where Element: ~Copyable {
+    /// Tag type for `.peek` property extensions.
+    public enum Peek {
+        public typealias View = Property<Peek, Buffer<Element>.Linear>.View.Read.Typed<Element>
+    }
+
+    /// Tag type for `.remove` property extensions.
+    public enum Remove {
+        public typealias View = Property<Remove, Buffer<Element>.Linear>.View.Typed<Element>
+    }
+}
+
+// MARK: - Internal Mutations
+
+extension Buffer.Linear where Element: ~Copyable {
+
+    @usableFromInline
+    package mutating func _removeFirst() -> Element {
+        Buffer.Linear.removeFirst(header: &header, storage: storage)
+    }
+
+    @usableFromInline
+    package mutating func _removeLast() -> Element {
+        Buffer.Linear.consumeBack(header: &header, storage: storage)
+    }
+
+    @usableFromInline
+    package mutating func _removeAll() {
+        Buffer.Linear.deinitializeAll(header: &header, storage: storage)
+    }
+}
+
+// MARK: - Property.View (.peek, .remove)
+
+extension Buffer.Linear where Element: ~Copyable {
+    /// Namespaced peek operations (read-only).
+    ///
+    /// - `buffer.peek.front` — peeks at the first element.
+    /// - `buffer.peek.back` — peeks at the last element.
+    @inlinable
+    public var peek: Peek.View {
+        mutating _read {
+            yield unsafe .init(&self)
+        }
+    }
+
+    /// Namespaced remove operations.
+    ///
+    /// - `buffer.remove.first()` — removes the first element.
+    /// - `buffer.remove.last()` — removes the last element.
+    /// - `buffer.remove.all()` — removes all elements.
+    @inlinable
+    public var remove: Remove.View {
+        mutating _read {
+            yield unsafe .init(&self)
+        }
+        mutating _modify {
+            var view: Remove.View = unsafe .init(&self)
+            yield &view
+        }
+    }
+}
+
+// MARK: - Remove Operations (~Copyable)
+
+extension Property.View.Typed
+where Tag == Buffer<Element>.Linear.Remove,
+      Base == Buffer<Element>.Linear,
+      Element: ~Copyable
+{
+    /// Removes and returns the first element, shifting remaining elements left.
+    ///
+    /// - Precondition: The buffer is not empty.
+    /// - Complexity: O(n)
+    @_lifetime(&self)
+    @inlinable
+    public mutating func first() -> Element {
+        unsafe base.pointee._removeFirst()
+    }
+
+    /// Removes and returns the last element.
+    ///
+    /// - Precondition: The buffer is not empty.
+    /// - Complexity: O(1)
+    @_lifetime(&self)
+    @inlinable
+    public mutating func last() -> Element {
+        unsafe base.pointee._removeLast()
+    }
+
+    /// Removes all elements from the buffer.
+    ///
+    /// - Complexity: O(n) where n is the number of elements.
+    @_lifetime(&self)
+    @inlinable
+    public mutating func all() {
+        unsafe base.pointee._removeAll()
+    }
+}
+
 // MARK: - Sequence.Drain.Protocol
 
 extension Buffer.Linear: Sequence.Drain.`Protocol` where Element: Copyable {
@@ -155,7 +235,10 @@ extension Buffer.Linear: Sequence.Drain.`Protocol` where Element: Copyable {
 // MARK: - Sequence.Clearable
 
 extension Buffer.Linear: Sequence.Clearable where Element: Copyable {
-    // removeAll() already provided above
+    @inlinable
+    public mutating func removeAll() {
+        _removeAll()
+    }
 }
 
 // MARK: - Property.View (.drain)

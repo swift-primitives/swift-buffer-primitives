@@ -38,22 +38,6 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
         return nil
     }
 
-    /// Removes and returns the first element, shifting remaining elements left.
-    ///
-    /// - Precondition: The buffer is not empty.
-    @inlinable
-    public mutating func removeFirst() -> Element {
-        Buffer.Linear.removeFirst(header: &header, storage: &storage)
-    }
-
-    /// Removes and returns the last element.
-    ///
-    /// - Precondition: The buffer is not empty.
-    @inlinable
-    public mutating func removeLast() -> Element {
-        Buffer.Linear.consumeBack(header: &header, storage: &storage)
-    }
-
     /// Removes and returns the element at the given index, shifting subsequent elements left.
     ///
     /// - Precondition: The index must be in bounds.
@@ -96,18 +80,99 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
         swap(at: Index<Element>.Bounded<capacity>(i)!, with: Index<Element>.Bounded<capacity>(j)!)
     }
 
-    /// Removes all elements from the buffer.
-    @inlinable
-    public mutating func removeAll() {
-        Buffer.Linear.deinitializeAll(header: &header, storage: &storage)
-    }
-
     /// Removes elements beyond the specified count.
     ///
     /// If `newCount >= count`, this method has no effect.
     @inlinable
     public mutating func truncate(to newCount: Index<Element>.Count) {
         Buffer.Linear.truncate(to: newCount, header: &header, storage: &storage)
+    }
+}
+
+// MARK: - Tag View Typealiases
+
+extension Buffer.Linear.Inline where Element: ~Copyable {
+    public enum Peek {
+        public typealias View = Property<Buffer<Element>.Linear.Peek, Buffer<Element>.Linear.Inline<capacity>>.View.Read.Typed<Element>.Valued<capacity>
+    }
+
+    public enum Remove {
+        public typealias View = Property<Buffer<Element>.Linear.Remove, Buffer<Element>.Linear.Inline<capacity>>.View.Typed<Element>.Valued<capacity>
+    }
+}
+
+// MARK: - Internal Mutations
+
+extension Buffer.Linear.Inline where Element: ~Copyable {
+
+    @usableFromInline
+    mutating func _removeFirst() -> Element {
+        Buffer.Linear.removeFirst(header: &header, storage: &storage)
+    }
+
+    @usableFromInline
+    mutating func _removeLast() -> Element {
+        Buffer.Linear.consumeBack(header: &header, storage: &storage)
+    }
+
+    @usableFromInline
+    mutating func _removeAll() {
+        Buffer.Linear.deinitializeAll(header: &header, storage: &storage)
+    }
+}
+
+// MARK: - Property.View (.peek, .remove)
+
+extension Buffer.Linear.Inline where Element: ~Copyable {
+    @inlinable
+    public var peek: Peek.View {
+        mutating _read {
+            yield unsafe .init(&self)
+        }
+    }
+
+    @inlinable
+    public var remove: Remove.View {
+        mutating _read {
+            yield unsafe .init(&self)
+        }
+        mutating _modify {
+            var view: Remove.View = unsafe .init(&self)
+            yield &view
+        }
+    }
+}
+
+// MARK: - Remove Operations (~Copyable)
+
+extension Property.View.Typed.Valued
+where Tag == Buffer<Element>.Linear.Remove,
+      Base == Buffer<Element>.Linear.Inline<n>,
+      Element: ~Copyable
+{
+    /// Removes and returns the first element, shifting remaining elements left.
+    ///
+    /// - Precondition: The buffer is not empty.
+    @_lifetime(&self)
+    @inlinable
+    public mutating func first() -> Element {
+        unsafe base.pointee._removeFirst()
+    }
+
+    /// Removes and returns the last element.
+    ///
+    /// - Precondition: The buffer is not empty.
+    @_lifetime(&self)
+    @inlinable
+    public mutating func last() -> Element {
+        unsafe base.pointee._removeLast()
+    }
+
+    /// Removes all elements from the buffer.
+    @_lifetime(&self)
+    @inlinable
+    public mutating func all() {
+        unsafe base.pointee._removeAll()
     }
 }
 
@@ -157,7 +222,10 @@ extension Buffer.Linear.Inline: Sequence.Drain.`Protocol` where Element: Copyabl
 // MARK: - Sequence.Clearable
 
 extension Buffer.Linear.Inline: Sequence.Clearable where Element: Copyable {
-    // removeAll() already provided above
+    @inlinable
+    public mutating func removeAll() {
+        _removeAll()
+    }
 }
 
 // MARK: - Property.View (.drain)

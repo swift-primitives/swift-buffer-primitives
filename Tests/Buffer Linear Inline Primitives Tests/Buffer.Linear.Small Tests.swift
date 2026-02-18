@@ -51,9 +51,9 @@ extension LinearSmallTests.Unit {
         buffer.append(20)
         buffer.append(30)
 
-        #expect(buffer.removeFirst() == 10)
-        #expect(buffer.removeFirst() == 20)
-        #expect(buffer.removeFirst() == 30)
+        #expect(buffer.remove.first() == 10)
+        #expect(buffer.remove.first() == 20)
+        #expect(buffer.remove.first() == 30)
         #expect(buffer.isEmpty == true)
     }
 
@@ -65,9 +65,9 @@ extension LinearSmallTests.Unit {
         buffer.append(30)
         #expect(buffer.isSpilled == true)
 
-        #expect(buffer.removeFirst() == 10)
-        #expect(buffer.removeFirst() == 20)
-        #expect(buffer.removeFirst() == 30)
+        #expect(buffer.remove.first() == 10)
+        #expect(buffer.remove.first() == 20)
+        #expect(buffer.remove.first() == 30)
         #expect(buffer.isEmpty == true)
     }
 
@@ -78,9 +78,9 @@ extension LinearSmallTests.Unit {
         buffer.append(20)
         buffer.append(30)
 
-        #expect(buffer.removeLast() == 30)
-        #expect(buffer.removeLast() == 20)
-        #expect(buffer.removeLast() == 10)
+        #expect(buffer.remove.last() == 30)
+        #expect(buffer.remove.last() == 20)
+        #expect(buffer.remove.last() == 10)
         #expect(buffer.isEmpty == true)
     }
 
@@ -92,9 +92,9 @@ extension LinearSmallTests.Unit {
         buffer.append(30)
         #expect(buffer.isSpilled == true)
 
-        #expect(buffer.removeLast() == 30)
-        #expect(buffer.removeLast() == 20)
-        #expect(buffer.removeLast() == 10)
+        #expect(buffer.remove.last() == 30)
+        #expect(buffer.remove.last() == 20)
+        #expect(buffer.remove.last() == 10)
         #expect(buffer.isEmpty == true)
     }
 
@@ -133,7 +133,7 @@ extension LinearSmallTests.Unit {
         buffer.append(30)
         #expect(buffer.isSpilled == true)
 
-        buffer.removeAll()
+        buffer.remove.all()
         #expect(buffer.isEmpty == true)
         #expect(buffer.isSpilled == false)
     }
@@ -146,7 +146,7 @@ extension LinearSmallTests.Unit {
         buffer.append(30)
         #expect(buffer.isSpilled == true)
 
-        buffer.removeAll(keepingCapacity: true)
+        buffer.remove.all(keepingCapacity: true)
         #expect(buffer.isEmpty == true)
         #expect(buffer.isSpilled == true)
     }
@@ -158,8 +158,8 @@ extension LinearSmallTests.Unit {
         buffer.append(20)
         buffer.append(30)
 
-        #expect(buffer.peekFront == 10)
-        #expect(buffer.peekBack == 30)
+        #expect(buffer.peek.front == 10)
+        #expect(buffer.peek.back == 30)
     }
 
     @Test
@@ -170,8 +170,8 @@ extension LinearSmallTests.Unit {
         buffer.append(30)
         #expect(buffer.isSpilled == true)
 
-        #expect(buffer.peekFront == 10)
-        #expect(buffer.peekBack == 30)
+        #expect(buffer.peek.front == 10)
+        #expect(buffer.peek.back == 30)
     }
 
     @Test
@@ -286,7 +286,7 @@ extension LinearSmallTests.Unit {
         buffer.append(42)
         #expect(buffer.count == 1)
         #expect(buffer.isSpilled == false)
-        #expect(buffer.removeLast() == 42)
+        #expect(buffer.remove.last() == 42)
         #expect(buffer.isEmpty == true)
     }
 
@@ -381,7 +381,7 @@ extension LinearSmallTests.EdgeCase {
         buffer.append(30)
         #expect(buffer.isSpilled == true)
 
-        buffer.removeAll(keepingCapacity: false)
+        buffer.remove.all(keepingCapacity: false)
         #expect(buffer.isEmpty == true)
         #expect(buffer.isSpilled == false)
     }
@@ -423,14 +423,14 @@ extension LinearSmallTests.Integration {
 
         // Remove some from back
         for _ in 0..<5 {
-            let bufElement = buffer.removeLast()
+            let bufElement = buffer.remove.last()
             let modelElement = model.removeLast()
             #expect(bufElement == modelElement)
         }
 
         // Remove some from front
         for _ in 0..<3 {
-            let bufElement = buffer.removeFirst()
+            let bufElement = buffer.remove.first()
             let modelElement = model.removeFirst()
             #expect(bufElement == modelElement)
         }

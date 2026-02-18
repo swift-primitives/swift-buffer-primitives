@@ -2,28 +2,6 @@
 
 extension Buffer.Ring.Small where Element: Copyable {
 
-    /// Returns the front element without removing it.
-    ///
-    /// - Precondition: The buffer is not empty.
-    @inlinable
-    public var peekFront: Element {
-        switch _storage {
-        case .heap(let heap): return heap.peekFront
-        case .inline(let buf): return buf.peekFront
-        }
-    }
-
-    /// Returns the back element without removing it.
-    ///
-    /// - Precondition: The buffer is not empty.
-    @inlinable
-    public var peekBack: Element {
-        switch _storage {
-        case .heap(let heap): return heap.peekBack
-        case .inline(let buf): return buf.peekBack
-        }
-    }
-
     /// Ensures this buffer has unique heap storage, returning whether a copy was made.
     ///
     /// In inline mode, storage is always unique (value type). In heap mode,
@@ -118,28 +96,26 @@ extension Buffer.Ring.Small where Element: Copyable {
     }
 }
 
-// MARK: - CoW-Safe Mutations
+// MARK: - CoW-Safe Internal Mutations
 
 extension Buffer.Ring.Small where Element: Copyable {
 
-    /// Pushes an element to the back (CoW-safe).
-    @inlinable
-    public mutating func pushBack(_ element: consuming Element) {
+    @usableFromInline
+    mutating func _pushBack(_ element: consuming Element) {
         switch _storage {
         case .heap(var buf):
-            buf.ensureUnique()
-            buf.pushBack(consume element)
+            buf._pushBack(consume element)
             self = Self(_storage: .heap(consume buf))
         case .inline(var buf):
             if !buf.isFull {
-                _ = buf.pushBack(consume element)
+                _ = buf._pushBack(consume element)
                 self = Self(_storage: .inline(consume buf))
             } else {
                 self = Self(_storage: .inline(consume buf))
                 _spillToHeap()
                 switch _storage {
                 case .heap(var buf):
-                    buf.pushBack(consume element)
+                    buf._pushBack(consume element)
                     self = Self(_storage: .heap(consume buf))
                 case .inline(var buf):
                     self = Self(_storage: .inline(consume buf))
@@ -149,42 +125,36 @@ extension Buffer.Ring.Small where Element: Copyable {
         }
     }
 
-    /// Removes and returns the element at the front (CoW-safe).
-    ///
-    /// - Precondition: The buffer is not empty.
-    @inlinable
-    public mutating func popFront() -> Element {
+    @usableFromInline
+    mutating func _popFront() -> Element {
         switch _storage {
         case .heap(var buf):
-            buf.ensureUnique()
-            let element = buf.popFront()
+            let element = buf._popFront()
             self = Self(_storage: .heap(consume buf))
             return element
         case .inline(var buf):
-            let element = buf.popFront()
+            let element = buf._popFront()
             self = Self(_storage: .inline(consume buf))
             return element
         }
     }
 
-    /// Pushes an element to the front (CoW-safe).
-    @inlinable
-    public mutating func pushFront(_ element: consuming Element) {
+    @usableFromInline
+    mutating func _pushFront(_ element: consuming Element) {
         switch _storage {
         case .heap(var buf):
-            buf.ensureUnique()
-            buf.pushFront(consume element)
+            buf._pushFront(consume element)
             self = Self(_storage: .heap(consume buf))
         case .inline(var buf):
             if !buf.isFull {
-                _ = buf.pushFront(consume element)
+                _ = buf._pushFront(consume element)
                 self = Self(_storage: .inline(consume buf))
             } else {
                 self = Self(_storage: .inline(consume buf))
                 _spillToHeap()
                 switch _storage {
                 case .heap(var buf):
-                    buf.pushFront(consume element)
+                    buf._pushFront(consume element)
                     self = Self(_storage: .heap(consume buf))
                 case .inline(var buf):
                     self = Self(_storage: .inline(consume buf))
@@ -192,61 +162,172 @@ extension Buffer.Ring.Small where Element: Copyable {
                 }
             }
         }
+    }
+
+    @usableFromInline
+    mutating func _popBack() -> Element {
+        switch _storage {
+        case .heap(var buf):
+            let element = buf._popBack()
+            self = Self(_storage: .heap(consume buf))
+            return element
+        case .inline(var buf):
+            let element = buf._popBack()
+            self = Self(_storage: .inline(consume buf))
+            return element
+        }
+    }
+
+    @usableFromInline
+    mutating func _removeAll() {
+        switch _storage {
+        case .heap(var buf):
+            buf._removeAll()
+            self = Self(_storage: .inline(Buffer<Element>.Ring.Inline<inlineCapacity>()))
+            _ = consume buf
+        case .inline(var buf):
+            buf._removeAll()
+            self = Self(_storage: .inline(consume buf))
+        }
+    }
+
+    @usableFromInline
+    mutating func _removeAll(keepingCapacity: Bool) {
+        if keepingCapacity {
+            switch _storage {
+            case .heap(var buf):
+                buf._removeAll()
+                self = Self(_storage: .heap(consume buf))
+            case .inline(var buf):
+                buf._removeAll()
+                self = Self(_storage: .inline(consume buf))
+            }
+        } else {
+            _removeAll()
+        }
+    }
+}
+
+// MARK: - Peek Operations (Copyable)
+
+extension Property.View.Read.Typed.Valued
+where Tag == Buffer<Element>.Ring.Peek,
+      Base == Buffer<Element>.Ring.Small<n>,
+      Element: Copyable
+{
+    /// Returns the front element without removing it.
+    ///
+    /// - Precondition: The buffer is not empty.
+    @inlinable
+    public var front: Element {
+        switch unsafe base.pointee._storage {
+        case .heap(let heap):
+            return unsafe heap.storage.pointer(at: heap.header.head).pointee
+        case .inline(let buf):
+            let bounded = Index<Element>.Bounded<n>(buf.header.head)!
+            let ptr: UnsafePointer<Element> = unsafe buf.storage.pointer(at: bounded)
+            return unsafe ptr.pointee
+        }
+    }
+
+    /// Returns the back element without removing it.
+    ///
+    /// - Precondition: The buffer is not empty.
+    @inlinable
+    public var back: Element {
+        switch unsafe base.pointee._storage {
+        case .heap(let heap):
+            return unsafe heap.storage.pointer(at: Index.Modular.advanced(
+                heap.header.head,
+                by: Index<Element>.Offset(fromZero: heap.header.count.subtract.saturating(.one).map(Ordinal.init)),
+                capacity: heap.header.capacity
+            )).pointee
+        case .inline(let buf):
+            let bounded = Index<Element>.Bounded<n>(
+                Index.Modular.advanced(
+                    buf.header.head,
+                    by: Index<Element>.Offset(fromZero: buf.header.count.subtract.saturating(.one).map(Ordinal.init)),
+                    capacity: buf.header.capacity
+                )
+            )!
+            let ptr: UnsafePointer<Element> = unsafe buf.storage.pointer(at: bounded)
+            return unsafe ptr.pointee
+        }
+    }
+}
+
+// MARK: - Push Operations (Copyable)
+
+extension Property.View.Typed.Valued
+where Tag == Buffer<Element>.Ring.Push,
+      Base == Buffer<Element>.Ring.Small<n>,
+      Element: Copyable
+{
+    /// Pushes an element to the back (CoW-safe).
+    @_lifetime(&self)
+    @inlinable
+    public mutating func back(_ element: consuming Element) {
+        unsafe base.pointee._pushBack(consume element)
+    }
+
+    /// Pushes an element to the front (CoW-safe).
+    @_lifetime(&self)
+    @inlinable
+    public mutating func front(_ element: consuming Element) {
+        unsafe base.pointee._pushFront(consume element)
+    }
+}
+
+// MARK: - Pop Operations (Copyable)
+
+extension Property.View.Typed.Valued
+where Tag == Buffer<Element>.Ring.Pop,
+      Base == Buffer<Element>.Ring.Small<n>,
+      Element: Copyable
+{
+    /// Removes and returns the element at the front (CoW-safe).
+    ///
+    /// - Precondition: The buffer is not empty.
+    @_lifetime(&self)
+    @inlinable
+    public mutating func front() -> Element {
+        unsafe base.pointee._popFront()
     }
 
     /// Removes and returns the element at the back (CoW-safe).
     ///
     /// - Precondition: The buffer is not empty.
+    @_lifetime(&self)
     @inlinable
-    public mutating func popBack() -> Element {
-        switch _storage {
-        case .heap(var buf):
-            buf.ensureUnique()
-            let element = buf.popBack()
-            self = Self(_storage: .heap(consume buf))
-            return element
-        case .inline(var buf):
-            let element = buf.popBack()
-            self = Self(_storage: .inline(consume buf))
-            return element
-        }
+    public mutating func back() -> Element {
+        unsafe base.pointee._popBack()
     }
+}
 
+// MARK: - Remove Operations (Copyable)
+
+extension Property.View.Typed.Valued
+where Tag == Buffer<Element>.Ring.Remove,
+      Base == Buffer<Element>.Ring.Small<n>,
+      Element: Copyable
+{
     /// Removes all elements from the buffer (CoW-safe).
     ///
     /// Resets to inline mode.
+    @_lifetime(&self)
     @inlinable
-    public mutating func removeAll() {
-        switch _storage {
-        case .heap(var buf):
-            buf.removeAll()
-            self = Self(_storage: .inline(Buffer<Element>.Ring.Inline<inlineCapacity>()))
-            _ = consume buf
-        case .inline(var buf):
-            buf.removeAll()
-            self = Self(_storage: .inline(consume buf))
-        }
+    public mutating func all() {
+        unsafe base.pointee._removeAll()
     }
 
     /// Removes all elements from the buffer (CoW-safe).
     ///
     /// - Parameter keepingCapacity: If `true` and the buffer has spilled,
     ///   stays in heap mode. If `false`, resets to inline mode.
+    @_lifetime(&self)
     @inlinable
-    public mutating func removeAll(keepingCapacity: Bool) {
-        if keepingCapacity {
-            switch _storage {
-            case .heap(var buf):
-                buf.ensureUnique()
-                buf.removeAll()
-                self = Self(_storage: .heap(consume buf))
-            case .inline(var buf):
-                buf.removeAll()
-                self = Self(_storage: .inline(consume buf))
-            }
-        } else {
-            removeAll()
-        }
+    public mutating func all(keepingCapacity: Bool) {
+        unsafe base.pointee._removeAll(keepingCapacity: keepingCapacity)
     }
 }
 

@@ -1,21 +1,24 @@
-// MARK: - Copyable Conformances for Linear.Bounded
+// MARK: - Peek Operations (Copyable)
 
-extension Buffer.Linear.Bounded where Element: Copyable {
-
+extension Property.View.Read.Typed
+where Tag == Buffer<Element>.Linear.Peek,
+      Base == Buffer<Element>.Linear.Bounded,
+      Element: Copyable
+{
     /// Returns the first element without removing it.
     ///
     /// - Precondition: The buffer is not empty.
     @inlinable
-    public var peekFront: Element {
-        unsafe storage.pointer(at: .zero).pointee
+    public var front: Element {
+        unsafe base.pointee.storage.pointer(at: .zero).pointee
     }
 
     /// Returns the last element without removing it.
     ///
     /// - Precondition: The buffer is not empty.
     @inlinable
-    public var peekBack: Element {
-        return unsafe storage.pointer(at: header.count.subtract.saturating(.one).map(Ordinal.init)).pointee
+    public var back: Element {
+        return unsafe base.pointee.storage.pointer(at: base.pointee.header.count.subtract.saturating(.one).map(Ordinal.init)).pointee
     }
 }
 
@@ -82,24 +85,6 @@ extension Buffer.Linear.Bounded where Element: Copyable {
         return nil
     }
 
-    /// Removes and returns the first element, shifting remaining elements left (CoW-safe).
-    ///
-    /// - Precondition: The buffer is not empty.
-    @inlinable
-    public mutating func removeFirst() -> Element {
-        ensureUnique()
-        return Buffer.Linear.removeFirst(header: &header, storage: storage)
-    }
-
-    /// Removes and returns the last element (CoW-safe).
-    ///
-    /// - Precondition: The buffer is not empty.
-    @inlinable
-    public mutating func removeLast() -> Element {
-        ensureUnique()
-        return Buffer.Linear.consumeBack(header: &header, storage: storage)
-    }
-
     /// Removes and returns the element at the given index (CoW-safe).
     ///
     /// - Precondition: The index must be in bounds.
@@ -134,6 +119,62 @@ extension Buffer.Linear.Bounded where Element: Copyable {
     public mutating func truncate(to newCount: Index<Element>.Count) {
         ensureUnique()
         Buffer.Linear.truncate(to: newCount, header: &header, storage: storage)
+    }
+}
+
+// MARK: - CoW-Safe Internal Mutations
+
+extension Buffer.Linear.Bounded where Element: Copyable {
+
+    @usableFromInline
+    package mutating func _removeFirst() -> Element {
+        ensureUnique()
+        return Buffer.Linear.removeFirst(header: &header, storage: storage)
+    }
+
+    @usableFromInline
+    package mutating func _removeLast() -> Element {
+        ensureUnique()
+        return Buffer.Linear.consumeBack(header: &header, storage: storage)
+    }
+
+    @usableFromInline
+    package mutating func _removeAll() {
+        ensureUnique()
+        Buffer.Linear.deinitializeAll(header: &header, storage: storage)
+    }
+}
+
+// MARK: - Remove Operations (Copyable)
+
+extension Property.View.Typed
+where Tag == Buffer<Element>.Linear.Remove,
+      Base == Buffer<Element>.Linear.Bounded,
+      Element: Copyable
+{
+    /// Removes and returns the first element (CoW-safe).
+    ///
+    /// - Precondition: The buffer is not empty.
+    @_lifetime(&self)
+    @inlinable
+    public mutating func first() -> Element {
+        unsafe base.pointee._removeFirst()
+    }
+
+    /// Removes and returns the last element (CoW-safe).
+    ///
+    /// - Precondition: The buffer is not empty.
+    @_lifetime(&self)
+    @inlinable
+    public mutating func last() -> Element {
+        unsafe base.pointee._removeLast()
+    }
+
+    /// Removes all elements from the buffer (CoW-safe).
+    @_lifetime(&self)
+    @inlinable
+    public mutating func all() {
+        unsafe base.pointee._removeAll()
     }
 }
 

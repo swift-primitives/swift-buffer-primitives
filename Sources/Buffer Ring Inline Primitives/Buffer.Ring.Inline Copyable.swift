@@ -1,14 +1,17 @@
-// MARK: - Copyable Conformances for Ring.Inline
+// MARK: - Peek Operations (Copyable)
 
-extension Buffer.Ring.Inline where Element: Copyable {
-
+extension Property.View.Read.Typed.Valued
+where Tag == Buffer<Element>.Ring.Peek,
+      Base == Buffer<Element>.Ring.Inline<n>,
+      Element: Copyable
+{
     /// Returns the front element without removing it.
     ///
     /// - Precondition: The buffer is not empty.
     @inlinable
-    public var peekFront: Element {
-        let bounded = Index<Element>.Bounded<capacity>(header.head)!
-        let ptr: UnsafePointer<Element> = unsafe storage.pointer(at: bounded)
+    public var front: Element {
+        let bounded = Index<Element>.Bounded<n>(unsafe base.pointee.header.head)!
+        let ptr: UnsafePointer<Element> = unsafe base.pointee.storage.pointer(at: bounded)
         return unsafe ptr.pointee
     }
 
@@ -16,15 +19,15 @@ extension Buffer.Ring.Inline where Element: Copyable {
     ///
     /// - Precondition: The buffer is not empty.
     @inlinable
-    public var peekBack: Element {
-        let bounded = Index<Element>.Bounded<capacity>(
+    public var back: Element {
+        let bounded = Index<Element>.Bounded<n>(
             Index.Modular.advanced(
-                header.head,
-                by: Index<Element>.Offset(fromZero: header.count.subtract.saturating(.one).map(Ordinal.init)),
-                capacity: header.capacity
+                unsafe base.pointee.header.head,
+                by: Index<Element>.Offset(fromZero: unsafe base.pointee.header.count.subtract.saturating(.one).map(Ordinal.init)),
+                capacity: unsafe base.pointee.header.capacity
             )
         )!
-        let ptr: UnsafePointer<Element> = unsafe storage.pointer(at: bounded)
+        let ptr: UnsafePointer<Element> = unsafe base.pointee.storage.pointer(at: bounded)
         return unsafe ptr.pointee
     }
 }
@@ -42,7 +45,7 @@ extension Buffer.Ring.Inline where Element: Copyable {
         guard elements.count <= capacity else { throw .capacityExceeded }
         var buffer = Self()
         for element in elements {
-            _ = buffer.pushBack(element)
+            _ = buffer._pushBack(element)
         }
         self = buffer
     }

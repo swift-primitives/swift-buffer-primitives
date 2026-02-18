@@ -22,9 +22,9 @@ extension LinearBoundedInlineTests.Unit {
 
         #expect(buffer.count == 3)
 
-        #expect(buffer.removeFirst() == 10)
-        #expect(buffer.removeFirst() == 20)
-        #expect(buffer.removeFirst() == 30)
+        #expect(buffer.remove.first() == 10)
+        #expect(buffer.remove.first() == 20)
+        #expect(buffer.remove.first() == 30)
         #expect(buffer.isEmpty == true)
     }
 
@@ -35,17 +35,17 @@ extension LinearBoundedInlineTests.Unit {
         _ = buffer.append(20)
         _ = buffer.append(30)
 
-        #expect(buffer.removeLast() == 30)
-        #expect(buffer.removeLast() == 20)
-        #expect(buffer.removeLast() == 10)
+        #expect(buffer.remove.last() == 30)
+        #expect(buffer.remove.last() == 20)
+        #expect(buffer.remove.last() == 10)
         #expect(buffer.isEmpty == true)
     }
 
     @Test
     func `peekFront and peekBack (Copyable)`() throws {
-        let buffer = try Buffer<Int>.Linear.Inline<8>([10, 20, 30])
-        #expect(buffer.peekFront == 10)
-        #expect(buffer.peekBack == 30)
+        var buffer = try Buffer<Int>.Linear.Inline<8>([10, 20, 30])
+        #expect(buffer.peek.front == 10)
+        #expect(buffer.peek.back == 30)
         #expect(buffer.count == 3)
     }
 
@@ -61,7 +61,7 @@ extension LinearBoundedInlineTests.Unit {
     @Test
     func `removeAll clears buffer`() throws {
         var buffer = try Buffer<Int>.Linear.Inline<8>([1, 2, 3])
-        buffer.removeAll()
+        buffer.remove.all()
         #expect(buffer.isEmpty == true)
         #expect(buffer.count == 0)
     }
@@ -83,7 +83,7 @@ extension LinearBoundedInlineTests.Unit {
         _ = buffer.append(42)
         #expect(buffer.count == 1)
         #expect(buffer.isFull == true)
-        #expect(buffer.removeFirst() == 42)
+        #expect(buffer.remove.first() == 42)
         #expect(buffer.isEmpty == true)
     }
 }
@@ -111,12 +111,12 @@ extension LinearBoundedInlineTests.EdgeCase {
         var buffer = Buffer<Int>.Linear.Inline<4>()
         _ = buffer.append(10)
         _ = buffer.append(20)
-        buffer.removeAll()
+        buffer.remove.all()
         #expect(buffer.isEmpty == true)
 
         _ = buffer.append(30)
         #expect(buffer.count == 1)
-        #expect(buffer.peekFront == 30)
+        #expect(buffer.peek.front == 30)
     }
 }
 
