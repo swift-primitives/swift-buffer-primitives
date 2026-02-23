@@ -112,7 +112,7 @@ extension RingGrowableTests.Unit {
 
     @Test
     func `peekFront and peekBack (Copyable)`() {
-        var buffer: Buffer<Int>.Ring = [10, 20, 30]
+        let buffer: Buffer<Int>.Ring = [10, 20, 30]
         #expect(buffer.peek.front == 10)
         #expect(buffer.peek.back == 30)
 

@@ -211,8 +211,8 @@ extension Buffer.Ring.Small where Element: ~Copyable {
 
     @inlinable
     public var peek: Peek.View {
-        mutating _read {
-            yield unsafe .init(&self)
+        _read {
+            yield Peek.View(borrowing: self)
         }
     }
 

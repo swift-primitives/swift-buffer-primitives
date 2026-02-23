@@ -49,7 +49,7 @@ extension RingBoundedTests.Unit {
 
     @Test
     func `peekFront and peekBack (Copyable)`() throws {
-        var buffer = try Buffer<Int>.Ring.Bounded([10, 20, 30], capacity: 4)
+        let buffer = try Buffer<Int>.Ring.Bounded([10, 20, 30], capacity: 4)
         #expect(buffer.peek.front == 10)
         #expect(buffer.peek.back == 30)
         #expect(buffer.count == 3)

@@ -186,8 +186,8 @@ extension Buffer.Ring where Element: ~Copyable {
     /// - `buffer.peek.back` — peeks at the back element.
     @inlinable
     public var peek: Peek.View {
-        mutating _read {
-            yield unsafe .init(&self)
+        _read {
+            yield Peek.View(borrowing: self)
         }
     }
 

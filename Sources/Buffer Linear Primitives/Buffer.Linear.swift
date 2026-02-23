@@ -157,8 +157,8 @@ extension Buffer.Linear where Element: ~Copyable {
     /// - `buffer.peek.back` — peeks at the last element.
     @inlinable
     public var peek: Peek.View {
-        mutating _read {
-            yield unsafe .init(&self)
+        _read {
+            yield Peek.View(borrowing: self)
         }
     }
 
