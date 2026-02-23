@@ -104,7 +104,7 @@ public enum Buffer<Element: ~Copyable> {
             }
 
             deinit {
-                unsafe storage._deinitializeTrackedSlots()
+                unsafe storage.deinitialize()
             }
 
             /// Errors that can occur during inline ring buffer operations.
@@ -347,7 +347,7 @@ public enum Buffer<Element: ~Copyable> {
             }
 
             deinit {
-                unsafe storage._deinitializeTrackedSlots()
+                unsafe storage.deinitialize()
             }
 
             /// Errors that can occur during inline linear buffer operations.
