@@ -80,9 +80,9 @@ public enum Buffer<Element: ~Copyable> {
         /// Uses `Storage<Element>.Inline<capacity>` for stack-based allocation
         /// and the runtime `Header` for ring state tracking.
         ///
-        /// Unlike heap-backed `Bounded`, this type does not automatically
-        /// deinitialize on drop when Element is Copyable. When Element is
-        /// ~Copyable, deinit handles cleanup.
+        /// Element cleanup is handled by deinit, which iterates the
+        /// per-slot bitvector in `Storage.Inline` to deinitialize all
+        /// initialized elements.
         public struct Inline<let capacity: Int>: ~Copyable {
             @usableFromInline
             package var header: Header
@@ -90,10 +90,21 @@ public enum Buffer<Element: ~Copyable> {
             @usableFromInline
             package var storage: Storage<Element>.Inline<capacity>
 
+            /// Workaround for Swift compiler bug where deinit is not called
+            /// for ~Copyable structs that contain only value-type properties.
+            /// Adding a reference type property forces proper destructor generation.
+            /// See: https://github.com/swiftlang/swift/issues/86652
+            @usableFromInline
+            var _deinitWorkaround: (any AnyObject & Sendable)? = nil
+
             @inlinable
             package init(header: Header, storage: consuming Storage<Element>.Inline<capacity>) {
                 self.header = header
                 self.storage = storage
+            }
+
+            deinit {
+                unsafe storage._deinitializeTrackedSlots()
             }
 
             /// Errors that can occur during inline ring buffer operations.
