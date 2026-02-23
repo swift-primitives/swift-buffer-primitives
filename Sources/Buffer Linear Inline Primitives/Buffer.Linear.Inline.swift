@@ -106,17 +106,17 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
 extension Buffer.Linear.Inline where Element: ~Copyable {
 
     @usableFromInline
-    mutating func _removeFirst() -> Element {
+    package mutating func _removeFirst() -> Element {
         Buffer.Linear.removeFirst(header: &header, storage: &storage)
     }
 
     @usableFromInline
-    mutating func _removeLast() -> Element {
+    package mutating func _removeLast() -> Element {
         Buffer.Linear.consumeBack(header: &header, storage: &storage)
     }
 
     @usableFromInline
-    mutating func _removeAll() {
+    package mutating func _removeAll() {
         Buffer.Linear.deinitializeAll(header: &header, storage: &storage)
     }
 }

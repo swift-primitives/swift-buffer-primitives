@@ -37,6 +37,10 @@ let package = Package(
             targets: ["Buffer Linear Inline Primitives"]
         ),
         .library(
+            name: "Buffer Linear Small Primitives",
+            targets: ["Buffer Linear Small Primitives"]
+        ),
+        .library(
             name: "Buffer Slab Primitives",
             targets: ["Buffer Slab Primitives"]
         ),
@@ -116,13 +120,24 @@ let package = Package(
                 .product(name: "Collection Primitives", package: "swift-collection-primitives"),
             ]
         ),
-        // Linear Inline: Inline and small contiguous buffer variants
+        // Linear Inline: Fixed-capacity inline contiguous buffer variants
         .target(
             name: "Buffer Linear Inline Primitives",
             dependencies: [
                 "Buffer Primitives Core",
                 "Buffer Linear Primitives",
                 .product(name: "Finite Primitives", package: "swift-finite-primitives"),
+                .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
+                .product(name: "Collection Primitives", package: "swift-collection-primitives"),
+            ]
+        ),
+        // Linear Small: Small-buffer optimization (inline + heap spill)
+        .target(
+            name: "Buffer Linear Small Primitives",
+            dependencies: [
+                "Buffer Primitives Core",
+                "Buffer Linear Primitives",
+                "Buffer Linear Inline Primitives",
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
                 .product(name: "Collection Primitives", package: "swift-collection-primitives"),
             ]
@@ -194,6 +209,7 @@ let package = Package(
                 "Buffer Ring Inline Primitives",
                 "Buffer Linear Primitives",
                 "Buffer Linear Inline Primitives",
+                "Buffer Linear Small Primitives",
                 "Buffer Slab Primitives",
                 "Buffer Slab Inline Primitives",
                 "Buffer Linked Primitives",
@@ -240,6 +256,13 @@ let package = Package(
             name: "Buffer Linear Inline Primitives Tests",
             dependencies: [
                 .target(name: "Buffer Linear Inline Primitives"),
+                .target(name: "Buffer Primitives Test Support"),
+            ]
+        ),
+        .testTarget(
+            name: "Buffer Linear Small Primitives Tests",
+            dependencies: [
+                .target(name: "Buffer Linear Small Primitives"),
                 .target(name: "Buffer Primitives Test Support"),
             ]
         ),

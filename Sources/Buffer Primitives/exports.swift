@@ -3,6 +3,7 @@
 @_exported public import Buffer_Ring_Inline_Primitives
 @_exported public import Buffer_Linear_Primitives
 @_exported public import Buffer_Linear_Inline_Primitives
+@_exported public import Buffer_Linear_Small_Primitives
 @_exported public import Buffer_Slab_Primitives
 @_exported public import Buffer_Slab_Inline_Primitives
 @_exported public import Buffer_Linked_Primitives
