@@ -138,4 +138,26 @@ extension LinearBoundedInlineTests.Integration {
         #expect(drained == [10, 20, 30, 40])
         #expect(buffer.isEmpty == true)
     }
+
+    @Test
+    func `deinit cleans up inline storage elements`() {
+        final class DeinitCounter: @unchecked Sendable {
+            var count: Int = 0
+        }
+
+        struct Tracked: ~Copyable {
+            let counter: DeinitCounter
+            deinit { counter.count += 1 }
+        }
+
+        let counter = DeinitCounter()
+        do {
+            var buffer = Buffer<Tracked>.Linear.Inline<4>()
+            _ = buffer.append(Tracked(counter: counter))
+            _ = buffer.append(Tracked(counter: counter))
+            _ = buffer.append(Tracked(counter: counter))
+            #expect(counter.count == 0)
+        }
+        #expect(counter.count == 3)
+    }
 }
