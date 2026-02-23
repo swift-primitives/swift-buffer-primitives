@@ -29,8 +29,14 @@ extension Buffer.Linear.Small where Element: ~Copyable {
 
     /// Mutable span of all buffer elements.
     ///
-    /// Extracts pointer and count from the enum, then constructs the span
-    /// outside the switch to avoid overlapping access on `self`.
+    /// `mutating get` extracts pointer and count from the enum, then constructs
+    /// the span outside the switch to avoid overlapping access on `self`.
+    ///
+    /// `_modify` spills inline storage to heap first, then yields through the
+    /// heap pointer. Inline storage cannot yield through `_modify` because
+    /// enum payloads do not support `_modify` projection (only Optional has
+    /// special compiler support via `unchecked_take_enum_data_addr`).
+    /// See: Experiments/small-enum-modify-recovery (2026-02-16)
     public var mutableSpan: MutableSpan<Element> {
         @_lifetime(&self)
         @inlinable
@@ -48,6 +54,21 @@ extension Buffer.Linear.Small where Element: ~Copyable {
             }
             let span = unsafe MutableSpan(_unsafeStart: start, count: elementCount)
             return unsafe _overrideLifetime(span, mutating: &self)
+        }
+        @_lifetime(&self)
+        @inlinable
+        _modify {
+            _spillToHeapMoving()
+            switch _storage {
+            case .heap(let heap):
+                var span = unsafe MutableSpan(
+                    _unsafeStart: unsafe heap.storage.pointer(at: .zero),
+                    count: heap.header.count
+                )
+                yield &span
+            case .inline:
+                fatalError("unreachable: _spillToHeapMoving guarantees heap mode")
+            }
         }
     }
 }
