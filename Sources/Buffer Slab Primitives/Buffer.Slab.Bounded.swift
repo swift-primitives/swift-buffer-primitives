@@ -101,3 +101,15 @@ extension Buffer.Slab.Bounded where Element: ~Copyable {
         }
     }
 }
+
+// MARK: - Iteration
+
+extension Buffer.Slab.Bounded where Element: ~Copyable {
+    /// Visits each occupied slot index via read-only `Property.View.Read`.
+    @inlinable
+    public var forEach: Property<Sequence.ForEach, Self>.View.Read {
+        _read {
+            yield Property<Sequence.ForEach, Self>.View.Read(borrowing: self)
+        }
+    }
+}

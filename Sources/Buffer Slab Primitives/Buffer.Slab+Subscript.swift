@@ -35,17 +35,18 @@ extension Buffer.Slab where Element: ~Copyable {
     }
 }
 
-// MARK: - Occupied Slot Iteration
+// MARK: - Iteration
 
 extension Buffer.Slab where Element: ~Copyable {
-    /// Calls the given closure for each occupied slot index.
+    /// Read-only view for occupied slot iteration.
     ///
-    /// Uses Wegner/Kernighan bit iteration via `bitmap.ones.forEach` — O(count)
-    /// rather than O(capacity).
+    /// Usage: `slab.forEach.occupied { slot in ... }`
     ///
-    /// - Parameter body: A closure that receives each occupied slot's `Bit.Index`.
+    /// Uses Wegner/Kernighan bit iteration — O(count) rather than O(capacity).
     @inlinable
-    public func forEachOccupied(_ body: (Bit.Index) -> Void) {
-        header.bitmap.ones.forEach(body)
+    public var forEach: Property<Sequence.ForEach, Self>.View.Read {
+        _read {
+            yield Property<Sequence.ForEach, Self>.View.Read(borrowing: self)
+        }
     }
 }
