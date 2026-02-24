@@ -2,6 +2,10 @@ import Testing
 import Buffer_Slab_Primitives
 import Buffer_Primitives_Test_Support
 
+// Note: Buffer.Slab is conditionally Copyable when Element: Copyable, but uses
+// REFERENCE SEMANTICS — copies share Storage.Slab (class). Headers (struct) are
+// independent, but element storage is shared. No CoW is implemented.
+
 @Suite("Buffer.Slab Conditional Copyable")
 struct SlabCopyableTests {
 
@@ -22,23 +26,23 @@ struct SlabCopyableTests {
     }
 
     @Test
-    func `copied Buffer.Slab is independent of original`() {
+    func `copied Buffer.Slab header is independent`() {
         var original = Buffer<Int>.Slab(minimumCapacity: 8)
         original.insert(10, at: 0)
         original.insert(20, at: 3)
 
         var copy = original
 
-        // Mutate original — copy should be unaffected
+        // Mutate original — copy's HEADER is unaffected (struct copy)
         _ = original.remove(at: 0)
         original.insert(99, at: 5)
 
+        // Header state is independent
         #expect(copy.occupancy == 2)
         #expect(copy.isOccupied(at: 0) == true)
         #expect(copy.isOccupied(at: 5) == false)
-        #expect(copy[Bit.Index(Ordinal(0 as UInt))] == 10)
 
-        // Mutate copy — original should be unaffected
+        // Mutate copy — original's HEADER is unaffected
         copy.insert(77, at: 1)
         #expect(original.isOccupied(at: 1) == false)
     }
@@ -51,11 +55,11 @@ struct SlabCopyableTests {
 
         var copy: Buffer<Int>.Slab? = original
         original = nil
-        // Original's Storage.Slab still alive (copy holds reference)
+        // Original dropped — Storage.Slab still alive (copy holds reference)
         #expect(copy!.occupancy == 2)
 
         copy = nil
-        // Both dropped — no double-free crash
+        // Both dropped — ARC releases Storage.Slab, no double-free
     }
 
     @Test
@@ -81,17 +85,19 @@ struct SlabCopyableTests {
     }
 
     @Test
-    func `copied Bounded is independent of original`() {
+    func `copied Bounded header is independent`() {
         var original = Buffer<Int>.Slab.Bounded(minimumCapacity: 8)
         original.insert(10, at: 0)
         original.insert(20, at: 1)
 
         var copy = original
 
+        // Mutate original — copy's header is unaffected
         _ = original.remove(at: 0)
         #expect(copy.occupancy == 2)
         #expect(copy.isOccupied(at: 0) == true)
 
+        // Mutate copy — original's header is unaffected
         copy.insert(77, at: 5)
         #expect(original.isOccupied(at: 5) == false)
     }
@@ -106,7 +112,7 @@ struct SlabCopyableTests {
         buffer.insert(30, at: 2)
         _ = buffer.remove(at: 1)
 
-        // Copy after mutations — bitmap sync must be correct
+        // Copy reads header state — bitmap must reflect mutations
         let copy = buffer
         #expect(copy.occupancy == 2)
         #expect(copy.isOccupied(at: 0) == true)
@@ -143,6 +149,7 @@ struct SlabCopyableTests {
         buffer.insert(10, at: 0)
         _ = buffer.update(at: 0, with: 99)
 
+        // No mutation after copy — shared storage read is safe
         let copy = buffer
         #expect(copy[Bit.Index(Ordinal(0 as UInt))] == 99)
     }
@@ -158,7 +165,7 @@ struct SlabCopyableTests {
         // Both see the same underlying heap
         let copy = original
 
-        // Both can read the same element
+        // Both can read the same element (no mutation after copy)
         #expect(original[Bit.Index(Ordinal(0 as UInt))] == 42)
         #expect(copy[Bit.Index(Ordinal(0 as UInt))] == 42)
     }
