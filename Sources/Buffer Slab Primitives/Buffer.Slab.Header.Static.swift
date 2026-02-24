@@ -41,6 +41,6 @@ extension Buffer.Slab.Header.Static where Element: ~Copyable {
     /// Returns `nil` if all slots are full.
     @inlinable
     public func firstVacant(max: Bit.Index.Count) -> Bit.Index? {
-        bitmap.firstZero(max: max)
+        bitmap.zeros.first(max: max)
     }
 }
