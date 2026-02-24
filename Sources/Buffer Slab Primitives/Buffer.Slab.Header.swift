@@ -34,17 +34,12 @@ extension Buffer.Slab.Header where Element: ~Copyable {
     
     /// Finds the first vacant slot by scanning the bitmap.
     ///
+    /// Uses word-level scanning: inverts each UInt word and finds the lowest
+    /// set bit via `trailingZeroBitCount`. O(max/64) instead of O(max).
+    ///
     /// Returns `nil` if all slots are full.
     @inlinable
     public func firstVacant(max: Bit.Index.Count) -> Bit.Index? {
-        var idx: Bit.Index = .zero
-        let end = max.map(Ordinal.init)
-        while idx < end {
-            if !bitmap[idx] {
-                return idx
-            }
-            idx += .one
-        }
-        return nil
+        bitmap.firstZero(max: max)
     }
 }
