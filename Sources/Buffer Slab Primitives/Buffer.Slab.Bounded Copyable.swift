@@ -1,7 +1,7 @@
-// MARK: - Copyable Conformances for Slab.Bounded
+// MARK: - Copyable-Constrained Methods for Slab.Bounded
 //
-// Note: Slab types are NEVER Copyable because Bit.Vector in the header is ~Copyable.
-// This file provides read-only accessors for Copyable elements.
+// Slab types are conditionally Copyable when Element: Copyable (via Storage.Slab reference semantics).
+// This file provides read-only accessors and convenience initializers for Copyable elements.
 
 extension Buffer.Slab.Bounded where Element: Copyable {
 

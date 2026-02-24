@@ -420,25 +420,15 @@ public enum Buffer<Element: ~Copyable> {
         package var header: Header
 
         @usableFromInline
-        package var storage: Storage<Element>.Heap
+        package var storage: Storage<Element>.Slab
 
         @inlinable
-        package init(header: consuming Header, storage: Storage<Element>.Heap) {
+        package init(header: Header, storage: Storage<Element>.Slab) {
             self.header = header
             self.storage = storage
         }
 
-        deinit {
-            // WORKAROUND: Uses `for...in` instead of `.forEach` closure
-            // WHY: Closures capturing ~Copyable fields of `self` inside deinit trigger
-            //      CopiedLoadBorrowEliminationVisitor segfault (swift-frontend signal 11)
-            // WHEN TO REMOVE: When MoveOnlyChecker deinit closure crash is fixed
-            // TRACKING: swiftlang/swift MoveOnlyChecker deinit closure crash
-            for bitIndex in header.bitmap.ones {
-                storage.deinitialize(at: bitIndex.retag())
-            }
-            storage.initialization = .empty
-        }
+        // No deinit — Storage.Slab handles element cleanup via bitmap iteration
 
         // MARK: - Bounded (Fixed-Capacity, Heap-Allocated)
 
@@ -452,28 +442,18 @@ public enum Buffer<Element: ~Copyable> {
             package var header: Header
 
             @usableFromInline
-            package var storage: Storage<Element>.Heap
+            package var storage: Storage<Element>.Slab
 
             @inlinable
             package init(
-                header: consuming Header,
-                storage: Storage<Element>.Heap
+                header: Header,
+                storage: Storage<Element>.Slab
             ) {
                 self.header = header
                 self.storage = storage
             }
 
-            deinit {
-                // WORKAROUND: Uses `for...in` instead of `.forEach` closure
-                // WHY: Closures capturing ~Copyable fields of `self` inside deinit trigger
-                //      CopiedLoadBorrowEliminationVisitor segfault (swift-frontend signal 11)
-                // WHEN TO REMOVE: When MoveOnlyChecker deinit closure crash is fixed
-                // TRACKING: swiftlang/swift MoveOnlyChecker deinit closure crash
-                for bitIndex in header.bitmap.ones {
-                    storage.deinitialize(at: bitIndex.retag())
-                }
-                storage.initialization = .empty
-            }
+            // No deinit — Storage.Slab handles element cleanup via bitmap iteration
 
             /// Errors that can occur during bounded slab buffer operations.
             public enum Error: Swift.Error, Sendable, Equatable {
@@ -583,10 +563,10 @@ public enum Buffer<Element: ~Copyable> {
         /// are occupied. `storage.initialization` stays `.empty` — the bitmap
         /// drives all cleanup.
         ///
-        /// ~Copyable because `Bit.Vector` is ~Copyable.
+        /// Copyable because `Bit.Vector.Bounded` (ContiguousArray-backed) is Copyable.
         ///
         /// Blueprint: `Experiments/initialization-consistency/Sources/main.swift:249-311`
-        public struct Header: ~Copyable {
+        public struct Header {
             /// Bitmap tracking which slots are occupied.
             public var bitmap: Bit.Vector.Bounded
 
@@ -1242,10 +1222,13 @@ extension Buffer.Linear.Small: Sendable where Element: Sendable {}
 
 // MARK: - Conditional Conformances (Slab)
 
+extension Buffer.Slab: Copyable where Element: Copyable {}
 extension Buffer.Slab: @unchecked Sendable where Element: Sendable {}
 
+extension Buffer.Slab.Bounded: Copyable where Element: Copyable {}
 extension Buffer.Slab.Bounded: @unchecked Sendable where Element: Sendable {}
 
+extension Buffer.Slab.Bounded.Indexed: Copyable where Element: Copyable, Tag: ~Copyable {}
 extension Buffer.Slab.Bounded.Indexed: @unchecked Sendable where Element: Sendable, Tag: ~Copyable {}
 
 // Copyable suppressed per INV-INLINE-004a.

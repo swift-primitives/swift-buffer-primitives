@@ -9,22 +9,23 @@ extension Buffer.Slab.Bounded {
     @safe
     public final class ConsumeState: @unchecked Sendable {
         @usableFromInline
-        let storage: Storage<Element>.Heap
+        let storage: Storage<Element>.Slab
 
         @usableFromInline
         var bitmap: Bit.Vector.Bounded
 
         @inlinable
-        package init(storage: Storage<Element>.Heap, bitmap: consuming Bit.Vector.Bounded) {
+        package init(storage: Storage<Element>.Slab, bitmap: consuming Bit.Vector.Bounded) {
             self.storage = storage
             self.bitmap = bitmap
         }
 
         deinit {
             bitmap.ones.forEach { slot in
-                storage.deinitialize(at: slot.retag(Element.self))
+                storage.heap.deinitialize(at: slot.retag(Element.self))
             }
-            storage.initialization = .empty
+            // Sync empty bitmap to storage so Storage.Slab deinit is a no-op
+            storage.bitmap = bitmap
         }
     }
 }
@@ -32,7 +33,10 @@ extension Buffer.Slab.Bounded {
 extension Buffer.Slab.Bounded: Sequence.Consume.`Protocol` {
     @inlinable
     public consuming func consume() -> Sequence.Consume.View<Element, ConsumeState> {
-        let state = ConsumeState(storage: storage, bitmap: header.bitmap.take())
+        // Take bitmap from header; sync empty bitmap to storage to disarm its deinit
+        let consumeBitmap = header.bitmap.take()
+        storage.bitmap = header.bitmap
+        let state = ConsumeState(storage: storage, bitmap: consumeBitmap)
         return Sequence.Consume.View(
             state: state,
             next: { state in
@@ -40,7 +44,7 @@ extension Buffer.Slab.Bounded: Sequence.Consume.`Protocol` {
                 while slot < state.bitmap.count {
                     if state.bitmap[slot] {
                         state.bitmap[slot] = false
-                        return state.storage.move(at: slot.retag(Element.self))
+                        return state.storage.heap.move(at: slot.retag(Element.self))
                     }
                     slot += .one
                 }

@@ -154,7 +154,7 @@ extension Buffer.Slab.Small where Element: ~Copyable {
             return
         case .inline(var buf):
             let newCapacity = Index<Element>.Count(UInt(inlineCapacity * 2))
-            let newStorage = Storage<Element>.Heap.create(minimumCapacity: newCapacity)
+            let newStorage = Storage<Element>.Slab(minimumCapacity: newCapacity)
             var newHeader = Buffer<Element>.Slab.Header(
                 capacity: newStorage.slotCapacity.retag(Bit.self)
             )
@@ -166,7 +166,7 @@ extension Buffer.Slab.Small where Element: ~Copyable {
                 if buf.header.bitmap[slot] {
                     Buffer<Element>.Slab.Inline<inlineCapacity>.moveSlotToHeap(
                         storage: &buf.storage,
-                        heapStorage: newStorage,
+                        heapStorage: newStorage.heap,
                         at: slot
                     )
                     newHeader.bitmap[slot] = true
@@ -174,9 +174,12 @@ extension Buffer.Slab.Small where Element: ~Copyable {
                 slot += .one
             }
 
+            // Sync bitmap to storage for deinit correctness
+            newStorage.bitmap = newHeader.bitmap
+
             // Reset inline state
             buf.header = .init()
-            self = Self(_storage: .heap(Buffer<Element>.Slab(header: consume newHeader, storage: newStorage)))
+            self = Self(_storage: .heap(Buffer<Element>.Slab(header: newHeader, storage: newStorage)))
             // buf goes out of scope — deinit runs on empty state
         }
     }
