@@ -34,6 +34,15 @@ extension Buffer.Slab where Element: ~Copyable {
         header.isOccupied(at: slot)
     }
 
+    /// The occupied slot indices, as a bitmap-level iterator.
+    ///
+    /// - Complexity: O(count) total via Wegner/Kernighan bit extraction,
+    ///   not O(capacity) linear scan.
+    @inlinable
+    public var occupiedSlots: Bit.Vector.Ones.Bounded {
+        header.bitmap.ones
+    }
+
     // MARK: - Mutations
 
     /// Inserts an element at the given slot.

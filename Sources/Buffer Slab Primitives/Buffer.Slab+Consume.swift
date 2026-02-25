@@ -14,9 +14,13 @@ extension Buffer.Slab {
         @usableFromInline
         var bitmap: Bit.Vector.Bounded
 
+        @usableFromInline
+        var onesIterator: Bit.Vector.Ones.Bounded.Iterator
+
         @inlinable
         package init(storage: Storage<Element>.Slab, bitmap: consuming Bit.Vector.Bounded) {
             self.storage = storage
+            self.onesIterator = bitmap.ones.makeIterator()
             self.bitmap = bitmap
         }
 
@@ -40,15 +44,9 @@ extension Buffer.Slab: Sequence.Consume.`Protocol` {
         return Sequence.Consume.View(
             state: state,
             next: { state in
-                var slot: Bit.Index = .zero
-                while slot < state.bitmap.count {
-                    if state.bitmap[slot] {
-                        state.bitmap[slot] = false
-                        return state.storage.heap.move(at: slot.retag(Element.self))
-                    }
-                    slot += .one
-                }
-                return nil
+                guard let slot = state.onesIterator.next() else { return nil }
+                state.bitmap[slot] = false
+                return state.storage.heap.move(at: slot.retag(Element.self))
             }
         )
     }
