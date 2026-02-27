@@ -46,45 +46,43 @@ extension Buffer.Linear.Inline where Element: Copyable {
 extension Buffer.Linear.Inline: Sequence.`Protocol` where Element: Copyable {
     /// Iterator over linear inline buffer elements.
     ///
-    /// Uses pointer-based iteration. The iterator is only valid while the
-    /// source buffer exists - standard for-in loops maintain this invariant.
+    /// Uses pointer-based iteration with zero-copy `Span` access.
+    /// The iterator is only valid while the source buffer exists —
+    /// standard for-in loops maintain this invariant.
     @safe
     public struct Iterator: Sequence.Iterator.`Protocol`, IteratorProtocol, @unchecked Sendable {
         @usableFromInline
-        let base: UnsafePointer<Element>
+        var base: UnsafePointer<Element>
+
         @usableFromInline
-        var current: Index<Element>
-        @usableFromInline
-        let end: Index<Element>
-        @usableFromInline
-        var _spanBuffer: [Element] = []
+        var remaining: Index<Element>.Count
 
         @inlinable
-        init(base: UnsafePointer<Element>, end: Index<Element>) {
+        init(base: UnsafePointer<Element>, count: Index<Element>.Count) {
             unsafe self.base = base
-            self.current = .zero
-            self.end = end
+            self.remaining = count
         }
 
         @_lifetime(&self)
         @inlinable
         public mutating func nextSpan(maximumCount: Cardinal) -> Span<Element> {
-            _spanBuffer.removeAll(keepingCapacity: true)
-            var remaining = Int(maximumCount.rawValue)
-            while remaining > 0, current < end {
-                _spanBuffer.append(unsafe base[current])
-                current += .one
-                remaining -= 1
+            let take = Index<Element>.Count.min(.init(maximumCount), remaining)
+            guard take > .zero else {
+                return unsafe Swift.Span(_unsafeStart: base, count: 0)
             }
-            return _spanBuffer.span
+            let span = unsafe Swift.Span(_unsafeStart: base, count: take)
+            unsafe base = base + Int(bitPattern: take)
+            remaining = remaining.subtract.saturating(take)
+            return span
         }
 
         @_lifetime(self: immortal)
         @inlinable
         public mutating func next() -> Element? {
-            guard current < end else { return nil }
-            let element = unsafe base[current]
-            current += .one
+            guard remaining > .zero else { return nil }
+            let element = unsafe base.pointee
+            unsafe base = base + 1
+            remaining = remaining.subtract.saturating(.one)
             return element
         }
     }
@@ -93,7 +91,7 @@ extension Buffer.Linear.Inline: Sequence.`Protocol` where Element: Copyable {
     public borrowing func makeIterator() -> Iterator {
         let bounded = Index<Element>.Bounded<capacity>(.zero)!
         let base: UnsafePointer<Element> = unsafe storage.pointer(at: bounded)
-        return unsafe Iterator(base: base, end: header.count.map(Ordinal.init))
+        return unsafe Iterator(base: base, count: header.count)
     }
 }
 
