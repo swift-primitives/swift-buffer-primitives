@@ -56,6 +56,8 @@ extension Buffer.Linear.Inline: Sequence.`Protocol` where Element: Copyable {
         var current: Index<Element>
         @usableFromInline
         let end: Index<Element>
+        @usableFromInline
+        var _spanBuffer: [Element] = []
 
         @inlinable
         init(base: UnsafePointer<Element>, end: Index<Element>) {
@@ -64,6 +66,20 @@ extension Buffer.Linear.Inline: Sequence.`Protocol` where Element: Copyable {
             self.end = end
         }
 
+        @_lifetime(&self)
+        @inlinable
+        public mutating func nextSpan(maximumCount: Cardinal) -> Span<Element> {
+            _spanBuffer.removeAll(keepingCapacity: true)
+            var remaining = Int(maximumCount.rawValue)
+            while remaining > 0, current < end {
+                _spanBuffer.append(unsafe base[current])
+                current += .one
+                remaining -= 1
+            }
+            return _spanBuffer.span
+        }
+
+        @_lifetime(self: immortal)
         @inlinable
         public mutating func next() -> Element? {
             guard current < end else { return nil }

@@ -194,7 +194,7 @@ where Tag == Buffer<Element>.Ring.Remove,
 
 // MARK: - Sequence.Drain.Protocol
 
-extension Buffer.Ring.Inline: Sequence.Drain.`Protocol` where Element: Copyable {
+extension Buffer.Ring.Inline: Sequence.Drain.`Protocol` where Element: ~Copyable {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         while !isEmpty {

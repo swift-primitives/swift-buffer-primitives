@@ -67,6 +67,8 @@ extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
         var current: Index<Element>
         @usableFromInline
         let end: Index<Element>
+        @usableFromInline
+        var _spanBuffer: [Element] = []
 
         @inlinable
         init(base: UnsafePointer<Element>, header: Buffer.Ring.Header) {
@@ -76,6 +78,25 @@ extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
             self.end = header.count.map(Ordinal.init)
         }
 
+        @_lifetime(&self)
+        @inlinable
+        public mutating func nextSpan(maximumCount: Cardinal) -> Span<Element> {
+            _spanBuffer.removeAll(keepingCapacity: true)
+            var remaining = Int(maximumCount.rawValue)
+            while remaining > 0, current < end {
+                let physicalIdx = Index.Modular.physical(
+                    forLogical: current,
+                    head: header.head,
+                    capacity: header.capacity
+                )
+                _spanBuffer.append(unsafe base[physicalIdx])
+                current += .one
+                remaining -= 1
+            }
+            return _spanBuffer.span
+        }
+
+        @_lifetime(self: immortal)
         @inlinable
         public mutating func next() -> Element? {
             guard current < end else { return nil }

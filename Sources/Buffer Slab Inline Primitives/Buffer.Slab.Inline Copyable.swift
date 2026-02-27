@@ -63,6 +63,8 @@ extension Buffer.Slab.Inline: Sequence.`Protocol` where Element: Copyable {
         var current: Bit.Index
         @usableFromInline
         let end: Bit.Index
+        @usableFromInline
+        var _spanBuffer: [Element] = []
 
         @inlinable
         init(base: UnsafePointer<Element>, bitmap: Bit.Vector.Static<wordCount>, end: Bit.Index) {
@@ -72,6 +74,23 @@ extension Buffer.Slab.Inline: Sequence.`Protocol` where Element: Copyable {
             self.end = end
         }
 
+        @_lifetime(&self)
+        @inlinable
+        public mutating func nextSpan(maximumCount: Cardinal) -> Span<Element> {
+            _spanBuffer.removeAll(keepingCapacity: true)
+            var remaining = Int(maximumCount.rawValue)
+            while remaining > 0, current < end {
+                let slot = current
+                current += .one
+                if bitmap[slot] {
+                    _spanBuffer.append(unsafe base[slot])
+                    remaining -= 1
+                }
+            }
+            return _spanBuffer.span
+        }
+
+        @_lifetime(self: immortal)
         @inlinable
         public mutating func next() -> Element? {
             while current < end {

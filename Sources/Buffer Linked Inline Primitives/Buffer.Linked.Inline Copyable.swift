@@ -57,6 +57,9 @@ extension Buffer.Linked.Inline: Sequence.`Protocol` where Element: Copyable {
         let _sentinel: Index<Buffer<Element>.Linked<N>.Node>
 
         @usableFromInline
+        var _spanBuffer: [Element] = []
+
+        @usableFromInline
         init(
             base: UnsafePointer<Buffer<Element>.Linked<N>.Node>,
             head: Index<Buffer<Element>.Linked<N>.Node>,
@@ -67,7 +70,23 @@ extension Buffer.Linked.Inline: Sequence.`Protocol` where Element: Copyable {
             self._sentinel = sentinel
         }
 
+        @_lifetime(&self)
+        @inlinable
+        public mutating func nextSpan(maximumCount: Cardinal) -> Span<Element> {
+            _spanBuffer.removeAll(keepingCapacity: true)
+            var remaining = Int(maximumCount.rawValue)
+            while remaining > 0, _current != _sentinel {
+                let offset = Index<Buffer<Element>.Linked<N>.Node>.Offset(fromZero: _current)
+                let ptr = unsafe _base + offset
+                _spanBuffer.append(unsafe ptr.pointee.element)
+                _current = unsafe ptr.pointee.links[0]
+                remaining -= 1
+            }
+            return _spanBuffer.span
+        }
+
         /// Advances to the next element and returns it, or nil if no next element exists.
+        @_lifetime(self: immortal)
         @inlinable
         public mutating func next() -> Element? {
             guard _current != _sentinel else { return nil }
