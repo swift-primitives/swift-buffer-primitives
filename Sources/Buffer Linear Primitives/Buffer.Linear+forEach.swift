@@ -37,7 +37,7 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
         var slot: Index<Element> = .zero
         let end = header.count.map(Ordinal.init)
         while slot < end {
-            try body(unsafe storage.pointer(at: slot).pointee)
+            try body(unsafe storage.pointer(at: Index<Element>.Bounded<capacity>(slot)!).pointee)
             slot += .one
         }
     }
