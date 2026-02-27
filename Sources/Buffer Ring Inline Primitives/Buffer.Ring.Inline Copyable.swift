@@ -58,6 +58,10 @@ extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
     ///
     /// Uses pointer-based iteration with ring wrap-around logic.
     /// The iterator is only valid while the source buffer exists.
+    ///
+    /// - Note: Uses `_spanBuffer` array accumulation. Could be upgraded to
+    ///   pointer-based `Span(_unsafeStart:count:)` per contiguous region,
+    ///   matching `Buffer.Ring.Iterator`'s two-region span strategy.
     public struct Iterator: Sequence.Iterator.`Protocol`, IteratorProtocol, @unchecked Sendable {
         @usableFromInline
         let base: UnsafePointer<Element>
