@@ -1,4 +1,4 @@
-// MARK: - Unified Iterator for Ring buffers (Sequence.Protocol + Sequence.Borrowing.Protocol)
+// MARK: - Unified Iterator for Ring buffers
 
 extension Buffer.Ring where Element: Copyable {
     /// Iterator that provides both element-at-a-time and span-based iteration
@@ -7,7 +7,7 @@ extension Buffer.Ring where Element: Copyable {
     /// When the ring wraps, handles two contiguous regions: head-to-capacity
     /// and zero-to-tail.
     @safe
-    public struct Iterator: Sequence.Iterator.`Protocol`, Sequence.Iterator.Borrowing.`Protocol`, IteratorProtocol, @unchecked Sendable {
+    public struct Iterator: Sequence.Iterator.`Protocol`, IteratorProtocol, @unchecked Sendable {
         @usableFromInline
         var base: UnsafePointer<Element>
 
@@ -75,7 +75,7 @@ extension Buffer.Ring where Element: Copyable {
             return nil
         }
 
-        // MARK: Sequence.Iterator.Borrowing.Protocol
+        // MARK: Sequence.Iterator.Protocol (nextSpan)
 
         @inlinable
         @_lifetime(&self)
@@ -123,7 +123,7 @@ extension Buffer.Ring.Bounded where Element: Copyable {
     /// Iterator that provides both element-at-a-time and span-based iteration
     /// for ring storage.
     @safe
-    public struct Iterator: Sequence.Iterator.`Protocol`, Sequence.Iterator.Borrowing.`Protocol`, IteratorProtocol, @unchecked Sendable {
+    public struct Iterator: Sequence.Iterator.`Protocol`, IteratorProtocol, @unchecked Sendable {
         @usableFromInline
         var base: UnsafePointer<Element>
 

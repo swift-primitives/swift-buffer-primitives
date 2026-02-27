@@ -1,10 +1,10 @@
-// MARK: - Unified Iterator for Linear buffers (Sequence.Protocol + Sequence.Borrowing.Protocol)
+// MARK: - Unified Iterator for Linear buffers
 
 extension Buffer.Linear where Element: Copyable {
     /// Iterator that provides both element-at-a-time and span-based iteration
     /// for linear storage.
     @safe
-    public struct Iterator: Sequence.Iterator.`Protocol`, Sequence.Iterator.Borrowing.`Protocol`, IteratorProtocol, @unchecked Sendable {
+    public struct Iterator: Sequence.Iterator.`Protocol`, IteratorProtocol, @unchecked Sendable {
         @usableFromInline
         var base: UnsafePointer<Element>
 
@@ -28,7 +28,7 @@ extension Buffer.Linear where Element: Copyable {
             return element
         }
 
-        // MARK: Sequence.Iterator.Borrowing.Protocol
+        // MARK: Sequence.Iterator.Protocol (nextSpan)
 
         @inlinable
         @_lifetime(&self)
@@ -62,7 +62,7 @@ extension Buffer.Linear.Bounded where Element: Copyable {
     /// Iterator that provides both element-at-a-time and span-based iteration
     /// for linear storage.
     @safe
-    public struct Iterator: Sequence.Iterator.`Protocol`, Sequence.Iterator.Borrowing.`Protocol`, IteratorProtocol, @unchecked Sendable {
+    public struct Iterator: Sequence.Iterator.`Protocol`, IteratorProtocol, @unchecked Sendable {
         @usableFromInline
         var base: UnsafePointer<Element>
 
