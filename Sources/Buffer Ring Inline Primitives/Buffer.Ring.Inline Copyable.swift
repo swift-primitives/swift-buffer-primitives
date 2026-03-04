@@ -59,9 +59,8 @@ extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
     /// Uses pointer-based iteration with ring wrap-around logic.
     /// The iterator is only valid while the source buffer exists.
     ///
-    /// - Note: Uses `_spanBuffer` array accumulation. Could be upgraded to
-    ///   pointer-based `Span(_unsafeStart:count:)` per contiguous region,
-    ///   matching `Buffer.Ring.Iterator`'s two-region span strategy.
+    /// Uses pointer-based iteration with ring wrap-around logic.
+    /// The iterator is only valid while the source buffer exists.
     public struct Iterator: Sequence.Iterator.`Protocol`, IteratorProtocol, @unchecked Sendable {
         @usableFromInline
         let base: UnsafePointer<Element>
@@ -72,7 +71,7 @@ extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
         @usableFromInline
         let end: Index<Element>
         @usableFromInline
-        var _spanBuffer: [Element] = []
+        var _element: Element? = nil
 
         @inlinable
         init(base: UnsafePointer<Element>, header: Buffer.Ring.Header) {
@@ -85,19 +84,22 @@ extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
         @_lifetime(&self)
         @inlinable
         public mutating func nextSpan(maximumCount: Cardinal) -> Span<Element> {
-            _spanBuffer.removeAll(keepingCapacity: true)
-            var remaining = Int(maximumCount.rawValue)
-            while remaining > 0, current < end {
-                let physicalIdx = Index.Modular.physical(
-                    forLogical: current,
-                    head: header.head,
-                    capacity: header.capacity
+            let ptr = unsafe withUnsafeMutablePointer(to: &_element) { p in
+                unsafe UnsafePointer<Element>(
+                    unsafe UnsafeRawPointer(p).assumingMemoryBound(to: Element.self)
                 )
-                _spanBuffer.append(unsafe base[physicalIdx])
-                current += .one
-                remaining -= 1
             }
-            return _spanBuffer.span
+            guard maximumCount > .zero else {
+                let span = unsafe Span(_unsafeStart: ptr, count: 0)
+                return unsafe _overrideLifetime(span, mutating: &self)
+            }
+            guard let value = next() else {
+                let span = unsafe Span(_unsafeStart: ptr, count: 0)
+                return unsafe _overrideLifetime(span, mutating: &self)
+            }
+            _element = value
+            let span = unsafe Span(_unsafeStart: ptr, count: 1)
+            return unsafe _overrideLifetime(span, mutating: &self)
         }
 
         @_lifetime(self: immortal)
