@@ -141,23 +141,27 @@ extension LinearBoundedInlineTests.Integration {
 
     @Test
     func `deinit cleans up inline storage elements`() {
-        final class DeinitCounter: @unchecked Sendable {
-            var count: Int = 0
-        }
+        // TRACKING: swiftlang/swift #86652 — same-package test also fails
+        // because Buffer.Linear.Inline is generic over value-generic `capacity`.
+        withKnownIssue("swiftlang/swift #86652: ~Copyable value-generic member destruction") {
+            final class DeinitCounter: @unchecked Sendable {
+                var count: Int = 0
+            }
 
-        struct Tracked: ~Copyable {
-            let counter: DeinitCounter
-            deinit { counter.count += 1 }
-        }
+            struct Tracked: ~Copyable {
+                let counter: DeinitCounter
+                deinit { counter.count += 1 }
+            }
 
-        let counter = DeinitCounter()
-        do {
-            var buffer = Buffer<Tracked>.Linear.Inline<4>()
-            _ = buffer.append(Tracked(counter: counter))
-            _ = buffer.append(Tracked(counter: counter))
-            _ = buffer.append(Tracked(counter: counter))
-            #expect(counter.count == 0)
+            let counter = DeinitCounter()
+            do {
+                var buffer = Buffer<Tracked>.Linear.Inline<4>()
+                _ = buffer.append(Tracked(counter: counter))
+                _ = buffer.append(Tracked(counter: counter))
+                _ = buffer.append(Tracked(counter: counter))
+                #expect(counter.count == 0)
+            }
+            #expect(counter.count == 3)
         }
-        #expect(counter.count == 3)
     }
 }
