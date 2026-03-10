@@ -16,9 +16,6 @@ import Index_Primitives
 /// 2. **Static Operations** — Expert-level functions on `Storage.Heap` (Layer 2)
 /// 3. **Composed Types** — User-facing types that delegate to static ops (Layer 3)
 ///
-/// - Note: `Ring`, `Linear`, `Slab`, `Linked`, `Slots`, `Arena`, and all their nested types are
-///   declared inside the enum body (not in extensions) due to Swift compiler constraints
-///   on nested types within `~Copyable` generic types.
 public enum Buffer<Element: ~Copyable> {
 
     // MARK: - Ring
@@ -89,13 +86,6 @@ public enum Buffer<Element: ~Copyable> {
 
             @usableFromInline
             package var storage: Storage<Element>.Inline<capacity>
-
-            /// Workaround for Swift compiler bug where deinit is not called
-            /// for ~Copyable structs that contain only value-type properties.
-            /// Adding a reference type property forces proper destructor generation.
-            /// See: https://github.com/swiftlang/swift/issues/86652
-            @usableFromInline
-            var _deinitWorkaround: (any AnyObject & Sendable)? = nil
 
             @inlinable
             package init(header: Header, storage: consuming Storage<Element>.Inline<capacity>) {
@@ -332,13 +322,6 @@ public enum Buffer<Element: ~Copyable> {
 
             @usableFromInline
             package var storage: Storage<Element>.Inline<capacity>
-
-            /// Workaround for Swift compiler bug where deinit is not called
-            /// for ~Copyable structs that contain only value-type properties.
-            /// Adding a reference type property forces proper destructor generation.
-            /// See: https://github.com/swiftlang/swift/issues/86652
-            @usableFromInline
-            var _deinitWorkaround: (any AnyObject & Sendable)? = nil
 
             @inlinable
             package init(header: Header, storage: consuming Storage<Element>.Inline<capacity>) {
