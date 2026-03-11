@@ -16,8 +16,9 @@ import Index_Primitives
 /// 2. **Static Operations** — Expert-level functions on `Storage.Heap` (Layer 2)
 /// 3. **Composed Types** — User-facing types that delegate to static ops (Layer 3)
 ///
-public enum Buffer<Element: ~Copyable> {
+public enum Buffer<Element: ~Copyable> {}
 
+extension Buffer where Element: ~Copyable {
     // MARK: - Ring
 
     /// A growable ring buffer backed by heap storage.
@@ -64,40 +65,6 @@ public enum Buffer<Element: ~Copyable> {
             }
 
             /// Errors that can occur during bounded ring buffer operations.
-            public enum Error: Swift.Error, Sendable, Equatable {
-                /// The number of elements exceeds the buffer's capacity.
-                case capacityExceeded
-            }
-        }
-
-        // MARK: - Inline (Fixed-Capacity, Stack-Allocated)
-
-        /// A fixed-capacity ring buffer backed by inline (stack-allocated) storage.
-        ///
-        /// Uses `Storage<Element>.Inline<capacity>` for stack-based allocation
-        /// and the runtime `Header` for ring state tracking.
-        ///
-        /// Element cleanup is handled by deinit, which iterates the
-        /// per-slot bitvector in `Storage.Inline` to deinitialize all
-        /// initialized elements.
-        public struct Inline<let capacity: Int>: ~Copyable {
-            @usableFromInline
-            package var header: Header
-
-            @usableFromInline
-            package var storage: Storage<Element>.Inline<capacity>
-
-            @inlinable
-            package init(header: Header, storage: consuming Storage<Element>.Inline<capacity>) {
-                self.header = header
-                self.storage = storage
-            }
-
-            deinit {
-                unsafe storage.deinitialize()
-            }
-
-            /// Errors that can occur during inline ring buffer operations.
             public enum Error: Swift.Error, Sendable, Equatable {
                 /// The number of elements exceeds the buffer's capacity.
                 case capacityExceeded
@@ -257,7 +224,45 @@ public enum Buffer<Element: ~Copyable> {
             }
         }
     }
+}
 
+extension Buffer.Ring where Element: ~Copyable {
+    // MARK: - Inline (Fixed-Capacity, Stack-Allocated)
+
+    /// A fixed-capacity ring buffer backed by inline (stack-allocated) storage.
+    ///
+    /// Uses `Storage<Element>.Inline<capacity>` for stack-based allocation
+    /// and the runtime `Header` for ring state tracking.
+    ///
+    /// Element cleanup is handled by deinit, which iterates the
+    /// per-slot bitvector in `Storage.Inline` to deinitialize all
+    /// initialized elements.
+    public struct Inline<let capacity: Int>: ~Copyable {
+        @usableFromInline
+        package var header: Header
+
+        @usableFromInline
+        package var storage: Storage<Element>.Inline<capacity>
+
+        @inlinable
+        package init(header: Header, storage: consuming Storage<Element>.Inline<capacity>) {
+            self.header = header
+            self.storage = storage
+        }
+
+        deinit {
+            unsafe storage.deinitialize()
+        }
+
+        /// Errors that can occur during inline ring buffer operations.
+        public enum Error: Swift.Error, Sendable, Equatable {
+            /// The number of elements exceeds the buffer's capacity.
+            case capacityExceeded
+        }
+    }
+}
+
+extension Buffer where Element: ~Copyable {
     // MARK: - Linear
 
     /// A growable linear buffer backed by heap storage.
@@ -390,7 +395,10 @@ public enum Buffer<Element: ~Copyable> {
             }
         }
     }
+}
 
+extension Buffer where Element: ~Copyable {
+    
     // MARK: - Slab
 
     /// A dynamic-capacity slab buffer backed by heap storage.
@@ -541,7 +549,7 @@ public enum Buffer<Element: ~Copyable> {
         // MARK: - Header
 
         /// Cursor state for a slab (sparse slot) buffer.
-        /// 
+        ///
         /// Uses a `Bit.Vector` bitmap as the source of truth for which slots
         /// are occupied. `storage.initialization` stays `.empty` — the bitmap
         /// drives all cleanup.
@@ -579,7 +587,9 @@ public enum Buffer<Element: ~Copyable> {
             }
         }
     }
+}
 
+extension Buffer where Element: ~Copyable {
     // MARK: - Linked
 
     /// A linked list backed by pool storage, parameterized by link count.
@@ -793,7 +803,10 @@ public enum Buffer<Element: ~Copyable> {
             }
         }
     }
+}
 
+extension Buffer where Element: ~Copyable {
+    
     // MARK: - Slots
 
     /// A fixed-capacity slots buffer backed by split storage.
@@ -852,7 +865,9 @@ public enum Buffer<Element: ~Copyable> {
             }
         }
     }
+}
 
+extension Buffer where Element: ~Copyable {
     // MARK: - Arena
 
     /// A growable arena buffer backed by heap storage with generation-based
