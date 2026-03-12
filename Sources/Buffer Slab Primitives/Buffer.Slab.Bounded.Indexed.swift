@@ -3,7 +3,7 @@
 // Phantom-typed wrapper using Tagged.retag() per H2 for
 // zero-cost Index<Tag> ↔ Index<Element> and Bit.Index conversion.
 
-extension Buffer.Slab.Bounded.Indexed {
+extension Buffer.Slab.Bounded.Indexed where Element: ~Copyable {
 
     /// Creates an indexed bounded slab buffer with at least the given capacity.
     @inlinable

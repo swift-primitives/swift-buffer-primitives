@@ -88,7 +88,7 @@ extension Buffer.Slab where Element: ~Copyable {
 
 // MARK: - Sequence.Drain.Protocol
 
-extension Buffer.Slab: Sequence.Drain.`Protocol` {
+extension Buffer.Slab: Sequence.Drain.`Protocol` where Element: ~Copyable {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         header.bitmap.ones.forEach { bitIndex in

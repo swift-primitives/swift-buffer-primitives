@@ -1,4 +1,4 @@
-extension Buffer.Ring: ExpressibleByArrayLiteral {
+extension Buffer.Ring: ExpressibleByArrayLiteral where Element: Copyable {
     @inlinable
     public init(arrayLiteral elements: Element...) {
         var buffer = Self(minimumCapacity: .init(Cardinal(UInt(elements.count))))

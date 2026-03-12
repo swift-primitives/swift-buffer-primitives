@@ -1,6 +1,6 @@
 // MARK: - Sequence.Consume.Protocol for Slab
 
-extension Buffer.Slab {
+extension Buffer.Slab where Element: ~Copyable {
     /// State for consuming iteration — deinitializes remaining occupied slots on early exit.
     ///
     /// Class-based because `Sequence.Consume.Protocol.ConsumeState` must be Copyable,
@@ -34,7 +34,7 @@ extension Buffer.Slab {
     }
 }
 
-extension Buffer.Slab: Sequence.Consume.`Protocol` {
+extension Buffer.Slab: Sequence.Consume.`Protocol` where Element: Copyable {
     @inlinable
     public consuming func consume() -> Sequence.Consume.View<Element, ConsumeState> {
         // Take bitmap from header; sync empty bitmap to storage to disarm its deinit

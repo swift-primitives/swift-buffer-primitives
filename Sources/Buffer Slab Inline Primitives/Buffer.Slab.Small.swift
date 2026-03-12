@@ -187,7 +187,7 @@ extension Buffer.Slab.Small where Element: ~Copyable {
 
 // MARK: - Sequence.Drain.Protocol
 
-extension Buffer.Slab.Small: Sequence.Drain.`Protocol` {
+extension Buffer.Slab.Small: Sequence.Drain.`Protocol` where Element: ~Copyable {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         switch _storage {

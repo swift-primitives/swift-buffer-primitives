@@ -139,7 +139,7 @@ extension Buffer.Slab.Inline where Element: ~Copyable {
 
 // MARK: - Sequence.Drain.Protocol
 
-extension Buffer.Slab.Inline: Sequence.Drain.`Protocol` {
+extension Buffer.Slab.Inline: Sequence.Drain.`Protocol` where Element: ~Copyable {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         var slot: Bit.Index = .zero
