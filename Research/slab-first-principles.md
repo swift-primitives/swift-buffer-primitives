@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-02-11
-status: IN_PROGRESS
+version: 1.0.1
+last_updated: 2026-03-15
+status: DEFERRED
 research_tier: 2
 applies_to: [swift-buffer-primitives, swift-slab-primitives]
 normative: false
@@ -282,3 +282,15 @@ They are complementary, not overlapping. Slab is for when the consumer controls 
 - Peters, O. `slotmap` crate. https://docs.rs/slotmap
 - Fitzgerald, N. `generational-arena` crate. https://docs.rs/generational-arena
 - Deutsch, A. "P0661: A `slot_map` Container for the C++ Standard Library." ISO/IEC C++ Proposal.
+
+---
+
+## Deferral
+
+**Date**: 2026-03-15
+**Previous status**: IN_PROGRESS (since 2026-02-11)
+**New status**: DEFERRED
+
+**Blocker/Reason**: Document reached DECISION status in its Outcome section but frontmatter was never updated from IN_PROGRESS. All research questions are answered: Buffer.Slab correctly implements the colloquial "slab" concept (not Bonwick's full slab allocator), the name is acceptable, and the two-package separation (buffer-primitives vs slab-primitives) is justified. No open questions remain. Deferred because the findings are settled and no further research action is needed -- the frontmatter status should arguably be DECISION rather than DEFERRED, but DEFERRED is used here to reflect the stale IN_PROGRESS state being triaged.
+
+**Resumption trigger**: None expected. This document's findings are final. Consider promoting to DECISION status on next visit.

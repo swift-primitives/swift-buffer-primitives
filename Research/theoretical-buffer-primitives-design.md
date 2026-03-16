@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-02-03
-status: IN_PROGRESS
+version: 1.0.1
+last_updated: 2026-03-15
+status: DEFERRED
 tier: 3
 ---
 -->
@@ -1212,3 +1212,11 @@ Converged in 3 rounds between Claude (Anthropic) and ChatGPT (OpenAI). Full tran
 - `storage-primitives-first-principles` research (IN_PROGRESS) — storage taxonomy.
 - `ring-buffer-index-arithmetic` research (DECISION) — cyclic group for bounded, % for dynamic.
 - `inline-storage-span-access` research (DECISION) — 64-byte slots prevent dense Span.
+
+### Deferral
+
+**Date**: 2026-03-15
+
+**Reason**: The document reached RECOMMENDATION status (converged via Claude-ChatGPT collaborative discussion) with a complete three-layer design (discipline headers, static operations, composed types) and sequence-primitives integration. Implementation was overtaken by the buffer-primitives inline module split in February 2026, which reorganized the existing buffer code into 5 separate modules (Ring, Linear, Slab, Linked, Arena). The theoretical redesign from first principles has not been reconciled with the post-split module structure.
+
+**Resume when**: The inline module split is stable and a decision is made on whether to proceed with the theoretical redesign or evolve the current split structure incrementally.

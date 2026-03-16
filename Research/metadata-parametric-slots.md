@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.1.0
-last_updated: 2026-02-07
-status: IN_PROGRESS
+version: 1.1.1
+last_updated: 2026-03-15
+status: DEFERRED
 research_tier: 2
 applies_to: [swift-buffer-primitives, swift-hash-table-primitives]
 normative: false
@@ -1076,3 +1076,11 @@ Note: No `Buffer.Slots.Storage.swift` — storage is provided by `Storage<Payloa
 ### Collaborative Discussion
 - Transcript: `/tmp/hash-table-storage-layering-transcript.md`
 - Converged plan: `/tmp/hash-table-storage-layering-converged.md`
+
+### Deferral
+
+**Date**: 2026-03-15
+
+**Reason**: The document produced preliminary recommendations for `Buffer.Slots<Metadata, Payload>` backed by `Storage<Payload>.Split<Metadata>`, but 4 open questions (OQ-1 through OQ-4) remain unresolved. The next steps require implementing `Storage<Element>.Split<Lane>` in storage-primitives first (per split-storage-design.md), which has not been done. The buffer-primitives inline module split in February restructured existing modules but did not add the Slots discipline. The upstream dependency (Storage.Split) must exist before this design can be validated.
+
+**Resume when**: `Storage<Element>.Split<Lane>` is implemented in storage-primitives, or when hash-table-primitives is actively being refactored to use the canonical `ADT -> Buffer -> Storage` layering.

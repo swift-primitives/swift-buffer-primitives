@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-02-11
-status: IN_PROGRESS
+version: 1.0.1
+last_updated: 2026-03-15
+status: DEFERRED
 tier: 2
 type: discovery/consistency-analysis
 ---
@@ -558,3 +558,15 @@ Phase 6 is lowest priority and can be deferred.
 - `Buffer.Arena.swift`: Lines 1-234 — Arena base API + CoW
 - `Buffer.Slots.swift`: Lines 1-27 — Slots base API
 - Research process skill: [RES-012] Discovery Triggers, [RES-014] Consistency Analysis
+
+---
+
+## Deferral
+
+**Date**: 2026-03-15
+**Previous status**: IN_PROGRESS (since 2026-02-11)
+**New status**: DEFERRED
+
+**Blocker/Reason**: Comprehensive 6-phase implementation plan is fully specified (naming alignment, missing protocol conformances, Property.View parity, critical test coverage, file organization, future sub-variants). No open analysis questions remain. Deferred because implementation has not started. Phase 1 (naming/convention alignment) is prerequisite for all subsequent phases. Phase 4a (Linked tests -- zero coverage) is critical but blocked on Phase 1 renames.
+
+**Resumption trigger**: When buffer-primitives enters a consistency/polish cycle, or when Linked buffer tests become blocking for a downstream consumer.

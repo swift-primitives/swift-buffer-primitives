@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-02-10
-status: IN_PROGRESS
+version: 1.0.1
+last_updated: 2026-03-15
+status: DEFERRED
 ---
 -->
 
@@ -225,3 +225,15 @@ Rationale:
 - `Buffer.Linear+Subscript.swift` — Demonstrates subscript by logical index on linear buffer
 - `Buffer.Ring+Span.swift` — Demonstrates Iterator pattern with two-region wrap-around
 - `Buffer.Ring.Inline Copyable.swift` — Demonstrates Iterator using `Index.Modular.physical`
+
+---
+
+## Deferral
+
+**Date**: 2026-03-15
+**Previous status**: IN_PROGRESS (since 2026-02-10)
+**New status**: DEFERRED
+
+**Blocker/Reason**: Document recommends Option A (full public API additions to Buffer.Ring and variants) with a clear implementation order (A4 forEach, A1 CoW overloads, A2 withFront/withBack, A3 subscript, A5 checkpoint, A6 identity). The analysis is complete but implementation across ~80 methods across 4 variants has not been started. Deferred due to other priorities (leaf package audit, typed throws conversion, ~Copyable deinit workarounds).
+
+**Resumption trigger**: When queue-primitives migration to Buffer.Ring resumes, or when buffer-primitives public API surface is next expanded.
