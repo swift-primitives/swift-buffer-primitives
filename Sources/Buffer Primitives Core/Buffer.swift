@@ -238,19 +238,39 @@ extension Buffer.Ring where Element: ~Copyable {
     /// per-slot bitvector in `Storage.Inline` to deinitialize all
     /// initialized elements.
     public struct Inline<let capacity: Int>: ~Copyable {
+        // WORKAROUND: Enum wrapping for @_rawLayout storage to avoid LLVM verifier
+        // crash in release builds. ~Copyable structs with @_rawLayout stored fields
+        // + explicit deinit trigger "Instruction does not dominate all uses!".
+        // See Buffer.Ring.Small for extended rationale.
+        @usableFromInline
+        package enum _StorageRepr: ~Copyable, @unchecked Sendable {
+            case active(Storage<Element>.Inline<capacity>)
+        }
+
         @usableFromInline
         package var header: Header
 
         @usableFromInline
-        package var storage: Storage<Element>.Inline<capacity>
+        package var _storage: _StorageRepr
+
+        @usableFromInline
+        package var storage: Storage<Element>.Inline<capacity> {
+            _read {
+                switch _storage {
+                case .active(borrowing s):
+                    yield s
+                }
+            }
+        }
 
         @inlinable
         package init(header: Header, storage: consuming Storage<Element>.Inline<capacity>) {
             self.header = header
-            self.storage = storage
+            self._storage = .active(storage)
         }
 
         deinit {
+            guard case .active(var storage) = _storage else { return }
             unsafe storage.deinitialize()
         }
 
@@ -322,19 +342,37 @@ extension Buffer where Element: ~Copyable {
         /// per-slot bitvector in `Storage.Inline` to deinitialize all
         /// initialized elements.
         public struct Inline<let capacity: Int>: ~Copyable {
+            // WORKAROUND: Enum wrapping for @_rawLayout storage to avoid LLVM verifier
+            // crash in release builds. ~Copyable structs with @_rawLayout stored fields
+            // + explicit deinit trigger "Instruction does not dominate all uses!".
+            // See Buffer.Ring.Small for extended rationale.
+            @usableFromInline
+            package enum _StorageRepr: ~Copyable, @unchecked Sendable {
+                case active(Storage<Element>.Inline<capacity>)
+            }
+
             @usableFromInline
             package var header: Header
 
             @usableFromInline
-            package var storage: Storage<Element>.Inline<capacity>
+            package var _storage: _StorageRepr
+
+            @usableFromInline
+            package var storage: Storage<Element>.Inline<capacity> {
+                _read {
+                    guard case .active(let s) = _storage else { preconditionFailure() }
+                    yield s
+                }
+            }
 
             @inlinable
             package init(header: Header, storage: consuming Storage<Element>.Inline<capacity>) {
                 self.header = header
-                self.storage = storage
+                self._storage = .active(storage)
             }
 
             deinit {
+                guard case .active(var storage) = _storage else { return }
                 unsafe storage.deinitialize()
             }
 
@@ -478,11 +516,28 @@ extension Buffer where Element: ~Copyable {
         /// The bitmap drives cleanup — `Storage.Inline`'s initialization state
         /// stays `.empty`.
         public struct Inline<let wordCount: Int>: ~Copyable {
+            // WORKAROUND: Enum wrapping for @_rawLayout storage to avoid LLVM verifier
+            // crash in release builds. ~Copyable structs with @_rawLayout stored fields
+            // + explicit deinit trigger "Instruction does not dominate all uses!".
+            // See Buffer.Ring.Small for extended rationale.
+            @usableFromInline
+            package enum _StorageRepr: ~Copyable, @unchecked Sendable {
+                case active(Storage<Element>.Inline<wordCount>)
+            }
+
             @usableFromInline
             package var header: Header.Static<wordCount>
 
             @usableFromInline
-            package var storage: Storage<Element>.Inline<wordCount>
+            package var _storage: _StorageRepr
+
+            @usableFromInline
+            package var storage: Storage<Element>.Inline<wordCount> {
+                _read {
+                    guard case .active(let s) = _storage else { preconditionFailure() }
+                    yield s
+                }
+            }
 
             @inlinable
             package init(
@@ -490,7 +545,7 @@ extension Buffer where Element: ~Copyable {
                 storage: consuming Storage<Element>.Inline<wordCount>
             ) {
                 self.header = header
-                self.storage = storage
+                self._storage = .active(storage)
             }
 
             /// Errors that can occur during inline slab buffer operations.
@@ -500,6 +555,7 @@ extension Buffer where Element: ~Copyable {
             }
 
             deinit {
+                guard case .active(var storage) = _storage else { return }
                 // Bitmap-driven cleanup: Storage.Inline's initialization stays .empty,
                 // so the bitmap is the sole source of truth for occupied slots.
                 // Uses pointer-based deinit — non-mutating read of storage,
@@ -958,6 +1014,15 @@ extension Buffer where Element: ~Copyable {
                 @usableFromInline package init() {}
             }
 
+            // WORKAROUND: Enum wrapping for @_rawLayout storage to avoid LLVM verifier
+            // crash in release builds. ~Copyable structs with @_rawLayout stored fields
+            // + explicit deinit trigger "Instruction does not dominate all uses!".
+            // See Buffer.Ring.Small for extended rationale.
+            @usableFromInline
+            package enum _ElementsRepr: ~Copyable, @unchecked Sendable {
+                case active(_Elements)
+            }
+
             @usableFromInline
             package var header: Header
 
@@ -965,7 +1030,7 @@ extension Buffer where Element: ~Copyable {
             package var _meta: InlineArray<inlineCapacity, Meta>
 
             @usableFromInline
-            package var _elements: _Elements
+            package var _elements: _ElementsRepr
 
             @inlinable
             package init(
@@ -975,7 +1040,7 @@ extension Buffer where Element: ~Copyable {
             ) {
                 self.header = header
                 self._meta = _meta
-                self._elements = _elements
+                self._elements = .active(_elements)
             }
 
             /// Errors that can occur during inline arena buffer operations.
@@ -987,6 +1052,7 @@ extension Buffer where Element: ~Copyable {
             }
 
             deinit {
+                guard case .active(var elements) = _elements else { return }
                 // WORKAROUND: Uses `for i in` instead of `.forEach` closure
                 // WHY: Closures capturing ~Copyable fields of `self` inside deinit trigger
                 //      CopiedLoadBorrowEliminationVisitor segfault (swift-frontend signal 11)
@@ -996,7 +1062,7 @@ extension Buffer where Element: ~Copyable {
                 for i in 0..<hw {
                     if _meta[i].isOccupied {
                         // Use borrowing pointer + mutating cast: safe in deinit (we own the memory).
-                        unsafe withUnsafePointer(to: _elements) { (ptr: UnsafePointer<_Elements>) -> Void in
+                        unsafe withUnsafePointer(to: elements) { (ptr: UnsafePointer<_Elements>) -> Void in
                             unsafe UnsafeMutableRawPointer(mutating: UnsafeRawPointer(ptr))
                                 .advanced(by: i * stride)
                                 .assumingMemoryBound(to: Element.self)
