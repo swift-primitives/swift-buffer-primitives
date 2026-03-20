@@ -95,11 +95,49 @@ let package = Package(
             ]
         ),
 
+        // MARK: - Per-Variant Core Targets
+        .target(
+            name: "Buffer Ring Primitives Core",
+            dependencies: ["Buffer Primitives Core"]
+        ),
+        .target(
+            name: "Buffer Linear Primitives Core",
+            dependencies: ["Buffer Primitives Core"]
+        ),
+        .target(
+            name: "Buffer Slab Primitives Core",
+            dependencies: ["Buffer Primitives Core"]
+        ),
+        .target(
+            name: "Buffer Linked Primitives Core",
+            dependencies: ["Buffer Primitives Core"]
+        ),
+        .target(
+            name: "Buffer Arena Primitives Core",
+            dependencies: ["Buffer Primitives Core"]
+        ),
+        .target(
+            name: "Buffer Slots Primitives Core",
+            dependencies: ["Buffer Primitives Core"]
+        ),
+        .target(
+            name: "Buffer Aligned Primitives Core",
+            dependencies: ["Buffer Primitives Core"]
+        ),
+        .target(
+            name: "Buffer Unbounded Primitives Core",
+            dependencies: [
+                "Buffer Primitives Core",
+                "Buffer Aligned Primitives Core",
+            ]
+        ),
+
         // MARK: - Ring
         .target(
             name: "Buffer Ring Primitives",
             dependencies: [
                 "Buffer Primitives Core",
+                "Buffer Ring Primitives Core",
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
@@ -107,6 +145,7 @@ let package = Package(
             name: "Buffer Ring Inline Primitives",
             dependencies: [
                 "Buffer Primitives Core",
+                "Buffer Ring Primitives Core",
                 "Buffer Ring Primitives",
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
@@ -117,6 +156,7 @@ let package = Package(
             name: "Buffer Linear Primitives",
             dependencies: [
                 "Buffer Primitives Core",
+                "Buffer Linear Primitives Core",
                 .product(name: "Finite Primitives", package: "swift-finite-primitives"),
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
                 .product(name: "Collection Primitives", package: "swift-collection-primitives"),
@@ -126,6 +166,7 @@ let package = Package(
             name: "Buffer Linear Inline Primitives",
             dependencies: [
                 "Buffer Primitives Core",
+                "Buffer Linear Primitives Core",
                 "Buffer Linear Primitives",
                 .product(name: "Finite Primitives", package: "swift-finite-primitives"),
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
@@ -136,6 +177,7 @@ let package = Package(
             name: "Buffer Linear Small Primitives",
             dependencies: [
                 "Buffer Primitives Core",
+                "Buffer Linear Primitives Core",
                 "Buffer Linear Primitives",
                 "Buffer Linear Inline Primitives",
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
@@ -148,6 +190,7 @@ let package = Package(
             name: "Buffer Slab Primitives",
             dependencies: [
                 "Buffer Primitives Core",
+                "Buffer Slab Primitives Core",
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
@@ -155,6 +198,7 @@ let package = Package(
             name: "Buffer Slab Inline Primitives",
             dependencies: [
                 "Buffer Primitives Core",
+                "Buffer Slab Primitives Core",
                 "Buffer Slab Primitives",
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
@@ -165,6 +209,7 @@ let package = Package(
             name: "Buffer Linked Primitives",
             dependencies: [
                 "Buffer Primitives Core",
+                "Buffer Linked Primitives Core",
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
@@ -172,6 +217,7 @@ let package = Package(
             name: "Buffer Linked Inline Primitives",
             dependencies: [
                 "Buffer Primitives Core",
+                "Buffer Linked Primitives Core",
                 "Buffer Linked Primitives",
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
@@ -182,6 +228,7 @@ let package = Package(
             name: "Buffer Slots Primitives",
             dependencies: [
                 "Buffer Primitives Core",
+                "Buffer Slots Primitives Core",
             ]
         ),
 
@@ -190,6 +237,7 @@ let package = Package(
             name: "Buffer Arena Primitives",
             dependencies: [
                 "Buffer Primitives Core",
+                "Buffer Arena Primitives Core",
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
@@ -197,6 +245,7 @@ let package = Package(
             name: "Buffer Arena Inline Primitives",
             dependencies: [
                 "Buffer Primitives Core",
+                "Buffer Arena Primitives Core",
                 "Buffer Arena Primitives",
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
@@ -207,6 +256,14 @@ let package = Package(
             name: "Buffer Primitives",
             dependencies: [
                 "Buffer Primitives Core",
+                "Buffer Ring Primitives Core",
+                "Buffer Linear Primitives Core",
+                "Buffer Slab Primitives Core",
+                "Buffer Linked Primitives Core",
+                "Buffer Arena Primitives Core",
+                "Buffer Slots Primitives Core",
+                "Buffer Aligned Primitives Core",
+                "Buffer Unbounded Primitives Core",
                 "Buffer Ring Primitives",
                 "Buffer Ring Inline Primitives",
                 "Buffer Linear Primitives",
