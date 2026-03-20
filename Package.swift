@@ -83,7 +83,8 @@ let package = Package(
         .package(path: "../swift-collection-primitives"),
     ],
     targets: [
-        // Core: Namespace enums, header types, growth policy
+
+        // MARK: - Core
         .target(
             name: "Buffer Primitives Core",
             dependencies: [
@@ -93,7 +94,8 @@ let package = Package(
                 .product(name: "Bit Vector Primitives", package: "swift-bit-vector-primitives"),
             ]
         ),
-        // Ring: Circular buffer heap and bounded variants
+
+        // MARK: - Ring
         .target(
             name: "Buffer Ring Primitives",
             dependencies: [
@@ -101,7 +103,6 @@ let package = Package(
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
-        // Ring Inline: Inline and small circular buffer variants
         .target(
             name: "Buffer Ring Inline Primitives",
             dependencies: [
@@ -110,7 +111,8 @@ let package = Package(
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
-        // Linear: Contiguous buffer heap and bounded variants
+
+        // MARK: - Linear
         .target(
             name: "Buffer Linear Primitives",
             dependencies: [
@@ -120,7 +122,6 @@ let package = Package(
                 .product(name: "Collection Primitives", package: "swift-collection-primitives"),
             ]
         ),
-        // Linear Inline: Fixed-capacity inline contiguous buffer variants
         .target(
             name: "Buffer Linear Inline Primitives",
             dependencies: [
@@ -131,7 +132,6 @@ let package = Package(
                 .product(name: "Collection Primitives", package: "swift-collection-primitives"),
             ]
         ),
-        // Linear Small: Small-buffer optimization (inline + heap spill)
         .target(
             name: "Buffer Linear Small Primitives",
             dependencies: [
@@ -142,7 +142,8 @@ let package = Package(
                 .product(name: "Collection Primitives", package: "swift-collection-primitives"),
             ]
         ),
-        // Slab: Index-addressable slot storage heap and bounded variants
+
+        // MARK: - Slab
         .target(
             name: "Buffer Slab Primitives",
             dependencies: [
@@ -150,7 +151,6 @@ let package = Package(
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
-        // Slab Inline: Inline and small slab buffer variants
         .target(
             name: "Buffer Slab Inline Primitives",
             dependencies: [
@@ -159,7 +159,8 @@ let package = Package(
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
-        // Linked: Doubly-linked list heap variant
+
+        // MARK: - Linked
         .target(
             name: "Buffer Linked Primitives",
             dependencies: [
@@ -167,7 +168,6 @@ let package = Package(
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
-        // Linked Inline: Inline and small linked list variants
         .target(
             name: "Buffer Linked Inline Primitives",
             dependencies: [
@@ -176,14 +176,16 @@ let package = Package(
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
-        // Slots: Metadata-parametric random-access slots
+
+        // MARK: - Slots
         .target(
             name: "Buffer Slots Primitives",
             dependencies: [
                 "Buffer Primitives Core",
             ]
         ),
-        // Arena: Generation-token arena heap and bounded variants
+
+        // MARK: - Arena
         .target(
             name: "Buffer Arena Primitives",
             dependencies: [
@@ -191,7 +193,6 @@ let package = Package(
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
-        // Arena Inline: Inline and small arena variants
         .target(
             name: "Buffer Arena Inline Primitives",
             dependencies: [
@@ -200,7 +201,8 @@ let package = Package(
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
-        // Umbrella: Re-exports all buffer primitive modules
+
+        // MARK: - Umbrella
         .target(
             name: "Buffer Primitives",
             dependencies: [
@@ -219,6 +221,8 @@ let package = Package(
                 "Buffer Arena Inline Primitives",
             ]
         ),
+
+        // MARK: - Test Support
         .target(
             name: "Buffer Primitives Test Support",
             dependencies: [
@@ -230,7 +234,8 @@ let package = Package(
             ],
             path: "Tests/Support"
         ),
-        // Per-module test targets
+
+        // MARK: - Tests
         .testTarget(
             name: "Buffer Ring Primitives Tests",
             dependencies: [
