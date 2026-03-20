@@ -24,11 +24,11 @@ extension Buffer.Aligned where Element == UInt8 {
     @inlinable
     public subscript(index: Int) -> UInt8 {
         get {
-            precondition(index >= 0 && index < Int(bitPattern: count), "index out of bounds")
+            precondition(index >= 0 && index < Int(bitPattern: count.cardinal), "index out of bounds")
             return unsafe bytePointer[index]
         }
         set {
-            precondition(index >= 0 && index < Int(bitPattern: count), "index out of bounds")
+            precondition(index >= 0 && index < Int(bitPattern: count.cardinal), "index out of bounds")
             unsafe bytePointer[index] = newValue
         }
     }
@@ -50,7 +50,7 @@ extension Buffer.Aligned where Element == UInt8 {
         from source: Span<UInt8>,
         at offset: Int = 0
     ) {
-        precondition(offset >= 0 && offset + source.count <= Int(bitPattern: count))
+        precondition(offset >= 0 && offset + source.count <= Int(bitPattern: count.cardinal))
         unsafe withUnsafeMutableBufferPointer { dest in
             source.withUnsafeBufferPointer { src in
                 unsafe dest.baseAddress!.advanced(by: offset)
@@ -72,7 +72,7 @@ extension Buffer.Aligned where Element == UInt8 {
         from source: UnsafeRawBufferPointer,
         at offset: Int = 0
     ) {
-        precondition(offset >= 0 && offset + source.count <= Int(bitPattern: count))
+        precondition(offset >= 0 && offset + source.count <= Int(bitPattern: count.cardinal))
         unsafe withUnsafeMutableBytes { dest in
             unsafe dest.baseAddress!.advanced(by: offset)
                 .copyMemory(from: source.baseAddress!, byteCount: source.count)
@@ -99,7 +99,7 @@ extension Buffer.Aligned where Element == UInt8 {
     /// - Precondition: `range.upperBound <= count`
     @inlinable
     public mutating func zero(range: Swift.Range<Int>) {
-        precondition(range.lowerBound >= 0 && range.upperBound <= Int(bitPattern: count))
+        precondition(range.lowerBound >= 0 && range.upperBound <= Int(bitPattern: count.cardinal))
         unsafe withUnsafeMutableBytes { buffer in
             let start = unsafe buffer.baseAddress!.advanced(by: range.lowerBound)
             unsafe start.initializeMemory(as: UInt8.self, repeating: 0, count: range.count)
@@ -114,7 +114,7 @@ extension Buffer.Aligned where Element == UInt8 {
     /// - Precondition: `offset <= count`
     @inlinable
     public mutating func zero(from offset: Int) {
-        let size = Int(bitPattern: count)
+        let size = Int(bitPattern: count.cardinal)
         precondition(offset >= 0 && offset <= size)
         zero(range: offset..<size)
     }

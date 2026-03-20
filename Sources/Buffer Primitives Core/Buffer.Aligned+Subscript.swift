@@ -38,7 +38,7 @@ extension Buffer.Aligned where Element == UInt8 {
     public subscript(range: PartialRangeFrom<Int>) -> Span<UInt8> {
         @_lifetime(borrow self)
         borrowing get {
-            bytes.extracting(range.lowerBound..<Int(bitPattern: count))
+            bytes.extracting(range.lowerBound..<Int(bitPattern: count.cardinal))
         }
     }
 

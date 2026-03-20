@@ -61,7 +61,7 @@ extension Buffer where Element == UInt8 {
         var bytePointer: UnsafeMutablePointer<UInt8>
 
         /// The number of bytes allocated.
-        public let count: Cardinal
+        public let count: Index<UInt8>.Count
 
         /// The alignment of the allocation.
         public let alignment: Memory.Alignment
@@ -86,7 +86,7 @@ extension Buffer.Aligned where Element == UInt8 {
     /// - Note: Empty buffers (`byteCount == 0`) allocate 1 byte with the
     ///   requested alignment. This avoids sentinel pointers and platform-specific
     ///   page size queries.
-    public init(byteCount: Cardinal, alignment: Memory.Alignment) throws(Error) {
+    public init(byteCount: Index<UInt8>.Count, alignment: Memory.Alignment) throws(Error) {
         let alignmentMagnitude: Int = alignment.magnitude()
 
         if byteCount == .zero {
@@ -101,7 +101,7 @@ extension Buffer.Aligned where Element == UInt8 {
         }
 
         // Convert to Int at the C/stdlib boundary [IMPL-010]
-        let size = Int(bitPattern: byteCount)
+        let size = Int(bitPattern: byteCount.cardinal)
 
         let raw = UnsafeMutableRawPointer.allocate(
             byteCount: size,
@@ -120,11 +120,11 @@ extension Buffer.Aligned where Element == UInt8 {
     ///   - alignment: The alignment boundary.
     /// - Throws: `Error.allocationFailed` if allocation fails.
     public static func zeroed(
-        byteCount: Cardinal,
+        byteCount: Index<UInt8>.Count,
         alignment: Memory.Alignment
     ) throws(Error) -> Self {
         let buffer = try Self(byteCount: byteCount, alignment: alignment)
-        unsafe buffer.bytePointer.initialize(repeating: 0, count: Int(bitPattern: byteCount))
+        unsafe buffer.bytePointer.initialize(repeating: 0, count: Int(bitPattern: byteCount.cardinal))
         return buffer
     }
 }
@@ -144,7 +144,7 @@ extension Buffer.Aligned where Element == UInt8 {
     public func withUnsafeBytes<R, E: Swift.Error>(
         _ body: (UnsafeRawBufferPointer) throws(E) -> R
     ) throws(E) -> R {
-        try unsafe body(UnsafeRawBufferPointer(start: UnsafeRawPointer(bytePointer), count: Int(bitPattern: count)))
+        try unsafe body(UnsafeRawBufferPointer(start: UnsafeRawPointer(bytePointer), count: Int(bitPattern: count.cardinal)))
     }
 
     /// Provides read-write access to the buffer contents.
@@ -159,7 +159,7 @@ extension Buffer.Aligned where Element == UInt8 {
     public mutating func withUnsafeMutableBytes<R, E: Swift.Error>(
         _ body: (UnsafeMutableRawBufferPointer) throws(E) -> R
     ) throws(E) -> R {
-        try unsafe body(UnsafeMutableRawBufferPointer(start: UnsafeMutableRawPointer(bytePointer), count: Int(bitPattern: count)))
+        try unsafe body(UnsafeMutableRawBufferPointer(start: UnsafeMutableRawPointer(bytePointer), count: Int(bitPattern: count.cardinal)))
     }
 }
 
@@ -225,7 +225,7 @@ extension Buffer.Aligned where Element == UInt8 {
     public func withRawSpan<R, E: Swift.Error>(
         _ body: (RawSpan) throws(E) -> R
     ) throws(E) -> R {
-        let span = unsafe RawSpan(_unsafeStart: UnsafeRawPointer(bytePointer), byteCount: Int(bitPattern: count))
+        let span = unsafe RawSpan(_unsafeStart: UnsafeRawPointer(bytePointer), byteCount: Int(bitPattern: count.cardinal))
         return try body(span)
     }
 
@@ -237,7 +237,7 @@ extension Buffer.Aligned where Element == UInt8 {
     public mutating func withMutableRawSpan<R, E: Swift.Error>(
         _ body: (inout MutableRawSpan) throws(E) -> R
     ) throws(E) -> R {
-        var span = unsafe MutableRawSpan(_unsafeStart: UnsafeMutableRawPointer(bytePointer), byteCount: Int(bitPattern: count))
+        var span = unsafe MutableRawSpan(_unsafeStart: UnsafeMutableRawPointer(bytePointer), byteCount: Int(bitPattern: count.cardinal))
         return try body(&span)
     }
 }
@@ -284,7 +284,7 @@ extension Buffer.Aligned: Memory.Contiguous.`Protocol` where Element == UInt8 {
     public func withUnsafeBufferPointer<R, E: Swift.Error>(
         _ body: (UnsafeBufferPointer<UInt8>) throws(E) -> R
     ) throws(E) -> R {
-        try unsafe body(UnsafeBufferPointer(start: bytePointer, count: Int(bitPattern: count)))
+        try unsafe body(UnsafeBufferPointer(start: bytePointer, count: Int(bitPattern: count.cardinal)))
     }
 
     /// Provides read-write access via typed mutable buffer pointer.
@@ -295,6 +295,6 @@ extension Buffer.Aligned: Memory.Contiguous.`Protocol` where Element == UInt8 {
     public mutating func withUnsafeMutableBufferPointer<R, E: Swift.Error>(
         _ body: (UnsafeMutableBufferPointer<UInt8>) throws(E) -> R
     ) throws(E) -> R {
-        try unsafe body(UnsafeMutableBufferPointer(start: bytePointer, count: Int(bitPattern: count)))
+        try unsafe body(UnsafeMutableBufferPointer(start: bytePointer, count: Int(bitPattern: count.cardinal)))
     }
 }

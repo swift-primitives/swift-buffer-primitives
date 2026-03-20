@@ -58,7 +58,7 @@ extension Buffer where Element == UInt8 {
             alignment: Memory.Alignment,
             growthPolicy: Growth.Policy = .doubling
         ) throws(Aligned.Error) {
-            self._storage = try Aligned(byteCount: minimumCapacity.rawValue, alignment: alignment)
+            self._storage = try Aligned(byteCount: minimumCapacity.retag(UInt8.self), alignment: alignment)
             self.growthPolicy = growthPolicy
             self.alignment = alignment
         }
@@ -98,13 +98,13 @@ extension Buffer.Unbounded where Element == UInt8 {
     /// "Meaningful bytes" is tracked by `Binary.Cursor.writerIndex`, not here.
     @inlinable
     public var count: Index<Element>.Count {
-        Index<Element>.Count(_storage.count)
+        _storage.count.retag(Element.self)
     }
 
     /// Alias for `count` (capacity == addressable bytes).
     @inlinable
     public var capacity: Index<Element>.Count {
-        Index<Element>.Count(_storage.count)
+        _storage.count.retag(Element.self)
     }
 }
 
@@ -180,7 +180,7 @@ extension Buffer.Unbounded where Element == UInt8 {
         to newCapacity: Index<Element>.Count,
         preserving: Bool
     ) throws(Buffer.Aligned.Error) {
-        var newStorage = try Buffer.Aligned(byteCount: newCapacity.rawValue, alignment: alignment)
+        var newStorage = try Buffer.Aligned(byteCount: newCapacity.retag(UInt8.self), alignment: alignment)
 
         if preserving {
             let bytesToCopy = Int(bitPattern: Index<Element>.Count.min(count, newCapacity).rawValue)
