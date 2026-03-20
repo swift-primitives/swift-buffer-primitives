@@ -47,7 +47,7 @@ extension Buffer.Arena where Element: ~Copyable {
             meta[i].link = .max
         } else {
             precondition(header.highWater < header.capacity, "Arena: capacity exhausted")
-            slot = UInt32(header.highWater.rawValue.rawValue)
+            slot = UInt32(header.highWater)
             header.highWater = header.highWater + .one
         }
         let i = Int(slot)
@@ -140,7 +140,7 @@ extension Buffer.Arena where Element: ~Copyable {
         meta: UnsafeMutablePointer<Meta>
     ) -> Bool {
         let rawSlot = position.index
-        guard rawSlot < UInt32(header.highWater.rawValue.rawValue) else { return false }
+        guard rawSlot < UInt32(header.highWater) else { return false }
         let currentToken = meta[Int(rawSlot)].token
         return currentToken == position.token && (currentToken & 1 == 1)
     }
