@@ -18,15 +18,6 @@ extension Buffer.Arena where Element: ~Copyable {
             @usableFromInline package init() {}
         }
 
-        // WORKAROUND: Enum wrapping for @_rawLayout storage to avoid LLVM verifier
-        // crash in release builds. ~Copyable structs with @_rawLayout stored fields
-        // + explicit deinit trigger "Instruction does not dominate all uses!".
-        // See Buffer.Ring.Small for extended rationale.
-        @usableFromInline
-        package enum _ElementsRepr: ~Copyable, @unchecked Sendable {
-            case active(_Elements)
-        }
-
         @usableFromInline
         package var header: Header
 
@@ -34,7 +25,7 @@ extension Buffer.Arena where Element: ~Copyable {
         package var _meta: InlineArray<inlineCapacity, Meta>
 
         @usableFromInline
-        package var _elements: _ElementsRepr
+        package var _elements: _Elements
 
         @inlinable
         package init(
@@ -44,7 +35,7 @@ extension Buffer.Arena where Element: ~Copyable {
         ) {
             self.header = header
             self._meta = _meta
-            self._elements = .active(_elements)
+            self._elements = _elements
         }
 
         /// Errors that can occur during inline arena buffer operations.
@@ -56,7 +47,6 @@ extension Buffer.Arena where Element: ~Copyable {
         }
 
         deinit {
-            guard case .active(var elements) = _elements else { return }
             // WORKAROUND: Uses `for i in` instead of `.forEach` closure
             // WHY: Closures capturing ~Copyable fields of `self` inside deinit trigger
             //      CopiedLoadBorrowEliminationVisitor segfault (swift-frontend signal 11)
@@ -66,7 +56,7 @@ extension Buffer.Arena where Element: ~Copyable {
             for i in 0..<hw {
                 if _meta[i].isOccupied {
                     // Use borrowing pointer + mutating cast: safe in deinit (we own the memory).
-                    unsafe withUnsafePointer(to: elements) { (ptr: UnsafePointer<_Elements>) -> Void in
+                    unsafe withUnsafePointer(to: _elements) { (ptr: UnsafePointer<_Elements>) -> Void in
                         unsafe UnsafeMutableRawPointer(mutating: UnsafeRawPointer(ptr))
                             .advanced(by: i * stride)
                             .assumingMemoryBound(to: Element.self)

@@ -10,39 +10,19 @@ extension Buffer.Ring where Element: ~Copyable {
     /// per-slot bitvector in `Storage.Inline` to deinitialize all
     /// initialized elements.
     public struct Inline<let capacity: Int>: ~Copyable {
-        // WORKAROUND: Enum wrapping for @_rawLayout storage to avoid LLVM verifier
-        // crash in release builds. ~Copyable structs with @_rawLayout stored fields
-        // + explicit deinit trigger "Instruction does not dominate all uses!".
-        // See Buffer.Ring.Small for extended rationale.
-        @usableFromInline
-        package enum _StorageRepr: ~Copyable, @unchecked Sendable {
-            case active(Storage<Element>.Inline<capacity>)
-        }
-
         @usableFromInline
         package var header: Header
 
         @usableFromInline
-        package var _storage: _StorageRepr
-
-        @usableFromInline
-        package var storage: Storage<Element>.Inline<capacity> {
-            _read {
-                switch _storage {
-                case .active(borrowing s):
-                    yield s
-                }
-            }
-        }
+        package var storage: Storage<Element>.Inline<capacity>
 
         @inlinable
         package init(header: Header, storage: consuming Storage<Element>.Inline<capacity>) {
             self.header = header
-            self._storage = .active(storage)
+            self.storage = storage
         }
 
         deinit {
-            guard case .active(var storage) = _storage else { return }
             unsafe storage.deinitialize()
         }
 

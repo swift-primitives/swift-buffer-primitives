@@ -11,28 +11,11 @@ extension Buffer.Slab where Element: ~Copyable {
     /// The bitmap drives cleanup — `Storage.Inline`'s initialization state
     /// stays `.empty`.
     public struct Inline<let wordCount: Int>: ~Copyable {
-        // WORKAROUND: Enum wrapping for @_rawLayout storage to avoid LLVM verifier
-        // crash in release builds. ~Copyable structs with @_rawLayout stored fields
-        // + explicit deinit trigger "Instruction does not dominate all uses!".
-        // See Buffer.Ring.Small for extended rationale.
-        @usableFromInline
-        package enum _StorageRepr: ~Copyable, @unchecked Sendable {
-            case active(Storage<Element>.Inline<wordCount>)
-        }
-
         @usableFromInline
         package var header: Header.Static<wordCount>
 
         @usableFromInline
-        package var _storage: _StorageRepr
-
-        @usableFromInline
-        package var storage: Storage<Element>.Inline<wordCount> {
-            _read {
-                guard case .active(let s) = _storage else { preconditionFailure() }
-                yield s
-            }
-        }
+        package var storage: Storage<Element>.Inline<wordCount>
 
         @inlinable
         package init(
@@ -40,7 +23,7 @@ extension Buffer.Slab where Element: ~Copyable {
             storage: consuming Storage<Element>.Inline<wordCount>
         ) {
             self.header = header
-            self._storage = .active(storage)
+            self.storage = storage
         }
 
         /// Errors that can occur during inline slab buffer operations.
@@ -50,7 +33,6 @@ extension Buffer.Slab where Element: ~Copyable {
         }
 
         deinit {
-            guard case .active(var storage) = _storage else { return }
             // Bitmap-driven cleanup: Storage.Inline's initialization stays .empty,
             // so the bitmap is the sole source of truth for occupied slots.
             // Uses pointer-based deinit — non-mutating read of storage,
