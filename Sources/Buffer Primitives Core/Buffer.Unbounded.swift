@@ -98,13 +98,13 @@ extension Buffer.Unbounded where Element == UInt8 {
     /// "Meaningful bytes" is tracked by `Binary.Cursor.writerIndex`, not here.
     @inlinable
     public var count: Index<Element>.Count {
-        Index<Element>.Count(__unchecked: (), _storage.count)
+        Index<Element>.Count(_storage.count)
     }
 
     /// Alias for `count` (capacity == addressable bytes).
     @inlinable
     public var capacity: Index<Element>.Count {
-        Index<Element>.Count(__unchecked: (), _storage.count)
+        Index<Element>.Count(_storage.count)
     }
 }
 
