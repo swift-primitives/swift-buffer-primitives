@@ -23,7 +23,9 @@ Under what conditions does `~Copyable` struct + `@_rawLayout` stored field + exp
 
 ## Summary
 
-The crash requires the **combination** of: (1) `~Copyable` struct with `@_rawLayout` stored field(s), (2) explicit `deinit` block, (3) `-O` optimization, (4) sufficient cross-module serialized SIL from imported dependencies. Standalone reproducers with local type definitions do NOT crash — the bug is context-sensitive per [EXP-004a].
+The crash requires the **combination** of: (1) `~Copyable` struct with `@_rawLayout` stored field(s), (2) explicit `deinit` block, (3) `-O` optimization, (4) cross-module usage where a consumer stores 2+ fields of the @_rawLayout type.
+
+**UPDATE 2026-03-21**: A standalone minimal reproducer now EXISTS — see `rawlayout-minimal-reproducer/`. The bug reproduces with a 3-module chain (Core → Middleware → Consumer) when the middleware stores 2+ fields of the @_rawLayout type. The earlier claim that "standalone reproducers do NOT crash" was incorrect for the cross-module 2-field pattern.
 
 ### Constraint Triangle (from diagnosis Steps 6-8)
 
@@ -55,9 +57,19 @@ The crash requires the **combination** of: (1) `~Copyable` struct with `@_rawLay
 3. **Same-file extension = extension-file**: Defining Ring.Inline via `extension Buffer.Ring { }` in Buffer.swift (same file) still crashes. The compiler treats ALL extensions identically regardless of file.
 4. **`-disable-llvm-verify` + `-disable-sil-ownership-verifier`**: The combination suppresses both bugs. 391 tests pass.
 
+### Minimal Reproducer Findings (2026-03-21)
+
+A standalone reproducer for Bug 1 was found at `rawlayout-minimal-reproducer/`. Key discoveries:
+
+1. **Cross-module threshold is 2 fields, not 3**: A struct in module B storing 2+ fields of an @_rawLayout+deinit type from module A crashes. Within-module threshold remains ≤2 types in struct body.
+2. **@inlinable NOT required**: Neither on the core type's init nor the consumer struct. The crash is purely structural.
+3. **Same type, different capacities crashes**: `Inline<8>` + `Inline<4>` of the same type triggers it. No need for distinct types.
+4. **Crash is in the consumer module**: Bug1Middleware crashes, not Bug1Core. The @_rawLayout type metadata from Core is incorrectly lowered to LLVM IR when the consumer struct's destructor needs to destroy 2+ @_rawLayout fields.
+5. **Minimal trigger**: Generic enum + @_rawLayout(likeArrayOf: Element, count: capacity) + value generic + deinit + 2+ fields cross-module + release mode. Removing ANY ONE prevents the crash.
+
 ### Production Context
 
-These variants are standalone packages that attempt to reproduce the crash in isolation. Per [EXP-004a], the crash is context-sensitive and requires the full production dependency graph (Storage_Primitives + Cyclic_Index_Primitives + 5+ layers of @inlinable typed infrastructure). The variants document what patterns DON'T crash in isolation, narrowing the search space. The actual crash behavior was verified by modifying Buffer.swift in the production codebase.
+The earlier experiment variants (V01-V08) are standalone packages that test individual patterns. Most don't reproduce the crash because they lack the cross-module 2-field pattern. The `rawlayout-minimal-reproducer/` captures the exact trigger conditions.
 
 ## Build Protocol
 
@@ -73,3 +85,4 @@ swift build -c release 2>&1 | grep -c "Instruction does not dominate"  # Count e
 - [release-crash-resolution-handoff.md](../../Research/release-crash-resolution-handoff.md) — Resolution handoff
 - [rawlayout-sil-ownership-crash](../rawlayout-sil-ownership-crash/) — Bug 2 (SIL ownership)
 - [rawlayout-deinit-alternatives](../rawlayout-deinit-alternatives/) — Workaround exploration
+- [rawlayout-minimal-reproducer](../rawlayout-minimal-reproducer/) — Standalone reproducer (Bug 1 REPRODUCES, Bug 2 does not)

@@ -42,6 +42,15 @@ Two related issues in the SIL optimization pipeline:
 1. **SIL ownership crash is pre-existing**: Happens WITH all 4 Inline deinits intact. Not caused by removing deinits. Was masked by the LLVM verifier crash preventing Core from building.
 2. **Adding deinit to Small types causes 85+ errors**: "cannot partially consume 'self' when it has a deinitializer" — breaks all consuming methods in the Small buffer types.
 
+### Investigation Findings (2026-03-21)
+
+3. **Bug 2 does NOT reproduce in isolation**: 7 standalone patterns tried (see `rawlayout-minimal-reproducer/`), including ~Escapable views with @_lifetime coroutines, ~Copyable enum consuming patterns, bitmap-conditional moves, and @_rawLayout dependency chains. None triggered the crash. Bug 2 is strictly context-sensitive per [EXP-004a].
+4. **Property.View attribution was investigated and rejected**: SIL examination showed `end_lifetime`/`store ... to [init]` conflicts on Property.View.Typed values in Ring.arrayLiteral and Slab.Small.drain. However, source code review confirmed these functions do NOT use Property.View in the attributed way. The SIL patterns are correlated effects of the @_rawLayout + serialized SIL interaction, not the root cause. The original diagnosis (@_rawLayout in serialized SIL) remains correct.
+5. **Affected modules (3 of 12)**: Ring Primitives, Ring Inline Primitives, Slab Inline Primitives. Other 9 downstream modules unaffected. The pattern appears to involve @inlinable functions that trigger generic specialization through the @_rawLayout type paths, but the exact discriminator between affected and unaffected modules is not isolated.
+6. **Removing @inlinable does not help**: WMO (-whole-module-optimization) still optimizes all functions in the module, so removing @inlinable does not prevent CopyPropagation from processing them.
+7. **@_transparent not applicable**: The crashing functions (arrayLiteral with loops, drain with enum switches) are too complex for mandatory inlining.
+8. **@_optimize(none) is unbounded whack-a-mole**: Annotating crashing functions causes new functions to crash as the optimizer shifts its attention.
+
 ## Build Protocol
 
 ```bash
@@ -58,3 +67,4 @@ swift run V03-enum-modify-recovery          # runtime verification
 - [small-buffer-enum-compiler-workarounds.md](../../Research/small-buffer-enum-compiler-workarounds.md) — Bug 2 and 3 documented here
 - [rawlayout-llvm-verifier-crash](../rawlayout-llvm-verifier-crash/) — Bug 1 (LLVM verifier)
 - [rawlayout-deinit-alternatives](../rawlayout-deinit-alternatives/) — Workaround exploration
+- [rawlayout-minimal-reproducer](../rawlayout-minimal-reproducer/) — Bug 2 reproduction attempts (7 patterns, all REFUTED)
