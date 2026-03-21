@@ -93,25 +93,10 @@ let package = Package(
                 .product(name: "Memory Primitives", package: "swift-memory-primitives"),
                 .product(name: "Bit Vector Primitives", package: "swift-bit-vector-primitives"),
             ],
-            // WORKAROUND: Suppress LLVM and SIL verifier crashes in release builds.
-            // WHY: 4 ~Copyable structs with @_rawLayout + deinit trigger an LLVM
-            //      verifier crash ("Instruction does not dominate all uses!") under -O.
-            //      The threshold is ≤2 per module, we have 4. No code-level placement
-            //      can satisfy this — Ring/Linear parents store Storage.Heap (class ref)
-            //      which blocks struct-body pattern, and extension-file/cross-module
-            //      patterns crash with even 1 type.
-            //      Downstream modules do NOT need these flags — all types retain their
-            //      deinit, so the SIL ownership verifier sees well-formed destructors.
-            // WHEN TO REMOVE: When swiftlang/swift fixes the LLVM verifier crash
-            //      for @_rawLayout + deinit under -O.
-            // TRACKING: Research/release-mode-llvm-verifier-crash-diagnosis.md
-            swiftSettings: [
-                .unsafeFlags(
-                    ["-Xfrontend", "-disable-llvm-verify",
-                     "-Xfrontend", "-disable-sil-ownership-verifier"],
-                    .when(configuration: .release)
-                ),
-            ]
+            // RESOLVED: LLVM and SIL verifier crashes eliminated by moving
+            // Inline types from extension-file pattern to struct-body pattern.
+            // See Research/release-mode-llvm-verifier-crash-diagnosis.md
+            swiftSettings: []
         ),
 
         // MARK: - Ring
@@ -367,22 +352,5 @@ for target in package.targets where ![.system, .binary, .plugin, .macro].contain
         .enableExperimentalFeature("RawLayout"),
     ]
 
-    // WORKAROUND: Suppress SIL ownership verifier crash in release builds.
-    // WHY: @_rawLayout types trigger SIL ownership errors in CopyPropagation
-    //      under -O. This is a pre-existing compiler bug, not caused by our code.
-    //      The verifier catches a false positive — the SIL is correct, but the
-    //      verifier's ownership model doesn't account for @_rawLayout destruction.
-    //      391 tests pass, confirming runtime correctness.
-    // SCOPE: This flag is package-local. Downstream consumers do NOT need it
-    //      unless they also trigger CopyPropagation on @_rawLayout types.
-    // WHEN TO REMOVE: When swiftlang/swift fixes the SIL ownership verifier
-    //      for @_rawLayout types.
-    let releaseWorkarounds: [SwiftSetting] = [
-        .unsafeFlags(
-            ["-Xfrontend", "-disable-sil-ownership-verifier"],
-            .when(configuration: .release)
-        ),
-    ]
-
-    target.swiftSettings = (target.swiftSettings ?? []) + ecosystem + package + releaseWorkarounds
+    target.swiftSettings = (target.swiftSettings ?? []) + ecosystem + package
 }

@@ -188,6 +188,9 @@ extension Buffer.Slab.Small where Element: ~Copyable {
 // MARK: - Sequence.Drain.Protocol
 
 extension Buffer.Slab.Small: Sequence.Drain.`Protocol` where Element: ~Copyable {
+    // WORKAROUND: @_optimize(none) — CopyPropagation SIL ownership crash.
+    // TRACKING: Research/release-mode-llvm-verifier-crash-diagnosis.md
+    @_optimize(none)
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         switch _storage {

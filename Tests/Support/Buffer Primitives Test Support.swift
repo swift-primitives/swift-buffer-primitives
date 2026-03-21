@@ -1,6 +1,9 @@
 // MARK: - Ring
 
 extension Buffer.Ring {
+    // WORKAROUND: @_optimize(none) — CopyPropagation SIL ownership crash.
+    // TRACKING: Research/release-mode-llvm-verifier-crash-diagnosis.md
+    @_optimize(none)
     @inlinable
     public init(_ elements: [Element], minimumCapacity: UInt = 0) {
         let cap: Index<Element>.Count = .init(Cardinal(Swift.max(UInt(elements.count), minimumCapacity)))
@@ -13,6 +16,9 @@ extension Buffer.Ring {
 }
 
 extension Buffer.Ring.Small {
+    // WORKAROUND: @_optimize(none) — CopyPropagation SIL ownership crash.
+    // TRACKING: Research/release-mode-llvm-verifier-crash-diagnosis.md
+    @_optimize(none)
     @inlinable
     public init(_ elements: [Element]) {
         var buffer = Self()
@@ -26,6 +32,9 @@ extension Buffer.Ring.Small {
 // MARK: - Linear
 
 extension Buffer.Linear {
+    // WORKAROUND: @_optimize(none) — CopyPropagation SIL ownership crash.
+    // TRACKING: Research/release-mode-llvm-verifier-crash-diagnosis.md
+    @_optimize(none)
     @inlinable
     public init(_ elements: [Element], minimumCapacity: UInt = 0) {
         let cap: Index<Element>.Count = .init(Cardinal(Swift.max(UInt(elements.count), minimumCapacity)))
@@ -38,6 +47,9 @@ extension Buffer.Linear {
 }
 
 extension Buffer.Linear.Small {
+    // WORKAROUND: @_optimize(none) — CopyPropagation SIL ownership crash.
+    // TRACKING: Research/release-mode-llvm-verifier-crash-diagnosis.md
+    @_optimize(none)
     @inlinable
     public init(_ elements: [Element]) {
         var buffer = Self()
