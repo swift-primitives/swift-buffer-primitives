@@ -20,7 +20,7 @@ import Storage_Inline_Primitives
 // --- Marker type to track deinit calls ---
 
 final class Marker: @unchecked Sendable {
-    static var deinitCount = 0
+    nonisolated(unsafe) static var deinitCount = 0
 
     let id: Int
     init(_ id: Int) { self.id = id }

@@ -50,6 +50,8 @@ Two related issues in the SIL optimization pipeline:
 6. **Removing @inlinable does not help**: WMO (-whole-module-optimization) still optimizes all functions in the module, so removing @inlinable does not prevent CopyPropagation from processing them.
 7. **@_transparent not applicable**: The crashing functions (arrayLiteral with loops, drain with enum switches) are too complex for mandatory inlining.
 8. **@_optimize(none) is unbounded whack-a-mole**: Annotating crashing functions causes new functions to crash as the optimizer shifts its attention.
+9. **AnyObject? workaround does NOT fix Bug 2**: Adding `_deinitWorkaround: AnyObject? = nil` to all 4 Inline types (to force non-trivial destructibility) and suppressing Bug 1 with `-disable-llvm-verify` on Core only — Bug 2 still crashes in Buffer Ring Primitives. The triviality classification change does not affect the SIL ownership verifier's handling of @_rawLayout types.
+10. **Bug 2 is fully independent of Bug 1's workaround**: Every mitigation tested for Bug 1 (AnyObject?, field count changes, @inlinable removal) has zero effect on Bug 2. The two bugs share the same root cause (@_rawLayout cross-module mishandling) but manifest in different compiler passes (LLVM IR vs SIL) and require separate flags to suppress.
 
 ## Build Protocol
 

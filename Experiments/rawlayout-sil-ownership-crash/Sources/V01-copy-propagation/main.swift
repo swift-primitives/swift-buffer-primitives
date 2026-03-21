@@ -22,53 +22,45 @@ import V01_copy_propagation_lib
 
 // --- V3: Nested in generic enum (matches Buffer<Element> pattern) ---
 
-public enum Container<Element: ~Copyable> {
+enum Container<Element: ~Copyable> {
 
-    @frozen
-    public struct Inline: ~Copyable {
-        public var storage: InlineStorage<Element>
-        public var count: Int
+    struct Inline: ~Copyable {
+        var storage: InlineStorage<Element>
+        var count: Int
 
-        @inlinable
-        public init(capacity: Int) {
+        init(capacity: Int) {
             self.storage = InlineStorage(capacity: capacity)
             self.count = 0
         }
 
-        @inlinable
-        public mutating func append(_ element: consuming Element) {
+        mutating func append(_ element: consuming Element) {
             storage.initialize(to: consume element, at: count)
             count += 1
         }
 
-        @inlinable
-        public func move(at index: Int) -> Element {
+        func move(at index: Int) -> Element {
             storage.move(at: index)
         }
     }
 
-    @frozen
-    public struct Small: ~Copyable {
+    struct Small: ~Copyable {
         @frozen
-        public enum _Representation: ~Copyable {
+        enum _Representation: ~Copyable {
             case inline(Inline)
             case heap(HeapStorage<Element>)
         }
 
-        public var _storage: _Representation
+        var _storage: _Representation
 
-        @inlinable
-        public init(capacity: Int) {
+        init(capacity: Int) {
             self._storage = .inline(Inline(capacity: capacity))
         }
 
-        @inlinable
         init(_storage: consuming _Representation) {
             self._storage = consume _storage
         }
 
-        @inlinable
-        public mutating func append(_ element: consuming Element) {
+        mutating func append(_ element: consuming Element) {
             switch _storage {
             case .inline(var buf):
                 if buf.count < buf.storage.capacity {
@@ -88,8 +80,7 @@ public enum Container<Element: ~Copyable> {
             }
         }
 
-        @inlinable
-        public mutating func _appendToHeap(_ element: consuming Element) {
+        mutating func _appendToHeap(_ element: consuming Element) {
             switch _storage {
             case .inline(var buf):
                 self = Small(_storage: .inline(consume buf))
@@ -104,32 +95,27 @@ public enum Container<Element: ~Copyable> {
 
 // --- V5: Slab with value generic + bitmap ---
 
-public enum SlabContainer<Element: ~Copyable> {
+enum SlabContainer<Element: ~Copyable> {
 
-    @frozen
-    public struct Inline<let wordCount: Int>: ~Copyable {
-        public var storage: InlineStorage<Element>
-        public var bitmap: UInt64
+    struct Inline<let wordCount: Int>: ~Copyable {
+        var storage: InlineStorage<Element>
+        var bitmap: UInt64
 
-        @inlinable
-        public init() {
+        init() {
             self.storage = InlineStorage(capacity: wordCount)
             self.bitmap = 0
         }
 
-        @inlinable
-        public func isOccupied(_ index: Int) -> Bool {
+        func isOccupied(_ index: Int) -> Bool {
             (bitmap >> index) & 1 == 1
         }
 
-        @inlinable
-        public mutating func insert(_ element: consuming Element, at index: Int) {
+        mutating func insert(_ element: consuming Element, at index: Int) {
             storage.initialize(to: element, at: index)
             bitmap |= (1 << index)
         }
 
-        @inlinable
-        public mutating func removeAll() {
+        mutating func removeAll() {
             for i in 0..<wordCount {
                 if isOccupied(i) {
                     storage.deinitialize(at: i)

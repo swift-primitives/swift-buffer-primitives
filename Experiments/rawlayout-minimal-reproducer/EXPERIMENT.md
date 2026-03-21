@@ -86,6 +86,12 @@ fatal error encountered during compilation
 3. **Same type, different capacities crashes** — `Inline<8>` + `Inline<4>` of the same type triggers it. No need for distinct types.
 4. **The crash is in the consumer module** — Bug1Middleware crashes, not Bug1Core. The @_rawLayout type metadata from Bug1Core is incorrectly lowered to LLVM IR when the consuming module's struct destructor needs to destroy 2+ @_rawLayout fields.
 
+### Important Caveat: Reproducer vs Production Trigger Paths
+
+This reproducer captures the **consumer-module 2-field** trigger path. The production crash in Buffer Primitives Core uses a **different** trigger path: extension-file defined @_rawLayout+deinit types under WMO. The `AnyObject?` triviality workaround fixes THIS reproducer but does NOT fix the production crash. See `rawlayout-llvm-verifier-crash/EXPERIMENT.md` "AnyObject? Workaround Test" for details.
+
+The reproducer is still valuable for filing against swiftlang/swift — it demonstrates the same underlying bug (triviality misclassification for cross-module @_rawLayout types) via a simpler trigger path.
+
 ## Bug 2: CopyPropagation Ownership Crash
 
 ### Status: DOES NOT REPRODUCE

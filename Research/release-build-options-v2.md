@@ -50,23 +50,15 @@ These `.unsafeFlags` block Swift Package Registry distribution and may infect do
 
 ---
 
-### Option 2: Reduce to ≤1 Cross-Module @_rawLayout+deinit Field per Consumer Struct
+### ~~Option 2: AnyObject? Triviality Workaround~~ (INVALIDATED)
 
-**What**: Restructure the 4 Inline types so that no single struct stores 2+ cross-module @_rawLayout+deinit fields. This could mean:
-- Wrapping 2+ Inline fields in a single intermediate struct (within the same module as the definition)
-- Or keeping only 1 Inline field per consumer struct
+**What**: Add `_deinitWorkaround: AnyObject? = nil` to all 4 Inline types. Forces non-trivial destructibility classification, preventing the triviality misclassification documented in swiftlang/swift#86652.
 
-**Correctness**: Preserves deinits. But requires significant refactoring of how Inline types are composed.
+**Status**: **INVALIDATED** — tested empirically 2026-03-21. Works for the minimal reproducer (consumer-module 2-field pattern) but does NOT fix the production crash (extension-file pattern under WMO). Also does NOT fix Bug 2 (SIL ownership crash persists in Ring Primitives even with AnyObject? applied and Bug 1 suppressed).
 
-**Downstream impact**: None — the fix is structural, not flag-based.
+**Evidence**: See `rawlayout-llvm-verifier-crash/EXPERIMENT.md` "AnyObject? Workaround Test" section.
 
-**Performance**: Depends on the refactoring. Wrapper structs add indirection.
-
-**Reversibility**: Moderate. The refactoring could be unwound, but would touch many files.
-
-**Evidence**: `rawlayout-minimal-reproducer/` confirms 1 field = OK, 2+ fields = crash. The threshold is sharp.
-
-**Why it ranks second**: Addresses Bug 1 without flags, but doesn't address Bug 2. Also, the current production code has 4 Inline types as siblings in Buffer (each is a separate type, not 2+ fields in one struct), so this may not apply directly — the production crash trigger may be different from the reproducer's 2-field pattern.
+**Why it fails**: The production crash uses the extension-file trigger path (types defined via `extension` under WMO), not the consumer-module 2-field path that the minimal reproducer captures. These are different LLVM IR lowering paths, and triviality reclassification only fixes the latter.
 
 ---
 

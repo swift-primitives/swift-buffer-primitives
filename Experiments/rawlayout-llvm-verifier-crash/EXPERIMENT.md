@@ -67,9 +67,23 @@ A standalone reproducer for Bug 1 was found at `rawlayout-minimal-reproducer/`. 
 4. **Crash is in the consumer module**: Bug1Middleware crashes, not Bug1Core. The @_rawLayout type metadata from Core is incorrectly lowered to LLVM IR when the consumer struct's destructor needs to destroy 2+ @_rawLayout fields.
 5. **Minimal trigger**: Generic enum + @_rawLayout(likeArrayOf: Element, count: capacity) + value generic + deinit + 2+ fields cross-module + release mode. Removing ANY ONE prevents the crash.
 
+### AnyObject? Workaround Test (2026-03-21)
+
+The `_deinitWorkaround: AnyObject? = nil` pattern (from swiftlang/swift#86652) was tested on all 4 Inline types. It forces non-trivial destructibility classification, which fixes the **minimal reproducer** (consumer-module 2-field pattern). However, it does **NOT** fix the production crash:
+
+| Configuration | Bug 1 (LLVM verifier) | Bug 2 (SIL ownership) |
+|---------------|----------------------|----------------------|
+| AnyObject? on 4 Inline types, NO flags | **Still crashes** (4 errors in Core) | Not reached |
+| AnyObject? + `-disable-llvm-verify` on Core only | Suppressed by flag | **Still crashes** (Ring Primitives) |
+| Original flags (both) + AnyObject? | Suppressed | Suppressed |
+
+**Why it fails in production but works in the reproducer**: The minimal reproducer uses the consumer-module 2-field pattern (struct in module B stores 2+ fields from module A). The production code uses the extension-file pattern (types defined via `extension` in the defining module under WMO). These are different trigger paths. Adding `AnyObject?` changes the type's triviality classification but doesn't fix the LLVM IR lowering for extension-defined @_rawLayout+deinit types under WMO.
+
+**Conclusion**: `AnyObject?` is NOT a viable workaround for the production crash. The `.unsafeFlags` remain the only working solution.
+
 ### Production Context
 
-The earlier experiment variants (V01-V08) are standalone packages that test individual patterns. Most don't reproduce the crash because they lack the cross-module 2-field pattern. The `rawlayout-minimal-reproducer/` captures the exact trigger conditions.
+The experiment variants (V01-V08) are standalone packages that test individual patterns. The `rawlayout-minimal-reproducer/` captures the consumer-module 2-field trigger, but this is a DIFFERENT trigger path from production. The production crash (extension-file pattern under WMO) has no standalone reproducer — it requires the full Buffer Primitives Core module.
 
 ## Build Protocol
 

@@ -7,43 +7,52 @@
 // Toolchain: Swift 6.2.4 (Xcode, arm64 macOS 26)
 // Platform: macOS 26.0 (arm64)
 //
-// Result: CONFIRMED — @_unsafeNonescapableResult on `get` accessor (not `_read`)
-//         enables ~Escapable values in deinit. Combined with `mutating _modify`
-//         for tracked operations. This is THE solution for Property.View accessors.
+// Result: CONFIRMED — @_unsafeNonescapableResult on `get` accessor (not on the
+//         property declaration itself) enables ~Escapable values in deinit.
+//         Combined with `mutating _modify` for tracked operations under a single
+//         property name. This is THE solution for Property.View accessors.
 //
-//         REFUTED: _read accessor (V1-V5, V8, V10, V13) — "lifetime-dependent
-//                  value escapes its scope"
-//         CONFIRMED: get + @_unsafeNonescapableResult (V17, V18) — works
-//         COMPILER BUG: @_unsafeNonescapableResult on _read (V14, V15) — signal 6
+//         KEY SYNTAX: attribute goes on the GETTER, not the property:
+//           var view: View {
+//               @_unsafeNonescapableResult
+//               get { ... }
+//           }
+//
+//         REFUTED: _read accessor — "lifetime-dependent value escapes its scope"
+//         CONFIRMED: get + @_unsafeNonescapableResult on getter — works in deinit
+//         CONFIRMED: get + _modify combined under single property — works
+//         COMPILER BUG: @_unsafeNonescapableResult on _read — signal 6
 //
 // Date: 2026-03-21
 //
-// Consolidates: escapable-deinit-lifetime (18 variants)
+// Consolidates: escapable-deinit-lifetime (18 variants, especially V17, V18)
 // Supports: escapable-deinit-lifetime.md, Property.View accessor pattern
 
 // --- Setup: Simulated Property.View pattern ---
+
+struct View: ~Escapable {
+    var value: Int
+
+    @_unsafeNonescapableResult
+    init(value: Int) {
+        self.value = value
+    }
+}
+
+// --- CONFIRMED: @_unsafeNonescapableResult on get accessor ---
+// The attribute MUST be on the `get` accessor, NOT on the property declaration.
+// `get` returns @owned values, so the lifetime suppression works.
+// `_read` yields @guaranteed values — attribute crashes the compiler (Bug).
 
 struct Owner: ~Copyable {
     var _value: Int
 
     init(_ value: Int) { self._value = value }
 
-    // --- REFUTED approach: _read yields @guaranteed (carries lifetime) ---
-    // var view_read: BorrowedView {
-    //     _read {
-    //         yield BorrowedView(value: _value)  // ERROR in deinit
-    //     }
-    // }
-
-    // --- CONFIRMED approach: get returns @owned (no lifetime dependence) ---
-
-    @_unsafeNonescapableResult
+    // Single property with both read (get) and mutate (_modify) paths.
+    // get: used in deinit (non-mutating context)
+    // _modify: used in mutating context
     var view: View {
-        get { View(value: _value) }
-    }
-
-    // Mutating path still uses _modify for tracked operations
-    var mutableView: View {
         @_unsafeNonescapableResult
         get { View(value: _value) }
         _modify {
@@ -54,18 +63,9 @@ struct Owner: ~Copyable {
     }
 
     deinit {
-        // This works because `view` uses `get` (returns @owned)
+        // This works because `view` getter uses @_unsafeNonescapableResult
         let v = view
         print("  Owner deinit: value=\(v.value)")
-    }
-}
-
-struct View: ~Escapable {
-    var value: Int
-
-    @_unsafeNonescapableResult
-    init(value: Int) {
-        self.value = value
     }
 }
 
@@ -90,12 +90,12 @@ struct V9_Closure: ~Copyable {
 // --- Tests ---
 
 func testOwner() {
-    print("=== V17/V18: get + @_unsafeNonescapableResult ===")
+    print("=== get + @_unsafeNonescapableResult (on getter) ===")
     do {
         var owner = Owner(42)
         print("  Read: \(owner.view.value)")
-        owner.mutableView.value = 99
-        print("  After modify: \(owner.mutableView.value)")
+        owner.view.value = 99
+        print("  After modify: \(owner.view.value)")
         // deinit prints the final value
     }
 }
@@ -113,8 +113,9 @@ testV9()
 
 print("\nSUMMARY:")
 print("  `_read` in deinit: BLOCKED — yields @guaranteed, carries lifetime")
-print("  `get` + @_unsafeNonescapableResult: WORKS — returns @owned, no lifetime")
+print("  `get` + @_unsafeNonescapableResult ON GETTER: WORKS — returns @owned")
+print("  @_unsafeNonescapableResult ON PROPERTY: REJECTED — wrong placement")
 print("  `_read` + @_unsafeNonescapableResult: COMPILER CRASH (signal 6)")
 print("  withUnsafePointer closure: WORKS — alternative when _read not needed")
-print("\n  THE SOLUTION: @_unsafeNonescapableResult on `get` accessor")
+print("\n  THE SOLUTION: @_unsafeNonescapableResult on `get` accessor (not property)")
 print("  Combined with `mutating _modify` for tracked mutation paths.")

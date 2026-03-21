@@ -22,6 +22,7 @@ extension Container {
 
         @_rawLayout(likeArrayOf: Element, count: capacity)
         public struct Inline<let capacity: Int>: ~Copyable {
+            public init() {}
             deinit { }
         }
 
