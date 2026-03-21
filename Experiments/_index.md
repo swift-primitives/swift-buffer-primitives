@@ -18,6 +18,7 @@
 | **[rawlayout-deinit-alternatives](rawlayout-deinit-alternatives/)** | **Consolidated**: deinit workaround alternatives — 4 variants (V01-V04) covering discard self, guard idempotence, escapable lifetime, slab bitmap cleanup | 2026-03-21 | Swift 6.2.4 | CONFIRMED |
 | **[rawlayout-minimal-reproducer](rawlayout-minimal-reproducer/)** | Standalone minimal reproducer: Bug 1 REPRODUCES (3-module chain, 2+ cross-module @_rawLayout fields), Bug 2 does NOT reproduce (7 patterns tried) | 2026-03-21 | Swift 6.2.4 | Bug 1: CONFIRMED, Bug 2: REFUTED |
 | [noncopyable-nested-deinit-chain](noncopyable-nested-deinit-chain/) | 3-package nested ~Copyable deinit chain reproducer (swiftlang/swift#86652). Moved from swift-institute. | 2026-03-21 | Swift 6.2.4 | CONFIRMED (production only) |
+| **[rawlayout-access-level-trigger](rawlayout-access-level-trigger/)** | Access level is an independent trigger: `internal` builds, `public`/`package` crash. **Canary for compiler fix — when this passes with `public`, all 22 `_deinitWorkaround` sites can be removed.** | 2026-03-21 | Swift 6.2.4 / 6.4-dev | CONFIRMED |
 
 ### Removed (2026-03-21)
 
