@@ -22,3 +22,6 @@
 | [implementation-skill-audit](implementation-skill-audit.md) | Tier 1: Implementation skill audit — import gaps vs infrastructure gaps for typed boundary overloads | 2026-02-12 | RECOMMENDATION |
 | [bounded-index-parameter-syntax](bounded-index-parameter-syntax.md) | Tier 1: Bounded parameter syntax — accept bounded at API boundary, let retag carry the bound | 2026-02-12 | RECOMMENDATION |
 | [storage-pointer-access-level](storage-pointer-access-level.md) | Tier 1: Promote Storage.Heap/Pool pointer(at:) from package to public for buffer-layer access | 2026-02-15 | DECISION |
+| [release-mode-llvm-verifier-crash-diagnosis](release-mode-llvm-verifier-crash-diagnosis.md) | Authoritative diagnosis: @_rawLayout + deinit + -O LLVM verifier crash (Steps 1-8) | 2026-03-20 | OPEN |
+| [rawlayout-release-crash-investigation](rawlayout-release-crash-investigation.md) | Consolidated investigation: timeline, 2-field rule, Storage.Inline deinit analysis, GitHub issue reproducer | 2026-03-21 | OPEN |
+| [release-build-options-v2](release-build-options-v2.md) | Ranked alternatives for release build workaround | 2026-03-21 | RECOMMENDATION |
