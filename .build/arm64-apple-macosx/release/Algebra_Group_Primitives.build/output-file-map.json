@@ -1,0 +1,55 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra_Group_Primitives.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra_Group_Primitives.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-group-primitives/Sources/Algebra Group Primitives/Algebra.Group+Monoid.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group+Monoid.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group+Monoid~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group+Monoid.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group+Monoid.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-group-primitives/Sources/Algebra Group Primitives/Algebra.Group+Parity.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group+Parity.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group+Parity~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group+Parity.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group+Parity.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-group-primitives/Sources/Algebra Group Primitives/Algebra.Group+Z2.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group+Z2.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group+Z2~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group+Z2.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group+Z2.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-group-primitives/Sources/Algebra Group Primitives/Algebra.Group.Abelian+Group.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group.Abelian+Group.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group.Abelian+Group~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group.Abelian+Group.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group.Abelian+Group.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-group-primitives/Sources/Algebra Group Primitives/Algebra.Group.Abelian+Z2.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group.Abelian+Z2.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group.Abelian+Z2~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group.Abelian+Z2.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group.Abelian+Z2.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-group-primitives/Sources/Algebra Group Primitives/Algebra.Group.Abelian.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group.Abelian.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group.Abelian~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group.Abelian.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group.Abelian.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-group-primitives/Sources/Algebra Group Primitives/Algebra.Group.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/Algebra.Group.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-group-primitives/Sources/Algebra Group Primitives/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Group_Primitives.build/exports.dia"
+  }
+}

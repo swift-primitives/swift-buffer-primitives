@@ -1,0 +1,31 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Primitives_Core.build/Buffer_Primitives_Core.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Primitives_Core.build/Buffer_Primitives_Core.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Primitives_Core.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Primitives Core/Buffer.Growth.Policy.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Primitives_Core.build/Buffer.Growth.Policy.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Primitives_Core.build/Buffer.Growth.Policy~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Primitives_Core.build/Buffer.Growth.Policy.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Primitives_Core.build/Buffer.Growth.Policy.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Primitives Core/Buffer.Growth.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Primitives_Core.build/Buffer.Growth.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Primitives_Core.build/Buffer.Growth~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Primitives_Core.build/Buffer.Growth.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Primitives_Core.build/Buffer.Growth.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Primitives Core/Buffer.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Primitives_Core.build/Buffer.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Primitives_Core.build/Buffer~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Primitives_Core.build/Buffer.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Primitives_Core.build/Buffer.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Primitives Core/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Primitives_Core.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Primitives_Core.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Primitives_Core.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Primitives_Core.build/exports.dia"
+  }
+}

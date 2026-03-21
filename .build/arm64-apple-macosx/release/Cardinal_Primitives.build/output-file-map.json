@@ -1,0 +1,31 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cardinal_Primitives.build/Cardinal_Primitives.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cardinal_Primitives.build/Cardinal_Primitives.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cardinal_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cardinal-primitives/Sources/Cardinal Primitives/Tagged+Cardinal.Add.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cardinal_Primitives.build/Tagged+Cardinal.Add.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cardinal_Primitives.build/Tagged+Cardinal.Add~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cardinal_Primitives.build/Tagged+Cardinal.Add.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cardinal_Primitives.build/Tagged+Cardinal.Add.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cardinal-primitives/Sources/Cardinal Primitives/Tagged+Cardinal.Subtract.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cardinal_Primitives.build/Tagged+Cardinal.Subtract.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cardinal_Primitives.build/Tagged+Cardinal.Subtract~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cardinal_Primitives.build/Tagged+Cardinal.Subtract.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cardinal_Primitives.build/Tagged+Cardinal.Subtract.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cardinal-primitives/Sources/Cardinal Primitives/Tagged+Cardinal.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cardinal_Primitives.build/Tagged+Cardinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cardinal_Primitives.build/Tagged+Cardinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cardinal_Primitives.build/Tagged+Cardinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cardinal_Primitives.build/Tagged+Cardinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cardinal-primitives/Sources/Cardinal Primitives/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cardinal_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cardinal_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cardinal_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cardinal_Primitives.build/exports.dia"
+  }
+}

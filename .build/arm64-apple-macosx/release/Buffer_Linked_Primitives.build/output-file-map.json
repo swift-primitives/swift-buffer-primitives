@@ -1,0 +1,37 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/Buffer_Linked_Primitives.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/Buffer_Linked_Primitives.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Linked Primitives/Buffer.Linked Copyable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/Buffer.Linked Copyable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/Buffer.Linked Copyable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/Buffer.Linked Copyable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/Buffer.Linked Copyable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Linked Primitives/Buffer.Linked ~Copyable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/Buffer.Linked ~Copyable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/Buffer.Linked ~Copyable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/Buffer.Linked ~Copyable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/Buffer.Linked ~Copyable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Linked Primitives/Buffer.Linked+Consume.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/Buffer.Linked+Consume.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/Buffer.Linked+Consume~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/Buffer.Linked+Consume.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/Buffer.Linked+Consume.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Linked Primitives/Buffer.Linked+Pool ~Copyable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/Buffer.Linked+Pool ~Copyable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/Buffer.Linked+Pool ~Copyable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/Buffer.Linked+Pool ~Copyable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/Buffer.Linked+Pool ~Copyable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Linked Primitives/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linked_Primitives.build/exports.dia"
+  }
+}

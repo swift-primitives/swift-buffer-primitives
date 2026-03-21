@@ -1,0 +1,61 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic_Primitives.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic_Primitives.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-optic-primitives/Sources/Optic Primitives/Optic.Affine.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Affine.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Affine~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Affine.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Affine.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-optic-primitives/Sources/Optic Primitives/Optic.Iso.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Iso.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Iso~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Iso.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Iso.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-optic-primitives/Sources/Optic Primitives/Optic.Lens.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Lens.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Lens~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Lens.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Lens.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-optic-primitives/Sources/Optic Primitives/Optic.Operators.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Operators.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Operators~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Operators.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Operators.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-optic-primitives/Sources/Optic Primitives/Optic.Prism.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Prism.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Prism~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Prism.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Prism.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-optic-primitives/Sources/Optic Primitives/Optic.Traversal.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Traversal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Traversal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Traversal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.Traversal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-optic-primitives/Sources/Optic Primitives/Optic.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optic.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-optic-primitives/Sources/Optic Primitives/Optional+Prism.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optional+Prism.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optional+Prism~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optional+Prism.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Optional+Prism.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-optic-primitives/Sources/Optic Primitives/Result+Prism.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Result+Prism.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Result+Prism~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Result+Prism.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Optic_Primitives.build/Result+Prism.dia"
+  }
+}

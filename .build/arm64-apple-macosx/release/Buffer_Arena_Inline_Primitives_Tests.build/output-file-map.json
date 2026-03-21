@@ -1,0 +1,25 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Arena_Inline_Primitives_Tests.build/Buffer_Arena_Inline_Primitives_Tests.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Arena_Inline_Primitives_Tests.build/Buffer_Arena_Inline_Primitives_Tests.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Arena_Inline_Primitives_Tests.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Tests/Buffer Arena Inline Primitives Tests/Buffer.Arena.Inline Canary Tests.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Arena_Inline_Primitives_Tests.build/Buffer.Arena.Inline Canary Tests.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Arena_Inline_Primitives_Tests.build/Buffer.Arena.Inline Canary Tests~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Arena_Inline_Primitives_Tests.build/Buffer.Arena.Inline Canary Tests.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Arena_Inline_Primitives_Tests.build/Buffer.Arena.Inline Canary Tests.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Tests/Buffer Arena Inline Primitives Tests/Buffer.Arena.Inline Tests.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Arena_Inline_Primitives_Tests.build/Buffer.Arena.Inline Tests.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Arena_Inline_Primitives_Tests.build/Buffer.Arena.Inline Tests~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Arena_Inline_Primitives_Tests.build/Buffer.Arena.Inline Tests.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Arena_Inline_Primitives_Tests.build/Buffer.Arena.Inline Tests.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Tests/Buffer Arena Inline Primitives Tests/Buffer.Arena.Small Tests.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Arena_Inline_Primitives_Tests.build/Buffer.Arena.Small Tests.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Arena_Inline_Primitives_Tests.build/Buffer.Arena.Small Tests~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Arena_Inline_Primitives_Tests.build/Buffer.Arena.Small Tests.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Arena_Inline_Primitives_Tests.build/Buffer.Arena.Small Tests.dia"
+  }
+}

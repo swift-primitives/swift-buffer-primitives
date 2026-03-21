@@ -1,0 +1,55 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage_Split_Primitives.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage_Split_Primitives.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-storage-primitives/Sources/Storage Split Primitives/Storage.Field.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Field.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Field~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Field.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Field.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-storage-primitives/Sources/Storage Split Primitives/Storage.Split Copyable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split Copyable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split Copyable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split Copyable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split Copyable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-storage-primitives/Sources/Storage Split Primitives/Storage.Split ~Copyable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split ~Copyable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split ~Copyable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split ~Copyable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split ~Copyable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-storage-primitives/Sources/Storage Split Primitives/Storage.Split+Deinitialize.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split+Deinitialize.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split+Deinitialize~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split+Deinitialize.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split+Deinitialize.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-storage-primitives/Sources/Storage Split Primitives/Storage.Split+Initialize.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split+Initialize.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split+Initialize~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split+Initialize.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split+Initialize.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-storage-primitives/Sources/Storage Split Primitives/Storage.Split+Move.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split+Move.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split+Move~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split+Move.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split+Move.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-storage-primitives/Sources/Storage Split Primitives/Storage.Split.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/Storage.Split.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-storage-primitives/Sources/Storage Split Primitives/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Split_Primitives.build/exports.dia"
+  }
+}

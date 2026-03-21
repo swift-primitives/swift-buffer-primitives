@@ -1,0 +1,475 @@
+{
+  "object" : {
+    "artifacts" : [
+
+    ],
+    "dependencies" : [
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-affine-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-affine-primitives",
+          "name" : "swift-affine-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-affine-primitives"
+        },
+        "subpath" : "swift-affine-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-algebra-field-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-algebra-field-primitives",
+          "name" : "swift-algebra-field-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-algebra-field-primitives"
+        },
+        "subpath" : "swift-algebra-field-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-algebra-group-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-algebra-group-primitives",
+          "name" : "swift-algebra-group-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-algebra-group-primitives"
+        },
+        "subpath" : "swift-algebra-group-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-algebra-magma-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-algebra-magma-primitives",
+          "name" : "swift-algebra-magma-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-algebra-magma-primitives"
+        },
+        "subpath" : "swift-algebra-magma-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-algebra-monoid-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-algebra-monoid-primitives",
+          "name" : "swift-algebra-monoid-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-algebra-monoid-primitives"
+        },
+        "subpath" : "swift-algebra-monoid-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-algebra-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-algebra-primitives",
+          "name" : "swift-algebra-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-algebra-primitives"
+        },
+        "subpath" : "swift-algebra-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-algebra-ring-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-algebra-ring-primitives",
+          "name" : "swift-algebra-ring-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-algebra-ring-primitives"
+        },
+        "subpath" : "swift-algebra-ring-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-algebra-semiring-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-algebra-semiring-primitives",
+          "name" : "swift-algebra-semiring-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-algebra-semiring-primitives"
+        },
+        "subpath" : "swift-algebra-semiring-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-bit-index-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-bit-index-primitives",
+          "name" : "swift-bit-index-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-bit-index-primitives"
+        },
+        "subpath" : "swift-bit-index-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-bit-pack-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-bit-pack-primitives",
+          "name" : "swift-bit-pack-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-bit-pack-primitives"
+        },
+        "subpath" : "swift-bit-pack-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-bit-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-bit-primitives",
+          "name" : "swift-bit-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-bit-primitives"
+        },
+        "subpath" : "swift-bit-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-bit-vector-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-bit-vector-primitives",
+          "name" : "swift-bit-vector-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-bit-vector-primitives"
+        },
+        "subpath" : "swift-bit-vector-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-cardinal-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-cardinal-primitives",
+          "name" : "swift-cardinal-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-cardinal-primitives"
+        },
+        "subpath" : "swift-cardinal-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-collection-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-collection-primitives",
+          "name" : "swift-collection-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-collection-primitives"
+        },
+        "subpath" : "swift-collection-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-comparison-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-comparison-primitives",
+          "name" : "swift-comparison-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-comparison-primitives"
+        },
+        "subpath" : "swift-comparison-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-cyclic-index-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-cyclic-index-primitives",
+          "name" : "swift-cyclic-index-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-cyclic-index-primitives"
+        },
+        "subpath" : "swift-cyclic-index-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-cyclic-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-cyclic-primitives",
+          "name" : "swift-cyclic-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-cyclic-primitives"
+        },
+        "subpath" : "swift-cyclic-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-dependency-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-dependency-primitives",
+          "name" : "swift-dependency-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-dependency-primitives"
+        },
+        "subpath" : "swift-dependency-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-equation-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-equation-primitives",
+          "name" : "swift-equation-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-equation-primitives"
+        },
+        "subpath" : "swift-equation-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-finite-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-finite-primitives",
+          "name" : "swift-finite-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-finite-primitives"
+        },
+        "subpath" : "swift-finite-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-hash-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-hash-primitives",
+          "name" : "swift-hash-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-hash-primitives"
+        },
+        "subpath" : "swift-hash-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-identity-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-identity-primitives",
+          "name" : "swift-identity-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-identity-primitives"
+        },
+        "subpath" : "swift-identity-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-index-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-index-primitives",
+          "name" : "swift-index-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-index-primitives"
+        },
+        "subpath" : "swift-index-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-memory-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-memory-primitives",
+          "name" : "swift-memory-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-memory-primitives"
+        },
+        "subpath" : "swift-memory-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-optic-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-optic-primitives",
+          "name" : "swift-optic-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-optic-primitives"
+        },
+        "subpath" : "swift-optic-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-ordering-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-ordering-primitives",
+          "name" : "swift-ordering-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-ordering-primitives"
+        },
+        "subpath" : "swift-ordering-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-ordinal-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-ordinal-primitives",
+          "name" : "swift-ordinal-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-ordinal-primitives"
+        },
+        "subpath" : "swift-ordinal-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-property-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-property-primitives",
+          "name" : "swift-property-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-property-primitives"
+        },
+        "subpath" : "swift-property-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-sequence-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-sequence-primitives",
+          "name" : "swift-sequence-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-sequence-primitives"
+        },
+        "subpath" : "swift-sequence-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-standard-library-extensions",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-standard-library-extensions",
+          "name" : "swift-standard-library-extensions"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-standard-library-extensions"
+        },
+        "subpath" : "swift-standard-library-extensions"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-storage-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-storage-primitives",
+          "name" : "swift-storage-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-storage-primitives"
+        },
+        "subpath" : "swift-storage-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-vector-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-vector-primitives",
+          "name" : "swift-vector-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-vector-primitives"
+        },
+        "subpath" : "swift-vector-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-witness-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-witness-primitives",
+          "name" : "swift-witness-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-witness-primitives"
+        },
+        "subpath" : "swift-witness-primitives"
+      }
+    ],
+    "prebuilts" : [
+
+    ]
+  },
+  "version" : 7
+}

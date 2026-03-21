@@ -1,0 +1,79 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence_Difference_Primitives.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence_Difference_Primitives.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-sequence-primitives/Sources/Sequence Difference Primitives/Sequence.Difference+core.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference+core.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference+core~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference+core.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference+core.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-sequence-primitives/Sources/Sequence Difference Primitives/Sequence.Difference+diff.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference+diff.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference+diff~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference+diff.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference+diff.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-sequence-primitives/Sources/Sequence Difference Primitives/Sequence.Difference.Change.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Change.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Change~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Change.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Change.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-sequence-primitives/Sources/Sequence Difference Primitives/Sequence.Difference.Changes+hunks.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Changes+hunks.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Changes+hunks~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Changes+hunks.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Changes+hunks.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-sequence-primitives/Sources/Sequence Difference Primitives/Sequence.Difference.Changes.Iterator.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Changes.Iterator.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Changes.Iterator~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Changes.Iterator.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Changes.Iterator.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-sequence-primitives/Sources/Sequence Difference Primitives/Sequence.Difference.Changes.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Changes.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Changes~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Changes.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Changes.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-sequence-primitives/Sources/Sequence Difference Primitives/Sequence.Difference.Hunk.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Hunk.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Hunk~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Hunk.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Hunk.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-sequence-primitives/Sources/Sequence Difference Primitives/Sequence.Difference.Step.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Step.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Step~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Step.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Step.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-sequence-primitives/Sources/Sequence Difference Primitives/Sequence.Difference.Steps.Iterator.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Steps.Iterator.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Steps.Iterator~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Steps.Iterator.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Steps.Iterator.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-sequence-primitives/Sources/Sequence Difference Primitives/Sequence.Difference.Steps.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Steps.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Steps~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Steps.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.Steps.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-sequence-primitives/Sources/Sequence Difference Primitives/Sequence.Difference.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/Sequence.Difference.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-sequence-primitives/Sources/Sequence Difference Primitives/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Sequence_Difference_Primitives.build/exports.dia"
+  }
+}

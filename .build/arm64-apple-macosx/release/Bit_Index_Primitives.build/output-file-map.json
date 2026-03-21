@@ -1,0 +1,31 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Index_Primitives.build/Bit_Index_Primitives.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Index_Primitives.build/Bit_Index_Primitives.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Index_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-index-primitives/Sources/Bit Index Primitives/Bit+Affine.Discrete.Ratio.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Index_Primitives.build/Bit+Affine.Discrete.Ratio.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Index_Primitives.build/Bit+Affine.Discrete.Ratio~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Index_Primitives.build/Bit+Affine.Discrete.Ratio.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Index_Primitives.build/Bit+Affine.Discrete.Ratio.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-index-primitives/Sources/Bit Index Primitives/Bit.Index+Byte.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Index_Primitives.build/Bit.Index+Byte.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Index_Primitives.build/Bit.Index+Byte~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Index_Primitives.build/Bit.Index+Byte.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Index_Primitives.build/Bit.Index+Byte.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-index-primitives/Sources/Bit Index Primitives/Bit.Index.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Index_Primitives.build/Bit.Index.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Index_Primitives.build/Bit.Index~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Index_Primitives.build/Bit.Index.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Index_Primitives.build/Bit.Index.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-index-primitives/Sources/Bit Index Primitives/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Index_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Index_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Index_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Index_Primitives.build/exports.dia"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer_Ring_Inline_Primitives.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer_Ring_Inline_Primitives.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Ring Inline Primitives/Buffer.Ring+Inline Copyable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring+Inline Copyable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring+Inline Copyable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring+Inline Copyable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring+Inline Copyable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Ring Inline Primitives/Buffer.Ring+Inline ~Copyable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring+Inline ~Copyable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring+Inline ~Copyable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring+Inline ~Copyable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring+Inline ~Copyable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Ring Inline Primitives/Buffer.Ring.Inline Copyable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Inline Copyable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Inline Copyable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Inline Copyable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Inline Copyable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Ring Inline Primitives/Buffer.Ring.Inline+Consume.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Inline+Consume.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Inline+Consume~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Inline+Consume.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Inline+Consume.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Ring Inline Primitives/Buffer.Ring.Inline+Subscript.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Inline+Subscript.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Inline+Subscript~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Inline+Subscript.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Inline+Subscript.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Ring Inline Primitives/Buffer.Ring.Inline.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Inline.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Inline~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Inline.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Inline.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Ring Inline Primitives/Buffer.Ring.Small Copyable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Small Copyable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Small Copyable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Small Copyable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Small Copyable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Ring Inline Primitives/Buffer.Ring.Small+Consume.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Small+Consume.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Small+Consume~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Small+Consume.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Small+Consume.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Ring Inline Primitives/Buffer.Ring.Small+Span.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Small+Span.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Small+Span~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Small+Span.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Small+Span.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Ring Inline Primitives/Buffer.Ring.Small+Subscript.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Small+Subscript.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Small+Subscript~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Small+Subscript.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Small+Subscript.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Ring Inline Primitives/Buffer.Ring.Small.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Small.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Small~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Small.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/Buffer.Ring.Small.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Ring Inline Primitives/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives.build/exports.dia"
+  }
+}

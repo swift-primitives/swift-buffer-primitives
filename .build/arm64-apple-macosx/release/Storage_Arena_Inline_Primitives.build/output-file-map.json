@@ -1,0 +1,19 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Arena_Inline_Primitives.build/Storage_Arena_Inline_Primitives.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Arena_Inline_Primitives.build/Storage_Arena_Inline_Primitives.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Arena_Inline_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-storage-primitives/Sources/Storage Arena Inline Primitives/Storage.Arena.Inline ~Copyable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Arena_Inline_Primitives.build/Storage.Arena.Inline ~Copyable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Arena_Inline_Primitives.build/Storage.Arena.Inline ~Copyable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Arena_Inline_Primitives.build/Storage.Arena.Inline ~Copyable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Arena_Inline_Primitives.build/Storage.Arena.Inline ~Copyable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-storage-primitives/Sources/Storage Arena Inline Primitives/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Arena_Inline_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Arena_Inline_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Arena_Inline_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Storage_Arena_Inline_Primitives.build/exports.dia"
+  }
+}

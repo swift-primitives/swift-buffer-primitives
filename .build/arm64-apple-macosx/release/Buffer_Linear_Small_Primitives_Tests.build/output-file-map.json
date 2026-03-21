@@ -1,0 +1,13 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linear_Small_Primitives_Tests.build/Buffer_Linear_Small_Primitives_Tests.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linear_Small_Primitives_Tests.build/Buffer_Linear_Small_Primitives_Tests.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linear_Small_Primitives_Tests.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Tests/Buffer Linear Small Primitives Tests/Buffer.Linear.Small Tests.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linear_Small_Primitives_Tests.build/Buffer.Linear.Small Tests.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linear_Small_Primitives_Tests.build/Buffer.Linear.Small Tests~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linear_Small_Primitives_Tests.build/Buffer.Linear.Small Tests.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Linear_Small_Primitives_Tests.build/Buffer.Linear.Small Tests.dia"
+  }
+}

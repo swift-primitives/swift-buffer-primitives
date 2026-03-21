@@ -1,0 +1,37 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/Buffer_Aligned_Primitives_Core.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/Buffer_Aligned_Primitives_Core.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Aligned Primitives Core/Buffer.Aligned+Convenience.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/Buffer.Aligned+Convenience.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/Buffer.Aligned+Convenience~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/Buffer.Aligned+Convenience.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/Buffer.Aligned+Convenience.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Aligned Primitives Core/Buffer.Aligned+Subscript.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/Buffer.Aligned+Subscript.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/Buffer.Aligned+Subscript~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/Buffer.Aligned+Subscript.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/Buffer.Aligned+Subscript.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Aligned Primitives Core/Buffer.Aligned.Error.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/Buffer.Aligned.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/Buffer.Aligned.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/Buffer.Aligned.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/Buffer.Aligned.Error.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Aligned Primitives Core/Buffer.Aligned.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/Buffer.Aligned.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/Buffer.Aligned~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/Buffer.Aligned.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/Buffer.Aligned.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Sources/Buffer Aligned Primitives Core/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Aligned_Primitives_Core.build/exports.dia"
+  }
+}

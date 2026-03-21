@@ -1,0 +1,115 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory_Primitives_Core.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory_Primitives_Core.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/Memory+Affine.Discrete.Ratio.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory+Affine.Discrete.Ratio.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory+Affine.Discrete.Ratio~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory+Affine.Discrete.Ratio.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory+Affine.Discrete.Ratio.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/Memory.Address.Error.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Address.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Address.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Address.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Address.Error.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/Memory.Address.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Address.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Address~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Address.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Address.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/Memory.Aligned.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Aligned.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Aligned~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Aligned.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Aligned.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/Memory.Alignment.Align.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Alignment.Align.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Alignment.Align~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Alignment.Align.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Alignment.Align.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/Memory.Alignment.Error.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Alignment.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Alignment.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Alignment.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Alignment.Error.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/Memory.Alignment.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Alignment.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Alignment~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Alignment.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Alignment.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/Memory.Allocation.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Allocation.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Allocation~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Allocation.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Allocation.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/Memory.Contiguous+Memory.ContiguousProtocol.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Contiguous+Memory.ContiguousProtocol.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Contiguous+Memory.ContiguousProtocol~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Contiguous+Memory.ContiguousProtocol.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Contiguous+Memory.ContiguousProtocol.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/Memory.Contiguous.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Contiguous.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Contiguous~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Contiguous.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Contiguous.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/Memory.ContiguousProtocol.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.ContiguousProtocol.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.ContiguousProtocol~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.ContiguousProtocol.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.ContiguousProtocol.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/Memory.Inline ~Copyable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Inline ~Copyable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Inline ~Copyable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Inline ~Copyable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Inline ~Copyable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/Memory.Inline.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Inline.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Inline~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Inline.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Inline.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/Memory.Shift+Cardinal.Protocol.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Shift+Cardinal.Protocol.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Shift+Cardinal.Protocol~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Shift+Cardinal.Protocol.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Shift+Cardinal.Protocol.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/Memory.Shift.Error.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Shift.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Shift.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Shift.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Shift.Error.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/Memory.Shift.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Shift.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Shift~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Shift.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.Shift.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/Memory.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/Memory.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Primitives_Core.build/exports.dia"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Affine_Primitives_Test_Support.build/Affine_Primitives_Test_Support.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Affine_Primitives_Test_Support.build/Affine_Primitives_Test_Support.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Affine_Primitives_Test_Support.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-affine-primitives/Tests/Support/Affine Primitives Test Support.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Affine_Primitives_Test_Support.build/Affine Primitives Test Support.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Affine_Primitives_Test_Support.build/Affine Primitives Test Support~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Affine_Primitives_Test_Support.build/Affine Primitives Test Support.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Affine_Primitives_Test_Support.build/Affine Primitives Test Support.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-affine-primitives/Tests/Support/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Affine_Primitives_Test_Support.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Affine_Primitives_Test_Support.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Affine_Primitives_Test_Support.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Affine_Primitives_Test_Support.build/exports.dia"
+  }
+}

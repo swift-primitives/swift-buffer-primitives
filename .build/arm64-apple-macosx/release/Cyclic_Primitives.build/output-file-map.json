@@ -1,0 +1,79 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic_Primitives.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic_Primitives.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cyclic-primitives/Sources/Cyclic Primitives/Cyclic.Group+Arithmetic.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group+Arithmetic.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group+Arithmetic~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group+Arithmetic.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group+Arithmetic.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cyclic-primitives/Sources/Cyclic Primitives/Cyclic.Group.Element.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Element.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Element~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Element.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Element.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cyclic-primitives/Sources/Cyclic Primitives/Cyclic.Group.Modulus.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Modulus.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Modulus~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Modulus.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Modulus.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cyclic-primitives/Sources/Cyclic Primitives/Cyclic.Group.Static+Arithmetic.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static+Arithmetic.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static+Arithmetic~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static+Arithmetic.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static+Arithmetic.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cyclic-primitives/Sources/Cyclic Primitives/Cyclic.Group.Static+Protocol.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static+Protocol.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static+Protocol~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static+Protocol.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static+Protocol.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cyclic-primitives/Sources/Cyclic Primitives/Cyclic.Group.Static+Sequence.Protocol.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static+Sequence.Protocol.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static+Sequence.Protocol~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static+Sequence.Protocol.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static+Sequence.Protocol.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cyclic-primitives/Sources/Cyclic Primitives/Cyclic.Group.Static.Element+Ordinal.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static.Element+Ordinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static.Element+Ordinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static.Element+Ordinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static.Element+Ordinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cyclic-primitives/Sources/Cyclic Primitives/Cyclic.Group.Static.Iterator.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static.Iterator.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static.Iterator~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static.Iterator.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static.Iterator.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cyclic-primitives/Sources/Cyclic Primitives/Cyclic.Group.Static.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.Group.Static.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cyclic-primitives/Sources/Cyclic Primitives/Cyclic.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Cyclic.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cyclic-primitives/Sources/Cyclic Primitives/Tagged+Cyclic.Group.Static.Element.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Tagged+Cyclic.Group.Static.Element.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Tagged+Cyclic.Group.Static.Element~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Tagged+Cyclic.Group.Static.Element.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/Tagged+Cyclic.Group.Static.Element.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cyclic-primitives/Sources/Cyclic Primitives/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Cyclic_Primitives.build/exports.dia"
+  }
+}

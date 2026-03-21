@@ -1,0 +1,133 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation_Primitives_Standard_Library_Integration.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation_Primitives_Standard_Library_Integration.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-equation-primitives/Sources/Equation Primitives Standard Library Integration/Equation.Protocol+Swift.Array.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Array.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Array~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Array.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Array.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-equation-primitives/Sources/Equation Primitives Standard Library Integration/Equation.Protocol+Swift.ArraySlice.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.ArraySlice.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.ArraySlice~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.ArraySlice.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.ArraySlice.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-equation-primitives/Sources/Equation Primitives Standard Library Integration/Equation.Protocol+Swift.CollectionOfOne.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.CollectionOfOne.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.CollectionOfOne~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.CollectionOfOne.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.CollectionOfOne.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-equation-primitives/Sources/Equation Primitives Standard Library Integration/Equation.Protocol+Swift.ContiguousArray.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.ContiguousArray.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.ContiguousArray~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.ContiguousArray.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.ContiguousArray.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-equation-primitives/Sources/Equation Primitives Standard Library Integration/Equation.Protocol+Swift.Dictionary.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Dictionary.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Dictionary~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Dictionary.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Dictionary.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-equation-primitives/Sources/Equation Primitives Standard Library Integration/Equation.Protocol+Swift.EmptyCollection.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.EmptyCollection.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.EmptyCollection~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.EmptyCollection.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.EmptyCollection.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-equation-primitives/Sources/Equation Primitives Standard Library Integration/Equation.Protocol+Swift.Equatable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Equatable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Equatable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Equatable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Equatable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-equation-primitives/Sources/Equation Primitives Standard Library Integration/Equation.Protocol+Swift.KeyValuePairs.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.KeyValuePairs.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.KeyValuePairs~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.KeyValuePairs.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.KeyValuePairs.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-equation-primitives/Sources/Equation Primitives Standard Library Integration/Equation.Protocol+Swift.Optional.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Optional.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Optional~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Optional.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Optional.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-equation-primitives/Sources/Equation Primitives Standard Library Integration/Equation.Protocol+Swift.PartialRange.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.PartialRange.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.PartialRange~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.PartialRange.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.PartialRange.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-equation-primitives/Sources/Equation Primitives Standard Library Integration/Equation.Protocol+Swift.Range.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Range.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Range~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Range.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Range.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-equation-primitives/Sources/Equation Primitives Standard Library Integration/Equation.Protocol+Swift.Result.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Result.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Result~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Result.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Result.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-equation-primitives/Sources/Equation Primitives Standard Library Integration/Equation.Protocol+Swift.ReversedCollection.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.ReversedCollection.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.ReversedCollection~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.ReversedCollection.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.ReversedCollection.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-equation-primitives/Sources/Equation Primitives Standard Library Integration/Equation.Protocol+Swift.Set.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Set.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Set~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Set.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.Set.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-equation-primitives/Sources/Equation Primitives Standard Library Integration/Equation.Protocol+Swift.UnsafeBufferPointer.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafeBufferPointer.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafeBufferPointer~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafeBufferPointer.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafeBufferPointer.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-equation-primitives/Sources/Equation Primitives Standard Library Integration/Equation.Protocol+Swift.UnsafeMutableBufferPointer.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafeMutableBufferPointer.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafeMutableBufferPointer~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafeMutableBufferPointer.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafeMutableBufferPointer.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-equation-primitives/Sources/Equation Primitives Standard Library Integration/Equation.Protocol+Swift.UnsafeMutablePointer.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafeMutablePointer.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafeMutablePointer~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafeMutablePointer.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafeMutablePointer.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-equation-primitives/Sources/Equation Primitives Standard Library Integration/Equation.Protocol+Swift.UnsafeMutableRawPointer.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafeMutableRawPointer.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafeMutableRawPointer~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafeMutableRawPointer.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafeMutableRawPointer.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-equation-primitives/Sources/Equation Primitives Standard Library Integration/Equation.Protocol+Swift.UnsafePointer.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafePointer.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafePointer~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafePointer.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafePointer.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-equation-primitives/Sources/Equation Primitives Standard Library Integration/Equation.Protocol+Swift.UnsafeRawPointer.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafeRawPointer.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafeRawPointer~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafeRawPointer.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/Equation.Protocol+Swift.UnsafeRawPointer.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-equation-primitives/Sources/Equation Primitives Standard Library Integration/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Equation_Primitives_Standard_Library_Integration.build/exports.dia"
+  }
+}

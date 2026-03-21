@@ -1,0 +1,25 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives_Tests.build/Buffer_Ring_Inline_Primitives_Tests.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives_Tests.build/Buffer_Ring_Inline_Primitives_Tests.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives_Tests.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Tests/Buffer Ring Inline Primitives Tests/Buffer.Ring.Inline Canary Tests.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives_Tests.build/Buffer.Ring.Inline Canary Tests.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives_Tests.build/Buffer.Ring.Inline Canary Tests~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives_Tests.build/Buffer.Ring.Inline Canary Tests.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives_Tests.build/Buffer.Ring.Inline Canary Tests.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Tests/Buffer Ring Inline Primitives Tests/Buffer.Ring.Inline Tests.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives_Tests.build/Buffer.Ring.Inline Tests.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives_Tests.build/Buffer.Ring.Inline Tests~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives_Tests.build/Buffer.Ring.Inline Tests.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives_Tests.build/Buffer.Ring.Inline Tests.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/Tests/Buffer Ring Inline Primitives Tests/Buffer.Ring.Small Tests.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives_Tests.build/Buffer.Ring.Small Tests.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives_Tests.build/Buffer.Ring.Small Tests~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives_Tests.build/Buffer.Ring.Small Tests.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Buffer_Ring_Inline_Primitives_Tests.build/Buffer.Ring.Small Tests.dia"
+  }
+}

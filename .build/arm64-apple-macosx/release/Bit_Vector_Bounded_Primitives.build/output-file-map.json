@@ -1,0 +1,115 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit_Vector_Bounded_Primitives.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit_Vector_Bounded_Primitives.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Bounded Primitives/Bit.Vector.Bounded+Protocol.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+Protocol.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+Protocol~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+Protocol.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+Protocol.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Bounded Primitives/Bit.Vector.Bounded+Sequence.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+Sequence.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+Sequence~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+Sequence.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+Sequence.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Bounded Primitives/Bit.Vector.Bounded+growth.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+growth.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+growth~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+growth.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+growth.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Bounded Primitives/Bit.Vector.Bounded+mutating.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+mutating.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+mutating~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+mutating.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+mutating.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Bounded Primitives/Bit.Vector.Bounded+ones.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+ones.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+ones~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+ones.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+ones.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Bounded Primitives/Bit.Vector.Bounded+protocols.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+protocols.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+protocols~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+protocols.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+protocols.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Bounded Primitives/Bit.Vector.Bounded+take.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+take.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+take~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+take.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+take.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Bounded Primitives/Bit.Vector.Bounded+zeros.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+zeros.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+zeros~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+zeros.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded+zeros.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Bounded Primitives/Bit.Vector.Bounded.All.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded.All.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded.All~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded.All.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded.All.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Bounded Primitives/Bit.Vector.Bounded.Capacity.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded.Capacity.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded.Capacity~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded.Capacity.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded.Capacity.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Bounded Primitives/Bit.Vector.Bounded.Error.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded.Error.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Bounded Primitives/Bit.Vector.Bounded.Statistic.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded.Statistic.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded.Statistic~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded.Statistic.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded.Statistic.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Bounded Primitives/Bit.Vector.Bounded.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Bounded.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Bounded Primitives/Bit.Vector.Ones.Bounded.Iterator.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Ones.Bounded.Iterator.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Ones.Bounded.Iterator~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Ones.Bounded.Iterator.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Ones.Bounded.Iterator.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Bounded Primitives/Bit.Vector.Ones.Bounded.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Ones.Bounded.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Ones.Bounded~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Ones.Bounded.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Ones.Bounded.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Bounded Primitives/Bit.Vector.Zeros.Bounded.Iterator.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Zeros.Bounded.Iterator.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Zeros.Bounded.Iterator~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Zeros.Bounded.Iterator.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Zeros.Bounded.Iterator.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Bounded Primitives/Bit.Vector.Zeros.Bounded.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Zeros.Bounded.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Zeros.Bounded~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Zeros.Bounded.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/Bit.Vector.Zeros.Bounded.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Bounded Primitives/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Vector_Bounded_Primitives.build/exports.dia"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/Algebra_Monoid_Primitives.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/Algebra_Monoid_Primitives.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-monoid-primitives/Sources/Algebra Monoid Primitives/Algebra.Monoid+Bool.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/Algebra.Monoid+Bool.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/Algebra.Monoid+Bool~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/Algebra.Monoid+Bool.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/Algebra.Monoid+Bool.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-monoid-primitives/Sources/Algebra Monoid Primitives/Algebra.Monoid+Semigroup.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/Algebra.Monoid+Semigroup.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/Algebra.Monoid+Semigroup~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/Algebra.Monoid+Semigroup.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/Algebra.Monoid+Semigroup.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-monoid-primitives/Sources/Algebra Monoid Primitives/Algebra.Monoid.Commutative.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/Algebra.Monoid.Commutative.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/Algebra.Monoid.Commutative~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/Algebra.Monoid.Commutative.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/Algebra.Monoid.Commutative.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-monoid-primitives/Sources/Algebra Monoid Primitives/Algebra.Monoid.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/Algebra.Monoid.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/Algebra.Monoid~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/Algebra.Monoid.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/Algebra.Monoid.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-monoid-primitives/Sources/Algebra Monoid Primitives/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Monoid_Primitives.build/exports.dia"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory_Pool_Primitives.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory_Pool_Primitives.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Pool Primitives/Memory.Pool+allocation.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool+allocation.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool+allocation~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool+allocation.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool+allocation.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Pool Primitives/Memory.Pool+slot.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool+slot.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool+slot~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool+slot.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool+slot.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Pool Primitives/Memory.Pool.Duplicate.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool.Duplicate.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool.Duplicate~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool.Duplicate.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool.Duplicate.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Pool Primitives/Memory.Pool.Error.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool.Error.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Pool Primitives/Memory.Pool.Slot.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool.Slot.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool.Slot~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool.Slot.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool.Slot.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Pool Primitives/Memory.Pool.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/Memory.Pool.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Pool Primitives/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Memory_Pool_Primitives.build/exports.dia"
+  }
+}

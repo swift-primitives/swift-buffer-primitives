@@ -1,0 +1,13 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Finite_Primitives_Test_Support.build/Finite_Primitives_Test_Support.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Finite_Primitives_Test_Support.build/Finite_Primitives_Test_Support.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Finite_Primitives_Test_Support.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-finite-primitives/Tests/Support/Finite Primitives Test Support.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Finite_Primitives_Test_Support.build/Finite Primitives Test Support.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Finite_Primitives_Test_Support.build/Finite Primitives Test Support~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Finite_Primitives_Test_Support.build/Finite Primitives Test Support.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Finite_Primitives_Test_Support.build/Finite Primitives Test Support.dia"
+  }
+}

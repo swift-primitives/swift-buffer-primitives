@@ -1,0 +1,79 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit_Primitives_Standard_Library_Integration.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit_Primitives_Standard_Library_Integration.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-primitives/Sources/Bit Primitives Standard Library Integration/Bit+CaseIterable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+CaseIterable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+CaseIterable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+CaseIterable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+CaseIterable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-primitives/Sources/Bit Primitives Standard Library Integration/Bit+Codable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+Codable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+Codable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+Codable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+Codable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-primitives/Sources/Bit Primitives Standard Library Integration/Bit+Comparable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+Comparable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+Comparable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+Comparable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+Comparable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-primitives/Sources/Bit Primitives Standard Library Integration/Bit+CustomStringConvertible.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+CustomStringConvertible.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+CustomStringConvertible~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+CustomStringConvertible.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+CustomStringConvertible.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-primitives/Sources/Bit Primitives Standard Library Integration/Bit+ExpressibleByBooleanLiteral.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+ExpressibleByBooleanLiteral.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+ExpressibleByBooleanLiteral~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+ExpressibleByBooleanLiteral.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+ExpressibleByBooleanLiteral.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-primitives/Sources/Bit Primitives Standard Library Integration/Bit+ExpressibleByIntegerLiteral.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+ExpressibleByIntegerLiteral.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+ExpressibleByIntegerLiteral~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+ExpressibleByIntegerLiteral.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+ExpressibleByIntegerLiteral.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-primitives/Sources/Bit Primitives Standard Library Integration/Bit+Normalizing.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+Normalizing.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+Normalizing~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+Normalizing.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit+Normalizing.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-primitives/Sources/Bit Primitives Standard Library Integration/Bit.Mask.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit.Mask.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit.Mask~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit.Mask.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit.Mask.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-primitives/Sources/Bit Primitives Standard Library Integration/Bit.Order+CaseIterable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit.Order+CaseIterable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit.Order+CaseIterable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit.Order+CaseIterable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit.Order+CaseIterable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-primitives/Sources/Bit Primitives Standard Library Integration/Bit.Set.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit.Set.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit.Set~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit.Set.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/Bit.Set.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-primitives/Sources/Bit Primitives Standard Library Integration/FixedWidthInteger+Cardinal.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/FixedWidthInteger+Cardinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/FixedWidthInteger+Cardinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/FixedWidthInteger+Cardinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/FixedWidthInteger+Cardinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-primitives/Sources/Bit Primitives Standard Library Integration/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Bit_Primitives_Standard_Library_Integration.build/exports.dia"
+  }
+}

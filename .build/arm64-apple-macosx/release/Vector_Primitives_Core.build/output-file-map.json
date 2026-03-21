@@ -1,0 +1,85 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector_Primitives_Core.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector_Primitives_Core.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-vector-primitives/Sources/Vector Primitives Core/Index.Count+Vector.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Index.Count+Vector.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Index.Count+Vector~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Index.Count+Vector.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Index.Count+Vector.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-vector-primitives/Sources/Vector Primitives Core/Swift.Range+Map.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Swift.Range+Map.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Swift.Range+Map~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Swift.Range+Map.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Swift.Range+Map.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-vector-primitives/Sources/Vector Primitives Core/Vector+Index.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector+Index.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector+Index~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector+Index.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector+Index.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-vector-primitives/Sources/Vector Primitives Core/Vector+Sequence.Properties.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector+Sequence.Properties.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector+Sequence.Properties~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector+Sequence.Properties.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector+Sequence.Properties.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-vector-primitives/Sources/Vector Primitives Core/Vector+Sequence.Protocol.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector+Sequence.Protocol.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector+Sequence.Protocol~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector+Sequence.Protocol.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector+Sequence.Protocol.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-vector-primitives/Sources/Vector Primitives Core/Vector.Drain+Property.View.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.Drain+Property.View.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.Drain+Property.View~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.Drain+Property.View.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.Drain+Property.View.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-vector-primitives/Sources/Vector Primitives Core/Vector.Drop.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.Drop.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.Drop~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.Drop.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.Drop.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-vector-primitives/Sources/Vector Primitives Core/Vector.ForEach+Property.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.ForEach+Property.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.ForEach+Property~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.ForEach+Property.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.ForEach+Property.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-vector-primitives/Sources/Vector Primitives Core/Vector.Prefix.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.Prefix.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.Prefix~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.Prefix.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.Prefix.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-vector-primitives/Sources/Vector Primitives Core/Vector.Reversed.Drop.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.Reversed.Drop.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.Reversed.Drop~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.Reversed.Drop.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.Reversed.Drop.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-vector-primitives/Sources/Vector Primitives Core/Vector.Reversed.Prefix.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.Reversed.Prefix.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.Reversed.Prefix~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.Reversed.Prefix.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.Reversed.Prefix.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-vector-primitives/Sources/Vector Primitives Core/Vector.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/Vector.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-vector-primitives/Sources/Vector Primitives Core/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Vector_Primitives_Core.build/exports.dia"
+  }
+}

@@ -1,0 +1,3 @@
+module Standard_Library_Extensions {
+    header "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Standard_Library_Extensions.build/include/Standard Library Extensions-Swift.h"
+}

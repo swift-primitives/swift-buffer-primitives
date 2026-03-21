@@ -1,0 +1,103 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering_Primitives.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering_Primitives.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordering-primitives/Sources/Ordering Primitives/Ordering.Comparator+Chaining.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator+Chaining.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator+Chaining~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator+Chaining.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator+Chaining.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordering-primitives/Sources/Ordering Primitives/Ordering.Comparator+Comparable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator+Comparable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator+Comparable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator+Comparable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator+Comparable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordering-primitives/Sources/Ordering Primitives/Ordering.Comparator+Projection.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator+Projection.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator+Projection~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator+Projection.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator+Projection.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordering-primitives/Sources/Ordering Primitives/Ordering.Comparator+Reversal.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator+Reversal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator+Reversal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator+Reversal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator+Reversal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordering-primitives/Sources/Ordering Primitives/Ordering.Comparator+Swift.Comparable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator+Swift.Comparable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator+Swift.Comparable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator+Swift.Comparable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator+Swift.Comparable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordering-primitives/Sources/Ordering Primitives/Ordering.Comparator.Partial.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator.Partial.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator.Partial~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator.Partial.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator.Partial.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordering-primitives/Sources/Ordering Primitives/Ordering.Comparator.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Comparator.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordering-primitives/Sources/Ordering Primitives/Ordering.Direction.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Direction.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Direction~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Direction.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Direction.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordering-primitives/Sources/Ordering Primitives/Ordering.Order+Property.View.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Order+Property.View.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Order+Property.View~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Order+Property.View.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Order+Property.View.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordering-primitives/Sources/Ordering Primitives/Ordering.Order+Swift.Comparable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Order+Swift.Comparable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Order+Swift.Comparable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Order+Swift.Comparable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Order+Swift.Comparable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordering-primitives/Sources/Ordering Primitives/Ordering.Order.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Order.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Order~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Order.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Order.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordering-primitives/Sources/Ordering Primitives/Ordering.Orderable+Swift.Comparable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Orderable+Swift.Comparable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Orderable+Swift.Comparable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Orderable+Swift.Comparable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Orderable+Swift.Comparable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordering-primitives/Sources/Ordering Primitives/Ordering.Orderable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Orderable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Orderable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Orderable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Orderable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordering-primitives/Sources/Ordering Primitives/Ordering.Projection.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Projection.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Projection~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Projection.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.Projection.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordering-primitives/Sources/Ordering Primitives/Ordering.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/Ordering.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordering-primitives/Sources/Ordering Primitives/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordering_Primitives.build/exports.dia"
+  }
+}

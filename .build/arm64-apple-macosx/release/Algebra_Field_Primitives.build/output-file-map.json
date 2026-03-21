@@ -1,0 +1,49 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra_Field_Primitives.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra_Field_Primitives.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-field-primitives/Sources/Algebra Field Primitives/Algebra.Field+Convenience.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field+Convenience.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field+Convenience~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field+Convenience.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field+Convenience.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-field-primitives/Sources/Algebra Field Primitives/Algebra.Field+Parity.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field+Parity.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field+Parity~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field+Parity.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field+Parity.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-field-primitives/Sources/Algebra Field Primitives/Algebra.Field+Ring.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field+Ring.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field+Ring~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field+Ring.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field+Ring.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-field-primitives/Sources/Algebra Field Primitives/Algebra.Field+Z2.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field+Z2.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field+Z2~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field+Z2.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field+Z2.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-field-primitives/Sources/Algebra Field Primitives/Algebra.Field.Unit.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field.Unit.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field.Unit~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field.Unit.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field.Unit.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-field-primitives/Sources/Algebra Field Primitives/Algebra.Field.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/Algebra.Field.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-field-primitives/Sources/Algebra Field Primitives/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Algebra_Field_Primitives.build/exports.dia"
+  }
+}

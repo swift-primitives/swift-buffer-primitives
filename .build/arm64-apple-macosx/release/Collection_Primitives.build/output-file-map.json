@@ -1,0 +1,169 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection_Primitives.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection_Primitives.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Access.Random+Swift.RandomAccessCollection.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Access.Random+Swift.RandomAccessCollection.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Access.Random+Swift.RandomAccessCollection~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Access.Random+Swift.RandomAccessCollection.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Access.Random+Swift.RandomAccessCollection.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Access.Random.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Access.Random.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Access.Random~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Access.Random.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Access.Random.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Bidirectional+Swift.BidirectionalCollection.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Bidirectional+Swift.BidirectionalCollection.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Bidirectional+Swift.BidirectionalCollection~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Bidirectional+Swift.BidirectionalCollection.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Bidirectional+Swift.BidirectionalCollection.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Bidirectional.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Bidirectional.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Bidirectional~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Bidirectional.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Bidirectional.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Clearable.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Clearable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Clearable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Clearable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Clearable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Count.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Count.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Count~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Count.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Count.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.ForEach+Property.View.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.ForEach+Property.View.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.ForEach+Property.View~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.ForEach+Property.View.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.ForEach+Property.View.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.ForEach.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.ForEach.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.ForEach~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.ForEach.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.ForEach.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Indexed.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Indexed.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Indexed~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Indexed.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Indexed.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Max+Property.View.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Max+Property.View.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Max+Property.View~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Max+Property.View.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Max+Property.View.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Max.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Max.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Max~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Max.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Max.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Min+Property.View.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Min+Property.View.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Min+Property.View~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Min+Property.View.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Min+Property.View.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Min.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Min.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Min~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Min.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Min.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Protocol+ForEach.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Protocol+ForEach.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Protocol+ForEach~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Protocol+ForEach.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Protocol+ForEach.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Protocol+Swift.Collection.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Protocol+Swift.Collection.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Protocol+Swift.Collection~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Protocol+Swift.Collection.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Protocol+Swift.Collection.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Protocol+defaults.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Protocol+defaults.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Protocol+defaults~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Protocol+defaults.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Protocol+defaults.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Protocol.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Protocol.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Protocol~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Protocol.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Protocol.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Remove.Last.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Remove.Last.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Remove.Last~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Remove.Last.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Remove.Last.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Remove.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Remove.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Remove~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Remove.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Remove.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Rotated.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Rotated.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Rotated~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Rotated.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Rotated.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Slice+Property.View.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Slice+Property.View.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Slice+Property.View~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Slice+Property.View.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Slice+Property.View.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Slice.Protocol+Property.View.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Slice.Protocol+Property.View.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Slice.Protocol+Property.View~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Slice.Protocol+Property.View.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Slice.Protocol+Property.View.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Slice.Protocol+defaults.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Slice.Protocol+defaults.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Slice.Protocol+defaults~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Slice.Protocol+defaults.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Slice.Protocol+defaults.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Slice.Protocol.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Slice.Protocol.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Slice.Protocol~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Slice.Protocol.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Slice.Protocol.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Slice.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Slice.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Slice~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Slice.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.Slice.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/Collection.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/exports.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Collection_Primitives.build/exports.dia"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordinal_Primitives_Test_Support.build/Ordinal_Primitives_Test_Support.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordinal_Primitives_Test_Support.build/Ordinal_Primitives_Test_Support.o",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordinal_Primitives_Test_Support.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordinal-primitives/Tests/Support/Ordinal Primitives Test Support.swift": {
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordinal_Primitives_Test_Support.build/Ordinal Primitives Test Support.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordinal_Primitives_Test_Support.build/Ordinal Primitives Test Support~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordinal_Primitives_Test_Support.build/Ordinal Primitives Test Support.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/release/Ordinal_Primitives_Test_Support.build/Ordinal Primitives Test Support.dia"
+  }
+}
