@@ -65,14 +65,19 @@ extension Buffer where Element: ~Copyable {
             }
 
             // WORKAROUND: deinit commented out to stay under the ≤2 threshold
-            // for @_rawLayout + deinit types per WMO translation unit.
+            // for @_rawLayout + deinit types (swiftlang/swift#86652).
             // Elements LEAK if a non-empty Linear.Inline is dropped without
             // draining. Affects class-typed and ~Copyable elements only.
+            //
             // IDEAL: Storage.Inline owns this cleanup via its own deinit.
-            // See Research/storage-inline-deinit-handoff.md for investigation.
-            // WHEN TO RESTORE: When swiftlang/swift fixes the LLVM verifier
-            //      crash for @_rawLayout + deinit under -O.
-            // TRACKING: Research/release-mode-llvm-verifier-crash-diagnosis.md
+            // Blocked by the 2-field rule: Storage.Inline has _storage + _slots,
+            // and any type with @_rawLayout field + 2nd field + deinit crashes
+            // under -O. Moving _slots to the buffer layer was considered and
+            // rejected — initialization tracking is a storage-layer concern.
+            // The fix is a compiler fix, not a layering change.
+            //
+            // WHEN TO RESTORE: When swiftlang/swift#86652 is fixed.
+            // TRACKING: Research/rawlayout-release-crash-investigation.md
             //
             // deinit {
             //     unsafe storage.deinitialize()
