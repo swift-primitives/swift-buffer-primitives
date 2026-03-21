@@ -4,7 +4,7 @@
 ---
 version: 2.0.0
 date: 2026-03-21
-status: VIABLE PATH (combined @_rawLayout approach verified)
+status: OPEN (combined @_rawLayout works for internal, blocked by public access level)
 consolidates:
   - release-crash-fix-handoff.md
   - release-crash-resolution-handoff.md
@@ -81,41 +81,28 @@ Storage.Inline has 2 stored properties: `_storage: _Raw` (@_rawLayout) + `_slots
 8. Shared deinit wrapper in Buffer Primitives Core → CRASH (multiplies transitive chain)
 9. Wrapper in variant struct body → CRASH (same issue)
 
-## Viable Path: Combined @_rawLayout (Discovered 2026-03-21)
+## Combined @_rawLayout Approach (Explored and Blocked 2026-03-21)
 
-The 2-field rule only triggers when there are 2+ STORED FIELDS. If the bitmap is encoded WITHIN the single `@_rawLayout` field (alongside elements), Storage.Inline has 1 stored field and CAN have a deinit.
+The 2-field rule only triggers when there are 2+ STORED FIELDS. Encoding the bitmap within the single `@_rawLayout` field reduces Storage.Inline to 1 stored field.
 
-**Approach**: Use `@_rawLayout(like: _CombinedLayout<Element, capacity>)` where `_CombinedLayout` is a struct containing both element storage and bitmap:
+**Approach**: Use `@_rawLayout(like: _CombinedLayout)` where `_CombinedLayout` contains both element storage and bitmap in one raw region.
 
-```swift
-@_rawLayout(likeArrayOf: Element, count: capacity)
-struct _RawElements<Element: ~Copyable, let capacity: Int>: ~Copyable { init() {} }
+**Works with `internal` access, crashes with `public`**:
 
-struct _CombinedLayout<Element: ~Copyable, let capacity: Int>: ~Copyable {
-    var elements: _RawElements<Element, capacity>
-    var bitmap: InlineArray<4, UInt>  // 32 bytes = 256 bits
-}
+| Access Level | Deps | Result |
+|--------------|------|--------|
+| `internal` (default) | 0 | **Builds** |
+| `internal` (default) | 4 (Index, Memory, BitVec, Finite) | **Builds** |
+| `public` | 0 | **CRASH** |
+| `public` | 4 | **CRASH** |
 
-@_rawLayout(like: _CombinedLayout<Element, capacity>)
-struct _Raw: ~Copyable { init() {} }
-```
+The crash is access-level-dependent. `internal` types work because the optimizer doesn't generate cross-module type metadata. `public` types crash because the optimizer generates the problematic `invariant.load` pattern for cross-module visibility.
 
-**Verified empirically** (2026-03-21):
-- `@_rawLayout(like: CombinedLayout)` computes correct layout (elements + 32 bitmap bytes)
-- 1-field struct with deinit builds in release without crash
-- Deinit correctly accesses bitmap region via pointer arithmetic into the raw layout
-- `swift run -c release` produces correct output: `CombinedRaw<Int, 4>` size = 64 (4×8 + 32)
+**Since Storage.Inline must be `public`, the combined layout approach is blocked.** The combined layout is architecturally correct — it just can't be expressed with `public` types under the current compiler bug.
 
-**Consistent with stdlib**: `Atomic<Value>` uses `@_rawLayout(like: Value.AtomicRepresentation)` — the `like: T` pattern with generic T is production-proven.
+**Standalone reproducer** (works): `/tmp/rawlayout-test/` — `internal` types + combined layout + deinit builds and runs correctly in release.
 
-**What changes**:
-- `_slots` moves from a stored field to a computed property backed by pointer access into the raw region
-- The bitmap lives at byte offset `stride(Element) × capacity` within the raw layout
-- Storage.Inline becomes 1 field (`_raw: _Raw`) instead of 2 (`_storage + _slots`)
-- Storage.Inline gains a deinit that iterates the embedded bitmap
-- Buffer-layer deinits on Ring.Inline, Linear.Inline, Slab.Inline become unnecessary
-
-**Layering note**: The bitmap remains semantically a storage concern — it's still inside Storage.Inline, just encoded within the raw layout region instead of as a separate stored field. No layering violation.
+**This is the strongest candidate for a compiler fix**: the combined layout produces correct IR for `internal` types. The `public` trigger path is a distinct codegen issue that could potentially be fixed independently.
 
 ## Ideal Architecture
 

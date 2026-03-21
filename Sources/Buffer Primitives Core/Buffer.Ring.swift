@@ -94,12 +94,8 @@ extension Buffer where Element: ~Copyable {
             // Elements LEAK if a non-empty Ring.Inline is dropped without
             // draining. Affects class-typed and ~Copyable elements only.
             //
-            // FIX: Encode the bitmap within Storage.Inline's @_rawLayout region
-            // using @_rawLayout(like: CombinedLayout). This reduces Storage.Inline
-            // to 1 stored field, enabling a deinit. Once Storage.Inline has a
-            // deinit, this commented-out deinit becomes unnecessary — cleanup is
-            // handled by implicit field destruction.
-            //
+            // Combined @_rawLayout approach works for `internal` types but
+            // crashes for `public` types. Blocked until compiler bug is fixed.
             // TRACKING: Research/rawlayout-release-crash-investigation.md
             //
             // deinit {
