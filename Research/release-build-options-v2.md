@@ -133,9 +133,8 @@ The bug report should include:
 
 ## Cross-References
 
-- [release-build-resolution-handoff-v2.md](release-build-resolution-handoff-v2.md) — Investigation plan
+- [rawlayout-release-crash-investigation.md](rawlayout-release-crash-investigation.md) — Consolidated investigation record
 - [release-mode-llvm-verifier-crash-diagnosis.md](release-mode-llvm-verifier-crash-diagnosis.md) — Full diagnosis
-- [release-crash-resolution-handoff.md](release-crash-resolution-handoff.md) — Original resolution handoff
 - `Experiments/rawlayout-minimal-reproducer/` — Standalone Bug 1 reproducer
 - `Experiments/rawlayout-llvm-verifier-crash/` — Consolidated Bug 1 experiments
 - `Experiments/rawlayout-sil-ownership-crash/` — Consolidated Bug 2 experiments

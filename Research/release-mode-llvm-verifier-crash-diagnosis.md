@@ -309,11 +309,9 @@ File at https://github.com/swiftlang/swift/issues with:
 ## Cross-References
 
 - [small-buffer-enum-compiler-workarounds.md](small-buffer-enum-compiler-workarounds.md) — same LLVM verifier error, different trigger (two-field struct with @_rawLayout + class ref)
-- [release-crash-fix-handoff.md](release-crash-fix-handoff.md) — handoff document (v1.0 approach, now invalidated)
+- [rawlayout-release-crash-investigation.md](rawlayout-release-crash-investigation.md) — consolidated investigation record (timeline, approaches, GitHub reproducer)
 - Consolidated experiment: `Experiments/rawlayout-llvm-verifier-crash/` — 8 variants (V01-V08) covering all @_rawLayout + deinit crash patterns
-- Original experiment: `Experiments/rawlayout-release-verifier-crash/` (SUPERSEDED — absorbed into consolidated)
 - Consolidated experiment: `Experiments/rawlayout-sil-ownership-crash/` — 3 variants (V01-V03) covering SIL ownership and enum _modify
-- [rawlayout-experiment-consolidation-handoff.md](rawlayout-experiment-consolidation-handoff.md) — consolidation plan and execution
 - `/conversions` skill — typed API rules for the Phase 2 cleanup
 - `/existing-infrastructure` skill — Cardinal integration overloads for stdlib boundary conversions
 - `/modularization` skill — [MOD-004] constraint isolation theory confirmed empirically in Step 7
