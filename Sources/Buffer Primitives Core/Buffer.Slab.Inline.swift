@@ -33,10 +33,6 @@ extension Buffer.Slab where Element: ~Copyable {
         }
 
         deinit {
-            // Bitmap-driven cleanup: Storage.Inline's initialization stays .empty,
-            // so the bitmap is the sole source of truth for occupied slots.
-            // Uses pointer-based deinit — non-mutating read of storage,
-            // because deinit treats self as immutable.
             var slot: Bit.Index = .zero
             let end = Bit.Index.Count(UInt(wordCount)).map(Ordinal.init)
             while slot < end {
@@ -51,6 +47,4 @@ extension Buffer.Slab where Element: ~Copyable {
 }
 
 // Copyable suppressed per INV-INLINE-004a.
-// extension Buffer.Slab.Inline: Copyable where Element: Copyable {}
-// extension Buffer.Slab.Inline: Swift.Sequence where Element: Copyable {}
 extension Buffer.Slab.Inline: Sendable where Element: Sendable {}

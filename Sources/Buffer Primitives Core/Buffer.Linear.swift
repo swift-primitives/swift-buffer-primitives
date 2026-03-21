@@ -21,6 +21,7 @@ extension Buffer where Element: ~Copyable {
             self.header = header
             self.storage = storage
         }
+
     }
 }
 

@@ -47,15 +47,10 @@ extension Buffer.Arena where Element: ~Copyable {
         }
 
         deinit {
-            // WORKAROUND: Uses `for i in` instead of `.forEach` closure
-            // WHY: Closures capturing ~Copyable fields of `self` inside deinit trigger
-            //      CopiedLoadBorrowEliminationVisitor segfault (swift-frontend signal 11)
-            // WHEN TO REMOVE: When MoveOnlyChecker deinit closure crash is fixed
             let hw = Int(bitPattern: header.highWater)
             let stride = MemoryLayout<Element>.stride
             for i in 0..<hw {
                 if _meta[i].isOccupied {
-                    // Use borrowing pointer + mutating cast: safe in deinit (we own the memory).
                     unsafe withUnsafePointer(to: _elements) { (ptr: UnsafePointer<_Elements>) -> Void in
                         unsafe UnsafeMutableRawPointer(mutating: UnsafeRawPointer(ptr))
                             .advanced(by: i * stride)
@@ -71,5 +66,4 @@ extension Buffer.Arena where Element: ~Copyable {
 // MARK: - Conditional Conformances (Arena.Inline)
 
 // Copyable suppressed per INV-INLINE-004a.
-// extension Buffer.Arena.Inline: Copyable where Element: Copyable {}
 extension Buffer.Arena.Inline: Sendable where Element: Sendable {}
