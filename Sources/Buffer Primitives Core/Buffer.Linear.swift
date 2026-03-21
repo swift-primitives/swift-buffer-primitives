@@ -64,11 +64,19 @@ extension Buffer where Element: ~Copyable {
                 self.storage = storage
             }
 
-            // WORKAROUND: deinit removed to stay under the ≤2 threshold for
-            // @_rawLayout + deinit types per WMO translation unit.
-            // Element cleanup is handled by Storage.Inline's own deinit
-            // (added in storage-primitives as part of this workaround).
-            // WHEN TO REMOVE: When swiftlang/swift fixes the LLVM verifier crash.
+            // WORKAROUND: deinit commented out to stay under the ≤2 threshold
+            // for @_rawLayout + deinit types per WMO translation unit.
+            // Elements LEAK if a non-empty Linear.Inline is dropped without
+            // draining. Affects class-typed and ~Copyable elements only.
+            // IDEAL: Storage.Inline owns this cleanup via its own deinit.
+            // See Research/storage-inline-deinit-handoff.md for investigation.
+            // WHEN TO RESTORE: When swiftlang/swift fixes the LLVM verifier
+            //      crash for @_rawLayout + deinit under -O.
+            // TRACKING: Research/release-mode-llvm-verifier-crash-diagnosis.md
+            //
+            // deinit {
+            //     unsafe storage.deinitialize()
+            // }
 
             /// Errors that can occur during inline linear buffer operations.
             public enum Error: Swift.Error, Sendable, Equatable {
