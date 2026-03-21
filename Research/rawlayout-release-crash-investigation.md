@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
+version: 2.0.0
 date: 2026-03-21
-status: OPEN (compiler bugs, workaround applied)
+status: VIABLE PATH (combined @_rawLayout approach verified)
 consolidates:
   - release-crash-fix-handoff.md
   - release-crash-resolution-handoff.md
@@ -81,7 +81,43 @@ Storage.Inline has 2 stored properties: `_storage: _Raw` (@_rawLayout) + `_slots
 8. Shared deinit wrapper in Buffer Primitives Core → CRASH (multiplies transitive chain)
 9. Wrapper in variant struct body → CRASH (same issue)
 
-## Ideal Architecture (Blocked by Compiler)
+## Viable Path: Combined @_rawLayout (Discovered 2026-03-21)
+
+The 2-field rule only triggers when there are 2+ STORED FIELDS. If the bitmap is encoded WITHIN the single `@_rawLayout` field (alongside elements), Storage.Inline has 1 stored field and CAN have a deinit.
+
+**Approach**: Use `@_rawLayout(like: _CombinedLayout<Element, capacity>)` where `_CombinedLayout` is a struct containing both element storage and bitmap:
+
+```swift
+@_rawLayout(likeArrayOf: Element, count: capacity)
+struct _RawElements<Element: ~Copyable, let capacity: Int>: ~Copyable { init() {} }
+
+struct _CombinedLayout<Element: ~Copyable, let capacity: Int>: ~Copyable {
+    var elements: _RawElements<Element, capacity>
+    var bitmap: InlineArray<4, UInt>  // 32 bytes = 256 bits
+}
+
+@_rawLayout(like: _CombinedLayout<Element, capacity>)
+struct _Raw: ~Copyable { init() {} }
+```
+
+**Verified empirically** (2026-03-21):
+- `@_rawLayout(like: CombinedLayout)` computes correct layout (elements + 32 bitmap bytes)
+- 1-field struct with deinit builds in release without crash
+- Deinit correctly accesses bitmap region via pointer arithmetic into the raw layout
+- `swift run -c release` produces correct output: `CombinedRaw<Int, 4>` size = 64 (4×8 + 32)
+
+**Consistent with stdlib**: `Atomic<Value>` uses `@_rawLayout(like: Value.AtomicRepresentation)` — the `like: T` pattern with generic T is production-proven.
+
+**What changes**:
+- `_slots` moves from a stored field to a computed property backed by pointer access into the raw region
+- The bitmap lives at byte offset `stride(Element) × capacity` within the raw layout
+- Storage.Inline becomes 1 field (`_raw: _Raw`) instead of 2 (`_storage + _slots`)
+- Storage.Inline gains a deinit that iterates the embedded bitmap
+- Buffer-layer deinits on Ring.Inline, Linear.Inline, Slab.Inline become unnecessary
+
+**Layering note**: The bitmap remains semantically a storage concern — it's still inside Storage.Inline, just encoded within the raw layout region instead of as a separate stored field. No layering violation.
+
+## Ideal Architecture
 
 ```
 ┌─────────────────────────┬──────────────────────────────────────────┐

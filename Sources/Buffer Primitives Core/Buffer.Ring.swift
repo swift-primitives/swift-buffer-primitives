@@ -90,19 +90,16 @@ extension Buffer where Element: ~Copyable {
                 self.storage = storage
             }
 
-            // WORKAROUND: deinit commented out to stay under the ≤2 threshold
-            // for @_rawLayout + deinit types (swiftlang/swift#86652).
+            // WORKAROUND: deinit commented out due to swiftlang/swift#86652.
             // Elements LEAK if a non-empty Ring.Inline is dropped without
             // draining. Affects class-typed and ~Copyable elements only.
             //
-            // IDEAL: Storage.Inline owns this cleanup via its own deinit.
-            // Blocked by the 2-field rule: Storage.Inline has _storage + _slots,
-            // and any type with @_rawLayout field + 2nd field + deinit crashes
-            // under -O. Moving _slots to the buffer layer was considered and
-            // rejected — initialization tracking is a storage-layer concern.
-            // The fix is a compiler fix, not a layering change.
+            // FIX: Encode the bitmap within Storage.Inline's @_rawLayout region
+            // using @_rawLayout(like: CombinedLayout). This reduces Storage.Inline
+            // to 1 stored field, enabling a deinit. Once Storage.Inline has a
+            // deinit, this commented-out deinit becomes unnecessary — cleanup is
+            // handled by implicit field destruction.
             //
-            // WHEN TO RESTORE: When swiftlang/swift#86652 is fixed.
             // TRACKING: Research/rawlayout-release-crash-investigation.md
             //
             // deinit {
