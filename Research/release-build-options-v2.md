@@ -1,10 +1,12 @@
 # Release Build Options v2: Ranked Alternatives
 
+> **SUPERSEDED (2026-03-22)**: Both bugs resolved without compiler flags. Bug 1: field-ordering fix. Bug 2: removed `~Escapable` from Property.View. No `@_optimize(none)`, no `-disable-sil-ownership-verifier`, no `-disable-llvm-verify` needed. See [rawlayout-release-crash-investigation.md](rawlayout-release-crash-investigation.md).
+
 <!--
 ---
 version: 1.0.0
-last_updated: 2026-03-21
-status: RECOMMENDATION
+last_updated: 2026-03-22
+status: SUPERSEDED
 ---
 -->
 

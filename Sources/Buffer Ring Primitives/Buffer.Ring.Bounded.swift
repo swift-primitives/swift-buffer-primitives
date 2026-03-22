@@ -137,7 +137,6 @@ where Tag == Buffer<Element>.Ring.Push,
       Element: ~Copyable
 {
     /// Pushes an element to the back. Returns the element if the buffer is full.
-    @_lifetime(&self)
     @inlinable
     @discardableResult
     public mutating func back(_ element: consuming Element) -> Element? {
@@ -145,7 +144,6 @@ where Tag == Buffer<Element>.Ring.Push,
     }
 
     /// Pushes an element to the front. Returns the element if the buffer is full.
-    @_lifetime(&self)
     @inlinable
     @discardableResult
     public mutating func front(_ element: consuming Element) -> Element? {
@@ -163,7 +161,6 @@ where Tag == Buffer<Element>.Ring.Pop,
     /// Removes and returns the element at the front.
     ///
     /// - Precondition: The buffer is not empty.
-    @_lifetime(&self)
     @inlinable
     public mutating func front() -> Element {
         unsafe base.pointee._popFront()
@@ -172,7 +169,6 @@ where Tag == Buffer<Element>.Ring.Pop,
     /// Removes and returns the element at the back.
     ///
     /// - Precondition: The buffer is not empty.
-    @_lifetime(&self)
     @inlinable
     public mutating func back() -> Element {
         unsafe base.pointee._popBack()
@@ -187,7 +183,6 @@ where Tag == Buffer<Element>.Ring.Remove,
       Element: ~Copyable
 {
     /// Removes all elements from the buffer.
-    @_lifetime(&self)
     @inlinable
     public mutating func all() {
         unsafe base.pointee._removeAll()

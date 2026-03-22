@@ -4,7 +4,7 @@
 ---
 version: 4.0.0
 date: 2026-03-22
-status: RESOLVED (Bug 1: field-ordering; Bug 2: @_optimize(none) on 30+ functions)
+status: RESOLVED (Bug 1: field-ordering; Bug 2: removed ~Escapable from Property.View — root cause fix, zero @_optimize(none))
 consolidates:
   - release-crash-fix-handoff.md
   - release-crash-resolution-handoff.md
@@ -24,7 +24,7 @@ Two compiler bugs block `swift build -c release` for types combining `~Copyable`
 
 **Bug 1 (LLVM verifier) — RESOLVED via field ordering.** The compiler generates composite value witnesses that load `stride` inside an element-iteration loop but use `stride * capacity` outside the loop to reach fields that follow the variable-size `@_rawLayout` storage. When the loop is skipped (capacity ≤ 0), `stride` is undefined, violating LLVM SSA dominance. **Fix**: place `@_rawLayout` storage as the last stored property at every nesting level, so no fields require stride-based offset computation post-loop.
 
-**Bug 2 (SIL ownership) — RESOLVED via `@_optimize(none)`.** CopyPropagation false positive; suppressed with `@_optimize(none)` on 30+ functions across 6 sub-repos (Stack, Queue, Array, Heap, Set, Dictionary). All 9 data structure sub-repos pass `swift build -c release`.
+**Bug 2 (SIL ownership) — RESOLVED by removing `~Escapable` from Property.View.** Root cause: `~Escapable` + `@_lifetime(borrow base)` on Property.View generates `mark_dependence` instructions in SIL classified as `PointerEscape` (see `OSSACanonicalizeOwned.cpp:40-46`). CopyPropagation's canonicalizer mishandles these across control flow joins, producing double `end_lifetime`. Fix: removed `~Escapable` from 7 Property.View types — the `_read`/`_modify` coroutine scope already provides lifetime confinement. All 149 `@_optimize(none)` annotations removed. Previously suppressed with `@_optimize(none)` on 149 functions across 12 sub-repos.
 
 **Authoritative diagnosis**: [release-mode-llvm-verifier-crash-diagnosis.md](release-mode-llvm-verifier-crash-diagnosis.md) (v3.0.0, Steps 1-8)
 **Ranked workaround options**: [release-build-options-v2.md](release-build-options-v2.md)
@@ -52,17 +52,13 @@ Two compiler bugs block `swift build -c release` for types combining `~Copyable`
 - Root cause: `invariant.load` annotation on `let` stored property accesses mis-positioned relative to `@_rawLayout` destruction sequences in LLVM IR
 - Tracked: swiftlang/swift#86652
 
-**Bug 2 — SIL Ownership Crash** ("Found ownership error?!"):
-- Trigger: CopyPropagation false positive on `@inlinable` mutating functions that perform multiple buffer/hash-table accessor chain operations when buffer types with `@_rawLayout` are in the dependency graph
-- Context-sensitive: requires 5+ layers of `@inlinable` typed infrastructure; does not reproduce standalone
-- Patterns that trigger: (1) `remove.all()` + conditional `_buffer = ...` reassignment, (2) multiple `_buffer.swap` + `_buffer.remove.last` + `trickleDown` chains, (3) multiple stored-property mutations (`_keys` + `_values` + `_hashTable`)
-- Suppressed: `@_optimize(none)` on 30+ functions across 6 sub-repos:
-  - **swift-stack-primitives**: `Stack.clear(keepingCapacity:)` (Copyable + ~Copyable)
-  - **swift-queue-primitives**: `Queue.clear(keepingCapacity:)` (Dynamic, DoubleEnded, Linked, Small variants; Copyable + ~Copyable)
-  - **swift-array-primitives**: `Array.removeAll` (static + instance)
-  - **swift-heap-primitives**: `Heap.Remove.all(keepingCapacity:)`, `Heap.MinMax.Remove.all(keepingCapacity:)`, `Heap.MinMax.removeMin()`, `Heap.MinMax.removeMax()`
-  - **swift-set-primitives**: `Set.Ordered.Small.clear`, `.insert`, `.remove`, `.drain`
-  - **swift-dictionary-primitives**: `Dictionary.clear`, `.set`, `.drain`, `._grow`; `Dictionary.Ordered.set`, `.remove`, `.clear`, `.drain` (all variants: base, Bounded, Static, Small, Copyable)
+**Bug 2 — SIL Ownership Crash** ("Found ownership error?!") — **RESOLVED 2026-03-22**:
+- Root cause: `~Escapable` + `@_lifetime(borrow base)` on Property.View generates `mark_dependence` instructions classified as `PointerEscape` by `OperandOwnership.cpp:699-720`. CopyPropagation's `OSSACanonicalizeOwned` (line 216-219) bails out on PointerEscape, and in deep `@inlinable` chains this partial bailout produces double `end_lifetime` for `~Copyable ~Escapable` values across control flow joins.
+- Compiler team TODO: `OSSACanonicalizeOwned.cpp:40-46` acknowledges the `mark_dependence`/PointerEscape limitation
+- Fix: Removed `~Escapable` from 7 Property.View types in property-primitives. The `_read`/`_modify` coroutine scope already confines the yielded view's lifetime. This eliminated all `mark_dependence` instructions, preventing the CopyPropagation bug from triggering.
+- All 149 `@_optimize(none)` annotations removed across 12 sub-repos. 4 extracted static methods in async-primitives inlined back into closures.
+- Standalone reproducer: `Experiments/copypropagation-nonescapable-mark-dependence/` (3-module package, crashes reliably in release mode)
+- Previous workaround (superseded): `@_optimize(none)` on 149 functions across 12 sub-repos
 
 ## The 2-Field Rule (Refined Trigger)
 
@@ -206,7 +202,7 @@ After fix — stride is never used post-loop because there are no fields after s
 
 - **Bug 1 (LLVM verifier)**: RESOLVED for types with field reorder applied
 - **`_deinitWorkaround` retained**: Still needed to prevent deinit elision (#86652 triviality misclassification)
-- **Bug 2 (SIL ownership)**: RESOLVED — suppressed with `@_optimize(none)` on 30+ functions across 6 sub-repos. All 9 data structure sub-repos pass `swift build -c release`.
+- **Bug 2 (SIL ownership)**: RESOLVED — root cause fixed by removing `~Escapable` from Property.View (2026-03-22). All 149 `@_optimize(none)` annotations removed. Standalone reproducer: `Experiments/copypropagation-nonescapable-mark-dependence/`. `swift build -c release` passes clean with zero workarounds.
 
 ## Previous Workaround (Superseded)
 
@@ -330,6 +326,7 @@ rm -rf .build && swift build -c release
 - [release-build-options-v2.md](release-build-options-v2.md) — Ranked workaround options
 - [small-buffer-enum-compiler-workarounds.md](small-buffer-enum-compiler-workarounds.md) — Related DECISION: Small enum compiler bugs
 - [rawlayout-llvm-verifier-crash/](../Experiments/rawlayout-llvm-verifier-crash/) — Bug 1 experiment corpus (8 variants)
-- [rawlayout-sil-ownership-crash/](../Experiments/rawlayout-sil-ownership-crash/) — Bug 2 experiment corpus (3 variants)
+- [rawlayout-sil-ownership-crash/](../Experiments/rawlayout-sil-ownership-crash/) — Bug 2 experiment corpus (3 variants) — SUPERSEDED by root cause fix
 - [rawlayout-deinit-alternatives/](../Experiments/rawlayout-deinit-alternatives/) — Workaround alternatives (4 variants)
-- [rawlayout-minimal-reproducer/](../Experiments/rawlayout-minimal-reproducer/) — Standalone reproducer
+- [rawlayout-minimal-reproducer/](../Experiments/rawlayout-minimal-reproducer/) — Bug 1 standalone reproducer
+- [copypropagation-nonescapable-mark-dependence/](../Experiments/copypropagation-nonescapable-mark-dependence/) — **Bug 2 standalone reproducer** (3 modules, reliably crashes in release mode)

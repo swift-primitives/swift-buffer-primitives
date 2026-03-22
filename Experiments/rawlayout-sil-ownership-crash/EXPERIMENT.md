@@ -1,8 +1,10 @@
 # @_rawLayout SIL Ownership Crash and Enum _modify Investigation
 
+> **SUPERSEDED (2026-03-22)**: Bug 2 (CopyPropagation) root cause identified and fixed. The `~Escapable` + `@_lifetime(borrow)` combination on Property.View generated `mark_dependence` instructions classified as `PointerEscape`, causing CopyPropagation to produce double `end_lifetime`. Fix: removed `~Escapable` from Property.View. All `@_optimize(none)` annotations removed. Standalone reproducer: `../copypropagation-nonescapable-mark-dependence/`. The enum _modify limitation (V02-V03) remains current.
+
 <!--
 ---
-status: CONFIRMED (compiler bug + language limitation)
+status: SUPERSEDED (Bug 2 fixed; enum _modify limitation remains)
 date: 2026-03-21
 toolchain: Swift 6.2.4 (Xcode, arm64 macOS 26)
 consolidation_of:

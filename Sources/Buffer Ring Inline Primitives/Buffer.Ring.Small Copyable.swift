@@ -264,14 +264,12 @@ where Tag == Buffer<Element>.Ring.Push,
       Element: Copyable
 {
     /// Pushes an element to the back (CoW-safe).
-    @_lifetime(&self)
     @inlinable
     public mutating func back(_ element: consuming Element) {
         unsafe base.pointee._pushBack(consume element)
     }
 
     /// Pushes an element to the front (CoW-safe).
-    @_lifetime(&self)
     @inlinable
     public mutating func front(_ element: consuming Element) {
         unsafe base.pointee._pushFront(consume element)
@@ -288,7 +286,6 @@ where Tag == Buffer<Element>.Ring.Pop,
     /// Removes and returns the element at the front (CoW-safe).
     ///
     /// - Precondition: The buffer is not empty.
-    @_lifetime(&self)
     @inlinable
     public mutating func front() -> Element {
         unsafe base.pointee._popFront()
@@ -297,7 +294,6 @@ where Tag == Buffer<Element>.Ring.Pop,
     /// Removes and returns the element at the back (CoW-safe).
     ///
     /// - Precondition: The buffer is not empty.
-    @_lifetime(&self)
     @inlinable
     public mutating func back() -> Element {
         unsafe base.pointee._popBack()
@@ -314,7 +310,6 @@ where Tag == Buffer<Element>.Ring.Remove,
     /// Removes all elements from the buffer (CoW-safe).
     ///
     /// Resets to inline mode.
-    @_lifetime(&self)
     @inlinable
     public mutating func all() {
         unsafe base.pointee._removeAll()
@@ -324,7 +319,6 @@ where Tag == Buffer<Element>.Ring.Remove,
     ///
     /// - Parameter keepingCapacity: If `true` and the buffer has spilled,
     ///   stays in heap mode. If `false`, resets to inline mode.
-    @_lifetime(&self)
     @inlinable
     public mutating func all(keepingCapacity: Bool) {
         unsafe base.pointee._removeAll(keepingCapacity: keepingCapacity)

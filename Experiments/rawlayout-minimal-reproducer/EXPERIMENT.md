@@ -1,8 +1,10 @@
 # Minimal Reproducers for @_rawLayout Compiler Bugs
 
+> **UPDATE (2026-03-22)**: Bug 2 was subsequently reproduced in `../copypropagation-nonescapable-mark-dependence/`. The 7 patterns here failed because they tested general `~Copyable`/`@_rawLayout` patterns without the specific `~Escapable` + `@_lifetime(borrow)` ingredient that generates `mark_dependence`. Bug 2 root cause has been fixed by removing `~Escapable` from Property.View.
+
 <!--
 ---
-status: Bug 1 REPRODUCES, Bug 2 DOES NOT REPRODUCE
+status: Bug 1 REPRODUCES, Bug 2 DOES NOT REPRODUCE (see copypropagation-nonescapable-mark-dependence for successful reproducer)
 date: 2026-03-21
 toolchain: Swift 6.2.4 (swiftlang-6.2.4.1.4 clang-1700.6.4.2, arm64 macOS 26)
 supports: release-build-resolution-handoff-v2.md Step 4
