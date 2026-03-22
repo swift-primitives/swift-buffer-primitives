@@ -52,7 +52,7 @@ extension Buffer.Aligned where Element == UInt8 {
     ) {
         precondition(offset >= 0 && offset + source.count <= Int(bitPattern: count.cardinal))
         unsafe withUnsafeMutableBufferPointer { dest in
-            source.withUnsafeBufferPointer { src in
+            unsafe source.withUnsafeBufferPointer { src in
                 unsafe dest.baseAddress!.advanced(by: offset)
                     .update(from: src.baseAddress!, count: src.count)
             }

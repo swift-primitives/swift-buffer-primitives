@@ -33,3 +33,32 @@ future work on this package.
 A systematic audit of remaining `Buffer.Slab.Inline` and `Buffer.Slab.Bounded` public APIs may reveal additional unbounded `Bit.Index` parameters that should be `Bit.Index.Bounded<wordCount>`. The `Buffer.Slab.Small` variant narrows at its delegation boundary and may also have inconsistencies.
 
 **Applies to**: `Buffer.Slab.Inline`, `Buffer.Slab.Bounded`, `Buffer.Slab.Small`
+
+---
+
+## Experiment Consolidation Packaging Defects
+
+**Date**: 2026-03-21
+
+**Context**: During consolidation of 14 @_rawLayout experiments into 3 coherent groups, 4 packaging defects were identified in the consolidated experiment variants.
+
+Defects identified: V04 missing public init, V08 Sendable conformance, V01 visibility issue, V03 attribute issue. These are in the consolidated experiment packages under `Experiments/`, not in production code.
+
+**Applies to**: `Experiments/rawlayout-llvm-verifier-crash/`, `Experiments/rawlayout-sil-ownership-crash/`, `Experiments/rawlayout-deinit-alternatives/`
+
+---
+
+## Ideal Architecture After Compiler Fix
+
+**Date**: 2026-03-22
+
+**Context**: A 21-line compiler fix for swiftlang/swift#86652 (IRGen element-wise vs VWT destruction for public ~Copyable types with @_rawLayout) was written, validated against 2,284 compiler tests, and confirmed to eliminate the LLVM verifier crash.
+
+Once the compiler fix lands upstream, the ideal architecture becomes possible:
+1. Add `deinit` to `Storage.Inline` (combined @_rawLayout layout)
+2. Remove all 22 `_deinitWorkaround: AnyObject?` sites across 10 packages
+3. Remove buffer-layer deinits that exist solely to compensate for Storage.Inline lacking deinit
+
+The `rawlayout-access-level-trigger` experiment is the canary — when it passes on the upstream toolchain, the migration can begin.
+
+**Applies to**: `Storage.Inline`, `Buffer.Ring.Inline`, `Buffer.Linear.Inline`, `Buffer.Slab.Inline`, all data structure types with `_deinitWorkaround`

@@ -75,7 +75,7 @@ extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
 
         @inlinable
         init(base: UnsafePointer<Element>, header: Buffer.Ring.Header) {
-            self.base = base
+            unsafe (self.base = base)
             self.header = header
             self.current = .zero
             self.end = header.count.map(Ordinal.init)
@@ -120,7 +120,7 @@ extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
     public borrowing func makeIterator() -> Iterator {
         let bounded = Index<Element>.Bounded<capacity>(.zero)!
         let base: UnsafePointer<Element> = unsafe storage.pointer(at: bounded)
-        return Iterator(base: base, header: header)
+        return unsafe Iterator(base: base, header: header)
     }
 }
 

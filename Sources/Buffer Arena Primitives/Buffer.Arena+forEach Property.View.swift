@@ -10,7 +10,7 @@ extension Property.View where Base: ~Copyable {
         _ body: (Index<Element>) -> Void
     ) where Tag == Sequence.ForEach, Base == Buffer<Element>.Arena {
         let meta = unsafe base.pointee.storage.meta
-        Buffer<Element>.Arena.forEach(
+        unsafe Buffer<Element>.Arena.forEach(
             occupied: unsafe base.pointee.header,
             meta: meta,
             body
@@ -28,7 +28,7 @@ extension Property.View where Base: ~Copyable {
         _ body: (Index<Element>) -> Void
     ) where Tag == Sequence.ForEach, Base == Buffer<Element>.Arena.Bounded {
         let meta = unsafe base.pointee.storage.meta
-        Buffer<Element>.Arena.forEach(
+        unsafe Buffer<Element>.Arena.forEach(
             occupied: unsafe base.pointee.header,
             meta: meta,
             body

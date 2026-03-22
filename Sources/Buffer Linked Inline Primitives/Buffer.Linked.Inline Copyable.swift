@@ -65,7 +65,7 @@ extension Buffer.Linked.Inline: Sequence.`Protocol` where Element: Copyable {
             head: Index<Buffer<Element>.Linked<N>.Node>,
             sentinel: Index<Buffer<Element>.Linked<N>.Node>
         ) {
-            self._base = base
+            unsafe (self._base = base)
             self._current = head
             self._sentinel = sentinel
         }

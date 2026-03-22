@@ -68,7 +68,7 @@ extension Buffer.Slab.Inline: Sequence.`Protocol` where Element: Copyable {
 
         @inlinable
         init(base: UnsafePointer<Element>, bitmap: Bit.Vector.Static<wordCount>, end: Bit.Index) {
-            self.base = base
+            unsafe (self.base = base)
             self.bitmap = bitmap
             self.current = .zero
             self.end = end
@@ -113,7 +113,7 @@ extension Buffer.Slab.Inline: Sequence.`Protocol` where Element: Copyable {
     public borrowing func makeIterator() -> Iterator {
         let base: UnsafePointer<Element> = unsafe storage.pointer(at: Index<Element>.Bounded<wordCount>(.zero)!)
         let end = Bit.Index.Count(UInt(wordCount)).map(Ordinal.init)
-        return Iterator(base: base, bitmap: header.bitmap, end: end)
+        return unsafe Iterator(base: base, bitmap: header.bitmap, end: end)
     }
 }
 

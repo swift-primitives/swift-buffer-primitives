@@ -27,7 +27,7 @@ extension Buffer.Arena.Bounded where Element: Copyable {
         let newMeta = unsafe newArenaStorage.meta
         let hw = Int(bitPattern: header.highWater)
         unsafe newMeta.update(from: oldMeta, count: hw)
-        Buffer<Element>.Arena.forEach(occupied: header, meta: oldMeta) { slot in
+        unsafe Buffer<Element>.Arena.forEach(occupied: header, meta: oldMeta) { slot in
             unsafe newArenaStorage.initialize(
                 to: storage.pointer(at: slot).pointee, at: slot
             )

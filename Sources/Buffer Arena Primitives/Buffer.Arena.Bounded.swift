@@ -44,7 +44,7 @@ extension Buffer.Arena.Bounded where Element: ~Copyable {
     ) throws(Error) -> Buffer<Element>.Arena.Position {
         guard !header.isFull else { throw .capacityExceeded }
         let meta = unsafe storage.meta
-        let position = Buffer<Element>.Arena.insert(
+        let position = unsafe Buffer<Element>.Arena.insert(
             consume element, header: &header, arenaStorage: storage, meta: meta
         )
         storage.highWater = header.highWater
@@ -59,7 +59,7 @@ extension Buffer.Arena.Bounded where Element: ~Copyable {
     public mutating func allocate() throws(Error) -> Buffer<Element>.Arena.Position {
         guard !header.isFull else { throw .capacityExceeded }
         let meta = unsafe storage.meta
-        let position = Buffer<Element>.Arena.allocate(header: &header, meta: meta)
+        let position = unsafe Buffer<Element>.Arena.allocate(header: &header, meta: meta)
         storage.highWater = header.highWater
         return position
     }
@@ -74,11 +74,11 @@ extension Buffer.Arena.Bounded where Element: ~Copyable {
         at position: Buffer<Element>.Arena.Position
     ) throws(Error) -> Element {
         let meta = unsafe storage.meta
-        guard Buffer<Element>.Arena.isValid(position, header: header, meta: meta) else {
+        guard unsafe Buffer<Element>.Arena.isValid(position, header: header, meta: meta) else {
             throw .invalidPosition
         }
         let element = storage.move(at: position.slot)
-        Buffer<Element>.Arena._releaseSlot(position.slot, header: &header, meta: meta)
+        unsafe Buffer<Element>.Arena._releaseSlot(position.slot, header: &header, meta: meta)
         return element
     }
 
@@ -88,7 +88,7 @@ extension Buffer.Arena.Bounded where Element: ~Copyable {
     @inlinable
     public mutating func remove(at slot: Index<Element>) -> Element {
         let meta = unsafe storage.meta
-        return Buffer<Element>.Arena.remove(
+        return unsafe Buffer<Element>.Arena.remove(
             at: slot, header: &header, arenaStorage: storage, meta: meta
         )
     }
@@ -99,7 +99,7 @@ extension Buffer.Arena.Bounded where Element: ~Copyable {
     @inlinable
     public mutating func free(at slot: Index<Element>) {
         let meta = unsafe storage.meta
-        Buffer<Element>.Arena.free(
+        unsafe Buffer<Element>.Arena.free(
             at: slot, header: &header, arenaStorage: storage, meta: meta
         )
     }
@@ -108,7 +108,7 @@ extension Buffer.Arena.Bounded where Element: ~Copyable {
     @inlinable
     public mutating func removeAll() {
         let meta = unsafe storage.meta
-        Buffer<Element>.Arena.deinitialize(
+        unsafe Buffer<Element>.Arena.deinitialize(
             header: &header, arenaStorage: storage, meta: meta
         )
     }
@@ -119,14 +119,14 @@ extension Buffer.Arena.Bounded where Element: ~Copyable {
     @inlinable
     public func isValid(_ position: Buffer<Element>.Arena.Position) -> Bool {
         let meta = unsafe storage.meta
-        return Buffer<Element>.Arena.isValid(position, header: header, meta: meta)
+        return unsafe Buffer<Element>.Arena.isValid(position, header: header, meta: meta)
     }
 
     /// Returns whether the slot at the given index is occupied.
     @inlinable
     public func isOccupied(_ slot: Index<Element>) -> Bool {
         let meta = unsafe storage.meta
-        return Buffer<Element>.Arena.isOccupied(slot, meta: meta)
+        return unsafe Buffer<Element>.Arena.isOccupied(slot, meta: meta)
     }
 
     // MARK: - Token Access
@@ -135,7 +135,7 @@ extension Buffer.Arena.Bounded where Element: ~Copyable {
     @inlinable
     public func token(at slot: Index<Element>) -> UInt32 {
         let meta = unsafe storage.meta
-        return Buffer<Element>.Arena.token(at: slot, meta: meta)
+        return unsafe Buffer<Element>.Arena.token(at: slot, meta: meta)
     }
 
     /// Constructs a Position handle from an occupied slot.
@@ -146,7 +146,7 @@ extension Buffer.Arena.Bounded where Element: ~Copyable {
         forOccupied slot: Index<Element>
     ) -> Buffer<Element>.Arena.Position {
         let meta = unsafe storage.meta
-        return Buffer<Element>.Arena.position(forOccupied: slot, meta: meta)
+        return unsafe Buffer<Element>.Arena.position(forOccupied: slot, meta: meta)
     }
 
     // MARK: - Element Access
