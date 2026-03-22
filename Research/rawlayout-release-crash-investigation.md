@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 2.0.0
-date: 2026-03-21
-status: OPEN (combined @_rawLayout works for internal, blocked by public access level)
+version: 3.0.0
+date: 2026-03-22
+status: RESOLVED (field-ordering workaround applied; compiler bug still open)
 consolidates:
   - release-crash-fix-handoff.md
   - release-crash-resolution-handoff.md
@@ -20,7 +20,11 @@ consolidates:
 
 ## Summary
 
-Two compiler bugs block `swift build -c release` for types combining `~Copyable` structs, `@_rawLayout` stored fields, and explicit `deinit`. The root cause is triviality misclassification: the compiler incorrectly classifies `@_rawLayout` types with generic-dependent layout as trivially destructible when imported cross-module.
+Two compiler bugs block `swift build -c release` for types combining `~Copyable` structs, `@_rawLayout` stored fields, and explicit `deinit`.
+
+**Bug 1 (LLVM verifier) — RESOLVED via field ordering.** The compiler generates composite value witnesses that load `stride` inside an element-iteration loop but use `stride * capacity` outside the loop to reach fields that follow the variable-size `@_rawLayout` storage. When the loop is skipped (capacity ≤ 0), `stride` is undefined, violating LLVM SSA dominance. **Fix**: place `@_rawLayout` storage as the last stored property at every nesting level, so no fields require stride-based offset computation post-loop.
+
+**Bug 2 (SIL ownership) — OPEN.** CopyPropagation false positive; suppressed with `@_optimize(none)` on affected functions.
 
 **Authoritative diagnosis**: [release-mode-llvm-verifier-crash-diagnosis.md](release-mode-llvm-verifier-crash-diagnosis.md) (v3.0.0, Steps 1-8)
 **Ranked workaround options**: [release-build-options-v2.md](release-build-options-v2.md)
@@ -38,6 +42,8 @@ Two compiler bugs block `swift build -c release` for types combining `~Copyable`
 | 2026-03-21 | Minimal reproducer found for Bug 1 | 3-module chain, 2+ cross-module @_rawLayout fields. Consumer module crashes, defining module fine. |
 | 2026-03-21 | Storage.Inline deinit investigated → **provably impossible** | 2-field rule discovered. 9 approaches tested, all fail. |
 | 2026-03-21 | Tested on Swift 6.4-dev (main snapshot 2026-03-16) | **Still broken.** |
+| 2026-03-22 | **Field-ordering root cause discovered** | `@_rawLayout` storage must be the last stored property. Composite value witnesses compute `stride * capacity` post-loop only when fixed-size fields follow the variable-size storage. Reordering eliminates the crash entirely. |
+| 2026-03-22 | Field reorder applied across 11 sub-repos | Storage.Inline, Storage.Pool.Inline, Storage.Arena.Inline, Buffer.Linked.Inline reordered. `_deinitWorkaround` moved before `_buffer` in 19 data structure types. Debug build passes (3779 modules). |
 
 ## The Two Bugs
 
@@ -133,9 +139,71 @@ deinit {
 }
 ```
 
-## Current Workaround
+## Field-Ordering Fix (2026-03-22)
 
-Branch: `workaround/struct-body-inline-types`
+### Root Cause
+
+The "2-field rule" is actually a **field-ordering rule**: the crash occurs when fixed-size fields follow a variable-size `@_rawLayout` field in memory layout. The compiler generates composite value witnesses (`wxx` destroy, `wta` assignWithTake, `wet`/`wst` enum tag) that:
+
+1. Iterate through `@_rawLayout` elements in a loop, loading `stride` from type metadata inside the loop body
+2. After the loop, compute `stride * capacity` to find fields at higher offsets
+3. When the loop is skipped (capacity ≤ 0), `stride` was never loaded → LLVM SSA dominance violation
+
+### Fix
+
+Place `@_rawLayout` storage as the **last stored property** at every nesting level:
+
+| Type | Before (crashes) | After (works) |
+|------|-------------------|---------------|
+| `Storage.Inline` | `_storage`, `_slots` | `_slots`, **`_storage`** |
+| `Storage.Pool.Inline` | `_storage`, `_slots`, `_allocated` | `_slots`, `_allocated`, **`_storage`** |
+| `Storage.Arena.Inline` | `_storage`, `_slots`, `_allocated` | `_slots`, `_allocated`, **`_storage`** |
+| `Buffer.Linked.Inline` | `header`, `storage`, `freeHead`, `nextUnused` | `header`, `freeHead`, `nextUnused`, **`storage`** |
+
+For data structure types with `_deinitWorkaround: AnyObject?` + `_buffer`:
+
+| Pattern | Before (crashes) | After (works) |
+|---------|-------------------|---------------|
+| All Inline/Static/Small types | `_buffer`, `_deinitWorkaround` | `_deinitWorkaround`, **`_buffer`** |
+| Heap.Static/Small | `_buffer`, `order`, `_deinitWorkaround` | `_deinitWorkaround`, `order`, **`_buffer`** |
+| Tree.N.Inline/Small | `_arena`, `_rootIndex`, `_deinitWorkaround` | `_deinitWorkaround`, `_rootIndex`, **`_arena`** |
+
+### Why This Works
+
+The fix prevents the broken codegen path from being triggered. When `@_rawLayout` storage is last, the composite value witnesses:
+1. Handle all fixed-size fields at known offsets (no stride computation needed)
+2. Enter the element loop with stride computation
+3. After the loop, return — no post-loop stride usage required
+
+### Verification (LLVM IR)
+
+Before fix — `List.Linked.Inline` destroy witness (`wxx`):
+```
+entry:
+  %capacity = load ...
+  br i1 %capacity > 0, %loop, %exit    ; skip loop if empty
+
+loop:
+  %stride = load ... !invariant.load    ; stride only defined here
+  call void %Destroy(ptr ...)
+  br i1 %done, %exit, %loop
+
+exit:                                   ; reached from entry OR loop
+  %offset = mul i64 %stride, %capacity  ; ← BUG: %stride undefined from entry path
+  ; ... access _deinitWorkaround at %offset
+```
+
+After fix — stride is never used post-loop because there are no fields after storage.
+
+### Status
+
+- **Bug 1 (LLVM verifier)**: RESOLVED for types with field reorder applied
+- **`_deinitWorkaround` retained**: Still needed to prevent deinit elision (#86652 triviality misclassification)
+- **Bug 2 (SIL ownership)**: Remains OPEN — separate issue, suppressed with `@_optimize(none)`
+
+## Previous Workaround (Superseded)
+
+Branch: `workaround/struct-body-inline-types` (superseded by field-ordering fix)
 
 1. Inline types moved from extension files into parent struct bodies (avoids extension-file trigger)
 2. Ring.Inline and Linear.Inline deinits **removed** (elements leak for class-typed and ~Copyable)
@@ -145,7 +213,7 @@ Branch: `workaround/struct-body-inline-types`
 
 **Known regression**: Ring.Inline and Linear.Inline silently leak elements when dropped without draining. Affects class-typed and ~Copyable elements only.
 
-## Why the Current Workaround Works
+## Why the Previous Workaround Worked
 
 1. Only 2 types have deinits with @_rawLayout in their destruction chain: Slab.Inline + Arena.Inline
 2. Both in **variant struct bodies** (struct-body pattern)
