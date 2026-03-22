@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 3.0.0
+version: 4.0.0
 date: 2026-03-22
-status: RESOLVED (field-ordering workaround applied; compiler bug still open)
+status: RESOLVED (Bug 1: field-ordering; Bug 2: @_optimize(none) on 30+ functions)
 consolidates:
   - release-crash-fix-handoff.md
   - release-crash-resolution-handoff.md
@@ -24,7 +24,7 @@ Two compiler bugs block `swift build -c release` for types combining `~Copyable`
 
 **Bug 1 (LLVM verifier) — RESOLVED via field ordering.** The compiler generates composite value witnesses that load `stride` inside an element-iteration loop but use `stride * capacity` outside the loop to reach fields that follow the variable-size `@_rawLayout` storage. When the loop is skipped (capacity ≤ 0), `stride` is undefined, violating LLVM SSA dominance. **Fix**: place `@_rawLayout` storage as the last stored property at every nesting level, so no fields require stride-based offset computation post-loop.
 
-**Bug 2 (SIL ownership) — OPEN.** CopyPropagation false positive; suppressed with `@_optimize(none)` on affected functions.
+**Bug 2 (SIL ownership) — RESOLVED via `@_optimize(none)`.** CopyPropagation false positive; suppressed with `@_optimize(none)` on 30+ functions across 6 sub-repos (Stack, Queue, Array, Heap, Set, Dictionary). All 9 data structure sub-repos pass `swift build -c release`.
 
 **Authoritative diagnosis**: [release-mode-llvm-verifier-crash-diagnosis.md](release-mode-llvm-verifier-crash-diagnosis.md) (v3.0.0, Steps 1-8)
 **Ranked workaround options**: [release-build-options-v2.md](release-build-options-v2.md)
@@ -53,9 +53,16 @@ Two compiler bugs block `swift build -c release` for types combining `~Copyable`
 - Tracked: swiftlang/swift#86652
 
 **Bug 2 — SIL Ownership Crash** ("Found ownership error?!"):
-- Trigger: CopyPropagation false positive on functions using buffer types with `@_rawLayout` in dependency graph
+- Trigger: CopyPropagation false positive on `@inlinable` mutating functions that perform multiple buffer/hash-table accessor chain operations when buffer types with `@_rawLayout` are in the dependency graph
 - Context-sensitive: requires 5+ layers of `@inlinable` typed infrastructure; does not reproduce standalone
-- Suppressed: `@_optimize(none)` on 4 affected functions
+- Patterns that trigger: (1) `remove.all()` + conditional `_buffer = ...` reassignment, (2) multiple `_buffer.swap` + `_buffer.remove.last` + `trickleDown` chains, (3) multiple stored-property mutations (`_keys` + `_values` + `_hashTable`)
+- Suppressed: `@_optimize(none)` on 30+ functions across 6 sub-repos:
+  - **swift-stack-primitives**: `Stack.clear(keepingCapacity:)` (Copyable + ~Copyable)
+  - **swift-queue-primitives**: `Queue.clear(keepingCapacity:)` (Dynamic, DoubleEnded, Linked, Small variants; Copyable + ~Copyable)
+  - **swift-array-primitives**: `Array.removeAll` (static + instance)
+  - **swift-heap-primitives**: `Heap.Remove.all(keepingCapacity:)`, `Heap.MinMax.Remove.all(keepingCapacity:)`, `Heap.MinMax.removeMin()`, `Heap.MinMax.removeMax()`
+  - **swift-set-primitives**: `Set.Ordered.Small.clear`, `.insert`, `.remove`, `.drain`
+  - **swift-dictionary-primitives**: `Dictionary.clear`, `.set`, `.drain`, `._grow`; `Dictionary.Ordered.set`, `.remove`, `.clear`, `.drain` (all variants: base, Bounded, Static, Small, Copyable)
 
 ## The 2-Field Rule (Refined Trigger)
 
@@ -199,7 +206,7 @@ After fix — stride is never used post-loop because there are no fields after s
 
 - **Bug 1 (LLVM verifier)**: RESOLVED for types with field reorder applied
 - **`_deinitWorkaround` retained**: Still needed to prevent deinit elision (#86652 triviality misclassification)
-- **Bug 2 (SIL ownership)**: Remains OPEN — separate issue, suppressed with `@_optimize(none)`
+- **Bug 2 (SIL ownership)**: RESOLVED — suppressed with `@_optimize(none)` on 30+ functions across 6 sub-repos. All 9 data structure sub-repos pass `swift build -c release`.
 
 ## Previous Workaround (Superseded)
 
