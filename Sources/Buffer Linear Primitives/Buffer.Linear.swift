@@ -190,7 +190,6 @@ where Tag == Buffer<Element>.Linear.Remove,
     ///
     /// - Precondition: The buffer is not empty.
     /// - Complexity: O(n)
-    @_lifetime(&self)
     @inlinable
     public mutating func first() -> Element {
         unsafe base.pointee._removeFirst()
@@ -200,7 +199,6 @@ where Tag == Buffer<Element>.Linear.Remove,
     ///
     /// - Precondition: The buffer is not empty.
     /// - Complexity: O(1)
-    @_lifetime(&self)
     @inlinable
     public mutating func last() -> Element {
         unsafe base.pointee._removeLast()
@@ -209,7 +207,6 @@ where Tag == Buffer<Element>.Linear.Remove,
     /// Removes all elements from the buffer.
     ///
     /// - Complexity: O(n) where n is the number of elements.
-    @_lifetime(&self)
     @inlinable
     public mutating func all() {
         unsafe base.pointee._removeAll()

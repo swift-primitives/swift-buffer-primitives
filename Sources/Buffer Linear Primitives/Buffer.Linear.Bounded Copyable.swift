@@ -155,7 +155,6 @@ where Tag == Buffer<Element>.Linear.Remove,
     /// Removes and returns the first element (CoW-safe).
     ///
     /// - Precondition: The buffer is not empty.
-    @_lifetime(&self)
     @inlinable
     public mutating func first() -> Element {
         unsafe base.pointee._removeFirst()
@@ -164,14 +163,12 @@ where Tag == Buffer<Element>.Linear.Remove,
     /// Removes and returns the last element (CoW-safe).
     ///
     /// - Precondition: The buffer is not empty.
-    @_lifetime(&self)
     @inlinable
     public mutating func last() -> Element {
         unsafe base.pointee._removeLast()
     }
 
     /// Removes all elements from the buffer (CoW-safe).
-    @_lifetime(&self)
     @inlinable
     public mutating func all() {
         unsafe base.pointee._removeAll()
@@ -203,14 +200,12 @@ extension Buffer.Linear.Bounded where Element: Copyable {
     ///
     /// Ensures unique ownership before providing mutable access.
     public var mutableSpan: MutableSpan<Element> {
-        @_lifetime(&self)
         @inlinable
         mutating get {
             ensureUnique()
             let span = unsafe MutableSpan(_unsafeStart: unsafe storage.pointer(at: .zero), count: header.count)
             return unsafe _overrideLifetime(span, mutating: &self)
         }
-        @_lifetime(&self)
         @inlinable
         _modify {
             ensureUnique()

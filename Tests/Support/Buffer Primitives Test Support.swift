@@ -52,7 +52,6 @@ extension Buffer.Linear.Small {
 
 extension Buffer.Linked {
     // Swift 6.2 CopyPropagation crash: double-consume of Property.View.Typed.Valued
-    @_optimize(none)
     public init(_ elements: [Element], minimumCapacity: UInt = 0) {
         let cap = Index<Node>.Count(Cardinal(Swift.max(UInt(elements.count), minimumCapacity)))
         var buffer = Self(minimumCapacity: cap)
@@ -65,7 +64,6 @@ extension Buffer.Linked {
 
 extension Buffer.Linked.Small {
     // Swift 6.2 CopyPropagation crash: double-consume of Property.View.Typed.Valued
-    @_optimize(none)
     public init(_ elements: [Element]) {
         var buffer = Self()
         for element in elements {

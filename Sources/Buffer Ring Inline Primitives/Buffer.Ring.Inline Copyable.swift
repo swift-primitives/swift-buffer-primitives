@@ -81,8 +81,8 @@ extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
             self.end = header.count.map(Ordinal.init)
         }
 
-        @_lifetime(&self)
         @inlinable
+        @_lifetime(&self)
         public mutating func nextSpan(maximumCount: Cardinal) -> Span<Element> {
             let ptr = unsafe withUnsafeMutablePointer(to: &_element) { p in
                 unsafe UnsafePointer<Element>(

@@ -63,8 +63,8 @@ extension Buffer.Linear.Inline: Sequence.`Protocol` where Element: Copyable {
             self.remaining = count
         }
 
-        @_lifetime(&self)
         @inlinable
+        @_lifetime(&self)
         public mutating func nextSpan(maximumCount: Cardinal) -> Span<Element> {
             let take = Index<Element>.Count.min(.init(maximumCount), remaining)
             guard take > .zero else {

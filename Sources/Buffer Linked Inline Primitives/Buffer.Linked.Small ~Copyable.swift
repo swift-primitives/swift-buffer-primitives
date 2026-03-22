@@ -212,7 +212,6 @@ where Tag == Buffer<Element>.Linked<n>.Insert,
     ///
     /// - Parameter element: The element to insert.
     /// - Complexity: O(1) amortized
-    @_lifetime(&self)
     @inlinable
     public mutating func front(
         _ element: consuming Element
@@ -226,7 +225,6 @@ where Tag == Buffer<Element>.Linked<n>.Insert,
     ///
     /// - Parameter element: The element to insert.
     /// - Complexity: O(1) amortized
-    @_lifetime(&self)
     @inlinable
     public mutating func back(
         _ element: consuming Element
@@ -278,7 +276,6 @@ where Tag == Buffer<Element>.Linked<n>.Remove,
     ///
     /// - Returns: The removed element, or `nil` if the list is empty.
     /// - Complexity: O(1)
-    @_lifetime(&self)
     @inlinable
     public mutating func front() -> Element? {
         unsafe base.pointee._removeFront()
@@ -288,7 +285,6 @@ where Tag == Buffer<Element>.Linked<n>.Remove,
     ///
     /// - Returns: The removed element, or `nil` if the list is empty.
     /// - Complexity: O(1) for N >= 2 (doubly-linked), O(n) for N == 1 (singly-linked)
-    @_lifetime(&self)
     @inlinable
     public mutating func back() -> Element? {
         unsafe base.pointee._removeBack()

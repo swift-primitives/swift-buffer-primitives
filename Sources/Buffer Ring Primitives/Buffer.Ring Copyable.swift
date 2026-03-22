@@ -122,7 +122,6 @@ where Tag == Buffer<Element>.Ring.Push,
     /// Pushes an element to the back (CoW-safe).
     ///
     /// - Complexity: O(1) amortized
-    @_lifetime(&self)
     @inlinable
     public mutating func back(_ element: consuming Element) {
         unsafe base.pointee._pushBack(consume element)
@@ -131,7 +130,6 @@ where Tag == Buffer<Element>.Ring.Push,
     /// Pushes an element to the front (CoW-safe).
     ///
     /// - Complexity: O(1) amortized
-    @_lifetime(&self)
     @inlinable
     public mutating func front(_ element: consuming Element) {
         unsafe base.pointee._pushFront(consume element)
@@ -149,7 +147,6 @@ where Tag == Buffer<Element>.Ring.Pop,
     ///
     /// - Precondition: The buffer is not empty.
     /// - Complexity: O(1)
-    @_lifetime(&self)
     @inlinable
     public mutating func front() -> Element {
         unsafe base.pointee._popFront()
@@ -159,7 +156,6 @@ where Tag == Buffer<Element>.Ring.Pop,
     ///
     /// - Precondition: The buffer is not empty.
     /// - Complexity: O(1)
-    @_lifetime(&self)
     @inlinable
     public mutating func back() -> Element {
         unsafe base.pointee._popBack()
@@ -176,7 +172,6 @@ where Tag == Buffer<Element>.Ring.Remove,
     /// Removes all elements from the buffer (CoW-safe).
     ///
     /// - Complexity: O(n) where n is the number of elements.
-    @_lifetime(&self)
     @inlinable
     public mutating func all() {
         unsafe base.pointee._removeAll()
