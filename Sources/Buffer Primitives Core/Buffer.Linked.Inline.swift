@@ -28,9 +28,6 @@ extension Buffer.Linked where Element: ~Copyable {
         @usableFromInline
         package var header: Header
 
-        @usableFromInline
-        package var storage: Storage<Node>.Inline<capacity>
-
         /// Head of the free list (previously used then freed slots).
         /// Equal to sentinel when no freed slots are available.
         @usableFromInline
@@ -41,6 +38,18 @@ extension Buffer.Linked where Element: ~Copyable {
         @usableFromInline
         package var nextUnused: Index<Node>
 
+        // NOTE: storage MUST be the last stored property. When a containing
+        // type has a custom deinit (e.g. List.Linked.Inline), the compiler
+        // generates composite value witnesses that iterate through the
+        // @_rawLayout storage in a loop. If fixed-size fields follow the
+        // variable-size storage, the compiler computes their offsets using
+        // stride * capacity — but stride is only loaded inside the loop body,
+        // causing an LLVM "Instruction does not dominate all uses" verifier
+        // crash in release builds (Swift 6.2.4 IRGen bug). Placing storage
+        // last means no fields need stride-based offset computation post-loop.
+        @usableFromInline
+        package var storage: Storage<Node>.Inline<capacity>
+
         @inlinable
         package init(
             header: Header,
@@ -49,9 +58,9 @@ extension Buffer.Linked where Element: ~Copyable {
             nextUnused: Index<Node>
         ) {
             self.header = header
-            self.storage = storage
             self.freeHead = freeHead
             self.nextUnused = nextUnused
+            self.storage = storage
         }
 
         /// Errors that can occur during inline linked buffer operations.
