@@ -37,7 +37,7 @@ extension Buffer.Arena.Small where Element: ~Copyable {
                     let pos = heap.insert(consume element)
                     self = Self(_storage: .heap(consume heap))
                     return pos
-                case .inline(var inl):
+                case .inline(let inl):
                     self = Self(_storage: .inline(consume inl))
                     fatalError("expected heap mode after spill")
                 }
@@ -68,7 +68,7 @@ extension Buffer.Arena.Small where Element: ~Copyable {
                     let pos = heap.allocate()
                     self = Self(_storage: .heap(consume heap))
                     return pos
-                case .inline(var inl):
+                case .inline(let inl):
                     self = Self(_storage: .inline(consume inl))
                     fatalError("expected heap mode after spill")
                 }
@@ -169,7 +169,7 @@ extension Buffer.Arena.Small where Element: ~Copyable {
         _ position: Buffer<Element>.Arena.Position
     ) -> Bool {
         switch _storage {
-        case .heap(var buf):
+        case .heap(let buf):
             let result = buf.isValid(position)
             self = Self(_storage: .heap(consume buf))
             return result
@@ -212,7 +212,7 @@ extension Buffer.Arena.Small where Element: ~Copyable {
         forOccupied slot: Index<Element>
     ) -> Buffer<Element>.Arena.Position {
         switch _storage {
-        case .heap(var buf):
+        case .heap(let buf):
             let pos = buf.position(forOccupied: slot)
             self = Self(_storage: .heap(consume buf))
             return pos
@@ -263,7 +263,7 @@ extension Buffer.Arena.Small where Element: ~Copyable {
     @inlinable
     mutating func _spillToHeap() {
         switch _storage {
-        case .heap(var buf):
+        case .heap(let buf):
             self = Self(_storage: .heap(consume buf))
             return
         case .inline(var inlineBuf):

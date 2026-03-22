@@ -38,7 +38,7 @@ extension Buffer.Ring.Small where Element: Copyable {
     @inlinable
     public mutating func consume() -> Sequence.Consume.View<Element, ConsumeState> {
         switch _storage {
-        case .heap(var heap):
+        case .heap(let heap):
             let header = heap.header
             let storage = heap.storage
             self = Self(_storage: .inline(Buffer<Element>.Ring.Inline<inlineCapacity>()))

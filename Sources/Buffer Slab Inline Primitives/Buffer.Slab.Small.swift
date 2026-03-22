@@ -149,7 +149,7 @@ extension Buffer.Slab.Small where Element: ~Copyable {
     @usableFromInline
     mutating func _spillToHeapMoving() {
         switch _storage {
-        case .heap(var buf):
+        case .heap(let buf):
             self = Self(_storage: .heap(consume buf))
             return
         case .inline(var buf):

@@ -93,7 +93,7 @@ extension Buffer.Ring.Small where Element: ~Copyable {
                 case .heap(var buf):
                     buf._pushBack(consume element)
                     self = Self(_storage: .heap(consume buf))
-                case .inline(var buf):
+                case .inline(let buf):
                     self = Self(_storage: .inline(consume buf))
                     fatalError("_spillToHeapMoving must transition to heap")
                 }
@@ -132,7 +132,7 @@ extension Buffer.Ring.Small where Element: ~Copyable {
                 case .heap(var buf):
                     buf._pushFront(consume element)
                     self = Self(_storage: .heap(consume buf))
-                case .inline(var buf):
+                case .inline(let buf):
                     self = Self(_storage: .inline(consume buf))
                     fatalError("_spillToHeapMoving must transition to heap")
                 }
@@ -319,7 +319,7 @@ extension Buffer.Ring.Small where Element: ~Copyable {
     @usableFromInline
     mutating func _spillToHeapMoving() {
         switch _storage {
-        case .heap(var buf):
+        case .heap(let buf):
             self = Self(_storage: .heap(consume buf))
             return
         case .inline(var buf):

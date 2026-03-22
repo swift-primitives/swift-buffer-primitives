@@ -283,7 +283,7 @@ extension Buffer.Linear.Small where Element: ~Copyable {
                 case .heap(var heapBuf):
                     heapBuf.append(consume element)
                     self = Self(_storage: .heap(consume heapBuf))
-                case .inline(var inlineBuf):
+                case .inline(let inlineBuf):
                     self = Self(_storage: .inline(consume inlineBuf))
                     fatalError("expected heap mode after spill")
                 }
@@ -295,7 +295,7 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     @usableFromInline
     mutating func _spillToHeapMoving() {
         switch _storage {
-        case .heap(var buf):
+        case .heap(let buf):
             self = Self(_storage: .heap(consume buf))
             return
         case .inline(var buf):
@@ -330,7 +330,7 @@ extension Buffer.Linear.Small where Element: Copyable {
     @usableFromInline
     mutating func _spillToHeap() {
         switch _storage {
-        case .heap(var buf):
+        case .heap(let buf):
             self = Self(_storage: .heap(consume buf))
             return
         case .inline(var buf):
@@ -357,7 +357,7 @@ extension Buffer.Linear.Small where Element: Copyable {
     @usableFromInline
     mutating func _spillToHeap(minimumCapacity: Index<Element>.Count) {
         switch _storage {
-        case .heap(var buf):
+        case .heap(let buf):
             self = Self(_storage: .heap(consume buf))
             return
         case .inline(var buf):
