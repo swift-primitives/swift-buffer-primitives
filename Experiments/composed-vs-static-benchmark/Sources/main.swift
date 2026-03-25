@@ -76,7 +76,7 @@ extension Ring {
 // ============================================================
 
 extension Ring {
-    @inline(__always)
+    @inline(always)
     static func pushBack(
         _ element: consuming Int,
         header: inout Header,
@@ -92,7 +92,7 @@ extension Ring {
         storage.initialization = header.initialization
     }
 
-    @inline(__always)
+    @inline(always)
     static func popFront(
         header: inout Header,
         storage: Storage.Heap<Int>
@@ -125,12 +125,12 @@ extension Ring {
         var capacity: Index<Storage>.Count { header.capacity }
         var isFull: Bool { header.isFull }
 
-        @inline(__always)
+        @inline(always)
         mutating func pushBack(_ element: consuming Int) {
             Ring.pushBack(consume element, header: &header, storage: storage)
         }
 
-        @inline(__always)
+        @inline(always)
         mutating func popFront() -> Int {
             Ring.popFront(header: &header, storage: storage)
         }
