@@ -17,7 +17,7 @@ extension Buffer.Arena.Small where Element: Copyable {
             let copied = buf.ensureUnique()
             self = Self(_storage: .heap(consume buf))
             return copied
-        case .inline(var buf):
+        case .inline(let buf):
             self = Self(_storage: .inline(consume buf))
             return false  // inline is always unique
         }

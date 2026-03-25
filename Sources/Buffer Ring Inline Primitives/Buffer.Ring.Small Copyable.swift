@@ -14,7 +14,7 @@ extension Buffer.Ring.Small where Element: Copyable {
             let copied = buf.ensureUnique()
             self = Self(_storage: .heap(consume buf))
             return copied
-        case .inline(var buf):
+        case .inline(let buf):
             self = Self(_storage: .inline(consume buf))
             return false
         }
@@ -29,7 +29,7 @@ extension Buffer.Ring.Small where Element: Copyable {
         case .heap(var buf):
             buf.reserveCapacity(minimumCapacity)
             self = Self(_storage: .heap(consume buf))
-        case .inline(var buf):
+        case .inline(let buf):
             self = Self(_storage: .inline(consume buf))
             if minimumCapacity > Index<Element>.Count(UInt(inlineCapacity)) {
                 _spillToHeap(minimumCapacity: minimumCapacity)
@@ -46,10 +46,10 @@ extension Buffer.Ring.Small where Element: Copyable {
     @usableFromInline
     mutating func _spillToHeap() {
         switch _storage {
-        case .heap(var buf):
+        case .heap(let buf):
             self = Self(_storage: .heap(consume buf))
             return
-        case .inline(var buf):
+        case .inline(let buf):
             let currentCount = buf.count
             let newCapacity = Index<Element>.Count(UInt(inlineCapacity * 2))
             let newStorage = Storage<Element>.Heap.create(minimumCapacity: newCapacity)
@@ -73,10 +73,10 @@ extension Buffer.Ring.Small where Element: Copyable {
     @usableFromInline
     mutating func _spillToHeap(minimumCapacity: Index<Element>.Count) {
         switch _storage {
-        case .heap(var buf):
+        case .heap(let buf):
             self = Self(_storage: .heap(consume buf))
             return
-        case .inline(var buf):
+        case .inline(let buf):
             let currentCount = buf.count
             let newStorage = Storage<Element>.Heap.create(minimumCapacity: minimumCapacity)
 
@@ -117,7 +117,7 @@ extension Buffer.Ring.Small where Element: Copyable {
                 case .heap(var buf):
                     buf._pushBack(consume element)
                     self = Self(_storage: .heap(consume buf))
-                case .inline(var buf):
+                case .inline(let buf):
                     self = Self(_storage: .inline(consume buf))
                     fatalError("_spillToHeap must transition to heap")
                 }
@@ -156,7 +156,7 @@ extension Buffer.Ring.Small where Element: Copyable {
                 case .heap(var buf):
                     buf._pushFront(consume element)
                     self = Self(_storage: .heap(consume buf))
-                case .inline(var buf):
+                case .inline(let buf):
                     self = Self(_storage: .inline(consume buf))
                     fatalError("_spillToHeap must transition to heap")
                 }

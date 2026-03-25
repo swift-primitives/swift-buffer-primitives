@@ -235,12 +235,12 @@ extension Buffer.Arena.Small where Element: ~Copyable {
         at slot: Index<Element>
     ) -> UnsafeMutablePointer<Element> {
         switch _storage {
-        case .heap(var buf):
+        case .heap(let buf):
             // Heap pointer is into ref-counted storage — stable after extraction.
             let ptr = unsafe buf.pointer(at: slot)
             self = Self(_storage: .heap(consume buf))
             return unsafe ptr
-        case .inline(var buf):
+        case .inline(let buf):
             // Inline pointer must NOT be computed from the extracted local `buf`,
             // because `buf` lives on the stack and the pointer would dangle after
             // `consume buf` moves it back into self. Instead, project through
