@@ -76,9 +76,9 @@ extension Buffer.Ring.Inline: @unsafe Sequence.`Protocol` where Element: Copyabl
         @inlinable
         init(base: UnsafePointer<Element>, header: Buffer.Ring.Header) {
             unsafe (self.base = base)
-            self.header = header
-            self.current = .zero
-            self.end = header.count.map(Ordinal.init)
+            unsafe (self.header = header)
+            unsafe (self.current = .zero)
+            unsafe (self.end = header.count.map(Ordinal.init))
         }
 
         @inlinable
@@ -93,11 +93,11 @@ extension Buffer.Ring.Inline: @unsafe Sequence.`Protocol` where Element: Copyabl
                 let span = unsafe Span(_unsafeStart: ptr, count: 0)
                 return unsafe _overrideLifetime(span, mutating: &self)
             }
-            guard let value = next() else {
+            guard let value = unsafe next() else {
                 let span = unsafe Span(_unsafeStart: ptr, count: 0)
                 return unsafe _overrideLifetime(span, mutating: &self)
             }
-            _element = value
+            unsafe (_element = value)
             let span = unsafe Span(_unsafeStart: ptr, count: 1)
             return unsafe _overrideLifetime(span, mutating: &self)
         }
@@ -105,13 +105,13 @@ extension Buffer.Ring.Inline: @unsafe Sequence.`Protocol` where Element: Copyabl
         @_lifetime(self: immortal)
         @inlinable
         public mutating func next() -> Element? {
-            guard current < end else { return nil }
-            let physicalIdx = Index.Modular.physical(
+            guard unsafe current < end else { return nil }
+            let physicalIdx = unsafe Index.Modular.physical(
                 forLogical: current,
                 head: header.head,
                 capacity: header.capacity
             )
-            current += .one
+            unsafe (current += .one)
             return unsafe base[physicalIdx]
         }
     }

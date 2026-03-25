@@ -66,8 +66,8 @@ extension Buffer.Linked.Inline: @unsafe Sequence.`Protocol` where Element: Copya
             sentinel: Index<Buffer<Element>.Linked<N>.Node>
         ) {
             unsafe (self._base = base)
-            self._current = head
-            self._sentinel = sentinel
+            unsafe (self._current = head)
+            unsafe (self._sentinel = sentinel)
         }
 
         @_lifetime(&self)
@@ -82,11 +82,11 @@ extension Buffer.Linked.Inline: @unsafe Sequence.`Protocol` where Element: Copya
                 let span = unsafe Span(_unsafeStart: ptr, count: 0)
                 return unsafe _overrideLifetime(span, mutating: &self)
             }
-            guard let value = next() else {
+            guard let value = unsafe next() else {
                 let span = unsafe Span(_unsafeStart: ptr, count: 0)
                 return unsafe _overrideLifetime(span, mutating: &self)
             }
-            _element = value
+            unsafe (_element = value)
             let span = unsafe Span(_unsafeStart: ptr, count: 1)
             return unsafe _overrideLifetime(span, mutating: &self)
         }
@@ -95,11 +95,11 @@ extension Buffer.Linked.Inline: @unsafe Sequence.`Protocol` where Element: Copya
         @_lifetime(self: immortal)
         @inlinable
         public mutating func next() -> Element? {
-            guard _current != _sentinel else { return nil }
-            let offset = Index<Buffer<Element>.Linked<N>.Node>.Offset(fromZero: _current)
+            guard unsafe _current != _sentinel else { return nil }
+            let offset = unsafe Index<Buffer<Element>.Linked<N>.Node>.Offset(fromZero: _current)
             let ptr = unsafe _base + offset
             let element = unsafe ptr.pointee.element
-            _current = unsafe ptr.pointee.links[0]
+            unsafe (_current = unsafe ptr.pointee.links[0])
             return element
         }
     }

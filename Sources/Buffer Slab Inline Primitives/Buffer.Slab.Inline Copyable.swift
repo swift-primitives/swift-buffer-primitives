@@ -69,9 +69,9 @@ extension Buffer.Slab.Inline: @unsafe Sequence.`Protocol` where Element: Copyabl
         @inlinable
         init(base: UnsafePointer<Element>, bitmap: Bit.Vector.Static<wordCount>, end: Bit.Index) {
             unsafe (self.base = base)
-            self.bitmap = bitmap
-            self.current = .zero
-            self.end = end
+            unsafe (self.bitmap = bitmap)
+            unsafe (self.current = .zero)
+            unsafe (self.end = end)
         }
 
         @_lifetime(&self)
@@ -86,11 +86,11 @@ extension Buffer.Slab.Inline: @unsafe Sequence.`Protocol` where Element: Copyabl
                 let span = unsafe Span(_unsafeStart: ptr, count: 0)
                 return unsafe _overrideLifetime(span, mutating: &self)
             }
-            guard let value = next() else {
+            guard let value = unsafe next() else {
                 let span = unsafe Span(_unsafeStart: ptr, count: 0)
                 return unsafe _overrideLifetime(span, mutating: &self)
             }
-            _element = value
+            unsafe (_element = value)
             let span = unsafe Span(_unsafeStart: ptr, count: 1)
             return unsafe _overrideLifetime(span, mutating: &self)
         }
@@ -98,10 +98,10 @@ extension Buffer.Slab.Inline: @unsafe Sequence.`Protocol` where Element: Copyabl
         @_lifetime(self: immortal)
         @inlinable
         public mutating func next() -> Element? {
-            while current < end {
-                let slot = current
-                current += .one
-                if bitmap[slot] {
+            while unsafe current < end {
+                let slot = unsafe current
+                unsafe (current += .one)
+                if unsafe bitmap[slot] {
                     return unsafe base[slot]
                 }
             }

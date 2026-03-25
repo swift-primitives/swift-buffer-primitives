@@ -87,7 +87,7 @@ extension Buffer.Aligned where Element == UInt8 {
     @inlinable
     public mutating func zero() {
         unsafe withUnsafeMutableBytes { buffer in
-            unsafe buffer.baseAddress?.initializeMemory(as: UInt8.self, repeating: 0, count: buffer.count)
+            _ = unsafe buffer.baseAddress?.initializeMemory(as: UInt8.self, repeating: 0, count: buffer.count)
         }
     }
 
