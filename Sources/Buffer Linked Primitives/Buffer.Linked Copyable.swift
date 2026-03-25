@@ -225,7 +225,6 @@ extension Buffer.Linked: Sequence.`Protocol` where Element: Copyable {
         }
 
         /// Advances to the next element and returns it, or nil if no next element exists.
-        @_lifetime(self: immortal)
         @inlinable
         public mutating func next() -> Element? {
             guard _current != _sentinel else { return nil }

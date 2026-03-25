@@ -92,7 +92,6 @@ extension Buffer.Linked.Inline: @unsafe Sequence.`Protocol` where Element: Copya
         }
 
         /// Advances to the next element and returns it, or nil if no next element exists.
-        @_lifetime(self: immortal)
         @inlinable
         public mutating func next() -> Element? {
             guard unsafe _current != _sentinel else { return nil }
