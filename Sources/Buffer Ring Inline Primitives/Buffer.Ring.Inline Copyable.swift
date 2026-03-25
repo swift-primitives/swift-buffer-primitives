@@ -61,7 +61,7 @@ extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
     ///
     /// Uses pointer-based iteration with ring wrap-around logic.
     /// The iterator is only valid while the source buffer exists.
-    public struct Iterator: Sequence.Iterator.`Protocol`, IteratorProtocol, @unchecked Sendable {
+    @unsafe public struct Iterator: Sequence.Iterator.`Protocol`, IteratorProtocol, @unchecked Sendable {
         @usableFromInline
         let base: UnsafePointer<Element>
         @usableFromInline
