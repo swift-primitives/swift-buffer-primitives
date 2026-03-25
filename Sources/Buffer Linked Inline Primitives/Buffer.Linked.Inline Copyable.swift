@@ -41,7 +41,7 @@ extension Buffer.Linked.Inline where Element: Copyable {
 
 // MARK: - Sequence.Protocol
 
-extension Buffer.Linked.Inline: Sequence.`Protocol` where Element: Copyable {
+extension Buffer.Linked.Inline: @unsafe Sequence.`Protocol` where Element: Copyable {
     /// An iterator over the elements of an inline linked list buffer.
     ///
     /// Uses pointer-based iteration following node links.

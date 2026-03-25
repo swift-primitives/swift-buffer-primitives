@@ -49,7 +49,7 @@ extension Buffer.Slab.Inline where Element: Copyable {
 
 // MARK: - Sequence.Protocol
 
-extension Buffer.Slab.Inline: Sequence.`Protocol` where Element: Copyable {
+extension Buffer.Slab.Inline: @unsafe Sequence.`Protocol` where Element: Copyable {
     /// Iterator over slab inline buffer elements.
     ///
     /// Uses pointer-based iteration with bitmap occupancy checking.

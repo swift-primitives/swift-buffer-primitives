@@ -53,7 +53,7 @@ extension Buffer.Ring.Inline where Element: Copyable {
 
 // MARK: - Sequence.Protocol
 
-extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
+extension Buffer.Ring.Inline: @unsafe Sequence.`Protocol` where Element: Copyable {
     /// Iterator over ring inline buffer elements.
     ///
     /// Uses pointer-based iteration with ring wrap-around logic.
