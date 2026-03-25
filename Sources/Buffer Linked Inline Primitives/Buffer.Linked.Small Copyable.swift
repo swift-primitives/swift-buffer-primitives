@@ -49,7 +49,7 @@ extension Buffer.Linked.Small where Element: Copyable {
     @discardableResult
     public mutating func ensureUnique() -> Bool {
         switch _storage {
-        case .inline(let buf):
+        case .inline(var buf):
             self = Self(_storage: .inline(consume buf))
             return false
         case .heap(var buf):

@@ -329,7 +329,7 @@ extension Buffer.Linear.Small where Element: Copyable {
         case .heap(let buf):
             self = Self(_storage: .heap(consume buf))
             return
-        case .inline(let buf):
+        case .inline(var buf):
             let currentCount = buf.count
             let newCapacity = Index<Element>.Count(UInt(inlineCapacity * 2))
             let newStorage = Storage<Element>.Heap.create(minimumCapacity: newCapacity)
@@ -356,7 +356,7 @@ extension Buffer.Linear.Small where Element: Copyable {
         case .heap(let buf):
             self = Self(_storage: .heap(consume buf))
             return
-        case .inline(let buf):
+        case .inline(var buf):
             let currentCount = buf.count
             let newStorage = Storage<Element>.Heap.create(minimumCapacity: minimumCapacity)
 
