@@ -1,0 +1,124 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/primary.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordinal-primitives/Sources/Ordinal Primitives Standard Library Integration/Array+Ordinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Array+Ordinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Array+Ordinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Array+Ordinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Array+Ordinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Array+Ordinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordinal-primitives/Sources/Ordinal Primitives Standard Library Integration/ContiguousArray+Ordinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/ContiguousArray+Ordinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/ContiguousArray+Ordinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/ContiguousArray+Ordinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/ContiguousArray+Ordinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/ContiguousArray+Ordinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordinal-primitives/Sources/Ordinal Primitives Standard Library Integration/InlineArray+Ordinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/InlineArray+Ordinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/InlineArray+Ordinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/InlineArray+Ordinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/InlineArray+Ordinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/InlineArray+Ordinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordinal-primitives/Sources/Ordinal Primitives Standard Library Integration/Int+Ordinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Int+Ordinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Int+Ordinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Int+Ordinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Int+Ordinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Int+Ordinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordinal-primitives/Sources/Ordinal Primitives Standard Library Integration/MutableSpan+Tagged.Ordinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/MutableSpan+Tagged.Ordinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/MutableSpan+Tagged.Ordinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/MutableSpan+Tagged.Ordinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/MutableSpan+Tagged.Ordinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/MutableSpan+Tagged.Ordinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordinal-primitives/Sources/Ordinal Primitives Standard Library Integration/Ordinal+ExpressibleByIntegerLiteral.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Ordinal+ExpressibleByIntegerLiteral.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Ordinal+ExpressibleByIntegerLiteral.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Ordinal+ExpressibleByIntegerLiteral~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Ordinal+ExpressibleByIntegerLiteral.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Ordinal+ExpressibleByIntegerLiteral.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordinal-primitives/Sources/Ordinal Primitives Standard Library Integration/Ordinal+UnsignedInteger.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Ordinal+UnsignedInteger.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Ordinal+UnsignedInteger.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Ordinal+UnsignedInteger~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Ordinal+UnsignedInteger.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Ordinal+UnsignedInteger.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordinal-primitives/Sources/Ordinal Primitives Standard Library Integration/Span+Tagged.Ordinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Span+Tagged.Ordinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Span+Tagged.Ordinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Span+Tagged.Ordinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Span+Tagged.Ordinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Span+Tagged.Ordinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordinal-primitives/Sources/Ordinal Primitives Standard Library Integration/Swift.Range+Ordinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Swift.Range+Ordinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Swift.Range+Ordinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Swift.Range+Ordinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Swift.Range+Ordinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/Swift.Range+Ordinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordinal-primitives/Sources/Ordinal Primitives Standard Library Integration/UnsafeBufferPointer+Tagged.Ordinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeBufferPointer+Tagged.Ordinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeBufferPointer+Tagged.Ordinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeBufferPointer+Tagged.Ordinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeBufferPointer+Tagged.Ordinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeBufferPointer+Tagged.Ordinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordinal-primitives/Sources/Ordinal Primitives Standard Library Integration/UnsafeMutableBufferPointer+Tagged.Ordinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeMutableBufferPointer+Tagged.Ordinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeMutableBufferPointer+Tagged.Ordinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeMutableBufferPointer+Tagged.Ordinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeMutableBufferPointer+Tagged.Ordinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeMutableBufferPointer+Tagged.Ordinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordinal-primitives/Sources/Ordinal Primitives Standard Library Integration/UnsafeMutablePointer+Ordinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeMutablePointer+Ordinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeMutablePointer+Ordinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeMutablePointer+Ordinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeMutablePointer+Ordinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeMutablePointer+Ordinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordinal-primitives/Sources/Ordinal Primitives Standard Library Integration/UnsafeMutablePointer.Move+Tagged.Ordinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeMutablePointer.Move+Tagged.Ordinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeMutablePointer.Move+Tagged.Ordinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeMutablePointer.Move+Tagged.Ordinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeMutablePointer.Move+Tagged.Ordinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeMutablePointer.Move+Tagged.Ordinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordinal-primitives/Sources/Ordinal Primitives Standard Library Integration/UnsafeMutableRawPointer+Ordinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeMutableRawPointer+Ordinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeMutableRawPointer+Ordinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeMutableRawPointer+Ordinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeMutableRawPointer+Ordinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeMutableRawPointer+Ordinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordinal-primitives/Sources/Ordinal Primitives Standard Library Integration/UnsafePointer+Ordinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafePointer+Ordinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafePointer+Ordinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafePointer+Ordinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafePointer+Ordinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafePointer+Ordinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordinal-primitives/Sources/Ordinal Primitives Standard Library Integration/UnsafeRawPointer+Ordinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeRawPointer+Ordinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeRawPointer+Ordinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeRawPointer+Ordinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeRawPointer+Ordinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/UnsafeRawPointer+Ordinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-ordinal-primitives/Sources/Ordinal Primitives Standard Library Integration/exports.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/exports.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Ordinal_Primitives_Standard_Library_Integration.build/exports.dia"
+  }
+}

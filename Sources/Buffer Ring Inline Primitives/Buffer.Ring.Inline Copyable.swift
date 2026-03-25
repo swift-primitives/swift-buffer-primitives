@@ -102,7 +102,6 @@ extension Buffer.Ring.Inline: Sequence.`Protocol` where Element: Copyable {
             return unsafe _overrideLifetime(span, mutating: &self)
         }
 
-        @_lifetime(self: immortal)
         @inlinable
         public mutating func next() -> Element? {
             guard current < end else { return nil }

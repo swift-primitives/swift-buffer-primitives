@@ -95,7 +95,6 @@ extension Buffer.Slab.Inline: Sequence.`Protocol` where Element: Copyable {
             return unsafe _overrideLifetime(span, mutating: &self)
         }
 
-        @_lifetime(self: immortal)
         @inlinable
         public mutating func next() -> Element? {
             while current < end {

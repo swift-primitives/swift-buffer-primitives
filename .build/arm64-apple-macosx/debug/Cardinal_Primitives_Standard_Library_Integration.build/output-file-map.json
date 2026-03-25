@@ -1,0 +1,82 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/primary.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cardinal-primitives/Sources/Cardinal Primitives Standard Library Integration/Cardinal+ExpressibleByIntegerLiteral.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/Cardinal+ExpressibleByIntegerLiteral.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/Cardinal+ExpressibleByIntegerLiteral.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/Cardinal+ExpressibleByIntegerLiteral~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/Cardinal+ExpressibleByIntegerLiteral.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/Cardinal+ExpressibleByIntegerLiteral.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cardinal-primitives/Sources/Cardinal Primitives Standard Library Integration/Cardinal+UnsignedInteger.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/Cardinal+UnsignedInteger.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/Cardinal+UnsignedInteger.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/Cardinal+UnsignedInteger~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/Cardinal+UnsignedInteger.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/Cardinal+UnsignedInteger.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cardinal-primitives/Sources/Cardinal Primitives Standard Library Integration/ContiguousArray+Cardinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/ContiguousArray+Cardinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/ContiguousArray+Cardinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/ContiguousArray+Cardinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/ContiguousArray+Cardinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/ContiguousArray+Cardinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cardinal-primitives/Sources/Cardinal Primitives Standard Library Integration/Int+Cardinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/Int+Cardinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/Int+Cardinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/Int+Cardinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/Int+Cardinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/Int+Cardinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cardinal-primitives/Sources/Cardinal Primitives Standard Library Integration/MutableSpan+Cardinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/MutableSpan+Cardinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/MutableSpan+Cardinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/MutableSpan+Cardinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/MutableSpan+Cardinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/MutableSpan+Cardinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cardinal-primitives/Sources/Cardinal Primitives Standard Library Integration/Span+Cardinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/Span+Cardinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/Span+Cardinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/Span+Cardinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/Span+Cardinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/Span+Cardinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cardinal-primitives/Sources/Cardinal Primitives Standard Library Integration/UInt32+Cardinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/UInt32+Cardinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/UInt32+Cardinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/UInt32+Cardinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/UInt32+Cardinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/UInt32+Cardinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cardinal-primitives/Sources/Cardinal Primitives Standard Library Integration/UnsafeBufferPointer+Cardinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/UnsafeBufferPointer+Cardinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/UnsafeBufferPointer+Cardinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/UnsafeBufferPointer+Cardinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/UnsafeBufferPointer+Cardinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/UnsafeBufferPointer+Cardinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cardinal-primitives/Sources/Cardinal Primitives Standard Library Integration/UnsafeMutableBufferPointer+Cardinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/UnsafeMutableBufferPointer+Cardinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/UnsafeMutableBufferPointer+Cardinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/UnsafeMutableBufferPointer+Cardinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/UnsafeMutableBufferPointer+Cardinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/UnsafeMutableBufferPointer+Cardinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cardinal-primitives/Sources/Cardinal Primitives Standard Library Integration/UnsafeMutablePointer+Cardinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/UnsafeMutablePointer+Cardinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/UnsafeMutablePointer+Cardinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/UnsafeMutablePointer+Cardinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/UnsafeMutablePointer+Cardinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/UnsafeMutablePointer+Cardinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cardinal-primitives/Sources/Cardinal Primitives Standard Library Integration/exports.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/exports.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Cardinal_Primitives_Standard_Library_Integration.build/exports.dia"
+  }
+}

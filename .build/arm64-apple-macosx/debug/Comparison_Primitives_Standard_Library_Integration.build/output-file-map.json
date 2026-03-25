@@ -1,0 +1,145 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/primary.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Standard Library Integration/Comparison+Swift.Comparable.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison+Swift.Comparable.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison+Swift.Comparable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison+Swift.Comparable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison+Swift.Comparable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison+Swift.Comparable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Standard Library Integration/Comparison.Clamp+Swift.Comparable.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Clamp+Swift.Comparable.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Clamp+Swift.Comparable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Clamp+Swift.Comparable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Clamp+Swift.Comparable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Clamp+Swift.Comparable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Standard Library Integration/Comparison.Compare+Swift.Comparable.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Compare+Swift.Comparable.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Compare+Swift.Comparable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Compare+Swift.Comparable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Compare+Swift.Comparable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Compare+Swift.Comparable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Standard Library Integration/Comparison.Protocol+Swift.Array.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.Array.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.Array.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.Array~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.Array.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.Array.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Standard Library Integration/Comparison.Protocol+Swift.ArraySlice.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.ArraySlice.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.ArraySlice.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.ArraySlice~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.ArraySlice.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.ArraySlice.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Standard Library Integration/Comparison.Protocol+Swift.CollectionOfOne.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.CollectionOfOne.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.CollectionOfOne.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.CollectionOfOne~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.CollectionOfOne.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.CollectionOfOne.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Standard Library Integration/Comparison.Protocol+Swift.ContiguousArray.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.ContiguousArray.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.ContiguousArray.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.ContiguousArray~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.ContiguousArray.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.ContiguousArray.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Standard Library Integration/Comparison.Protocol+Swift.EmptyCollection.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.EmptyCollection.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.EmptyCollection.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.EmptyCollection~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.EmptyCollection.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.EmptyCollection.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Standard Library Integration/Comparison.Protocol+Swift.KeyValuePairs.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.KeyValuePairs.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.KeyValuePairs.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.KeyValuePairs~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.KeyValuePairs.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.KeyValuePairs.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Standard Library Integration/Comparison.Protocol+Swift.Optional.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.Optional.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.Optional.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.Optional~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.Optional.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.Optional.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Standard Library Integration/Comparison.Protocol+Swift.PartialRange.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.PartialRange.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.PartialRange.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.PartialRange~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.PartialRange.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.PartialRange.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Standard Library Integration/Comparison.Protocol+Swift.Range.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.Range.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.Range.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.Range~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.Range.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.Range.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Standard Library Integration/Comparison.Protocol+Swift.ReversedCollection.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.ReversedCollection.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.ReversedCollection.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.ReversedCollection~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.ReversedCollection.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.ReversedCollection.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Standard Library Integration/Comparison.Protocol+Swift.UnsafeBufferPointer.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeBufferPointer.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeBufferPointer.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeBufferPointer~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeBufferPointer.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeBufferPointer.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Standard Library Integration/Comparison.Protocol+Swift.UnsafeMutableBufferPointer.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeMutableBufferPointer.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeMutableBufferPointer.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeMutableBufferPointer~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeMutableBufferPointer.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeMutableBufferPointer.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Standard Library Integration/Comparison.Protocol+Swift.UnsafeMutablePointer.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeMutablePointer.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeMutablePointer.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeMutablePointer~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeMutablePointer.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeMutablePointer.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Standard Library Integration/Comparison.Protocol+Swift.UnsafeMutableRawPointer.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeMutableRawPointer.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeMutableRawPointer.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeMutableRawPointer~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeMutableRawPointer.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeMutableRawPointer.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Standard Library Integration/Comparison.Protocol+Swift.UnsafePointer.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafePointer.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafePointer.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafePointer~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafePointer.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafePointer.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Standard Library Integration/Comparison.Protocol+Swift.UnsafeRawPointer.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeRawPointer.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeRawPointer.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeRawPointer~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeRawPointer.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/Comparison.Protocol+Swift.UnsafeRawPointer.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Standard Library Integration/exports.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/exports.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Standard_Library_Integration.build/exports.dia"
+  }
+}

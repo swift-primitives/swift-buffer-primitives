@@ -76,7 +76,6 @@ extension Buffer.Linear.Inline: Sequence.`Protocol` where Element: Copyable {
             return span
         }
 
-        @_lifetime(self: immortal)
         @inlinable
         public mutating func next() -> Element? {
             guard remaining > .zero else { return nil }

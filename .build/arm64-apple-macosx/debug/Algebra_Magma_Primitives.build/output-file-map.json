@@ -1,0 +1,33 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Magma_Primitives.build/primary.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-magma-primitives/Sources/Algebra Magma Primitives/Algebra.Magma.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Magma_Primitives.build/Algebra.Magma.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Magma_Primitives.build/Algebra.Magma.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Magma_Primitives.build/Algebra.Magma~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Magma_Primitives.build/Algebra.Magma.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Magma_Primitives.build/Algebra.Magma.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-magma-primitives/Sources/Algebra Magma Primitives/Algebra.Semigroup+Magma.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Magma_Primitives.build/Algebra.Semigroup+Magma.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Magma_Primitives.build/Algebra.Semigroup+Magma.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Magma_Primitives.build/Algebra.Semigroup+Magma~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Magma_Primitives.build/Algebra.Semigroup+Magma.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Magma_Primitives.build/Algebra.Semigroup+Magma.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-magma-primitives/Sources/Algebra Magma Primitives/Algebra.Semigroup.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Magma_Primitives.build/Algebra.Semigroup.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Magma_Primitives.build/Algebra.Semigroup.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Magma_Primitives.build/Algebra.Semigroup~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Magma_Primitives.build/Algebra.Semigroup.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Magma_Primitives.build/Algebra.Semigroup.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-magma-primitives/Sources/Algebra Magma Primitives/exports.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Magma_Primitives.build/exports.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Magma_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Magma_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Magma_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Magma_Primitives.build/exports.dia"
+  }
+}

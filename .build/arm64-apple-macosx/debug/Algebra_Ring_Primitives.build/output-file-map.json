@@ -1,0 +1,54 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/primary.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-ring-primitives/Sources/Algebra Ring Primitives/Algebra.Ring+Convenience.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring+Convenience.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring+Convenience.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring+Convenience~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring+Convenience.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring+Convenience.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-ring-primitives/Sources/Algebra Ring Primitives/Algebra.Ring+Group.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring+Group.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring+Group.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring+Group~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring+Group.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring+Group.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-ring-primitives/Sources/Algebra Ring Primitives/Algebra.Ring+Semiring.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring+Semiring.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring+Semiring.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring+Semiring~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring+Semiring.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring+Semiring.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-ring-primitives/Sources/Algebra Ring Primitives/Algebra.Ring.Commutative+Convenience.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring.Commutative+Convenience.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring.Commutative+Convenience.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring.Commutative+Convenience~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring.Commutative+Convenience.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring.Commutative+Convenience.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-ring-primitives/Sources/Algebra Ring Primitives/Algebra.Ring.Commutative.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring.Commutative.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring.Commutative.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring.Commutative~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring.Commutative.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring.Commutative.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-ring-primitives/Sources/Algebra Ring Primitives/Algebra.Ring.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/Algebra.Ring.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-ring-primitives/Sources/Algebra Ring Primitives/exports.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/exports.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Ring_Primitives.build/exports.dia"
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/primary.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Core/Comparison+BooleanProperties.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison+BooleanProperties.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison+BooleanProperties.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison+BooleanProperties~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison+BooleanProperties.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison+BooleanProperties.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Core/Comparison+Chaining.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison+Chaining.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison+Chaining.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison+Chaining~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison+Chaining.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison+Chaining.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Core/Comparison+Comparable.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison+Comparable.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison+Comparable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison+Comparable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison+Comparable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison+Comparable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Core/Comparison+Reversal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison+Reversal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison+Reversal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison+Reversal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison+Reversal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison+Reversal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Core/Comparison.Clamp+Property.View.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Clamp+Property.View.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Clamp+Property.View.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Clamp+Property.View~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Clamp+Property.View.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Clamp+Property.View.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Core/Comparison.Clamp.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Clamp.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Clamp.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Clamp~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Clamp.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Clamp.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Core/Comparison.Compare+Property.View.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Compare+Property.View.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Compare+Property.View.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Compare+Property.View~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Compare+Property.View.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Compare+Property.View.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Core/Comparison.Compare.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Compare.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Compare.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Compare~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Compare.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Compare.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Core/Comparison.Protocol+Property.View.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Protocol+Property.View.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Protocol+Property.View.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Protocol+Property.View~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Protocol+Property.View.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Protocol+Property.View.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Core/Comparison.Protocol.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Protocol.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Protocol.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Protocol~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Protocol.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.Protocol.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Core/Comparison.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/Comparison.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-comparison-primitives/Sources/Comparison Primitives Core/exports.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/exports.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Comparison_Primitives_Core.build/exports.dia"
+  }
+}

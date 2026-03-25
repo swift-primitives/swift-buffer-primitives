@@ -1,0 +1,75 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/primary.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-finite-primitives/Sources/Finite Primitives Core/Finite.Bounded.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.Bounded.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.Bounded.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.Bounded~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.Bounded.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.Bounded.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-finite-primitives/Sources/Finite Primitives Core/Finite.Capacity.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.Capacity.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.Capacity.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.Capacity~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.Capacity.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.Capacity.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-finite-primitives/Sources/Finite Primitives Core/Finite.Enumerable.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.Enumerable.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.Enumerable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.Enumerable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.Enumerable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.Enumerable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-finite-primitives/Sources/Finite Primitives Core/Finite.Enumeration.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.Enumeration.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.Enumeration.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.Enumeration~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.Enumeration.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.Enumeration.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-finite-primitives/Sources/Finite Primitives Core/Finite.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Finite.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-finite-primitives/Sources/Finite Primitives Core/Index.Bounded.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Index.Bounded.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Index.Bounded.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Index.Bounded~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Index.Bounded.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Index.Bounded.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-finite-primitives/Sources/Finite Primitives Core/Ordinal.Finite.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Ordinal.Finite.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Ordinal.Finite.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Ordinal.Finite~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Ordinal.Finite.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Ordinal.Finite.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-finite-primitives/Sources/Finite Primitives Core/Tagged+Finite.Enumerable.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Tagged+Finite.Enumerable.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Tagged+Finite.Enumerable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Tagged+Finite.Enumerable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Tagged+Finite.Enumerable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Tagged+Finite.Enumerable.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-finite-primitives/Sources/Finite Primitives Core/Tagged+Ordinal.Finite.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Tagged+Ordinal.Finite.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Tagged+Ordinal.Finite.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Tagged+Ordinal.Finite~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Tagged+Ordinal.Finite.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/Tagged+Ordinal.Finite.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-finite-primitives/Sources/Finite Primitives Core/exports.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/exports.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Finite_Primitives_Core.build/exports.dia"
+  }
+}

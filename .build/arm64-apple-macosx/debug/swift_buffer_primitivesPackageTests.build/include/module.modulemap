@@ -1,0 +1,3 @@
+module swift_buffer_primitivesPackageTests {
+    header "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/swift_buffer_primitivesPackageTests.build/include/swift-buffer-primitivesPackageTests-Swift.h"
+}

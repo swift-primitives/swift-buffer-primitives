@@ -1,0 +1,47 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/primary.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-pack-primitives/Sources/Bit Pack Primitives/Bit.Index+Pack.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Index+Pack.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Index+Pack.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Index+Pack~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Index+Pack.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Index+Pack.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-pack-primitives/Sources/Bit Pack Primitives/Bit.Pack.Bits.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Pack.Bits.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Pack.Bits.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Pack.Bits~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Pack.Bits.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Pack.Bits.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-pack-primitives/Sources/Bit Pack Primitives/Bit.Pack.Location.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Pack.Location.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Pack.Location.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Pack.Location~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Pack.Location.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Pack.Location.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-pack-primitives/Sources/Bit Pack Primitives/Bit.Pack.Words.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Pack.Words.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Pack.Words.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Pack.Words~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Pack.Words.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Pack.Words.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-pack-primitives/Sources/Bit Pack Primitives/Bit.Pack.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Pack.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Pack.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Pack~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Pack.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/Bit.Pack.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-bit-pack-primitives/Sources/Bit Pack Primitives/exports.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/exports.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Bit_Pack_Primitives.build/exports.dia"
+  }
+}

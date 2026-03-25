@@ -1,0 +1,75 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/primary.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Standard Library Integration/Memory+Array.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+Array.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+Array.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+Array~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+Array.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+Array.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Standard Library Integration/Memory+UnsafeMutableRawBufferPointer.Store.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawBufferPointer.Store.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawBufferPointer.Store.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawBufferPointer.Store~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawBufferPointer.Store.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawBufferPointer.Store.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Standard Library Integration/Memory+UnsafeMutableRawBufferPointer.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawBufferPointer.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawBufferPointer.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawBufferPointer~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawBufferPointer.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawBufferPointer.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Standard Library Integration/Memory+UnsafeMutableRawPointer.Memory.Move.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawPointer.Memory.Move.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawPointer.Memory.Move.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawPointer.Memory.Move~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawPointer.Memory.Move.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawPointer.Memory.Move.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Standard Library Integration/Memory+UnsafeMutableRawPointer.Memory.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawPointer.Memory.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawPointer.Memory.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawPointer.Memory~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawPointer.Memory.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawPointer.Memory.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Standard Library Integration/Memory+UnsafeMutableRawPointer.Store.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawPointer.Store.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawPointer.Store.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawPointer.Store~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawPointer.Store.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawPointer.Store.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Standard Library Integration/Memory+UnsafeMutableRawPointer.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawPointer.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawPointer.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawPointer~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawPointer.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeMutableRawPointer.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Standard Library Integration/Memory+UnsafeRawBufferPointer.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeRawBufferPointer.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeRawBufferPointer.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeRawBufferPointer~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeRawBufferPointer.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeRawBufferPointer.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Standard Library Integration/Memory+UnsafeRawPointer.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeRawPointer.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeRawPointer.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeRawPointer~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeRawPointer.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/Memory+UnsafeRawPointer.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Standard Library Integration/exports.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/exports.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Memory_Primitives_Standard_Library_Integration.build/exports.dia"
+  }
+}

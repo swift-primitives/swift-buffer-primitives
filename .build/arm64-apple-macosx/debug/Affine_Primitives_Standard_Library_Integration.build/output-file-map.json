@@ -1,0 +1,40 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/primary.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-affine-primitives/Sources/Affine Primitives Standard Library Integration/Int+Affine.Discrete.Vector.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/Int+Affine.Discrete.Vector.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/Int+Affine.Discrete.Vector.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/Int+Affine.Discrete.Vector~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/Int+Affine.Discrete.Vector.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/Int+Affine.Discrete.Vector.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-affine-primitives/Sources/Affine Primitives Standard Library Integration/RandomAccessCollection+Tagged.Ordinal.Offset.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/RandomAccessCollection+Tagged.Ordinal.Offset.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/RandomAccessCollection+Tagged.Ordinal.Offset.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/RandomAccessCollection+Tagged.Ordinal.Offset~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/RandomAccessCollection+Tagged.Ordinal.Offset.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/RandomAccessCollection+Tagged.Ordinal.Offset.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-affine-primitives/Sources/Affine Primitives Standard Library Integration/UnsafeMutablePointer+Tagged.Ordinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/UnsafeMutablePointer+Tagged.Ordinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/UnsafeMutablePointer+Tagged.Ordinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/UnsafeMutablePointer+Tagged.Ordinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/UnsafeMutablePointer+Tagged.Ordinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/UnsafeMutablePointer+Tagged.Ordinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-affine-primitives/Sources/Affine Primitives Standard Library Integration/UnsafePointer+Tagged.Ordinal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/UnsafePointer+Tagged.Ordinal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/UnsafePointer+Tagged.Ordinal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/UnsafePointer+Tagged.Ordinal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/UnsafePointer+Tagged.Ordinal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/UnsafePointer+Tagged.Ordinal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-affine-primitives/Sources/Affine Primitives Standard Library Integration/exports.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/exports.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Affine_Primitives_Standard_Library_Integration.build/exports.dia"
+  }
+}

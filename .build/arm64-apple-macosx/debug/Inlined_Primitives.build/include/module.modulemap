@@ -1,0 +1,3 @@
+module Inlined_Primitives {
+    header "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Inlined_Primitives.build/include/Inlined Primitives-Swift.h"
+}

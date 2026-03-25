@@ -1,0 +1,54 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/primary.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-semiring-primitives/Sources/Algebra Semiring Primitives/Algebra.Semiring+Bool.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring+Bool.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring+Bool.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring+Bool~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring+Bool.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring+Bool.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-semiring-primitives/Sources/Algebra Semiring Primitives/Algebra.Semiring+Convenience.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring+Convenience.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring+Convenience.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring+Convenience~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring+Convenience.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring+Convenience.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-semiring-primitives/Sources/Algebra Semiring Primitives/Algebra.Semiring+Monoid.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring+Monoid.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring+Monoid.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring+Monoid~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring+Monoid.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring+Monoid.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-semiring-primitives/Sources/Algebra Semiring Primitives/Algebra.Semiring.Commutative+Convenience.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring.Commutative+Convenience.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring.Commutative+Convenience.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring.Commutative+Convenience~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring.Commutative+Convenience.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring.Commutative+Convenience.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-semiring-primitives/Sources/Algebra Semiring Primitives/Algebra.Semiring.Commutative.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring.Commutative.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring.Commutative.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring.Commutative~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring.Commutative.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring.Commutative.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-semiring-primitives/Sources/Algebra Semiring Primitives/Algebra.Semiring.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/Algebra.Semiring.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-algebra-semiring-primitives/Sources/Algebra Semiring Primitives/exports.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/exports.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-buffer-primitives-modularization/.build/arm64-apple-macosx/debug/Algebra_Semiring_Primitives.build/exports.dia"
+  }
+}
