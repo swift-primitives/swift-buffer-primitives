@@ -62,3 +62,13 @@ Once the compiler fix lands upstream, the ideal architecture becomes possible:
 The `rawlayout-access-level-trigger` experiment is the canary — when it passes on the upstream toolchain, the migration can begin.
 
 **Applies to**: `Storage.Inline`, `Buffer.Ring.Inline`, `Buffer.Linear.Inline`, `Buffer.Slab.Inline`, all data structure types with `_deinitWorkaround`
+
+---
+
+## DeinitDevirtualizer ICE on Buffer.Unbounded (2026-03-31)
+
+**Date**: 2026-03-31
+
+**Context**: Building the Async Channel module on Swift 6.4-dev hits a `DeinitDevirtualizer` ICE on `Buffer.Unbounded.swift:40` (pass #45472, SIL assertion on substitutions vs generic signature). This is a separate optimizer bug from the CopyPropagation issue (#85743). It blocks full superrepo builds on 6.4-dev, which complicates verification of compiler fixes. Needs its own investigation handoff per the issue-investigation skill.
+
+**Applies to**: Buffer.Unbounded, Async Channel module on 6.4-dev
