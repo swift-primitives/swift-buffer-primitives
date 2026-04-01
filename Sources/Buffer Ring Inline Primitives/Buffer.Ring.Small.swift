@@ -167,21 +167,6 @@ extension Buffer.Ring.Small where Element: ~Copyable {
         }
     }
 
-    /// Consuming cleanup for deinit delegation.
-    ///
-    /// Takes ownership of the buffer, deinitializes all elements in whichever
-    /// representation is active, then the buffer is consumed.
-    @inlinable
-    public consuming func _deinitialize() {
-        switch _storage {
-        case .heap(var buf):
-            buf._removeAll()
-            _ = consume buf
-        case .inline(let buf):
-            buf._deinitialize()
-        }
-    }
-
     @usableFromInline
     mutating func _removeAll(keepingCapacity: Bool) {
         if keepingCapacity {
