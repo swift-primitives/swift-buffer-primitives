@@ -90,17 +90,12 @@ extension Buffer where Element: ~Copyable {
                 self.storage = storage
             }
 
-            // WORKAROUND: deinit commented out due to swiftlang/swift#86652.
-            // Elements LEAK if a non-empty Ring.Inline is dropped without
-            // draining. Affects class-typed and ~Copyable elements only.
-            //
-            // Combined @_rawLayout approach works for `internal` types but
-            // crashes for `public` types. Blocked until compiler bug is fixed.
-            // TRACKING: Research/rawlayout-release-crash-investigation.md
-            //
-            // deinit {
-            //     unsafe storage.deinitialize()
-            // }
+            // No deinit — cleanup uses the consuming pattern:
+            // Data structure deinit calls `_buffer._deinitialize()` (consuming),
+            // which calls `_removeAll()` (mutating — allowed in consuming context).
+            // This avoids #86652 entirely: no deinit on buffer or storage means
+            // no 2-field rule, public-access, or cross-module SIL triggers.
+            // TRACKING: Experiments/noncopyable-consuming-chain-cross-module/
 
             /// Errors that can occur during inline ring buffer operations.
             public enum Error: Swift.Error, Sendable, Equatable {

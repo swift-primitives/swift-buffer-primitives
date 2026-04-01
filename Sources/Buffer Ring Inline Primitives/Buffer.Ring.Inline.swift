@@ -81,6 +81,17 @@ extension Buffer.Ring.Inline where Element: ~Copyable {
     mutating func _removeAll() {
         Buffer.Ring.deinitialize(header: &header, storage: &storage)
     }
+
+    /// Consuming cleanup for deinit delegation.
+    ///
+    /// Takes ownership of the buffer, deinitializes all elements, then
+    /// the buffer is consumed. Called by data structure deinits (e.g.
+    /// `Queue.Static`) — consuming context allows mutating member access,
+    /// avoiding the unsafe pointer cast workaround.
+    @inlinable
+    public consuming func _deinitialize() {
+        _removeAll()
+    }
 }
 
 // MARK: - Property.View.Typed.Valued (.push, .pop, .peek, .remove)
