@@ -12,13 +12,14 @@
 import Testing
 import Buffer_Arena_Inline_Primitives
 
-/// Canary tests for swiftlang/swift #86652: ~Copyable value-generic member destruction.
+/// Regression tests for Buffer.Arena.Inline deinit via cross-module member destruction.
 ///
-/// When any test FAILS ("Known issue was not recorded"), the compiler has
-/// fixed #86652 and the workarounds can be removed from:
-///   - Tree.N.Inline (swift-tree-primitives)
-@Suite("Buffer.Arena.Inline - Deinit Canary")
-struct ArenaInlineDeinitCanaryTests {
+/// Buffer.Arena.Inline's `_deinitWorkaround` resolves swiftlang/swift #86652
+/// (triviality misclassification). These tests verify that element cleanup
+/// works through the member destruction chain — matching the pattern validated
+/// for Storage.Inline across 18 data structure types.
+@Suite("Buffer.Arena.Inline - Deinit Regression")
+struct ArenaInlineDeinitRegressionTests {
 
     final class Tracker: @unchecked Sendable {
         private var _storage: [Int] = []
@@ -33,24 +34,43 @@ struct ArenaInlineDeinitCanaryTests {
         deinit { tracker.append(id) }
     }
 
-    /// Bare wrapper — NO _deinitWorkaround, NO manual cleanup.
-    private struct _BareWrapper<Element: ~Copyable, let capacity: Int>: ~Copyable {
+    /// Wrapper with empty deinit — tests that Buffer.Arena.Inline's deinit fires
+    /// through the explicit-deinit → member-destruction chain.
+    private struct _EmptyDeinitWrapper<Element: ~Copyable, let capacity: Int>: ~Copyable {
         var _arena: Buffer<Element>.Arena.Inline<capacity>
         init() { self._arena = Buffer<Element>.Arena.Inline<capacity>() }
         deinit {}
     }
 
-    @Test
-    func `compiler destroys cross-module value-generic member`() throws {
-        withKnownIssue("swiftlang/swift #86652: ~Copyable value-generic member destruction") {
-            let tracker = Tracker()
-            do {
-                var bare = _BareWrapper<TrackedElement, 8>()
-                try _ = bare._arena.insert(TrackedElement(1, tracker: tracker))
-                try _ = bare._arena.insert(TrackedElement(2, tracker: tracker))
-                try _ = bare._arena.insert(TrackedElement(3, tracker: tracker))
-            }
-            #expect(tracker.deinitOrder == [1, 2, 3])
+    /// Wrapper with NO deinit — tests that Buffer.Arena.Inline's deinit fires
+    /// through pure implicit member destruction. This is the exact shape
+    /// Tree.N.Inline has after removing _deinitWorkaround and deinit.
+    private struct _NoDeinitWrapper<Element: ~Copyable, let capacity: Int>: ~Copyable {
+        var _arena: Buffer<Element>.Arena.Inline<capacity>
+        init() { self._arena = Buffer<Element>.Arena.Inline<capacity>() }
+    }
+
+    @Test("cross-module member destruction — wrapper with empty deinit")
+    func emptyDeinitWrapper() throws {
+        let tracker = Tracker()
+        do {
+            var bare = _EmptyDeinitWrapper<TrackedElement, 8>()
+            try _ = bare._arena.insert(TrackedElement(1, tracker: tracker))
+            try _ = bare._arena.insert(TrackedElement(2, tracker: tracker))
+            try _ = bare._arena.insert(TrackedElement(3, tracker: tracker))
         }
+        #expect(tracker.deinitOrder == [1, 2, 3])
+    }
+
+    @Test("cross-module member destruction — wrapper with no deinit")
+    func noDeinitWrapper() throws {
+        let tracker = Tracker()
+        do {
+            var bare = _NoDeinitWrapper<TrackedElement, 8>()
+            try _ = bare._arena.insert(TrackedElement(1, tracker: tracker))
+            try _ = bare._arena.insert(TrackedElement(2, tracker: tracker))
+            try _ = bare._arena.insert(TrackedElement(3, tracker: tracker))
+        }
+        #expect(tracker.deinitOrder == [1, 2, 3])
     }
 }

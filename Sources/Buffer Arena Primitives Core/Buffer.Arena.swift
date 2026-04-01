@@ -110,6 +110,18 @@ extension Buffer where Element: ~Copyable {
                 @usableFromInline package init() {}
             }
 
+            // WORKAROUND: swiftlang/swift#86652 — @_rawLayout triviality misclassification.
+            // Forces compiler to recognize type as non-trivially destructible so deinit executes
+            // during cross-module member destruction (e.g., when composed into Tree.N.Inline).
+            // COST: 8 bytes overhead per instance.
+            // WHEN TO REMOVE: When the compiler correctly classifies @_rawLayout types
+            //   with deinit as non-trivially destructible.
+            // TRACKING: swift-buffer-primitives/Research/rawlayout-release-crash-investigation.md
+            //
+            // NOTE: Must be declared BEFORE _meta and _elements. @_rawLayout storage
+            // must be the last stored property (field-ordering fix for LLVM verifier crash).
+            private var _deinitWorkaround: AnyObject? = nil
+
             @usableFromInline
             package var header: Header
 
@@ -179,4 +191,4 @@ extension Buffer.Arena: Copyable where Element: Copyable {}
 extension Buffer.Arena: @unchecked Sendable where Element: Sendable {}
 
 // Copyable suppressed per INV-INLINE-004a.
-extension Buffer.Arena.Inline: Sendable where Element: Sendable {}
+extension Buffer.Arena.Inline: @unchecked Sendable where Element: Sendable {}
