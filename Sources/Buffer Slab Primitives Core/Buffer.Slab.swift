@@ -53,20 +53,17 @@ extension Buffer where Element: ~Copyable {
 
         // MARK: - Inline (Fixed-Capacity, Stack-Allocated)
 
-        // WORKAROUND: Inline defined in Slab's struct body (not via extension)
-        // to avoid the LLVM verifier crash triggered by the extension-file
-        // pattern for @_rawLayout + deinit types under -O.
-        // WHEN TO REMOVE: When swiftlang/swift fixes the LLVM verifier crash
-        //      for @_rawLayout + deinit under -O.
-        // TRACKING: Research/release-mode-llvm-verifier-crash-diagnosis.md
-
         /// A fixed-capacity slab buffer backed by inline (stack-allocated) storage.
         ///
         /// Uses `Storage<Element>.Inline<wordCount>` for stack-based allocation
         /// and `Header.Static<wordCount>` for the bitmap.
         ///
-        /// The bitmap drives cleanup — `Storage.Inline`'s initialization state
-        /// stays `.empty`.
+        /// Element cleanup is handled by `Storage.Inline`'s deinit, which
+        /// iterates its bitvector and deinitializes all tracked elements.
+        /// The bitmap and `Storage.Inline._slots` track identical state
+        /// because all mutations go through tracked accessors
+        /// (`storage.initialize(to:at:)`, `storage.move(at:)`,
+        /// `storage.deinitialize(at:)`).
         public struct Inline<let wordCount: Int>: ~Copyable {
             @usableFromInline
             package var header: Header.Static<wordCount>
@@ -89,17 +86,11 @@ extension Buffer where Element: ~Copyable {
                 case capacityExceeded
             }
 
-            deinit {
-                var slot: Bit.Index = .zero
-                let end = Bit.Index.Count(UInt(wordCount)).map(Ordinal.init)
-                while slot < end {
-                    if header.bitmap[slot] {
-                        let elementSlot = Index<Element>.Bounded<wordCount>(slot.retag(Element.self))!
-                        unsafe storage.pointer(at: elementSlot).deinitialize(count: 1)
-                    }
-                    slot += .one
-                }
-            }
+            // No deinit — cleanup delegated to Storage.Inline's deinit
+            // via _slots bitvector. Buffer.Slab.Inline must NOT have its own
+            // deinit: Storage.Inline's deinit also fires during member destruction,
+            // which would cause double-free if this type deinitializes elements
+            // via raw pointers that don't clear _slots bits.
         }
 
         // MARK: - Slab Fields
