@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 public import Buffer_Primitives_Core
+public import Buffer_Link_Primitives
 
 // MARK: - Static Operations for ~Copyable Elements on Storage.Pool
 
@@ -33,26 +34,13 @@ extension Buffer.Linked where Element: ~Copyable {
             throw .capacityExceeded
         }
 
-        let sentinel = header.sentinel
-        var links = InlineArray<N, Index<Node>>(repeating: sentinel)
-        links[0] = header.head  // next = old head
-        // links[1..] already = sentinel (prev = none)
-
+        let links = InlineArray<N, Index<Node>>(repeating: header.sentinel)
         let node = Node(element: element, links: links)
         unsafe storage.pointer(at: slot).initialize(to: node)
 
-        // Link old head's prev to new node (doubly-linked only).
-        if header.head != sentinel {
-            if N >= 2 {
-                unsafe storage.pointer(at: header.head).pointee.links[1] = slot
-            }
-        } else {
-            // List was empty — new node is also tail.
-            header.tail = slot
+        unsafe Buffer<Element>.Link<N>.prepend(slot, header: &header) { idx in
+            unsafe storage.pointer(at: idx)
         }
-
-        header.head = slot
-        header.count += .one
     }
 
     // MARK: Insert Back
@@ -73,26 +61,13 @@ extension Buffer.Linked where Element: ~Copyable {
             throw .capacityExceeded
         }
 
-        let sentinel = header.sentinel
-        var links = InlineArray<N, Index<Node>>(repeating: sentinel)
-        links[0] = sentinel  // next = none (new tail)
-        if N >= 2 {
-            links[1] = header.tail  // prev = old tail
-        }
-
+        let links = InlineArray<N, Index<Node>>(repeating: header.sentinel)
         let node = Node(element: element, links: links)
         unsafe storage.pointer(at: slot).initialize(to: node)
 
-        // Link old tail's next to new node.
-        if header.tail != sentinel {
-            unsafe storage.pointer(at: header.tail).pointee.links[0] = slot
-        } else {
-            // List was empty — new node is also head.
-            header.head = slot
+        unsafe Buffer<Element>.Link<N>.append(slot, header: &header) { idx in
+            unsafe storage.pointer(at: idx)
         }
-
-        header.tail = slot
-        header.count += .one
     }
 
     // MARK: Remove Front
@@ -105,26 +80,12 @@ extension Buffer.Linked where Element: ~Copyable {
         header: inout Header,
         storage: Storage<Node>.Pool
     ) -> Element? {
-        let sentinel = header.sentinel
-        guard header.head != sentinel else { return nil }
+        guard let slot = unsafe Buffer<Element>.Link<N>.unlinkFirst(header: &header, { idx in
+            unsafe storage.pointer(at: idx)
+        }) else { return nil }
 
-        let slot = header.head
         let node = unsafe storage.pointer(at: slot).move()
-
-        // Unlink.
-        let nextSlot = node.links[0]
-        header.head = nextSlot
-        if nextSlot != sentinel {
-            if N >= 2 {
-                unsafe storage.pointer(at: nextSlot).pointee.links[1] = sentinel
-            }
-        } else {
-            // List is now empty.
-            header.tail = sentinel
-        }
-
         try! storage.deallocate(at: slot)
-        header.count = header.count.subtract.saturating(.one)
         return node.element
     }
 
@@ -139,54 +100,13 @@ extension Buffer.Linked where Element: ~Copyable {
         header: inout Header,
         storage: Storage<Node>.Pool
     ) -> Element? {
-        let sentinel = header.sentinel
-        guard header.tail != sentinel else { return nil }
+        guard let slot = unsafe Buffer<Element>.Link<N>.unlinkLast(header: &header, { idx in
+            unsafe storage.pointer(at: idx)
+        }) else { return nil }
 
-        let slot = header.tail
-
-        if N >= 2 {
-            // O(1) doubly-linked removal using prev link.
-            let prevSlot = unsafe storage.pointer(at: slot).pointee.links[1]
-            let node = unsafe storage.pointer(at: slot).move()
-
-            header.tail = prevSlot
-            if prevSlot != sentinel {
-                unsafe storage.pointer(at: prevSlot).pointee.links[0] = sentinel
-            } else {
-                header.head = sentinel
-            }
-
-            try! storage.deallocate(at: slot)
-            header.count = header.count.subtract.saturating(.one)
-            return node.element
-        } else {
-            // O(n) singly-linked: traverse from head to find predecessor.
-            var prevSlot = sentinel
-            if header.head != slot {
-                var current = header.head
-                while current != sentinel {
-                    let nextSlot = unsafe storage.pointer(at: current).pointee.links[0]
-                    if nextSlot == slot {
-                        prevSlot = current
-                        break
-                    }
-                    current = nextSlot
-                }
-            }
-
-            let node = unsafe storage.pointer(at: slot).move()
-
-            header.tail = prevSlot
-            if prevSlot != sentinel {
-                unsafe storage.pointer(at: prevSlot).pointee.links[0] = sentinel
-            } else {
-                header.head = sentinel
-            }
-
-            try! storage.deallocate(at: slot)
-            header.count = header.count.subtract.saturating(.one)
-            return node.element
-        }
+        let node = unsafe storage.pointer(at: slot).move()
+        try! storage.deallocate(at: slot)
+        return node.element
     }
 
     // MARK: Remove All
@@ -198,17 +118,15 @@ extension Buffer.Linked where Element: ~Copyable {
         header: inout Header,
         storage: Storage<Node>.Pool
     ) {
-        let sentinel = header.sentinel
-        var current = header.head
-        while current != sentinel {
-            let nextSlot = unsafe storage.pointer(at: current).pointee.links[0]
-            _ = unsafe storage.pointer(at: current).move()
-            try! storage.deallocate(at: current)
-            current = nextSlot
+        unsafe Buffer<Element>.Link<N>.forEach(header: header, { idx in
+            unsafe storage.pointer(at: idx)
+        }) { slot in
+            _ = unsafe storage.pointer(at: slot).move()
+            try! storage.deallocate(at: slot)
         }
 
-        header.head = sentinel
-        header.tail = sentinel
+        header.head = header.sentinel
+        header.tail = header.sentinel
         header.count = .zero
     }
 }

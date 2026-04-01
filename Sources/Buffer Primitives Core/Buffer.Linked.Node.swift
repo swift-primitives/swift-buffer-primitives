@@ -22,7 +22,7 @@ extension Buffer.Linked where Element: ~Copyable {
 
         /// Creates a node with the given element and links.
         @inlinable
-        package init(element: consuming Element, links: InlineArray<N, Index<Node>>) {
+        public init(element: consuming Element, links: InlineArray<N, Index<Node>>) {
             self.element = element
             self.links = links
         }
