@@ -12,14 +12,10 @@
 import Testing
 import Buffer_Linear_Inline_Primitives
 
-/// Canary tests for swiftlang/swift #86652: ~Copyable value-generic member destruction.
-///
-/// When any test FAILS ("Known issue was not recorded"), the compiler has
-/// fixed #86652 and the workarounds can be removed from:
-///   - Stack.Static, Array.Static, Heap.Static, Heap.MinMax.Static,
-///     Set.Ordered.Static, Dictionary.Ordered.Static
-@Suite("Buffer.Linear.Inline - Deinit Canary")
-struct LinearInlineDeinitCanaryTests {
+/// Regression test: Storage.Inline deinit cleans up elements through
+/// cross-module member destruction chain.
+@Suite("Buffer.Linear.Inline - Deinit")
+struct LinearInlineDeinitTests {
 
     final class Tracker: @unchecked Sendable {
         private var _storage: [Int] = []
@@ -34,7 +30,6 @@ struct LinearInlineDeinitCanaryTests {
         deinit { tracker.append(id) }
     }
 
-    /// Bare wrapper — NO _deinitWorkaround, NO manual cleanup.
     private struct _BareWrapper<Element: ~Copyable, let capacity: Int>: ~Copyable {
         var _buffer: Buffer<Element>.Linear.Inline<capacity>
         init() { self._buffer = Buffer<Element>.Linear.Inline<capacity>() }
@@ -42,16 +37,14 @@ struct LinearInlineDeinitCanaryTests {
     }
 
     @Test
-    func `compiler destroys cross-module value-generic member`() {
-        withKnownIssue("swiftlang/swift #86652: ~Copyable value-generic member destruction") {
-            let tracker = Tracker()
-            do {
-                var bare = _BareWrapper<TrackedElement, 4>()
-                _ = bare._buffer.append(TrackedElement(1, tracker: tracker))
-                _ = bare._buffer.append(TrackedElement(2, tracker: tracker))
-                _ = bare._buffer.append(TrackedElement(3, tracker: tracker))
-            }
-            #expect(tracker.deinitOrder == [1, 2, 3])
+    func `Storage.Inline deinit cleans up through cross-module chain`() {
+        let tracker = Tracker()
+        do {
+            var bare = _BareWrapper<TrackedElement, 4>()
+            _ = bare._buffer.append(TrackedElement(1, tracker: tracker))
+            _ = bare._buffer.append(TrackedElement(2, tracker: tracker))
+            _ = bare._buffer.append(TrackedElement(3, tracker: tracker))
         }
+        #expect(tracker.deinitOrder == [1, 2, 3])
     }
 }

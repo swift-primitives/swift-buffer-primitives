@@ -13,13 +13,10 @@ import Testing
 import Buffer_Slab_Inline_Primitives
 import Buffer_Primitives_Test_Support
 
-/// Canary tests for swiftlang/swift #86652: ~Copyable value-generic member destruction.
-///
-/// When any test FAILS ("Known issue was not recorded"), the compiler has
-/// fixed #86652 and the workarounds can be removed from:
-///   - Slab.Static (swift-slab-primitives)
-@Suite("Buffer.Slab.Inline - Deinit Canary")
-struct SlabInlineDeinitCanaryTests {
+/// Regression test: Storage.Inline deinit cleans up elements through
+/// cross-module member destruction chain.
+@Suite("Buffer.Slab.Inline - Deinit")
+struct SlabInlineDeinitTests {
 
     final class Tracker: @unchecked Sendable {
         private var _storage: [Int] = []
@@ -34,7 +31,6 @@ struct SlabInlineDeinitCanaryTests {
         deinit { tracker.append(id) }
     }
 
-    /// Bare wrapper — NO _deinitWorkaround, NO manual cleanup.
     private struct _BareWrapper<Element: ~Copyable, let wordCount: Int>: ~Copyable {
         var _buffer: Buffer<Element>.Slab.Inline<wordCount>
         init() { self._buffer = Buffer<Element>.Slab.Inline() }
@@ -42,19 +38,17 @@ struct SlabInlineDeinitCanaryTests {
     }
 
     @Test
-    func `compiler destroys cross-module value-generic member`() {
-        withKnownIssue("swiftlang/swift #86652: ~Copyable value-generic member destruction") {
-            let tracker = Tracker()
-            do {
-                var bare = _BareWrapper<TrackedElement, 4>()
-                let s0: Bit.Index.Bounded<4> = 0
-                let s1: Bit.Index.Bounded<4> = 1
-                let s2: Bit.Index.Bounded<4> = 2
-                bare._buffer.insert(TrackedElement(1, tracker: tracker), at: s0)
-                bare._buffer.insert(TrackedElement(2, tracker: tracker), at: s1)
-                bare._buffer.insert(TrackedElement(3, tracker: tracker), at: s2)
-            }
-            #expect(tracker.deinitOrder == [1, 2, 3])
+    func `deinit cleans up inline storage elements`() {
+        let tracker = Tracker()
+        do {
+            var bare = _BareWrapper<TrackedElement, 4>()
+            let s0: Bit.Index.Bounded<4> = 0
+            let s1: Bit.Index.Bounded<4> = 1
+            let s2: Bit.Index.Bounded<4> = 2
+            bare._buffer.insert(TrackedElement(1, tracker: tracker), at: s0)
+            bare._buffer.insert(TrackedElement(2, tracker: tracker), at: s1)
+            bare._buffer.insert(TrackedElement(3, tracker: tracker), at: s2)
         }
+        #expect(tracker.deinitOrder == [1, 2, 3])
     }
 }
