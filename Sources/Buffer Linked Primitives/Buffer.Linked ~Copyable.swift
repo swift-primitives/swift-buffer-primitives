@@ -63,7 +63,7 @@ extension Buffer.Linked where Element: ~Copyable {
 extension Buffer.Linked where Element: ~Copyable {
     /// Number of elements in the list.
     @inlinable
-    public var count: Index<Element>.Count { header.count }
+    public var count: Index<Element>.Count { header.count.retag(Element.self) }
 
     /// Whether the list is empty.
     @inlinable
@@ -248,7 +248,7 @@ extension Buffer.Linked where Element: ~Copyable {
             }
 
             unsafe newPool.pointer(at: newSlot).initialize(
-                to: Node(element: oldNode.element, links: newLinks)
+                to: Node(links: newLinks, element: oldNode.element)
             )
 
             // Patch previous node's next link to point to this node.

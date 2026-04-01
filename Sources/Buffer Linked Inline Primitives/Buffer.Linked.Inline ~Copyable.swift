@@ -35,7 +35,7 @@ extension Buffer.Linked.Inline where Element: ~Copyable {
 extension Buffer.Linked.Inline where Element: ~Copyable {
     /// Number of elements in the list.
     @inlinable
-    public var count: Index<Element>.Count { header.count }
+    public var count: Index<Element>.Count { header.count.retag(Element.self) }
 
     /// Whether the list is empty.
     @inlinable
@@ -157,7 +157,7 @@ extension Buffer.Linked.Inline where Element: ~Copyable {
         links[0] = header.head  // next = old head
         // links[1..] already = sentinel (prev = none)
 
-        let node = Buffer<Element>.Linked<N>.Node(element: element, links: links)
+        let node = Buffer<Element>.Linked<N>.Node(links: links, element: element)
         storage.initialize(to: node, at: slot)
 
         // Link old head's prev to new node (doubly-linked only).
@@ -189,7 +189,7 @@ extension Buffer.Linked.Inline where Element: ~Copyable {
             links[1] = header.tail  // prev = old tail
         }
 
-        let node = Buffer<Element>.Linked<N>.Node(element: element, links: links)
+        let node = Buffer<Element>.Linked<N>.Node(links: links, element: element)
         storage.initialize(to: node, at: slot)
 
         // Link old tail's next to new node.

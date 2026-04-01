@@ -48,10 +48,8 @@ let package = Package(
             name: "Buffer Slab Inline Primitives",
             targets: ["Buffer Slab Inline Primitives"]
         ),
-        .library(
-            name: "Buffer Link Primitives",
-            targets: ["Buffer Link Primitives"]
-        ),
+
+
         .library(
             name: "Buffer Linked Primitives",
             targets: ["Buffer Linked Primitives"]
@@ -78,6 +76,7 @@ let package = Package(
         ),
     ],
     dependencies: [
+        .package(path: "../swift-link-primitives"),
         .package(path: "../swift-storage-primitives"),
         .package(path: "../swift-cyclic-index-primitives"),
         .package(path: "../swift-memory-primitives"),
@@ -92,6 +91,7 @@ let package = Package(
         .target(
             name: "Buffer Primitives Core",
             dependencies: [
+                .product(name: "Link Primitives", package: "swift-link-primitives"),
                 .product(name: "Storage Primitives", package: "swift-storage-primitives"),
                 .product(name: "Cyclic Index Primitives", package: "swift-cyclic-index-primitives"),
                 .product(name: "Memory Primitives", package: "swift-memory-primitives"),
@@ -168,20 +168,11 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Link
-        .target(
-            name: "Buffer Link Primitives",
-            dependencies: [
-                "Buffer Primitives Core",
-            ]
-        ),
-
         // MARK: - Linked
         .target(
             name: "Buffer Linked Primitives",
             dependencies: [
                 "Buffer Primitives Core",
-                "Buffer Link Primitives",
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
@@ -231,7 +222,6 @@ let package = Package(
                 "Buffer Linear Small Primitives",
                 "Buffer Slab Primitives",
                 "Buffer Slab Inline Primitives",
-                "Buffer Link Primitives",
                 "Buffer Linked Primitives",
                 "Buffer Linked Inline Primitives",
                 "Buffer Slots Primitives",

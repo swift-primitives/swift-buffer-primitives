@@ -10,7 +10,6 @@
 // ===----------------------------------------------------------------------===//
 
 public import Buffer_Primitives_Core
-public import Buffer_Link_Primitives
 
 // MARK: - Static Operations for ~Copyable Elements on Storage.Pool
 
@@ -35,11 +34,11 @@ extension Buffer.Linked where Element: ~Copyable {
         }
 
         let links = InlineArray<N, Index<Node>>(repeating: header.sentinel)
-        let node = Node(element: element, links: links)
+        let node = Node(links: links, element: element)
         unsafe storage.pointer(at: slot).initialize(to: node)
 
-        unsafe Buffer<Element>.Link<N>.prepend(slot, header: &header) { idx in
-            unsafe storage.pointer(at: idx)
+        unsafe Link<N>.prepend(slot, header: &header) { idx in
+            unsafe Link<N>.linksPointer(in: storage.pointer(at: idx))
         }
     }
 
@@ -62,11 +61,11 @@ extension Buffer.Linked where Element: ~Copyable {
         }
 
         let links = InlineArray<N, Index<Node>>(repeating: header.sentinel)
-        let node = Node(element: element, links: links)
+        let node = Node(links: links, element: element)
         unsafe storage.pointer(at: slot).initialize(to: node)
 
-        unsafe Buffer<Element>.Link<N>.append(slot, header: &header) { idx in
-            unsafe storage.pointer(at: idx)
+        unsafe Link<N>.append(slot, header: &header) { idx in
+            unsafe Link<N>.linksPointer(in: storage.pointer(at: idx))
         }
     }
 
@@ -80,8 +79,8 @@ extension Buffer.Linked where Element: ~Copyable {
         header: inout Header,
         storage: Storage<Node>.Pool
     ) -> Element? {
-        guard let slot = unsafe Buffer<Element>.Link<N>.unlinkFirst(header: &header, { idx in
-            unsafe storage.pointer(at: idx)
+        guard let slot = unsafe Link<N>.unlinkFirst(header: &header, { idx in
+            unsafe Link<N>.linksPointer(in: storage.pointer(at: idx))
         }) else { return nil }
 
         let node = unsafe storage.pointer(at: slot).move()
@@ -100,8 +99,8 @@ extension Buffer.Linked where Element: ~Copyable {
         header: inout Header,
         storage: Storage<Node>.Pool
     ) -> Element? {
-        guard let slot = unsafe Buffer<Element>.Link<N>.unlinkLast(header: &header, { idx in
-            unsafe storage.pointer(at: idx)
+        guard let slot = unsafe Link<N>.unlinkLast(header: &header, { idx in
+            unsafe Link<N>.linksPointer(in: storage.pointer(at: idx))
         }) else { return nil }
 
         let node = unsafe storage.pointer(at: slot).move()
@@ -118,8 +117,8 @@ extension Buffer.Linked where Element: ~Copyable {
         header: inout Header,
         storage: Storage<Node>.Pool
     ) {
-        unsafe Buffer<Element>.Link<N>.forEach(header: header, { idx in
-            unsafe storage.pointer(at: idx)
+        unsafe Link<N>.forEach(header: header, { idx in
+            unsafe Link<N>.linksPointer(in: storage.pointer(at: idx))
         }) { slot in
             _ = unsafe storage.pointer(at: slot).move()
             try! storage.deallocate(at: slot)
