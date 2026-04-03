@@ -21,6 +21,38 @@ let package = Package(
             targets: ["Buffer Primitives Core"]
         ),
         .library(
+            name: "Buffer Ring Primitives Core",
+            targets: ["Buffer Ring Primitives Core"]
+        ),
+        .library(
+            name: "Buffer Linear Primitives Core",
+            targets: ["Buffer Linear Primitives Core"]
+        ),
+        .library(
+            name: "Buffer Slab Primitives Core",
+            targets: ["Buffer Slab Primitives Core"]
+        ),
+        .library(
+            name: "Buffer Linked Primitives Core",
+            targets: ["Buffer Linked Primitives Core"]
+        ),
+        .library(
+            name: "Buffer Arena Primitives Core",
+            targets: ["Buffer Arena Primitives Core"]
+        ),
+        .library(
+            name: "Buffer Slots Primitives Core",
+            targets: ["Buffer Slots Primitives Core"]
+        ),
+        .library(
+            name: "Buffer Aligned Primitives Core",
+            targets: ["Buffer Aligned Primitives Core"]
+        ),
+        .library(
+            name: "Buffer Unbounded Primitives Core",
+            targets: ["Buffer Unbounded Primitives Core"]
+        ),
+        .library(
             name: "Buffer Ring Primitives",
             targets: ["Buffer Ring Primitives"]
         ),
