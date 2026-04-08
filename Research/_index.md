@@ -2,8 +2,8 @@
 
 | Document | Topic | Date | Status |
 |----------|-------|------|--------|
+| [audit.md](audit.md) | Systematic code audit against skill requirements | 2026-03-25 | CLEAN |
 | [theoretical-buffer-primitives-design](theoretical-buffer-primitives-design.md) | Tier 3: Theoretical buffer-primitives built on storage-primitives and bit-vector-primitives | 2026-02-03 | RECOMMENDATION |
-| [dependency-reuse-audit](dependency-reuse-audit.md) | Audit: dependency reuse opportunities in converged buffer design | 2026-02-03 | DECISION |
 | [metadata-parametric-slots](metadata-parametric-slots.md) | Tier 2: Metadata-parametric random-access slots buffer discipline | 2026-02-07 | IN_PROGRESS |
 | [noncopyable-optional-access-patterns](noncopyable-optional-access-patterns.md) | Tier 2: Access patterns for ~Copyable optionals in borrowing contexts | 2026-02-09 | DECISION |
 | [linked-buffer-n-parameterization](linked-buffer-n-parameterization.md) | Tier 1: N-parameter analysis for Buffer.Linked singly/doubly-linked support | 2026-02-11 | DECISION |
@@ -19,7 +19,6 @@
 | [buffer-core-pattern-unification](buffer-core-pattern-unification.md) | Tier 2: Pattern unification — correctness fixes and minimal API surface for Buffer Primitives Core | 2026-02-12 | RECOMMENDATION |
 | [small-buffer-storage-representation](small-buffer-storage-representation.md) | Tier 2: Enum vs two-field storage for Small variants — force-unwrap elimination vs ~Copyable _modify | 2026-02-15 | SUPERSEDED |
 | [small-buffer-enum-compiler-workarounds](small-buffer-enum-compiler-workarounds.md) | Tier 2: Compiler bugs and workarounds from Small enum refactoring — LLVM verifier, DiagnoseStaticExclusivity, CopyPropagation | 2026-02-15 | DECISION |
-| [implementation-skill-audit](implementation-skill-audit.md) | Tier 1: Implementation skill audit — import gaps vs infrastructure gaps for typed boundary overloads | 2026-02-12 | RECOMMENDATION |
 | [bounded-index-parameter-syntax](bounded-index-parameter-syntax.md) | Tier 1: Bounded parameter syntax — accept bounded at API boundary, let retag carry the bound | 2026-02-12 | RECOMMENDATION |
 | [storage-pointer-access-level](storage-pointer-access-level.md) | Tier 1: Promote Storage.Heap/Pool pointer(at:) from package to public for buffer-layer access | 2026-02-15 | DECISION |
 | [release-mode-llvm-verifier-crash-diagnosis](release-mode-llvm-verifier-crash-diagnosis.md) | Authoritative diagnosis: @_rawLayout + deinit + -O LLVM verifier crash (Steps 1-8) | 2026-03-20 | OPEN |
