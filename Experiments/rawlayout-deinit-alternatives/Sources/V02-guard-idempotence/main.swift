@@ -19,6 +19,8 @@
 //
 // Date: 2026-03-21
 //
+// Swift 6.3: STILL BROKEN — workaround remains necessary
+//
 // Consolidates: deinit-guard-idempotence (V1-V6)
 // Supports: per-slot-initialization-tracking.md, inline-deinitialize-state-reset.md
 

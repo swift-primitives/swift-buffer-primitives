@@ -25,6 +25,8 @@ Does the access level of @_rawLayout types affect the LLVM verifier crash under 
 | `package` | 1 field, empty deinit | **Crash** |
 | `public` | 1 field, empty deinit | **Crash** |
 
+Swift 6.3: STILL BROKEN — workaround remains necessary
+
 ## Removal Test
 
 This experiment serves as the canary for the compiler fix. When this builds with `public` access under `-O`, the `_deinitWorkaround: AnyObject?` pattern across 22 types in 10 packages can be removed.

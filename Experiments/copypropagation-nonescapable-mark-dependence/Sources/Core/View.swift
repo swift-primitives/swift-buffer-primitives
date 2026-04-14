@@ -37,6 +37,9 @@
 //   B) @_optimize(none) on _read accessor (prevents accessor inlining,
 //      keeping mark_dependence behind function call boundary)
 // Date: 2026-03-22
+//
+// Swift 6.3: FIXED — workaround no longer required
+// Status: SUPERSEDED (2026-04-14) — bug fixed in Swift 6.3, workaround removed from production code
 
 // ─── Tag namespace (mirrors Property pattern) ───
 

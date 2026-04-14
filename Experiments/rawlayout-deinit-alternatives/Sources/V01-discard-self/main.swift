@@ -23,6 +23,8 @@
 //
 // Date: 2026-03-21
 //
+// Swift 6.3: STILL BROKEN — workaround remains necessary
+//
 // Consolidates: discard-self-availability (V1-V10)
 // Supports: eliminates discard self as workaround for @_rawLayout
 

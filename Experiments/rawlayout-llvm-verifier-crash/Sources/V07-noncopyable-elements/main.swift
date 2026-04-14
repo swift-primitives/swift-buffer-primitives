@@ -11,6 +11,8 @@
 //         a contributing factor to the LLVM verifier crash.
 // Date: 2026-03-21
 //
+// Swift 6.3: STILL BROKEN — workaround remains necessary
+//
 // Consolidates: rawlayout-noncopyable-elements
 // Supports: eliminates ~Copyable elements as crash cause
 

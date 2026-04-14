@@ -10,6 +10,8 @@
 //         The crash requires sufficient cross-module serialized SIL.
 // Date: 2026-03-21
 //
+// Swift 6.3: STILL BROKEN — workaround remains necessary
+//
 // Consolidates: rawlayout-deinit-investigation (Variants 1-3)
 // Supports: diagnosis Step 5 — standalone reproducer does not crash
 

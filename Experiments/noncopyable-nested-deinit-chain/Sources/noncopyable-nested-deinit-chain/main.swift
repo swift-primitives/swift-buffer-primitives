@@ -7,6 +7,8 @@
 // Setup: 3 packages — Element → Storage (@_rawLayout) → Container
 //
 // When all tests pass, the bug is fixed and production workarounds can be removed.
+//
+// Swift 6.3: STILL BROKEN — workaround remains necessary
 
 import Element
 import Storage

@@ -21,6 +21,8 @@
 //
 // Date: 2026-03-21
 //
+// Swift 6.3: STILL BROKEN — workaround remains necessary
+//
 // Consolidates: rawlayout-release-verifier-crash (V1-V8, V13a-V30)
 // Supports: diagnosis Step 6 — struct-body ≤2 threshold
 

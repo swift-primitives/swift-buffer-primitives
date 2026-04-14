@@ -12,6 +12,8 @@
 //         deinitialize() before scope exit.
 // Date: 2026-03-21
 //
+// Swift 6.3: STILL BROKEN — workaround remains necessary
+//
 // Consolidates: rawlayout-deinit-incremental (RealPackageTest + CoreOnlyTest)
 // Supports: compiler bug — pre-compiled @_rawLayout deinit not executed
 

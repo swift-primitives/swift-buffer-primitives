@@ -25,6 +25,8 @@
 //
 // Date: 2026-03-21
 //
+// Swift 6.3: STILL BROKEN — workaround remains necessary
+//
 // Consolidates: escapable-deinit-lifetime (18 variants, especially V17, V18)
 // Supports: escapable-deinit-lifetime.md, Property.View accessor pattern
 

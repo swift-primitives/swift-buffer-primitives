@@ -17,6 +17,8 @@
 //
 // Date: 2026-03-21
 //
+// Swift 6.3: STILL BROKEN — workaround remains necessary
+//
 // Consolidates: rawlayout-release-verifier-crash (V13-V27, RealStorageModule)
 // Supports: New finding #2 — class-ref interaction
 
