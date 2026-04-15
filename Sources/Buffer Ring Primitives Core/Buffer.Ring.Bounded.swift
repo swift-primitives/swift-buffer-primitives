@@ -30,4 +30,18 @@ extension Buffer.Ring where Element: ~Copyable {
 }
 
 extension Buffer.Ring.Bounded: Copyable where Element: Copyable {}
-extension Buffer.Ring.Bounded: @unchecked Sendable where Element: Sendable {}
+/// Sendable conformance for `Buffer.Ring.Bounded`.
+///
+/// ## Safety Invariant
+///
+/// `Buffer.Ring.Bounded` is `~Copyable`. Fixed-capacity ring buffer with
+/// single-owner semantics.
+///
+/// ## Intended Use
+///
+/// - Transferring a bounded ring buffer to a consumer.
+///
+/// ## Non-Goals
+///
+/// - Not a shared concurrent ring buffer.
+extension Buffer.Ring.Bounded: @unsafe @unchecked Sendable where Element: Sendable {}

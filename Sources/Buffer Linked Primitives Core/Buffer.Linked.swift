@@ -68,4 +68,18 @@ extension Buffer where Element: ~Copyable {
 // MARK: - Conditional Conformances (Linked)
 
 extension Buffer.Linked: Copyable where Element: Copyable {}
-extension Buffer.Linked: @unchecked Sendable where Element: Sendable {}
+/// Sendable conformance for `Buffer.Linked`.
+///
+/// ## Safety Invariant
+///
+/// `Buffer.Linked` is `~Copyable` and owns `Storage.Pool`. Single ownership
+/// enforced; cross-thread transfer is a move.
+///
+/// ## Intended Use
+///
+/// - Transferring a pool-backed linked buffer to a worker thread.
+///
+/// ## Non-Goals
+///
+/// - Not a shared concurrent linked buffer.
+extension Buffer.Linked: @unsafe @unchecked Sendable where Element: Sendable {}

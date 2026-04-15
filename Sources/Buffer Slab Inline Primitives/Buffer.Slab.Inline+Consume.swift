@@ -8,7 +8,7 @@ extension Buffer.Slab.Inline where Element: ~Copyable {
     ///
     /// Elements are moved from inline storage to heap storage during `consume()`
     /// for safe iteration. The bitmap tracks remaining occupied slots.
-    public final class ConsumeState: @unchecked Sendable {
+    public final class ConsumeState: @unsafe @unchecked Sendable {
         @usableFromInline
         let storage: Storage<Element>.Heap
 

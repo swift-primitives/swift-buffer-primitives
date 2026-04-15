@@ -48,7 +48,35 @@ extension Buffer.Slab where Element: ~Copyable {
 }
 
 extension Buffer.Slab.Bounded: Copyable where Element: Copyable {}
-extension Buffer.Slab.Bounded: @unchecked Sendable where Element: Sendable {}
+/// Sendable conformance for `Buffer.Slab.Bounded`.
+///
+/// ## Safety Invariant
+///
+/// `Buffer.Slab.Bounded` is `~Copyable`. Fixed-capacity slab with single-owner
+/// semantics.
+///
+/// ## Intended Use
+///
+/// - Transferring a bounded slab buffer to a consumer.
+///
+/// ## Non-Goals
+///
+/// - Not a shared concurrent slab; external synchronization required.
+extension Buffer.Slab.Bounded: @unsafe @unchecked Sendable where Element: Sendable {}
 
 extension Buffer.Slab.Bounded.Indexed: Copyable where Element: Copyable, Tag: ~Copyable {}
-extension Buffer.Slab.Bounded.Indexed: @unchecked Sendable where Element: Sendable, Tag: ~Copyable {}
+/// Sendable conformance for `Buffer.Slab.Bounded.Indexed`.
+///
+/// ## Safety Invariant
+///
+/// `Buffer.Slab.Bounded.Indexed` is `~Copyable`. Phantom-typed Tag wrapper
+/// around Bounded — ownership transfer is the primary invariant.
+///
+/// ## Intended Use
+///
+/// - Type-safe index conversion via `Tagged.retag()`.
+///
+/// ## Non-Goals
+///
+/// - Tag is phantom; no runtime data under Tag.
+extension Buffer.Slab.Bounded.Indexed: @unsafe @unchecked Sendable where Element: Sendable, Tag: ~Copyable {}

@@ -112,7 +112,21 @@ extension Buffer where Element: ~Copyable {
 }
 
 extension Buffer.Slab: Copyable where Element: Copyable {}
-extension Buffer.Slab: @unchecked Sendable where Element: Sendable {}
+/// Sendable conformance for `Buffer.Slab`.
+///
+/// ## Safety Invariant
+///
+/// `Buffer.Slab` is `~Copyable` and owns `Storage.Slab`. Single ownership
+/// enforced; cross-thread transfer is a move.
+///
+/// ## Intended Use
+///
+/// - Transferring a slab-backed buffer to a worker thread.
+///
+/// ## Non-Goals
+///
+/// - Not a shared concurrent slab; external synchronization required.
+extension Buffer.Slab: @unsafe @unchecked Sendable where Element: Sendable {}
 
 // Copyable suppressed per INV-INLINE-004a.
 extension Buffer.Slab.Inline: Sendable where Element: Sendable {}

@@ -106,6 +106,13 @@ extension Buffer where Element: ~Copyable {
         public struct Inline<let inlineCapacity: Int>: ~Copyable {
             @_rawLayout(likeArrayOf: Element, count: inlineCapacity)
             @usableFromInline
+            // WHY: Category D — structural Sendable workaround (SP-2).
+            // WHY: `_Elements` is a @_rawLayout wrapper whose sole purpose is
+            // WHY: element storage layout. @_rawLayout blocks structural Sendable
+            // WHY: inference. No caller invariant — the raw bytes contain Elements.
+            // WHEN TO REMOVE: When compiler gains structural Sendable inference
+            // WHEN TO REMOVE: through @_rawLayout types.
+            // TRACKING: unsafe-audit-findings.md Category D SP-2.
             package struct _Elements: ~Copyable, @unchecked Sendable {
                 @usableFromInline package init() {}
             }
@@ -188,7 +195,37 @@ extension Buffer where Element: ~Copyable {
 // MARK: - Conditional Conformances (Arena)
 
 extension Buffer.Arena: Copyable where Element: Copyable {}
-extension Buffer.Arena: @unchecked Sendable where Element: Sendable {}
+/// Sendable conformance for `Buffer.Arena`.
+///
+/// ## Safety Invariant
+///
+/// `Buffer.Arena` is `~Copyable` and owns `Storage.Arena` (a final class).
+/// Single ownership via `~Copyable` prevents aliasing; cross-thread transfer
+/// is a move.
+///
+/// ## Intended Use
+///
+/// - Transferring an arena-backed buffer to a worker thread.
+///
+/// ## Non-Goals
+///
+/// - Does not support concurrent access.
+extension Buffer.Arena: @unsafe @unchecked Sendable where Element: Sendable {}
 
 // Copyable suppressed per INV-INLINE-004a.
-extension Buffer.Arena.Inline: @unchecked Sendable where Element: Sendable {}
+/// Sendable conformance for `Buffer.Arena.Inline`.
+///
+/// ## Safety Invariant
+///
+/// `Buffer.Arena.Inline` is unconditionally `~Copyable` with inline
+/// `@_rawLayout` storage. Unique ownership ensures cross-thread transfer
+/// via move is race-free.
+///
+/// ## Intended Use
+///
+/// - Zero-allocation arena buffer moved from constructor to consumer.
+///
+/// ## Non-Goals
+///
+/// - Not shareable; inline storage is tied to one owner at a time.
+extension Buffer.Arena.Inline: @unsafe @unchecked Sendable where Element: Sendable {}

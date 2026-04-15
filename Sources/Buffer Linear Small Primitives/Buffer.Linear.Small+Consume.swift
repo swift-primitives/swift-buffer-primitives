@@ -7,7 +7,7 @@ extension Buffer.Linear.Small where Element: ~Copyable {
     /// and cleanup-on-drop requires a deinit.
     ///
     /// Elements are always moved to heap storage for safe iteration.
-    public final class ConsumeState: @unchecked Sendable {
+    public final class ConsumeState: @unsafe @unchecked Sendable {
         @usableFromInline
         let storage: Storage<Element>.Heap
 

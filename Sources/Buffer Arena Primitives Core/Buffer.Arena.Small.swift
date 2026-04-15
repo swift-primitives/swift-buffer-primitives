@@ -69,5 +69,19 @@ extension Buffer.Arena where Element: ~Copyable {
 
 // Copyable suppressed per INV-INLINE-004a (contains Inline).
 // extension Buffer.Arena.Small: Copyable where Element: Copyable {}
-extension Buffer.Arena.Small._Representation: @unchecked Sendable where Element: Sendable {}
+/// Sendable conformance for `Buffer.Arena.Small._Representation`.
+///
+/// ## Safety Invariant
+///
+/// `~Copyable` enum payload — either inline or heap variant. Single ownership
+/// enforced; cross-thread transfer is a move.
+///
+/// ## Intended Use
+///
+/// - Internal storage representation for `Buffer.Arena.Small`.
+///
+/// ## Non-Goals
+///
+/// - Not for direct use; package-scoped.
+extension Buffer.Arena.Small._Representation: @unsafe @unchecked Sendable where Element: Sendable {}
 extension Buffer.Arena.Small: Sendable where Element: Sendable {}

@@ -29,5 +29,19 @@ extension Buffer.Linear where Element: ~Copyable {
 
 // Copyable suppressed per INV-INLINE-004a (contains Inline).
 // extension Buffer.Linear.Small: Copyable where Element: Copyable {}
-extension Buffer.Linear.Small._Representation: @unchecked Sendable where Element: Sendable {}
+/// Sendable conformance for `Buffer.Linear.Small._Representation`.
+///
+/// ## Safety Invariant
+///
+/// `~Copyable` enum payload — either inline or heap variant. Single ownership
+/// enforced; cross-thread transfer is a move.
+///
+/// ## Intended Use
+///
+/// - Internal storage representation for `Buffer.Linear.Small`.
+///
+/// ## Non-Goals
+///
+/// - Not for direct use; package-scoped.
+extension Buffer.Linear.Small._Representation: @unsafe @unchecked Sendable where Element: Sendable {}
 extension Buffer.Linear.Small: Sendable where Element: Sendable {}

@@ -10,7 +10,7 @@ extension Buffer.Linked where Element: ~Copyable {
     ///
     /// Holds the pool storage and traverses the link chain front-to-back.
     /// On early exit, deinit traverses remaining nodes and deallocates them.
-    public final class ConsumeState: @unchecked Sendable {
+    public final class ConsumeState: @unsafe @unchecked Sendable {
         @usableFromInline
         let storage: Storage<Node>.Pool
 

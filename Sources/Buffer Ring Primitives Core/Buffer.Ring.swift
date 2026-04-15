@@ -122,7 +122,21 @@ extension Buffer where Element: ~Copyable {
 }
 
 extension Buffer.Ring: Copyable where Element: Copyable {}
-extension Buffer.Ring: @unchecked Sendable where Element: Sendable {}
+/// Sendable conformance for `Buffer.Ring`.
+///
+/// ## Safety Invariant
+///
+/// `Buffer.Ring` is `~Copyable` and owns heap-backed ring storage. Single
+/// ownership enforced; cross-thread transfer is a move.
+///
+/// ## Intended Use
+///
+/// - Transferring a ring buffer to a worker thread.
+///
+/// ## Non-Goals
+///
+/// - Not a shared concurrent ring buffer.
+extension Buffer.Ring: @unsafe @unchecked Sendable where Element: Sendable {}
 
 // Copyable suppressed per INV-INLINE-004a.
 // extension Buffer.Ring.Inline: Copyable where Element: Copyable {}

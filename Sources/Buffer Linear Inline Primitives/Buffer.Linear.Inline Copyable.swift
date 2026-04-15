@@ -50,7 +50,7 @@ extension Buffer.Linear.Inline: Sequence.`Protocol` where Element: Copyable {
     /// The iterator is only valid while the source buffer exists —
     /// standard for-in loops maintain this invariant.
     @safe
-    public struct Iterator: Sequence.Iterator.`Protocol`, IteratorProtocol, @unchecked Sendable {
+    public struct Iterator: Sequence.Iterator.`Protocol`, IteratorProtocol, @unsafe @unchecked Sendable {
         @usableFromInline
         var base: UnsafePointer<Element>
 

@@ -37,4 +37,18 @@ extension Buffer.Arena where Element: ~Copyable {
 // MARK: - Conditional Conformances (Arena.Bounded)
 
 extension Buffer.Arena.Bounded: Copyable where Element: Copyable {}
-extension Buffer.Arena.Bounded: @unchecked Sendable where Element: Sendable {}
+/// Sendable conformance for `Buffer.Arena.Bounded`.
+///
+/// ## Safety Invariant
+///
+/// `Buffer.Arena.Bounded` is `~Copyable`. Single ownership enforced; the
+/// fixed-capacity arena transfers with it.
+///
+/// ## Intended Use
+///
+/// - Transferring a bounded arena buffer to a worker or actor.
+///
+/// ## Non-Goals
+///
+/// - Not a shared concurrent allocator; external synchronization required.
+extension Buffer.Arena.Bounded: @unsafe @unchecked Sendable where Element: Sendable {}

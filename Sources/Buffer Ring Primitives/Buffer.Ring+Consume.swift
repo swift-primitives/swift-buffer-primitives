@@ -5,7 +5,7 @@ extension Buffer.Ring where Element: ~Copyable {
     ///
     /// Class-based because `Sequence.Consume.Protocol.ConsumeState` must be Copyable,
     /// and cleanup-on-drop requires a deinit.
-    public final class ConsumeState: @unchecked Sendable {
+    public final class ConsumeState: @unsafe @unchecked Sendable {
         @usableFromInline
         var header: Buffer.Ring.Header
 

@@ -7,7 +7,7 @@ extension Buffer.Slab where Element: ~Copyable {
     /// and cleanup-on-drop requires a deinit. The bitmap IS the consume state —
     /// linear scan provides destructive iteration through occupied slots.
     @safe
-    public final class ConsumeState: @unchecked Sendable {
+    public final class ConsumeState: @unsafe @unchecked Sendable {
         @usableFromInline
         let storage: Storage<Element>.Slab
 

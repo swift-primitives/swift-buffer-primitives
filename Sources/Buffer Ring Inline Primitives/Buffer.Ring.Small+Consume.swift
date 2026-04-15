@@ -7,7 +7,7 @@ extension Buffer.Ring.Small where Element: ~Copyable {
     /// and cleanup-on-drop requires a deinit.
     ///
     /// Elements are always linearized to heap storage for safe iteration.
-    public final class ConsumeState: @unchecked Sendable {
+    public final class ConsumeState: @unsafe @unchecked Sendable {
         @usableFromInline
         var header: Buffer.Ring.Header
 

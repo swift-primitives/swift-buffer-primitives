@@ -103,7 +103,21 @@ extension Buffer where Element: ~Copyable {
 // MARK: - Conditional Conformances (Linear)
 
 extension Buffer.Linear: Copyable where Element: Copyable {}
-extension Buffer.Linear: @unchecked Sendable where Element: Sendable {}
+/// Sendable conformance for `Buffer.Linear`.
+///
+/// ## Safety Invariant
+///
+/// `Buffer.Linear` is `~Copyable` and owns `Storage.Heap`. Single ownership
+/// enforced; cross-thread transfer is a move.
+///
+/// ## Intended Use
+///
+/// - Transferring a linear buffer to a worker thread.
+///
+/// ## Non-Goals
+///
+/// - Not a shared concurrent buffer; external synchronization required.
+extension Buffer.Linear: @unsafe @unchecked Sendable where Element: Sendable {}
 
 // Copyable suppressed per INV-INLINE-004a.
 // extension Buffer.Linear.Inline: Copyable where Element: Copyable {}

@@ -54,7 +54,7 @@ extension Buffer.Slab.Inline: @unsafe Sequence.`Protocol` where Element: Copyabl
     ///
     /// Uses pointer-based iteration with bitmap occupancy checking.
     /// The iterator is only valid while the source buffer exists.
-    @unsafe public struct Iterator: Sequence.Iterator.`Protocol`, IteratorProtocol, @unchecked Sendable {
+    @unsafe public struct Iterator: Sequence.Iterator.`Protocol`, IteratorProtocol, @unsafe @unchecked Sendable {
         @usableFromInline
         let base: UnsafePointer<Element>
         @usableFromInline

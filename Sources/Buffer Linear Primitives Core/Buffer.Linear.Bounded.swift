@@ -28,4 +28,18 @@ extension Buffer.Linear where Element: ~Copyable {
 // MARK: - Conditional Conformances
 
 extension Buffer.Linear.Bounded: Copyable where Element: Copyable {}
-extension Buffer.Linear.Bounded: @unchecked Sendable where Element: Sendable {}
+/// Sendable conformance for `Buffer.Linear.Bounded`.
+///
+/// ## Safety Invariant
+///
+/// `Buffer.Linear.Bounded` is `~Copyable`. Fixed-capacity linear buffer with
+/// single-owner semantics.
+///
+/// ## Intended Use
+///
+/// - Transferring a bounded linear buffer to a consumer.
+///
+/// ## Non-Goals
+///
+/// - Not a shared concurrent buffer.
+extension Buffer.Linear.Bounded: @unsafe @unchecked Sendable where Element: Sendable {}

@@ -8,7 +8,7 @@ extension Buffer.Ring.Inline where Element: ~Copyable {
     ///
     /// Elements are moved from inline storage to heap storage during `consume()`
     /// for safe iteration.
-    public final class ConsumeState: @unchecked Sendable {
+    public final class ConsumeState: @unsafe @unchecked Sendable {
         @usableFromInline
         var header: Buffer.Ring.Header
 

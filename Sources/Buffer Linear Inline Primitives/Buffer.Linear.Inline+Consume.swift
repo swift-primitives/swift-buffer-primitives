@@ -9,7 +9,7 @@ extension Buffer.Linear.Inline where Element: ~Copyable {
     /// Elements are moved from inline storage to heap storage during `consume()`
     /// for safe iteration. This introduces a heap allocation but preserves
     /// O(1)-per-element extraction per [CONSUME-001].
-    public final class ConsumeState: @unchecked Sendable {
+    public final class ConsumeState: @unsafe @unchecked Sendable {
         @usableFromInline
         let storage: Storage<Element>.Heap
 

@@ -38,15 +38,25 @@ extension Buffer where Element == UInt8 {
     /// Uses `UnsafeMutableRawPointer.allocate(byteCount:alignment:)` for pure Swift
     /// allocation with no platform-specific C imports.
     ///
-    /// ## Concurrency
+    /// ## Safety Invariant
     ///
-    /// `Aligned` is marked `@unchecked Sendable` because it is move-only (`~Copyable`).
-    /// This guarantees unique ownership: after transferring an `Aligned` value to another
-    /// task or actor, the original binding is invalidated by the compiler.
+    /// `~Copyable` guarantees single ownership. The buffer owns an
+    /// `UnsafeMutablePointer<UInt8>` of a known byte count and alignment,
+    /// deallocated in `deinit`. Transfer across threads is a move: the compiler
+    /// invalidates the original binding after the move, and the old thread cannot
+    /// access the memory after the move.
     ///
-    /// - **Safe**: Moving an `Aligned` value across concurrency domains.
-    /// - **Unsafe**: Concurrent access from multiple tasks without external synchronization.
-    ///   If you need shared access, wrap the buffer in an actor or use a lock.
+    /// ## Intended Use
+    ///
+    /// - Moving an aligned byte buffer from a producer thread to a consumer thread
+    ///   as a one-shot transfer.
+    /// - Sending into an `actor`'s initializer.
+    ///
+    /// ## Non-Goals
+    ///
+    /// Does NOT support concurrent access. The buffer has no internal locks.
+    /// All access must be serialized by the owning thread; sendability is
+    /// ownership transfer, not sharing.
     ///
     /// ## Usage
     ///
@@ -54,7 +64,7 @@ extension Buffer where Element == UInt8 {
     /// rather than `Buffer.Aligned` directly. This keeps `Buffer.Aligned` as
     /// an implementation detail, not a type that "infects" public interfaces.
     @safe
-    public struct Aligned: ~Copyable, @unchecked Sendable {
+    public struct Aligned: ~Copyable, @unsafe @unchecked Sendable {
         /// Typed byte pointer to the allocated memory.
         /// Memory is bound to UInt8 at initialization.
         @usableFromInline

@@ -46,7 +46,7 @@ extension Buffer.Linked.Inline: @unsafe Sequence.`Protocol` where Element: Copya
     ///
     /// Uses pointer-based iteration following node links.
     /// The iterator is only valid while the source buffer exists.
-    @unsafe public struct Iterator: Sequence.Iterator.`Protocol`, IteratorProtocol, @unchecked Sendable {
+    @unsafe public struct Iterator: Sequence.Iterator.`Protocol`, IteratorProtocol, @unsafe @unchecked Sendable {
         @usableFromInline
         let _base: UnsafePointer<Buffer<Element>.Linked<N>.Node>
 

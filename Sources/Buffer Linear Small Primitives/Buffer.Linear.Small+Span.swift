@@ -79,7 +79,7 @@ extension Buffer.Linear.Small where Element: Copyable {
     /// Iterator that provides both element-at-a-time and span-based iteration
     /// for small linear storage.
     @safe
-    public struct Iterator: Sequence.Iterator.`Protocol`, IteratorProtocol, @unchecked Sendable {
+    public struct Iterator: Sequence.Iterator.`Protocol`, IteratorProtocol, @unsafe @unchecked Sendable {
         @usableFromInline
         var base: UnsafePointer<Element>
 

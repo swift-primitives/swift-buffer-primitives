@@ -64,4 +64,18 @@ extension Buffer where Element: ~Copyable {
 // MARK: - Conditional Conformances (Slots)
 
 extension Buffer.Slots: Copyable where Element: Copyable {}
-extension Buffer.Slots: @unchecked Sendable where Element: Sendable {}
+/// Sendable conformance for `Buffer.Slots`.
+///
+/// ## Safety Invariant
+///
+/// `Buffer.Slots` is `~Copyable` with `Storage.Split` split storage. Single
+/// ownership enforced; cross-thread transfer is a move.
+///
+/// ## Intended Use
+///
+/// - Transferring a slots buffer to a worker thread.
+///
+/// ## Non-Goals
+///
+/// - Not a shared concurrent buffer.
+extension Buffer.Slots: @unsafe @unchecked Sendable where Element: Sendable {}

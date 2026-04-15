@@ -32,5 +32,19 @@ extension Buffer.Slab where Element: ~Copyable {
 
 // Copyable suppressed per INV-INLINE-004a (contains Inline).
 // extension Buffer.Slab.Small: Copyable where Element: Copyable {}
-extension Buffer.Slab.Small._Representation: @unchecked Sendable where Element: Sendable {}
+/// Sendable conformance for `Buffer.Slab.Small._Representation`.
+///
+/// ## Safety Invariant
+///
+/// `~Copyable` enum payload — either inline or heap variant. Single ownership
+/// enforced; cross-thread transfer is a move.
+///
+/// ## Intended Use
+///
+/// - Internal storage representation for `Buffer.Slab.Small`.
+///
+/// ## Non-Goals
+///
+/// - Not for direct use; package-scoped.
+extension Buffer.Slab.Small._Representation: @unsafe @unchecked Sendable where Element: Sendable {}
 extension Buffer.Slab.Small: Sendable where Element: Sendable {}

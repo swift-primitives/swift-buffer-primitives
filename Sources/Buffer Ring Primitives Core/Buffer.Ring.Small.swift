@@ -71,5 +71,19 @@ extension Buffer.Ring where Element: ~Copyable {
 
 // Copyable suppressed per INV-INLINE-004a (contains Inline).
 // extension Buffer.Ring.Small: Copyable where Element: Copyable {}
-extension Buffer.Ring.Small._Representation: @unchecked Sendable where Element: Sendable {}
+/// Sendable conformance for `Buffer.Ring.Small._Representation`.
+///
+/// ## Safety Invariant
+///
+/// `~Copyable` enum payload — either inline or heap variant. Single ownership
+/// enforced; cross-thread transfer is a move.
+///
+/// ## Intended Use
+///
+/// - Internal storage representation for `Buffer.Ring.Small`.
+///
+/// ## Non-Goals
+///
+/// - Not for direct use; package-scoped.
+extension Buffer.Ring.Small._Representation: @unsafe @unchecked Sendable where Element: Sendable {}
 extension Buffer.Ring.Small: Sendable where Element: Sendable {}
