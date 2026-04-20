@@ -212,7 +212,7 @@ extension Buffer.Ring.Small where Element: ~Copyable {
     @inlinable
     public var peek: Peek.View {
         _read {
-            yield Peek.View(borrowing: self)
+            yield Peek.View(self)
         }
     }
 

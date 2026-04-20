@@ -109,7 +109,7 @@ extension Buffer.Slab.Bounded where Element: ~Copyable {
     @inlinable
     public var forEach: Property<Sequence.ForEach, Self>.View.Read {
         _read {
-            yield Property<Sequence.ForEach, Self>.View.Read(borrowing: self)
+            yield Property<Sequence.ForEach, Self>.View.Read(self)
         }
     }
 }
