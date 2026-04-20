@@ -50,8 +50,8 @@ struct ArenaInlineDeinitRegressionTests {
         init() { self._arena = Buffer<Element>.Arena.Inline<capacity>() }
     }
 
-    @Test("cross-module member destruction — wrapper with empty deinit")
-    func emptyDeinitWrapper() throws {
+    @Test
+    func `cross-module member destruction — wrapper with empty deinit`() throws {
         let tracker = Tracker()
         do {
             var bare = _EmptyDeinitWrapper<TrackedElement, 8>()
@@ -62,8 +62,8 @@ struct ArenaInlineDeinitRegressionTests {
         #expect(tracker.deinitOrder == [1, 2, 3])
     }
 
-    @Test("cross-module member destruction — wrapper with no deinit")
-    func noDeinitWrapper() throws {
+    @Test
+    func `cross-module member destruction — wrapper with no deinit`() throws {
         let tracker = Tracker()
         do {
             var bare = _NoDeinitWrapper<TrackedElement, 8>()
