@@ -51,12 +51,12 @@ where Tag == Buffer<Element>.Linked<n>.Insert,
     public mutating func front(
         _ element: consuming Element
     ) {
-        unsafe base.pointee.ensureUnique()
-        if unsafe base.pointee.isFull { unsafe base.pointee._grow() }
+        unsafe base.value.ensureUnique()
+        if unsafe base.value.isFull { unsafe base.value._grow() }
         try! unsafe Buffer<Element>.Linked<n>.insertFront(
             consume element,
-            header: &base.pointee.header,
-            storage: base.pointee.storage
+            header: &base.value.header,
+            storage: base.value.storage
         )
     }
 
@@ -70,12 +70,12 @@ where Tag == Buffer<Element>.Linked<n>.Insert,
     public mutating func back(
         _ element: consuming Element
     ) {
-        unsafe base.pointee.ensureUnique()
-        if unsafe base.pointee.isFull { unsafe base.pointee._grow() }
+        unsafe base.value.ensureUnique()
+        if unsafe base.value.isFull { unsafe base.value._grow() }
         try! unsafe Buffer<Element>.Linked<n>.insertBack(
             consume element,
-            header: &base.pointee.header,
-            storage: base.pointee.storage
+            header: &base.value.header,
+            storage: base.value.storage
         )
     }
 }
@@ -93,10 +93,10 @@ where Tag == Buffer<Element>.Linked<n>.Remove,
     /// - Complexity: O(1)
     @inlinable
     public mutating func front() -> Element? {
-        unsafe base.pointee.ensureUnique()
+        unsafe base.value.ensureUnique()
         return unsafe Buffer<Element>.Linked<n>.removeFront(
-            header: &base.pointee.header,
-            storage: base.pointee.storage
+            header: &base.value.header,
+            storage: base.value.storage
         )
     }
 
@@ -106,10 +106,10 @@ where Tag == Buffer<Element>.Linked<n>.Remove,
     /// - Complexity: O(1) for N >= 2 (doubly-linked), O(n) for N == 1 (singly-linked)
     @inlinable
     public mutating func back() -> Element? {
-        unsafe base.pointee.ensureUnique()
+        unsafe base.value.ensureUnique()
         return unsafe Buffer<Element>.Linked<n>.removeBack(
-            header: &base.pointee.header,
-            storage: base.pointee.storage
+            header: &base.value.header,
+            storage: base.value.storage
         )
     }
 }

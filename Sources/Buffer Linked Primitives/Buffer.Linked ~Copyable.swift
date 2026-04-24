@@ -144,8 +144,8 @@ where Tag == Buffer<Element>.Linked<n>.Insert,
     ) throws(Buffer<Element>.Linked<n>.Error) {
         try unsafe Buffer<Element>.Linked<n>.insertFront(
             consume element,
-            header: &base.pointee.header,
-            storage: base.pointee.storage
+            header: &base.value.header,
+            storage: base.value.storage
         )
     }
 
@@ -160,8 +160,8 @@ where Tag == Buffer<Element>.Linked<n>.Insert,
     ) throws(Buffer<Element>.Linked<n>.Error) {
         try unsafe Buffer<Element>.Linked<n>.insertBack(
             consume element,
-            header: &base.pointee.header,
-            storage: base.pointee.storage
+            header: &base.value.header,
+            storage: base.value.storage
         )
     }
 }
@@ -180,8 +180,8 @@ where Tag == Buffer<Element>.Linked<n>.Remove,
     @inlinable
     public mutating func front() -> Element? {
         unsafe Buffer<Element>.Linked<n>.removeFront(
-            header: &base.pointee.header,
-            storage: base.pointee.storage
+            header: &base.value.header,
+            storage: base.value.storage
         )
     }
 
@@ -192,8 +192,8 @@ where Tag == Buffer<Element>.Linked<n>.Remove,
     @inlinable
     public mutating func back() -> Element? {
         unsafe Buffer<Element>.Linked<n>.removeBack(
-            header: &base.pointee.header,
-            storage: base.pointee.storage
+            header: &base.value.header,
+            storage: base.value.storage
         )
     }
 }

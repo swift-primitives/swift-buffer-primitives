@@ -1,5 +1,6 @@
 // MARK: - Extensions for Ring.Inline (declared in Core)
 
+
 extension Buffer.Ring.Inline where Element: ~Copyable {
 
     /// Creates a bounded inline ring buffer with fixed capacity.
@@ -138,14 +139,14 @@ where Tag == Buffer<Element>.Ring.Push,
     @inlinable
     @discardableResult
     public mutating func back(_ element: consuming Element) -> Element? {
-        unsafe base.pointee._pushBack(consume element)
+        unsafe base.value._pushBack(consume element)
     }
 
     /// Pushes an element to the front. Returns the element if the buffer is full.
     @inlinable
     @discardableResult
     public mutating func front(_ element: consuming Element) -> Element? {
-        unsafe base.pointee._pushFront(consume element)
+        unsafe base.value._pushFront(consume element)
     }
 }
 
@@ -161,7 +162,7 @@ where Tag == Buffer<Element>.Ring.Pop,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func front() -> Element {
-        unsafe base.pointee._popFront()
+        unsafe base.value._popFront()
     }
 
     /// Removes and returns the element at the back.
@@ -169,7 +170,7 @@ where Tag == Buffer<Element>.Ring.Pop,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func back() -> Element {
-        unsafe base.pointee._popBack()
+        unsafe base.value._popBack()
     }
 }
 
@@ -183,7 +184,7 @@ where Tag == Buffer<Element>.Ring.Remove,
     /// Removes all elements from the buffer.
     @inlinable
     public mutating func all() {
-        unsafe base.pointee._removeAll()
+        unsafe base.value._removeAll()
     }
 }
 

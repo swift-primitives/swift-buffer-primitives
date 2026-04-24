@@ -1,5 +1,6 @@
 // MARK: - Peek Operations (Copyable)
 
+
 extension Property.View.Read.Typed.Valued
 where Tag == Buffer<Element>.Linear.Peek,
       Base == Buffer<Element>.Linear.Inline<n>,
@@ -10,7 +11,7 @@ where Tag == Buffer<Element>.Linear.Peek,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var front: Element {
-        unsafe base.pointee.storage.pointer(at: Index<Element>.Bounded<n>(.zero)!).pointee
+        unsafe base.value.storage.pointer(at: Index<Element>.Bounded<n>(.zero)!).pointee
     }
 
     /// Returns the last element without removing it.
@@ -18,7 +19,7 @@ where Tag == Buffer<Element>.Linear.Peek,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var back: Element {
-        return unsafe base.pointee.storage.pointer(at: Index<Element>.Bounded<n>(base.pointee.header.count.subtract.saturating(.one).map(Ordinal.init))!).pointee
+        return unsafe base.value.storage.pointer(at: Index<Element>.Bounded<n>(base.value.header.count.subtract.saturating(.one).map(Ordinal.init))!).pointee
     }
 }
 

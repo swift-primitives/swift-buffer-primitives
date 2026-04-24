@@ -1,5 +1,6 @@
 // MARK: - Span / MutableSpan for Linear.Small
 
+
 extension Buffer.Linear.Small where Element: ~Copyable {
     /// Read-only span of all buffer elements.
     ///

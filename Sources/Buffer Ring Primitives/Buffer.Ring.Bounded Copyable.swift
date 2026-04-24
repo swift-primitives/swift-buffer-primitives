@@ -1,5 +1,6 @@
 // MARK: - Copyable Conformances for Ring.Bounded
 
+
 extension Buffer.Ring.Bounded where Element: Copyable {
 
     /// Ensures this buffer has unique storage, returning whether a copy was made.
@@ -97,7 +98,7 @@ where Tag == Buffer<Element>.Ring.Peek,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var front: Element {
-        unsafe base.pointee.storage.pointer(at: base.pointee.header.head).pointee
+        unsafe base.value.storage.pointer(at: base.value.header.head).pointee
     }
 
     /// Returns the back element without removing it.
@@ -105,10 +106,10 @@ where Tag == Buffer<Element>.Ring.Peek,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var back: Element {
-        return unsafe base.pointee.storage.pointer(at: Index.Modular.advanced(
-            base.pointee.header.head,
-            by: Index<Element>.Offset(fromZero: base.pointee.header.count.subtract.saturating(.one).map(Ordinal.init)),
-            capacity: base.pointee.header.capacity
+        return unsafe base.value.storage.pointer(at: Index.Modular.advanced(
+            base.value.header.head,
+            by: Index<Element>.Offset(fromZero: base.value.header.count.subtract.saturating(.one).map(Ordinal.init)),
+            capacity: base.value.header.capacity
         )).pointee
     }
 }
@@ -124,14 +125,14 @@ where Tag == Buffer<Element>.Ring.Push,
     @inlinable
     @discardableResult
     public mutating func back(_ element: consuming Element) -> Element? {
-        unsafe base.pointee._pushBack(consume element)
+        unsafe base.value._pushBack(consume element)
     }
 
     /// Pushes an element to the front (CoW-safe). Returns the element if full.
     @inlinable
     @discardableResult
     public mutating func front(_ element: consuming Element) -> Element? {
-        unsafe base.pointee._pushFront(consume element)
+        unsafe base.value._pushFront(consume element)
     }
 }
 
@@ -147,7 +148,7 @@ where Tag == Buffer<Element>.Ring.Pop,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func front() -> Element {
-        unsafe base.pointee._popFront()
+        unsafe base.value._popFront()
     }
 
     /// Removes and returns the element at the back (CoW-safe).
@@ -155,7 +156,7 @@ where Tag == Buffer<Element>.Ring.Pop,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func back() -> Element {
-        unsafe base.pointee._popBack()
+        unsafe base.value._popBack()
     }
 }
 
@@ -169,7 +170,7 @@ where Tag == Buffer<Element>.Ring.Remove,
     /// Removes all elements from the buffer (CoW-safe).
     @inlinable
     public mutating func all() {
-        unsafe base.pointee._removeAll()
+        unsafe base.value._removeAll()
     }
 }
 

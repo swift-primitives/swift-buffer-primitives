@@ -11,7 +11,7 @@ extension Property.View.Read where Base: ~Copyable {
     public func occupied<Element>(
         _ body: (Bit.Index) -> Void
     ) where Tag == Sequence.ForEach, Base == Buffer<Element>.Slab {
-        unsafe base.pointee.header.bitmap.ones.forEach(body)
+        unsafe base.value.header.bitmap.ones.forEach(body)
     }
 }
 
@@ -26,6 +26,6 @@ extension Property.View.Read where Base: ~Copyable {
     public func occupied<Element>(
         _ body: (Bit.Index) -> Void
     ) where Tag == Sequence.ForEach, Base == Buffer<Element>.Slab.Bounded {
-        unsafe base.pointee.header.bitmap.ones.forEach(body)
+        unsafe base.value.header.bitmap.ones.forEach(body)
     }
 }

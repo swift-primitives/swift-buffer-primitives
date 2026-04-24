@@ -1,5 +1,6 @@
 // MARK: - Iterator and Sequence for Ring.Small
 
+
 extension Buffer.Ring.Small where Element: Copyable {
     /// Iterator that provides both element-at-a-time and span-based iteration
     /// for small ring storage.

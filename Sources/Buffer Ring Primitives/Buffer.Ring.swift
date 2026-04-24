@@ -220,7 +220,7 @@ where Tag == Buffer<Element>.Ring.Push,
     /// - Complexity: O(1) amortized
     @inlinable
     public mutating func back(_ element: consuming Element) {
-        unsafe base.pointee._pushBack(consume element)
+        unsafe base.value._pushBack(consume element)
     }
 
     /// Pushes an element to the front of the ring.
@@ -229,7 +229,7 @@ where Tag == Buffer<Element>.Ring.Push,
     /// - Complexity: O(1) amortized
     @inlinable
     public mutating func front(_ element: consuming Element) {
-        unsafe base.pointee._pushFront(consume element)
+        unsafe base.value._pushFront(consume element)
     }
 }
 
@@ -246,7 +246,7 @@ where Tag == Buffer<Element>.Ring.Pop,
     /// - Complexity: O(1)
     @inlinable
     public mutating func front() -> Element {
-        unsafe base.pointee._popFront()
+        unsafe base.value._popFront()
     }
 
     /// Removes and returns the element at the back of the ring.
@@ -255,7 +255,7 @@ where Tag == Buffer<Element>.Ring.Pop,
     /// - Complexity: O(1)
     @inlinable
     public mutating func back() -> Element {
-        unsafe base.pointee._popBack()
+        unsafe base.value._popBack()
     }
 }
 
@@ -271,7 +271,7 @@ where Tag == Buffer<Element>.Ring.Remove,
     /// - Complexity: O(n) where n is the number of elements.
     @inlinable
     public mutating func all() {
-        unsafe base.pointee._removeAll()
+        unsafe base.value._removeAll()
     }
 }
 

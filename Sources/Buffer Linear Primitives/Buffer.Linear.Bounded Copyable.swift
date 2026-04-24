@@ -1,5 +1,6 @@
 // MARK: - Peek Operations (Copyable)
 
+
 extension Property.View.Read.Typed
 where Tag == Buffer<Element>.Linear.Peek,
       Base == Buffer<Element>.Linear.Bounded,
@@ -10,7 +11,7 @@ where Tag == Buffer<Element>.Linear.Peek,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var front: Element {
-        unsafe base.pointee.storage.pointer(at: .zero).pointee
+        unsafe base.value.storage.pointer(at: .zero).pointee
     }
 
     /// Returns the last element without removing it.
@@ -18,7 +19,7 @@ where Tag == Buffer<Element>.Linear.Peek,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var back: Element {
-        return unsafe base.pointee.storage.pointer(at: base.pointee.header.count.subtract.saturating(.one).map(Ordinal.init)).pointee
+        return unsafe base.value.storage.pointer(at: base.value.header.count.subtract.saturating(.one).map(Ordinal.init)).pointee
     }
 }
 
@@ -157,7 +158,7 @@ where Tag == Buffer<Element>.Linear.Remove,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func first() -> Element {
-        unsafe base.pointee._removeFirst()
+        unsafe base.value._removeFirst()
     }
 
     /// Removes and returns the last element (CoW-safe).
@@ -165,13 +166,13 @@ where Tag == Buffer<Element>.Linear.Remove,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func last() -> Element {
-        unsafe base.pointee._removeLast()
+        unsafe base.value._removeLast()
     }
 
     /// Removes all elements from the buffer (CoW-safe).
     @inlinable
     public mutating func all() {
-        unsafe base.pointee._removeAll()
+        unsafe base.value._removeAll()
     }
 }
 

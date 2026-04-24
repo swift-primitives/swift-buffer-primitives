@@ -1,5 +1,6 @@
 // MARK: - Extensions for Linear.Small (declared in Core)
 
+
 extension Buffer.Linear.Small where Element: ~Copyable {
 
     /// Creates an empty small buffer with inline storage.
@@ -225,7 +226,7 @@ where Tag == Buffer<Element>.Linear.Remove,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func first() -> Element {
-        unsafe base.pointee._removeFirst()
+        unsafe base.value._removeFirst()
     }
 
     /// Removes and returns the last element.
@@ -233,7 +234,7 @@ where Tag == Buffer<Element>.Linear.Remove,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func last() -> Element {
-        unsafe base.pointee._removeLast()
+        unsafe base.value._removeLast()
     }
 
     /// Removes all elements from the buffer.
@@ -241,7 +242,7 @@ where Tag == Buffer<Element>.Linear.Remove,
     /// Resets to inline mode.
     @inlinable
     public mutating func all() {
-        unsafe base.pointee._removeAll()
+        unsafe base.value._removeAll()
     }
 
     /// Removes all elements from the buffer.
@@ -250,7 +251,7 @@ where Tag == Buffer<Element>.Linear.Remove,
     ///   stays in heap mode. If `false`, resets to inline mode.
     @inlinable
     public mutating func all(keepingCapacity: Bool) {
-        unsafe base.pointee._removeAll(keepingCapacity: keepingCapacity)
+        unsafe base.value._removeAll(keepingCapacity: keepingCapacity)
     }
 }
 

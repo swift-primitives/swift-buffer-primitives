@@ -1,5 +1,6 @@
 // MARK: - Peek Operations (Copyable)
 
+
 extension Property.View.Read.Typed.Valued
 where Tag == Buffer<Element>.Ring.Peek,
       Base == Buffer<Element>.Ring.Inline<n>,
@@ -10,8 +11,8 @@ where Tag == Buffer<Element>.Ring.Peek,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var front: Element {
-        let bounded = Index<Element>.Bounded<n>(unsafe base.pointee.header.head)!
-        let ptr: UnsafePointer<Element> = unsafe base.pointee.storage.pointer(at: bounded)
+        let bounded = Index<Element>.Bounded<n>(unsafe base.value.header.head)!
+        let ptr: UnsafePointer<Element> = unsafe base.value.storage.pointer(at: bounded)
         return unsafe ptr.pointee
     }
 
@@ -22,12 +23,12 @@ where Tag == Buffer<Element>.Ring.Peek,
     public var back: Element {
         let bounded = Index<Element>.Bounded<n>(
             Index.Modular.advanced(
-                unsafe base.pointee.header.head,
-                by: Index<Element>.Offset(fromZero: unsafe base.pointee.header.count.subtract.saturating(.one).map(Ordinal.init)),
-                capacity: unsafe base.pointee.header.capacity
+                unsafe base.value.header.head,
+                by: Index<Element>.Offset(fromZero: unsafe base.value.header.count.subtract.saturating(.one).map(Ordinal.init)),
+                capacity: unsafe base.value.header.capacity
             )
         )!
-        let ptr: UnsafePointer<Element> = unsafe base.pointee.storage.pointer(at: bounded)
+        let ptr: UnsafePointer<Element> = unsafe base.value.storage.pointer(at: bounded)
         return unsafe ptr.pointee
     }
 }

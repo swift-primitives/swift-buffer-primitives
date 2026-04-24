@@ -192,7 +192,7 @@ where Tag == Buffer<Element>.Linear.Remove,
     /// - Complexity: O(n)
     @inlinable
     public mutating func first() -> Element {
-        unsafe base.pointee._removeFirst()
+        unsafe base.value._removeFirst()
     }
 
     /// Removes and returns the last element.
@@ -201,7 +201,7 @@ where Tag == Buffer<Element>.Linear.Remove,
     /// - Complexity: O(1)
     @inlinable
     public mutating func last() -> Element {
-        unsafe base.pointee._removeLast()
+        unsafe base.value._removeLast()
     }
 
     /// Removes all elements from the buffer.
@@ -209,7 +209,7 @@ where Tag == Buffer<Element>.Linear.Remove,
     /// - Complexity: O(n) where n is the number of elements.
     @inlinable
     public mutating func all() {
-        unsafe base.pointee._removeAll()
+        unsafe base.value._removeAll()
     }
 }
 

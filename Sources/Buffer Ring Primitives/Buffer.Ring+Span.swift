@@ -1,5 +1,6 @@
 // MARK: - Unified Iterator for Ring buffers
 
+
 extension Buffer.Ring where Element: Copyable {
     /// Iterator that provides both element-at-a-time and span-based iteration
     /// for ring storage.

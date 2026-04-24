@@ -1,5 +1,6 @@
 // MARK: - Unified Iterator for Linear buffers
 
+
 extension Buffer.Linear where Element: Copyable {
     /// Iterator that provides both element-at-a-time and span-based iteration
     /// for linear storage.

@@ -1,5 +1,6 @@
 // MARK: - Copyable Conformances for Linear.Small
 
+
 extension Buffer.Linear.Small where Element: Copyable {
 
     /// Ensures this buffer has unique heap storage, returning whether a copy was made.
@@ -182,7 +183,7 @@ where Tag == Buffer<Element>.Linear.Peek,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var front: Element {
-        switch unsafe base.pointee._storage {
+        switch unsafe base.value._storage {
         case .heap(let heap):
             return unsafe heap.storage.pointer(at: .zero).pointee
         case .inline(let buf):
@@ -195,7 +196,7 @@ where Tag == Buffer<Element>.Linear.Peek,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var back: Element {
-        switch unsafe base.pointee._storage {
+        switch unsafe base.value._storage {
         case .heap(let heap):
             return unsafe heap.storage.pointer(at: heap.header.count.subtract.saturating(.one).map(Ordinal.init)).pointee
         case .inline(let buf):
@@ -216,7 +217,7 @@ where Tag == Buffer<Element>.Linear.Remove,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func first() -> Element {
-        unsafe base.pointee._removeFirst()
+        unsafe base.value._removeFirst()
     }
 
     /// Removes and returns the last element (CoW-safe).
@@ -224,7 +225,7 @@ where Tag == Buffer<Element>.Linear.Remove,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func last() -> Element {
-        unsafe base.pointee._removeLast()
+        unsafe base.value._removeLast()
     }
 
     /// Removes all elements from the buffer (CoW-safe).
@@ -232,7 +233,7 @@ where Tag == Buffer<Element>.Linear.Remove,
     /// Resets to inline mode.
     @inlinable
     public mutating func all() {
-        unsafe base.pointee._removeAll()
+        unsafe base.value._removeAll()
     }
 
     /// Removes all elements from the buffer (CoW-safe).
@@ -241,7 +242,7 @@ where Tag == Buffer<Element>.Linear.Remove,
     ///   stays in heap mode. If `false`, resets to inline mode.
     @inlinable
     public mutating func all(keepingCapacity: Bool) {
-        unsafe base.pointee._removeAll(keepingCapacity: keepingCapacity)
+        unsafe base.value._removeAll(keepingCapacity: keepingCapacity)
     }
 }
 

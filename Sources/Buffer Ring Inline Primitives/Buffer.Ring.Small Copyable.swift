@@ -1,5 +1,6 @@
 // MARK: - Copyable Conformances for Ring.Small
 
+
 extension Buffer.Ring.Small where Element: Copyable {
 
     /// Ensures this buffer has unique heap storage, returning whether a copy was made.
@@ -220,7 +221,7 @@ where Tag == Buffer<Element>.Ring.Peek,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var front: Element {
-        switch unsafe base.pointee._storage {
+        switch unsafe base.value._storage {
         case .heap(let heap):
             return unsafe heap.storage.pointer(at: heap.header.head).pointee
         case .inline(let buf):
@@ -235,7 +236,7 @@ where Tag == Buffer<Element>.Ring.Peek,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public var back: Element {
-        switch unsafe base.pointee._storage {
+        switch unsafe base.value._storage {
         case .heap(let heap):
             return unsafe heap.storage.pointer(at: Index.Modular.advanced(
                 heap.header.head,
@@ -266,13 +267,13 @@ where Tag == Buffer<Element>.Ring.Push,
     /// Pushes an element to the back (CoW-safe).
     @inlinable
     public mutating func back(_ element: consuming Element) {
-        unsafe base.pointee._pushBack(consume element)
+        unsafe base.value._pushBack(consume element)
     }
 
     /// Pushes an element to the front (CoW-safe).
     @inlinable
     public mutating func front(_ element: consuming Element) {
-        unsafe base.pointee._pushFront(consume element)
+        unsafe base.value._pushFront(consume element)
     }
 }
 
@@ -288,7 +289,7 @@ where Tag == Buffer<Element>.Ring.Pop,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func front() -> Element {
-        unsafe base.pointee._popFront()
+        unsafe base.value._popFront()
     }
 
     /// Removes and returns the element at the back (CoW-safe).
@@ -296,7 +297,7 @@ where Tag == Buffer<Element>.Ring.Pop,
     /// - Precondition: The buffer is not empty.
     @inlinable
     public mutating func back() -> Element {
-        unsafe base.pointee._popBack()
+        unsafe base.value._popBack()
     }
 }
 
@@ -312,7 +313,7 @@ where Tag == Buffer<Element>.Ring.Remove,
     /// Resets to inline mode.
     @inlinable
     public mutating func all() {
-        unsafe base.pointee._removeAll()
+        unsafe base.value._removeAll()
     }
 
     /// Removes all elements from the buffer (CoW-safe).
@@ -321,7 +322,7 @@ where Tag == Buffer<Element>.Ring.Remove,
     ///   stays in heap mode. If `false`, resets to inline mode.
     @inlinable
     public mutating func all(keepingCapacity: Bool) {
-        unsafe base.pointee._removeAll(keepingCapacity: keepingCapacity)
+        unsafe base.value._removeAll(keepingCapacity: keepingCapacity)
     }
 }
 

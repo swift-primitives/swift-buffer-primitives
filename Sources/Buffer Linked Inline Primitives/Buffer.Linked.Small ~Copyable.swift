@@ -216,7 +216,7 @@ where Tag == Buffer<Element>.Linked<n>.Insert,
     public mutating func front(
         _ element: consuming Element
     ) {
-        unsafe base.pointee._insertFront(element)
+        unsafe base.value._insertFront(element)
     }
 
     /// Inserts an element at the back of the list.
@@ -229,7 +229,7 @@ where Tag == Buffer<Element>.Linked<n>.Insert,
     public mutating func back(
         _ element: consuming Element
     ) {
-        unsafe base.pointee._insertBack(element)
+        unsafe base.value._insertBack(element)
     }
 }
 
@@ -278,7 +278,7 @@ where Tag == Buffer<Element>.Linked<n>.Remove,
     /// - Complexity: O(1)
     @inlinable
     public mutating func front() -> Element? {
-        unsafe base.pointee._removeFront()
+        unsafe base.value._removeFront()
     }
 
     /// Removes and returns the element at the back of the list.
@@ -287,7 +287,7 @@ where Tag == Buffer<Element>.Linked<n>.Remove,
     /// - Complexity: O(1) for N >= 2 (doubly-linked), O(n) for N == 1 (singly-linked)
     @inlinable
     public mutating func back() -> Element? {
-        unsafe base.pointee._removeBack()
+        unsafe base.value._removeBack()
     }
 }
 
