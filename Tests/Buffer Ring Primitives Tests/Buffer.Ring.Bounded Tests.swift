@@ -175,3 +175,42 @@ extension RingBoundedTests.Integration {
         #expect(drained.count == cap)
     }
 }
+
+// MARK: - Release-mode regression guard (Finding #12 narrow-shape watchflag)
+//
+// Permanent positive-assertion regression guard for the V11 narrow-shape
+// compiler bug documented at swift-institute/Audits/borrow-pointer-
+// storage-release-miscompile.md finding #12, archived at the experiment
+// swift-institute/Experiments/borrow-pointer-storage-release-miscompile
+// V10/V11 (commit cee7a7a).
+//
+// Buffer.Ring.Bounded is one of ~16 swift-buffer-primitives consumers
+// of Memory.Inline.pointer(at:). Memory.Inline's production shape
+// (`@_rawLayout`-backed `_storage`) is empirically safe in release
+// despite the V11 experiment showing a narrower shape (plain stored
+// ~Copyable field, non-generic) fails. This test asserts the
+// consumer-side safety holds — if a future refactor of either
+// Memory.Inline or Buffer.Ring.Bounded migrates toward the V11 shape,
+// or an optimizer regression breaks the `@_rawLayout` discriminator,
+// the positive assertions flip to failing and the regression is caught
+// before it ships.
+
+extension RingBoundedTests.Unit {
+    @Test
+    func `peek front and back return stable values across repeated reads (finding #12 regression guard)`() {
+        var buffer = Buffer<Int>.Ring.Bounded(minimumCapacity: 4)
+        _ = buffer.push.back(10)
+        _ = buffer.push.back(20)
+        _ = buffer.push.back(30)
+
+        let front1 = buffer.peek.front
+        let front2 = buffer.peek.front
+        let back1 = buffer.peek.back
+        let back2 = buffer.peek.back
+
+        #expect(front1 == 10)
+        #expect(front2 == 10)
+        #expect(back1 == 30)
+        #expect(back2 == 30)
+    }
+}
