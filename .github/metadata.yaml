@@ -1,6 +1,6 @@
 # .github/metadata.yaml
 # Triaged 2026-04-29 — anomaly-fix pass after wave-4 PR-branch triage didn't apply.
-description: "Buffer types for Swift."
+description: "Dispatch-free capability protocol and shared namespace unifying Linear, Ring, Slots, and Linked buffer disciplines over a common storage substrate for Swift."
 topics:
   - primitives
   - buffer
