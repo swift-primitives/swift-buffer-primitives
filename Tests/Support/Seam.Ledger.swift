@@ -11,7 +11,9 @@
 
 public import Store_Protocol_Primitives
 public import Buffer_Protocol_Primitives
-public import Index_Primitives
+// `Index_Primitives` is used only in the (non-inlinable) body after M7 dropped the
+// `where S.Count == Index<S.Element>.Count` signature clause — internal import suffices.
+import Index_Primitives
 
 extension Seam {
     /// THE SEAM LEDGER LAWS — the contract `Array`-tier generic mutations rely on but the
@@ -39,7 +41,7 @@ extension Seam {
         public static func violations<S: Store.`Protocol` & Buffer.`Protocol` & ~Copyable>(
             makeEmpty: () -> S,
             element: (Int) -> S.Element
-        ) -> [String] where S.Count == Index<S.Element>.Count {
+        ) -> [String] {
             var found: [String] = []
             var column = makeEmpty()
 

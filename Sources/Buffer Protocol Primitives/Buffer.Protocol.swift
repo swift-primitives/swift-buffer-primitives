@@ -10,8 +10,6 @@
 // ===----------------------------------------------------------------------===//
 
 public import Buffer_Primitive
-public import Cardinal_Primitive
-public import Carrier_Protocol
 public import Index_Primitives
 
 // MARK: - Buffer.Protocol (Hoisted as __BufferProtocol)
@@ -21,48 +19,45 @@ public import Index_Primitives
 /// See ``Buffer/`Protocol``` for documentation.
 public protocol __BufferProtocol: ~Copyable, ~Escapable {
     /// The element type stored in the buffer.
+    ///
+    /// The sole associated type (M7, [DS-025]/[DS-026] §4.2): `count` is the
+    /// concrete `Index<Element>.Count`, so the former `associatedtype Count`
+    /// is gone and no op extension reaches through a nested associated type.
     associatedtype Element: ~Copyable
 
-    /// The domain in which this buffer reports its logical count.
+    /// The number of elements logically held by the buffer, in the concrete
+    /// element domain.
     ///
-    /// Defaults to `Index<Element>.Count` — the element domain — which keeps
-    /// dense disciplines (Linear, Ring, Linked, Aligned, Unbounded, Arena)
-    /// unchanged. Sparse disciplines that count in a different domain override
-    /// `Count`: a slab counts occupied bitmap slots in `Bit.Index.Count`.
-    ///
-    /// The `Carrier.`Protocol`<Cardinal>` bound is the shared logical-quantity
-    /// surface — every count domain in the ecosystem is a `Tagged<_, Cardinal>`
-    /// (or bare `Cardinal`), so this bound admits both `Index<Element>.Count`
-    /// and `Bit.Index.Count` while excluding non-cardinal carriers.
-    associatedtype Count: Carrier.`Protocol`<Cardinal> = Index<Element>.Count
-
-    /// The number of elements logically held by the buffer, in the buffer's
-    /// natural counting domain (`Count`).
-    var count: Count { get }
+    /// Concrete (M7): every discipline reports its live-element cardinality as
+    /// `Index<Element>.Count`. Sparse disciplines whose native ledger counts in
+    /// a different domain (a slab counts occupied bitmap slots in `Bit.Index.Count`)
+    /// re-tag into the element domain at this witness (`.retag(Element.self)` —
+    /// one occupied slot IS one live element, a numerically-sound phantom-label
+    /// change).
+    var count: Index<Element>.Count { get }
 
     /// Whether the buffer has no elements.
     ///
-    /// Provided as a default implementation (`count == .zero`) on the protocol
-    /// extension *for the element-domain default* (`Count == Index<Element>.Count`)
-    /// — the deduplication payoff for dense disciplines, which need only supply
-    /// `count`. Sparse disciplines whose `Count` is not the element-domain
-    /// default fall outside this constrained extension and supply their own
-    /// `isEmpty` (every such buffer already does).
+    /// Provided as an UNCONSTRAINED default implementation (`count == .zero`) on
+    /// the protocol extension (M7): the concrete `Index<Element>.Count`
+    /// (= `Tagged<Element, Cardinal>`) surfaces both `==` and `.zero`, so the
+    /// default fires for every conformer — dense and re-tagged sparse alike
+    /// (resolving W18). A conformer may still supply its own `isEmpty`.
     var isEmpty: Bool { get }
 }
 
 // MARK: - Derived-Observable Default Implementations
 
-extension __BufferProtocol where Self: ~Copyable & ~Escapable, Count == Index<Element>.Count {
+extension __BufferProtocol where Self: ~Copyable & ~Escapable {
     /// Whether the buffer has no elements.
     ///
-    /// Default implementation across every *element-domain* discipline,
-    /// replacing the per-leaf `isEmpty` copies. The `Count == Index<Element>.Count`
-    /// constraint is load-bearing: the `Carrier.`Protocol`<Cardinal>` bound does
-    /// not surface `.zero`/`==` on the abstract `Count`, but the concrete
-    /// element-domain `Tagged<Element, Cardinal>` does (via Cardinal's constrained
-    /// Carrier extension). Sparse-domain conformers (e.g. slab counting in
-    /// `Bit.Index.Count`) supply their own `isEmpty`.
+    /// UNCONSTRAINED default implementation (M7) across every discipline,
+    /// replacing the per-leaf `isEmpty` copies. No `Count == Index<Element>.Count`
+    /// pin is needed: `count` is already the concrete `Index<Element>.Count`
+    /// (= `Tagged<Element, Cardinal>`), which surfaces `.zero` (Cardinal's
+    /// constrained Carrier extension) and `==` (Tagged's `Equatable`) — both
+    /// resolving via `Index_Primitives`' re-exports. Re-tagged sparse conformers
+    /// (a slab counting in `Bit.Index.Count`) get this default for free.
     @inlinable
     public var isEmpty: Bool { count == .zero }
 }

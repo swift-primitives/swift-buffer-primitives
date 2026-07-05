@@ -36,8 +36,6 @@ let package = Package(
         // Buffer.Protocol is count-based and vends NO span conformance, so no source
         // reconform is needed here — this is the dependency-mesh repoint only.
         .package(url: "https://github.com/swift-primitives/swift-memory-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-carrier-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-cardinal-primitives.git", branch: "main"),
     ],
     targets: [
 
@@ -55,8 +53,6 @@ let package = Package(
             dependencies: [
                 "Buffer Primitive",
                 .product(name: "Index Primitives", package: "swift-index-primitives"),
-                .product(name: "Carrier Protocol", package: "swift-carrier-primitives"),
-                .product(name: "Cardinal Primitive", package: "swift-cardinal-primitives"),
             ]
         ),
 
