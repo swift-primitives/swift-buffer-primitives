@@ -140,7 +140,13 @@ extension Model {
     }
 
     private static func environment(_ name: String) -> String? {
+        // Embedded targets have no process environment; fall back to the
+        // CI-scale defaults ([PKG-BUILD-007] source-guard pattern).
+        #if hasFeature(Embedded)
+        return nil
+        #else
         guard let pointer = unsafe getenv(name) else { return nil }
         return unsafe String(validatingCString: pointer)
+        #endif
     }
 }
